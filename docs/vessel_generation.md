@@ -1,0 +1,91 @@
+## Game fractions
+
+* Earthlings
+* Krigia
+* Wertu
+* Zyth
+* Scavengers (not bound to a race)
+
+## Technologies by fraction
+
+Bold text indicates that the highlighted technology is specific to a single fraction.
+
+### Earthlings
+
+Weapons:
+
+* Spread Gun
+* Ion Cannon
+* Needle Gun
+* Point-Defense Laser
+* Pulse Laser
+* **Reaper Cannon**
+* Rocket Launcher
+* Hurricane
+
+### Krigia
+
+Weapons:
+
+* Ion Cannon
+* Point-Defense Laser
+* Pulse Laser
+* **Scythe**
+* **Great Scythe**
+* Rocket Launcher
+* Hurricane
+* Stinger
+
+### Wertu
+
+Weapons:
+
+* **Photon Burst Cannon**
+* Point-Laser Defense
+* **Twin Photon Burst Cannon**
+* **Restructuring Ray**
+* **Photon Beam**
+* **Plasma Emitter**
+
+### Zyth
+
+Weapons:
+
+* Needle Gun
+* **Hellfire**
+* Stinger
+
+## Weapons
+
+### Level 1 weapons
+
+| Weapon | Used by |
+|---|---|
+| Spread Gun | Earthlings |
+| Ion Cannon | Earthlings, Krigia |
+| Needle Gun | Earthlings, Zyth |
+| Photon Burst Cannon | Wertu |
+| Point-Defense Laser | Earthlings, Krigia, Wertu |
+| Pulse Laser | Earthlings, Krigia |
+| Reaper Cannon | Earthlings |
+| Rocket Launcher | Earthlings, Krigia |
+| Scythe | Krigia |
+
+### Level 2 weapons
+
+| Weapon | Used by |
+|---|---|
+| Great Scythe | Krigia |
+| Twin Proton Burst Cannon | Wertu |
+| Hellfire | Zyth |
+| Hurricane | Earthlings, Krigia |
+| Restructuring Ray | Wertu |
+| Stinger | Krigia, Zyth |
+
+### Level 3 weapons
+
+| Weapon | Used by |
+|---|---|
+| Disk Thrower | Exclusive to the player |
+| Photon Beam | Wertu |
+| Plasma Emitter | Wertu |
