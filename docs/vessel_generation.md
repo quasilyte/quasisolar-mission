@@ -88,6 +88,7 @@ Weapons:
 | Hurricane | Earthlings, Krigia |
 | Restructuring Ray | Wertu |
 | Stinger | Krigia, Zyth |
+| Crystal Cannon | ? |
 
 ### Level 3 weapons
 
