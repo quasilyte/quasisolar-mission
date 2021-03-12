@@ -14,7 +14,7 @@ Bold text indicates that the highlighted technology is specific to a single frac
 
 Weapons:
 
-* Spread Gun
+* **Spread Gun**
 * Ion Cannon
 * Needle Gun
 * Point-Defense Laser
