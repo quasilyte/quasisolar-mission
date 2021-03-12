@@ -53,6 +53,7 @@ Weapons:
 
 * Needle Gun
 * **Hellfire**
+* **Harpoon**
 * Stinger
 
 ## Weapons
@@ -64,6 +65,7 @@ Weapons:
 | Spread Gun | Earthlings |
 | Ion Cannon | Earthlings, Krigia |
 | Needle Gun | Earthlings, Zyth |
+| Harpoon | Zyth |
 | Photon Burst Cannon | Wertu |
 | Point-Defense Laser | Earthlings, Krigia, Wertu |
 | Pulse Laser | Earthlings, Krigia |
