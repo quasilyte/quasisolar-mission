@@ -72,6 +72,7 @@ Weapons:
 | Reaper Cannon | Earthlings |
 | Rocket Launcher | Earthlings, Krigia |
 | Scythe | Krigia |
+| Hellfire | Zyth |
 
 ### Level 2 weapons
 
@@ -79,7 +80,6 @@ Weapons:
 |---|---|
 | Great Scythe | Krigia |
 | Twin Proton Burst Cannon | Wertu |
-| Hellfire | Zyth |
 | Hurricane | Earthlings, Krigia |
 | Restructuring Ray | Wertu |
 | Stinger | Krigia, Zyth |
