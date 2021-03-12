@@ -69,7 +69,6 @@ Weapons:
 | Photon Burst Cannon | Wertu |
 | Point-Defense Laser | Earthlings, Krigia, Wertu |
 | Pulse Laser | Earthlings, Krigia |
-| Reaper Cannon | Earthlings |
 | Rocket Launcher | Earthlings, Krigia |
 | Scythe | Krigia |
 | Hellfire | Zyth |
@@ -78,6 +77,7 @@ Weapons:
 
 | Weapon | Used by |
 |---|---|
+| Reaper Cannon | Earthlings |
 | Great Scythe | Krigia |
 | Twin Proton Burst Cannon | Wertu |
 | Hurricane | Earthlings, Krigia |
