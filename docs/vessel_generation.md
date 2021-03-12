@@ -21,6 +21,7 @@ Weapons:
 * Pulse Laser
 * **Reaper Cannon**
 * Rocket Launcher
+* Cutter
 * Hurricane
 
 ### Krigia
@@ -33,6 +34,7 @@ Weapons:
 * **Scythe**
 * **Great Scythe**
 * Rocket Launcher
+* Cutter
 * Hurricane
 * Stinger
 
@@ -42,6 +44,7 @@ Weapons:
 
 * **Photon Burst Cannon**
 * Point-Laser Defense
+* Cutter
 * **Twin Photon Burst Cannon**
 * **Restructuring Ray**
 * **Photon Beam**
@@ -52,6 +55,7 @@ Weapons:
 Weapons:
 
 * Needle Gun
+* Cutter
 * **Hellfire**
 * **Harpoon**
 * Stinger
@@ -78,6 +82,7 @@ Weapons:
 | Weapon | Used by |
 |---|---|
 | Reaper Cannon | Earthlings |
+| Cutter | Earthlings, Krigia, Wertu, Zyth |
 | Great Scythe | Krigia |
 | Twin Proton Burst Cannon | Wertu |
 | Hurricane | Earthlings, Krigia |
