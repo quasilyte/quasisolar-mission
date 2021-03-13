@@ -97,3 +97,4 @@ Weapons:
 | Disk Thrower | Exclusive to the player |
 | Photon Beam | Wertu |
 | Plasma Emitter | Wertu |
+| Mortar | ? |
