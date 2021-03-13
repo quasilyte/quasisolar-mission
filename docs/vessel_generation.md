@@ -98,3 +98,4 @@ Weapons:
 | Photon Beam | Wertu |
 | Plasma Emitter | Wertu |
 | Mortar | ? |
+| Storm Bringer | ? |
