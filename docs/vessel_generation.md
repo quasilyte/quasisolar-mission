@@ -38,6 +38,11 @@ Weapons:
 * Hurricane
 * Stinger
 
+Special Weapons:
+
+* Mortar
+* Torpedo Launcher
+
 ### Wertu
 
 Weapons:
@@ -97,5 +102,5 @@ Weapons:
 | Disk Thrower | Exclusive to the player |
 | Photon Beam | Wertu |
 | Plasma Emitter | Wertu |
-| Mortar | ? |
+| Mortar | Krigia |
 | Storm Bringer | ? |
