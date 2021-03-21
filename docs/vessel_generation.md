@@ -69,8 +69,11 @@ Weapons:
 * Needle Gun
 * Cutter
 * **Hellfire**
-* **Harpoon**
 * Stinger
+
+Special weapons:
+
+* **Harpoon**
 
 ## Weapons
 
