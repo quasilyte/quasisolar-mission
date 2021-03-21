@@ -38,7 +38,6 @@ Weapons:
 * **Scythe**
 * **Great Scythe**
 * Rocket Launcher
-* Cutter
 * Hurricane
 * Stinger
 
@@ -98,7 +97,7 @@ Special weapons:
 | Weapon | Used by |
 |---|---|
 | Reaper Cannon | Earthlings |
-| Cutter | Earthlings, Krigia, Wertu, Zyth |
+| Cutter | Earthlings, Wertu, Zyth |
 | Great Scythe | Krigia |
 | Twin Proton Burst Cannon | Wertu |
 | Hurricane | Earthlings, Krigia |
