@@ -19,10 +19,14 @@ Weapons:
 * Needle Gun
 * Point-Defense Laser
 * Pulse Laser
-* **Reaper Cannon**
 * Rocket Launcher
 * Cutter
 * Hurricane
+
+Special weapons:
+
+* **Reaper Cannon**
+* Torpedo Launcher
 
 ### Krigia
 
@@ -51,9 +55,12 @@ Weapons:
 * Point-Laser Defense
 * Cutter
 * **Twin Photon Burst Cannon**
+* **Plasma Emitter**
+
+Special weapons:
+
 * **Restructuring Ray**
 * **Photon Beam**
-* **Plasma Emitter**
 
 ### Zyth
 
@@ -104,3 +111,4 @@ Weapons:
 | Plasma Emitter | Wertu |
 | Mortar | Krigia |
 | Storm Bringer | ? |
+| Torpedo Launcher | Earthlings, Krigia |
