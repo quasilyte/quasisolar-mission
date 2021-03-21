@@ -70,6 +70,7 @@ Weapons:
 * Cutter
 * **Hellfire**
 * Stinger
+* **Disk Thrower**
 
 Special weapons:
 
@@ -109,7 +110,7 @@ Special weapons:
 
 | Weapon | Used by |
 |---|---|
-| Disk Thrower | Exclusive to the player |
+| Disk Thrower | Zyth |
 | Photon Beam | Wertu |
 | Plasma Emitter | Wertu |
 | Mortar | Krigia |
