@@ -40,6 +40,7 @@ Weapons:
 * Rocket Launcher
 * Hurricane
 * Stinger
+* **Lancer**
 
 Special Weapons:
 
@@ -115,3 +116,4 @@ Special weapons:
 | Mortar | Krigia |
 | Storm Bringer | ? |
 | Torpedo Launcher | Earthlings, Krigia |
+| Lancer | Krigia |
