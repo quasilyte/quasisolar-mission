@@ -25,6 +25,7 @@ There are few ways to recover your fuel:
 * Buy it on a **star base**: relatively inexpensive, but you need to visit a base
 * Perform an **idle** action in any system: free, but very slow
 
+![image](https://user-images.githubusercontent.com/6286655/112731247-1b653680-8f47-11eb-91d4-e6d391480e4d.png)
 
 ## Earthling Star Bases
 
