@@ -190,7 +190,7 @@ A free roam group travels through space without any particular destination. Most
 
 ## Scavengers
 
-Scavengers are local "space pirates". They attack weak bases and fleets in attempt to scavenge their resources.
+Scavengers are the local "space pirates". They attack weak bases and fleets in attempt to scavenge their resources.
 
 They don't have own star bases.
 
