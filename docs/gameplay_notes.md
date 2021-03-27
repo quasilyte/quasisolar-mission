@@ -141,7 +141,7 @@ The player can build new star bases.
 Requirements:
 
 * The system should be unoccupied (i.e. it has no other star bases)
-* Fleet should have at least 1 Ark vessel
+* Fleet should have at least 1 **Ark** vessel
 
 If these requirements are satisfied, "build star base" action will be available.
 
