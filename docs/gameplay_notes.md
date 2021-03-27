@@ -41,6 +41,21 @@ There are few ways to recover your fuel:
 A player can't get stuck in **interstellar space**: you can only peek a destination that is reachable.
 It's impossible to wait in interstellar space, neither it is possible to fly somewhere in a middle of nowhere (only systems can be targeted).
 
+## Player Fleet
+
+![image](https://user-images.githubusercontent.com/6286655/112732731-c3c9c980-8f4c-11eb-89e7-41f93e4e5bc8.png)
+
+A fleet is a group of vessels that fly together.
+
+Player can have a fleet of size 6. One flagship (player-controlled) and 5 escort vessels.
+
+Not every vessel has to participate in combat, but flagship is obligated to.
+
+> TODO: or should it be OK to have a bots-vs-bots battle without a player?
+
+The player can choose what vessels are included into the fleet. It can consist of all military crafts
+or it can have some freighters to make it easy to carry more resources.
+
 ## Planetary Resources
 
 There are 3 basic types of **planetary resources**:
