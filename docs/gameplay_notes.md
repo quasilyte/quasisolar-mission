@@ -213,7 +213,7 @@ Periodic events are less unique and the same kind of event can happen several ti
 
 Every computer-controlled vessel has associated bot rank.
 
-Bot rank affect the battle performance.
+Bot rank affects the battle performance.
 
 Higher rank means:
 
@@ -222,6 +222,7 @@ Higher rank means:
 * Can perform more advanced movement tricks
 * More careful energy management
 * Less deliberate mistakes (bots make such mistakes sometimes; experienced bots do it very rarely)
+* Higher self-preservation (may retreat more when low on health)
 
 In a single player mode, all Earthling pilots start as rookies and then gain experience through battles.
 This makes it more desirable to keep allied pilots alive, so they can improve.
