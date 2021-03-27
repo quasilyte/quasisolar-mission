@@ -1,4 +1,4 @@
-This is not a game manual.
+This is not the game manual.
 
 This is something like a single player game mode design document.
 
