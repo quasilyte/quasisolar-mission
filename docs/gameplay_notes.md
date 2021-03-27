@@ -209,6 +209,23 @@ Periodic events are less unique and the same kind of event can happen several ti
 
 > TODO: figure out which kinds of random events we have and how they're resolved.
 
+## Computer-controlled Pilot Ranks
+
+Every computer-controlled vessel has associated bot rank.
+
+Bot rank affect the battle performance.
+
+Higher rank means:
+
+* Better chances to do a snipe shot (with velocity calculations)
+* May avoid asteroids more successfully
+* Can perform more advanced movement tricks
+* More careful energy management
+* Less deliberate mistakes (bots make such mistakes sometimes; experienced bots do it very rarely)
+
+In a single player mode, all Earthling pilots start as rookies and then gain experience through battles.
+This makes it more desirable to keep allied pilots alive, so they can improve.
+
 ## Battles
 
 ![image](https://user-images.githubusercontent.com/6286655/112731615-5c5e4a80-8f49-11eb-8c1f-ca38a423ff3c.png)
