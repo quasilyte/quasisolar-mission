@@ -121,3 +121,4 @@ A new base starts with a 1st level and no garrison.
 
 ![image](https://user-images.githubusercontent.com/6286655/112731615-5c5e4a80-8f49-11eb-8c1f-ca38a423ff3c.png)
 
+Battles are a big part of a game and they shoud be covered in a separate document.
