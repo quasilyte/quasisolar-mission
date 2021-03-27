@@ -71,6 +71,8 @@ It's up to the player to deploy droids effectively.
 
 ## Earthling Star Bases
 
+![image](https://user-images.githubusercontent.com/6286655/112732527-8d3f7f00-8f4b-11eb-81b6-007e1f006d53.png)
+
 Player-controlled bases can be entered.
 
 Every star base has a level.
