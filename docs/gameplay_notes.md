@@ -166,6 +166,19 @@ After the base is created, Ark ship leaves the fleet (in other words, it's consu
 
 A new base starts with a 1st level and no garrison.
 
+## Random Events
+
+There are 2 kinds of random events:
+
+* One-off events
+* Periodic events
+
+One-off events are determined during the new game generation. They are unique, so the same event won't happen twice in a game.
+
+Periodic events are less unique and the same kind of event can happen several times during a game. They're usually less drastic.
+
+> TODO: figure out which kinds of random events we have and how they're resolved.
+
 ## Battles
 
 ![image](https://user-images.githubusercontent.com/6286655/112731615-5c5e4a80-8f49-11eb-8c1f-ca38a423ff3c.png)
