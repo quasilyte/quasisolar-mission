@@ -98,6 +98,21 @@ Base offers these services:
 * Research
 * Vessel production
 
+## Enemy Star Bases
+
+![image](https://user-images.githubusercontent.com/6286655/112732471-3043c900-8f4b-11eb-96d7-f8e013a053ba.png)
+
+Being in a system that contains a hostile star base is dangerous.
+
+Every day there is a chance that some of the star base fleet ships will attack the player.
+The number of attackers depends on the garrison size. If a player uses **attack** action,
+that chance is equal to 100%; there will be a battle every day.
+
+If entire garrison is defeated, the base can be destroyed. In order to do that,
+player should use **attack** action. That will inflict damage to the base, until it's destroyed.
+
+Note that a base will produce new starships while it's active.
+
 ## Researching
 
 Every base can perform a research.
