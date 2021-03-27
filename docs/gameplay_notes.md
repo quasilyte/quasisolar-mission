@@ -15,6 +15,17 @@ In order to win, the player should:
 * Collect distant planet resources
 * Win in dozens of great space battles
 
+## Flying Through The Galaxy
+
+Traversing from one **star system** to another consumes **fuel**.
+
+There are few ways to recover your fuel:
+
+* Burn **energy resources**: expensive, but can save you some time
+* Buy it on a **star base**: relatively inexpensive, but you need to visit a base
+* Perform an **idle** action in any system: free, but very slow
+
+
 ## Earthling Star Bases
 
 Player-controlled bases can be entered.
