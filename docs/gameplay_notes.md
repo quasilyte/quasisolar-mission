@@ -1,3 +1,7 @@
+This is not a game manual.
+
+This is something like a single player game mode design document.
+
 ## The Game Goal
 
 In short, player mission is simple: collect N artifacts (N may depend on the game difficulty) before
@@ -27,8 +31,36 @@ There are few ways to recover your fuel:
 
 ![image](https://user-images.githubusercontent.com/6286655/112731247-1b653680-8f47-11eb-91d4-e6d391480e4d.png)
 
-A player can't get stuck in interstellar space: you can only peek a destination that is reachable.
+A player can't get stuck in **interstellar space**: you can only peek a destination that is reachable.
 It's impossible to wait in interstellar space, neither it is possible to fly somewhere in a middle of nowhere (only systems can be targeted).
+
+## Planetary Resources
+
+There are 3 basic types of **planetary resources**:
+
+* Minerals. The most common resource.
+* Organics. Valuable resource with a good price.
+* Energy. Even more valuable, but can also be converted to **fuel**.
+
+Every resource is needed to help a **star base** growth.
+
+As the name suggests, planetary resources can be mined on planets. To do that, **drones** are needed.
+Drones can be bought on a star base.
+
+Every star system has 1-3 planets with resourcs. Such planets may have different resources available.
+
+Some notes to keep in mind:
+
+* Planet resources are infinite
+* Drone collects some resources each day
+* The amount of resources gathered every day vary from planet to planet
+* Collected resources must be loaded to a vessel
+* There is a resource storage cap that will make the drone stop collecting resources if it's reached
+
+For example, there could be a planet with these properties: minerals-1, organics-3, energy-0.
+It means that every day drone will collect 1 mineral and 3 units of organics.
+
+It's up to the player to deploy droids effectively.
 
 ## Earthling Star Bases
 
