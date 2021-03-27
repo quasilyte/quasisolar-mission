@@ -81,6 +81,16 @@ the resources required by a base.
 A base accepts all kinds of resources, but some of them are needed more than others.
 Selling the resource that has higher demand will result in a faster base growth.
 
+Base offers these services:
+
+* Equipment store
+* Refuelling
+* Vessel repairs
+* Drone store
+* Resources market
+* Research
+* Vessel production
+
 ## Researching
 
 Every base can perform a research.
