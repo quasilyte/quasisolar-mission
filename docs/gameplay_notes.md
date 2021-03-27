@@ -116,3 +116,8 @@ Since Ark is essentially a ship that transforms into a base, it takes no extra t
 After the base is created, Ark ship leaves the fleet (in other words, it's consumed).
 
 A new base starts with a 1st level and no garrison.
+
+## Battles
+
+![image](https://user-images.githubusercontent.com/6286655/112731615-5c5e4a80-8f49-11eb-8c1f-ca38a423ff3c.png)
+
