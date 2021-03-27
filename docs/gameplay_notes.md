@@ -27,6 +27,9 @@ There are few ways to recover your fuel:
 
 ![image](https://user-images.githubusercontent.com/6286655/112731247-1b653680-8f47-11eb-91d4-e6d391480e4d.png)
 
+A player can't get stuck in interstellar space: you can only peek a destination that is reachable.
+It's impossible to wait in interstellar space, neither it is possible to fly somewhere in a middle of nowhere (only systems can be targeted).
+
 ## Earthling Star Bases
 
 Player-controlled bases can be entered.
