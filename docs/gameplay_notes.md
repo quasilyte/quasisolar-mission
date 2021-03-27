@@ -19,6 +19,13 @@ In order to win, the player should:
 * Collect distant planet resources
 * Win in dozens of great space battles
 
+Losing conditions:
+
+* All Earthling bases are destroyed
+* Flagship is destroyed
+* N artifacts are not collected before the day X
+* The final hostile armada is not defeated
+
 ## Flying Through The Galaxy
 
 Traversing from one **star system** to another consumes **fuel**.
