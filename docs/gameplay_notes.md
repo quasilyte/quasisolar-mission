@@ -166,6 +166,36 @@ After the base is created, Ark ship leaves the fleet (in other words, it's consu
 
 A new base starts with a 1st level and no garrison.
 
+## Wandering Units
+
+Player is not the only force in the galaxy that moves from one star system to another.
+
+There are different fleets that may roam the space:
+
+* Unique groups (related to random encounters)
+* Star base patrols
+* Task force
+* Free roam group
+
+Unique group could resolve into a battle or an ally. Most of the time they're bosses that the player can fight to get the reward.
+
+Star base patrols are units that fly between the star systems that are located in the vicinity of that base. These
+fleets will attack their enemies, but will not attempt a siege of the other star base.
+
+Task forces will try to besiege enemy star base. They'll either do it, or die. If they succeed, they'll return to the base
+from which they originated. If that base is destroyed, they'll try to find the closest allied base; if there are
+no allied bases, they'll turn into a free roam group.
+
+A free roam group travels through space without any particular destination. Most of the free roam groups belong to scavengers.
+
+## Scavengers
+
+Scavengers are local "space pirates". They attack weak bases and fleets in attempt to scavenge their resources.
+
+They don't have own star bases.
+
+> TODO: explain where and when do they spawn.
+
 ## Random Events
 
 There are 2 kinds of random events:
