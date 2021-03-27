@@ -18,6 +18,7 @@ Weapons:
 * Ion Cannon
 * Needle Gun
 * Point-Defense Laser
+* Zap
 * Pulse Laser
 * Rocket Launcher
 * Cutter
@@ -53,6 +54,7 @@ Weapons:
 
 * **Photon Burst Cannon**
 * Point-Laser Defense
+* Zap
 * Cutter
 * **Twin Photon Burst Cannon**
 * **Plasma Emitter**
@@ -98,6 +100,7 @@ Special weapons:
 | Weapon | Used by |
 |---|---|
 | Reaper Cannon | Earthlings |
+| Zap | Earthlings, Wertu |
 | Cutter | Earthlings, Wertu, Zyth |
 | Great Scythe | Krigia |
 | Twin Proton Burst Cannon | Wertu |
