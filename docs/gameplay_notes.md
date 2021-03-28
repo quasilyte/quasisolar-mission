@@ -228,6 +228,14 @@ Higher rank means:
 In a single player mode, all Earthling pilots start as rookies and then gain experience through battles.
 This makes it more desirable to keep allied pilots alive, so they can improve.
 
+## Earning Credits
+
+Ways to get credits:
+
+* Sell planetary resources (collected by drones)
+* Sell vessel debris (collected by fighting)
+* Some random events can give you credits
+
 ## Battles
 
 ![image](https://user-images.githubusercontent.com/6286655/112731615-5c5e4a80-8f49-11eb-8c1f-ca38a423ff3c.png)
