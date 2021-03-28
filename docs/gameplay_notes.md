@@ -115,6 +115,29 @@ Base offers these services:
 * Research
 * Vessel production
 
+## Equipment Shop
+
+Theoretically, an equipment shop can contain all game items.
+
+But there are requirements for every item that must be satisfied in order for that item to be available for sale.
+
+Every item has these potential requirements:
+
+* Required research
+* Minimal star base level
+
+For example, Krigia `Scythe` weapon requires these researches to be completed:
+
+* `Krigia Weapons I`
+* `Scythe`
+
+After that, it will be possible to produce that weapon at any allied star base.
+
+Unique weapons that can be found in space usually require a dedicated research. For example,
+when you'll find a `Stormbringer`, there will be a choise: you can either sell it or give it to the
+research lab. Researching that item will makes that item instance impossible to use, but
+it will be possible to produce them in the future.
+
 ## Enemy Star Bases
 
 ![image](https://user-images.githubusercontent.com/6286655/112732471-3043c900-8f4b-11eb-96d7-f8e013a053ba.png)
@@ -148,6 +171,8 @@ To research an artifact you first need... an artifact. When artifact is research
 be found in star systems and in some random encounters.
 
 > TODO: how does one make artifact available for production?
+
+Research tree can be found in a [dedicated document](/docs/research_tree.md).
 
 ## Building Star Bases
 
