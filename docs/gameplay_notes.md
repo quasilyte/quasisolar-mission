@@ -237,6 +237,8 @@ Ways to get credits:
 * Sell equipment
 * Some random events can give you credits
 
+> Note: selling equipment only gives credit gains; it doesn't count as giving an equipment for the research.
+
 ## Getting Equipment
 
 Ways to get equipment:
