@@ -234,7 +234,17 @@ Ways to get credits:
 
 * Sell planetary resources (collected by drones)
 * Sell vessel debris (collected by fighting)
+* Sell equipment
 * Some random events can give you credits
+
+## Getting Equipment
+
+Ways to get equipment:
+
+* Buy on a friendly star base: limited by a base technological limitations
+* Get from a random event
+
+Note that you don't normally get equipment from battles; all you get is sellable (and researchable) debris.
 
 ## Battles
 
