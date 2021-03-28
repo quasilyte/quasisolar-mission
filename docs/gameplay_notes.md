@@ -115,6 +115,22 @@ Base offers these services:
 * Research
 * Vessel production
 
+| Star Base Level | Max Weapon Level |
+|---|---|
+| 1 | Level 1 normal and special weapons |
+| 2 | Level 2 normal weapons |
+| 3 | Level 2 normal and special weapons |
+| 4 | Level 3 normal weapons |
+| 5 | Level 3 normal and special weapons |
+
+| Star Base Level | Max Shield Level |
+|---|---|
+| 1 | Level 1 |
+| 2 | Level 1 |
+| 3 | Level 2 |
+| 4 | Level 2 |
+| 5 | Level 3 |
+
 ## Equipment Shop
 
 Theoretically, an equipment shop can contain all game items.
@@ -137,14 +153,6 @@ Unique weapons that can be found in space usually require a dedicated research. 
 when you'll find a `Stormbringer`, there will be a choise: you can either sell it or give it to the
 research lab. Researching that item will makes that item instance impossible to use, but
 it will be possible to produce them in the future.
-
-| Star Base Level | Max Weapon Level |
-|---|---|
-| 1 | Level 1 normal and special weapons |
-| 2 | Level 2 normal weapons |
-| 3 | Level 2 normal and special weapons |
-| 4 | Level 3 normal weapons |
-| 5 | Level 3 normal and special weapons |
 
 ## Enemy Star Bases
 
