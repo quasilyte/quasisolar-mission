@@ -131,6 +131,14 @@ Base offers these services:
 | 4 | Level 2 |
 | 5 | Level 3 |
 
+| Star Base Level | Max Vessel Level 
+|---|---|
+| 1 | Level 2 |
+| 2 | Level 4 |
+| 3 | Level 6 |
+| 4 | Level 8 |
+| 5 | Level 10 |
+
 ## Equipment Shop
 
 Theoretically, an equipment shop can contain all game items.
