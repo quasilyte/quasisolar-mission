@@ -133,13 +133,13 @@ Base offers these services:
 
 | Star Base Level | Max Vessel Level 
 |---|---|
-| 1 | Level 2 |
-| 2 | Level 4 |
-| 3 | Level 6 |
-| 4 | Level 8 |
-| 5 | Level 9 |
+| 1 | Level 3 (e.g. Earthling Fighter) |
+| 2 | Level 4 (e.g. Earthling Interceptor) |
+| 3 | Level 5 (e.g. Wertu Guardian) |
+| 4 | Level 6 (e.g. Krigia Horns) |
+| 5 | Level 7 (e.g. Wertu Dominator) |
 
-> Note: level 10 vessels can't be produced.
+> Note: level 8, 9 and 10 vessels can't be produced on a star base.
 
 ## Equipment Shop
 
