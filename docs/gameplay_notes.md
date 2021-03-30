@@ -137,7 +137,9 @@ Base offers these services:
 | 2 | Level 4 |
 | 3 | Level 6 |
 | 4 | Level 8 |
-| 5 | Level 10 |
+| 5 | Level 9 |
+
+> Note: level 10 vessels can't be produced.
 
 ## Equipment Shop
 
