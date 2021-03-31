@@ -312,7 +312,7 @@ Note that you don't normally get equipment from battles; all you get is sellable
 
 ## Earning Experience
 
-Ways to get experience:
+Ways to get experience points:
 
 * Winning in battles
 * Some random events can give you experience
