@@ -299,6 +299,24 @@ Ways to get equipment:
 
 Note that you don't normally get equipment from battles; all you get is sellable (and researchable) debris.
 
+## Upgrades System
+
+| Skill | Expr | Effect |
+|---|---|---|
+| Mechanic I | 150 | When winning in battle, all ships recover 10% of the damage taken during that battle. |
+| Mechanic II | 200 | When winning in battle, all ships recover 20% of the damage taken during that battle. |
+| Recycling | 250 | When in idle mode, fuel gain is doubled (2 per day). |
+| Escape Tactics | 100 | Retreating fuel cost is halved. |
+| Siege Mastery I | 50 | When in attack mode, do double damage against bases. |
+| Siege Mastery II | 100 | When in attack mode, do 1 point of damage even if the garrison is not empty. |
+
+## Earning Experience
+
+Ways to get experience:
+
+* Winning in battles
+* Some random events can give you experience
+
 ## Battles
 
 ![image](https://user-images.githubusercontent.com/6286655/112731615-5c5e4a80-8f49-11eb-8c1f-ca38a423ff3c.png)
