@@ -314,6 +314,7 @@ Note that you don't normally get equipment from battles; all you get is sellable
 | Diplomacy | 75 | Better deals in negotiations. |
 | Intimidation | 50 | Helps in confrontation random events. |
 | Luck | 50 | Improves a chance of getting better random event. Also affects some rewards. |
+| Fighter | 50 | Combat experience rewards are doubled. |
 
 ## Earning Experience
 
