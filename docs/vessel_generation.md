@@ -26,6 +26,7 @@ Weapons:
 
 Special weapons:
 
+* Disruptor
 * **Reaper Cannon**
 * Torpedo Launcher
 
@@ -77,6 +78,7 @@ Weapons:
 Special weapons:
 
 * **Harpoon**
+* Disruptor
 
 ## Weapons
 
@@ -88,6 +90,7 @@ Special weapons:
 | Ion Cannon | Earthlings, Krigia |
 | Needle Gun | Earthlings, Zyth |
 | Harpoon | Zyth |
+| Disruptor | Earthlings, Zyth |
 | Photon Burst Cannon | Wertu |
 | Point-Defense Laser | Earthlings, Krigia, Wertu |
 | Pulse Laser | Earthlings, Krigia |
