@@ -314,7 +314,7 @@ Note that you don't normally get equipment from battles; all you get is sellable
 | Diplomacy | 75 | Better deals in negotiations. |
 | Intimidation | 50 | Helps in confrontation random events. |
 | Luck | 50 | Improves a chance of getting better random event. Also affects some rewards. |
-| Fighter | 50 | Combat experience rewards are doubled. |
+| Fighter | 50 | 25% more experience from battles. |
 | Mining I | 75 | Drones max resource limit increased by 25. |
 | Mining II | 100 | Drones max resource limit increased by 50. |
 
