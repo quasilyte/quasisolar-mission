@@ -310,9 +310,9 @@ Note that you don't normally get equipment from battles; all you get is sellable
 | Siege Mastery I | 50 | When in attack mode, do double damage against bases. |
 | Siege Mastery II | 100 | When in attack mode, do 1 point of damage even if the garrison is not empty. |
 | Navigation I | 100 | Map travelling is 10% faster. |
-| Navigation II | 150 | Map travelling is 15% faster. |
+| Navigation II | 100 | Map travelling is 15% faster. |
+| Navigation III | 125 | Map travelling is 20% faster. |
 | Diplomacy | 75 | Better deals in negotiations. |
-| Intimidation | 50 | Helps in confrontation random events. |
 | Luck | 50 | Improves a chance of getting better random event. Also affects some rewards. |
 | Fighter | 50 | 25% more experience from battles. |
 | Mining I | 75 | Drones max resource limit increased by 25. |
