@@ -325,6 +325,24 @@ Ways to get experience points:
 * Winning in battles
 * Some random events can give you experience
 
+## Scavenger Bases
+
+* Keeps 10 garrison ships for defense
+* Not attacked by any other race (but player can destroy them)
+
+## Scavenger Raid Unit
+
+A small fleet of Scavenger ships that flies in a chaotic manner through the map.
+
+They leave systems with star bases immediately while they can stay for several days on neutral systems.
+
+If they find a system with player-controlled mines, they'll grab as many resources as they can
+and fly to the nearest scavenger base. It's possible to intercept them and get some resources back.
+
+When player fleet meets the raid unit inside one system, a special "Scavengers" event appears.
+Depending on the player fleet power, they may be inclined to attack or not.
+Player can always choose to engage them in combat even if they don't want to attack.
+
 ## Battles
 
 ![image](https://user-images.githubusercontent.com/6286655/112731615-5c5e4a80-8f49-11eb-8c1f-ca38a423ff3c.png)
