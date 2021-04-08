@@ -95,8 +95,7 @@ Every star base has a level.
 A star base level affects what you can do on a base and how effectively it operates:
 
 * Max level of equipment it can produce (given that it's researched)
-* Vessel production speed
-* Research speed
+* Max level of ships it can produce
 
 Every base gets some development points every day. When it reaches some threshold,
 a new level is granted. This process is slow and player can sped it up by offloading
