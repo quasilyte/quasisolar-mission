@@ -329,6 +329,13 @@ Ways to get experience points:
 * Keeps 10 garrison ships for defense
 * Not attacked by any other race (but player can destroy them)
 
+Scavenger base activity:
+
+* Creates scavenger ships using its resources
+* Spawns a **raid unit** when it has enough vessels
+
+Scavenger bases get resources over time and by receiving resources from the raid units.
+
 ## Scavenger Raid Unit
 
 A small fleet of Scavenger ships that flies in a chaotic manner through the map.
