@@ -20,6 +20,7 @@ Weapons:
 * Point-Defense Laser
 * Zap
 * Pulse Laser
+* Assault Laser
 * Rocket Launcher
 * Cutter
 * Hurricane
@@ -37,6 +38,7 @@ Weapons:
 * Ion Cannon
 * Point-Defense Laser
 * Pulse Laser
+* Assault Laser
 * **Scythe**
 * **Great Scythe**
 * Rocket Launcher
@@ -71,6 +73,7 @@ Weapons:
 
 * Needle Gun
 * Cutter
+* Assault Laser
 * **Hellfire**
 * Stinger
 * **Disk Thrower**
@@ -105,6 +108,7 @@ Special weapons:
 | Reaper Cannon | Earthlings |
 | Zap | Earthlings, Wertu |
 | Cutter | Earthlings, Wertu, Zyth |
+| Assault Laser | Earthlings, Krigia, Zyth |
 | Great Scythe | Krigia |
 | Twin Proton Burst Cannon | Wertu |
 | Hurricane | Earthlings, Krigia |
