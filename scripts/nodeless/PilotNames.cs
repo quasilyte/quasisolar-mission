@@ -9,7 +9,7 @@ public static class PilotNames {
     }
 
     public static string PeekHumanName(HashSet<string> alreadyUsed = null) {
-        var i = GD.Randi() % humanNames.Length;
+        var i = QRandom.PositiveInt() % humanNames.Length;
         for (int attempt = 0; attempt < 5; attempt++) {
             var name = humanNames[i];
             if (alreadyUsed == null || !alreadyUsed.Contains(name)) {

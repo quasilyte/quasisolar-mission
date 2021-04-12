@@ -82,7 +82,7 @@ public static class VesselFactory {
 
         // 60% - assault laser
         // 40% - stinger
-        float weaponRoll = GD.Randf();
+        float weaponRoll = QRandom.Float();
         if (weaponRoll < 0.6) {
             v.weapons.Add(AssaultLaserWeapon.Design);
         } else {
@@ -91,14 +91,14 @@ public static class VesselFactory {
 
         // 70% - spread gun
         // 30% - rocket launcher
-        float weaponRoll2 = GD.Randf();
+        float weaponRoll2 = QRandom.Float();
         if (weaponRoll < 0.7) {
             v.weapons.Add(SpreadGunWeapon.Design);
         } else {
             v.weapons.Add(RocketLauncherWeapon.Design);
         }
 
-        var shieldRoll = GD.Randf();
+        var shieldRoll = QRandom.Float();
         if (shieldRoll < 0.25) {
             v.shield = DispersionFieldShield.Design;
         } else if (shieldRoll < 0.5) {
@@ -116,7 +116,7 @@ public static class VesselFactory {
         // 30% - zap
         // 20% - point-defense laser
         // 10% - spread gun
-        float weaponRoll = GD.Randf();
+        float weaponRoll = QRandom.Float();
         if (weaponRoll < 0.4) {
             v.weapons.Add(NeedleGunWeapon.Design);
         } else if (weaponRoll < 0.7) {
@@ -128,7 +128,7 @@ public static class VesselFactory {
         }
 
         // 30% - ion shield
-        var shieldRoll = GD.Randf();
+        var shieldRoll = QRandom.Float();
         if (shieldRoll < 0.3) {
             v.shield = IonCurtainShield.Design;
         }
@@ -143,7 +143,7 @@ public static class VesselFactory {
         // 15% - stinger
         // 15% - pulse laser
         // 10% - assault laser
-        float weaponRoll = GD.Randf();
+        float weaponRoll = QRandom.Float();
         if (weaponRoll < 0.3) {
             v.weapons.Add(RocketLauncherWeapon.Design);
         } else if (weaponRoll < 0.6) {
@@ -159,7 +159,7 @@ public static class VesselFactory {
         v.specialWeapon = DisruptorWeapon.Design;
 
         // 50% - ion shield
-        var shieldRoll = GD.Randf();
+        var shieldRoll = QRandom.Float();
         if (shieldRoll < 0.5) {
             v.shield = IonCurtainShield.Design;
         }
@@ -171,7 +171,7 @@ public static class VesselFactory {
 
         // 60% - spread gun
         // 40% - needle gun
-        float weaponRoll = GD.Randf();
+        float weaponRoll = QRandom.Float();
         if (weaponRoll < 0.6) {
             v.weapons.Add(SpreadGunWeapon.Design);
         } else {
@@ -183,7 +183,7 @@ public static class VesselFactory {
         v.design = VesselDesign.Find("Earthling", "Explorer");
         v.energySource = EnergySource.Find("Power Generator");
 
-        float weaponRoll = GD.Randf();
+        float weaponRoll = QRandom.Float();
         // 50% - ion cannon
         // 50% - needle gun
         if (weaponRoll < 0.5) {
@@ -197,7 +197,7 @@ public static class VesselFactory {
         v.design = VesselDesign.Find("Earthling", "Freighter");
         v.energySource = EnergySource.Find("Power Generator");
 
-        float weaponRoll = GD.Randf();
+        float weaponRoll = QRandom.Float();
         // 50% - ion cannon
         // 50% - needle gun
         if (weaponRoll < 0.5) {
@@ -211,7 +211,7 @@ public static class VesselFactory {
         v.design = VesselDesign.Find("Earthling", "Fighter");
         v.energySource = EnergySource.Find("Advanced Power Generator");
 
-        float weaponRoll = GD.Randf();
+        float weaponRoll = QRandom.Float();
         // 50% - ion cannon
         // 50% - zap
         if (weaponRoll < 0.5) {
@@ -221,7 +221,7 @@ public static class VesselFactory {
         }
         // 70% - pulse laser
         // 30% - needle gun
-        float weaponRoll2 = GD.Randf();
+        float weaponRoll2 = QRandom.Float();
         if (weaponRoll2 < 0.7) {
             v.weapons.Add(PulseLaserWeapon.Design);
         } else {
@@ -230,7 +230,7 @@ public static class VesselFactory {
 
         // 35% - heat shield
         // 25% - ion shield
-        var shieldRoll = GD.Randf();
+        var shieldRoll = QRandom.Float();
         if (shieldRoll < 0.35) {
             v.shield = HeatScreenShield.Design;
         } else if (shieldRoll < 0.6) {
@@ -242,7 +242,7 @@ public static class VesselFactory {
         v.design = VesselDesign.Find("Earthling", "Interceptor");
         v.energySource = EnergySource.Find("Vortex Battery");
 
-        float weaponRoll = GD.Randf();
+        float weaponRoll = QRandom.Float();
         // 50% - stinger
         // 30% - pulse laser
         // 20% - ion cannon
@@ -255,7 +255,7 @@ public static class VesselFactory {
         }
         // 80% - rocket launcher
         // 20% - zap
-        float weaponRoll2 = GD.Randf();
+        float weaponRoll2 = QRandom.Float();
         if (weaponRoll2 < 0.8) {
             v.weapons.Add(RocketLauncherWeapon.Design);
         } else {
@@ -265,7 +265,7 @@ public static class VesselFactory {
         // 20% - ion shield
         // 30% - heat shield
         // 20% - dispersion shield
-        var shieldRoll = GD.Randf();
+        var shieldRoll = QRandom.Float();
         if (shieldRoll < 0.2) {
             v.shield = IonCurtainShield.Design;
         } else if (shieldRoll < 0.5) {
@@ -290,7 +290,7 @@ public static class VesselFactory {
         // 30% - ion cannon
         // 25% - pulse laser
         // 15% - stinger
-        float weaponRoll = GD.Randf();
+        float weaponRoll = QRandom.Float();
         if (weaponRoll < 0.3) {
             v.weapons.Add(ScytheWeapon.Design);
         } else if (weaponRoll < 0.6) {
@@ -306,7 +306,7 @@ public static class VesselFactory {
         v.design = VesselDesign.Find("Krigia", "Claws");
         v.energySource = EnergySource.Find("Advanced Power Generator");
 
-        float weaponRoll = GD.Randf();
+        float weaponRoll = QRandom.Float();
         // 50% - pulse laser
         // 30% - ion cannon
         // 20% - point-defense laser
@@ -320,7 +320,7 @@ public static class VesselFactory {
         // 50% - rocket launcher
         // 40% - scythe
         // 10% - none
-        float weaponRoll2 = GD.Randf();
+        float weaponRoll2 = QRandom.Float();
         if (weaponRoll2 < 0.5) {
             v.weapons.Add(RocketLauncherWeapon.Design);
         } else if (weaponRoll2 < 0.9) {
@@ -329,7 +329,7 @@ public static class VesselFactory {
             // No second weapon.   
         }
 
-        if (GD.Randf() < 0.3) {
+        if (QRandom.Float() < 0.3) {
             v.shield = IonCurtainShield.Design;
         }
     }
@@ -338,7 +338,7 @@ public static class VesselFactory {
         v.design = VesselDesign.Find("Krigia", "Fangs");
         v.energySource = EnergySource.Find("Vortex Battery");
 
-        float weaponRoll = GD.Randf();
+        float weaponRoll = QRandom.Float();
         // 60% - pulse laser
         // 20% - assault laser
         // 20% - stinger
@@ -351,7 +351,7 @@ public static class VesselFactory {
         }
         // 70% - rocket launcher
         // 30% - scythe
-        float weaponRoll2 = GD.Randf();
+        float weaponRoll2 = QRandom.Float();
         if (weaponRoll2 < 0.7) {
             v.weapons.Add(RocketLauncherWeapon.Design);
         } else {
@@ -361,7 +361,7 @@ public static class VesselFactory {
         // 10% - ion shield
         // 20% - dispersion shield
         // 30% - reflector shield
-        var shieldRoll = GD.Randf();
+        var shieldRoll = QRandom.Float();
         if (shieldRoll < 0.1) {
             v.shield = IonCurtainShield.Design;
         } else if (shieldRoll < 0.3) {
@@ -374,11 +374,11 @@ public static class VesselFactory {
     private static void InitKrigiaTusks(Vessel v) {
         v.design = VesselDesign.Find("Krigia", "Tusks");
 
-        var roll = GD.Randf();
+        var roll = QRandom.Float();
         v.weapons.Add(StingerWeapon.Design);
         if (roll < 0.5) {
             v.energySource = EnergySource.Find("Radioisotope Generator");
-            float weaponRoll = GD.Randf();
+            float weaponRoll = QRandom.Float();
             if (weaponRoll < 0.5) {
                 v.weapons.Add(RocketLauncherWeapon.Design);
             } else {
@@ -386,7 +386,7 @@ public static class VesselFactory {
             }
         } else {
             v.energySource = EnergySource.Find("Cryogenic Block");
-            float weaponRoll = GD.Randf();
+            float weaponRoll = QRandom.Float();
             if (weaponRoll < 0.5) {
                 v.weapons.Add(GreatScytheWeapon.Design);
             } else {
@@ -394,7 +394,7 @@ public static class VesselFactory {
             }
         }
 
-        var specialRoll = GD.Randf();
+        var specialRoll = QRandom.Float();
         if (specialRoll < 0.4) {
             v.specialWeapon = TorpedoLauncherWeapon.Design;
         }
@@ -402,7 +402,7 @@ public static class VesselFactory {
         // 30% - ion shield
         // 20% - dispersion shield
         // 10% - reflector shield
-        var shieldRoll = GD.Randf();
+        var shieldRoll = QRandom.Float();
         if (shieldRoll < 0.3) {
             v.shield = IonCurtainShield.Design;
         } else if (shieldRoll < 0.5) {
@@ -416,7 +416,7 @@ public static class VesselFactory {
         v.design = VesselDesign.Find("Krigia", "Horns");
         v.energySource = EnergySource.Find("Graviton Generator");
 
-        float weaponRoll = GD.Randf();
+        float weaponRoll = QRandom.Float();
         // 50% - pulse laser
         // 50% - ion cannon
         if (weaponRoll < 0.5) {
@@ -426,7 +426,7 @@ public static class VesselFactory {
         }
         v.weapons.Add(PointDefenseLaserWeapon.Design);
 
-        var specialRoll = GD.Randf();
+        var specialRoll = QRandom.Float();
         if (specialRoll < 0.6) {
             v.specialWeapon = MortarWeapon.Design;
         } else {
@@ -436,7 +436,7 @@ public static class VesselFactory {
         // 20% - ion shield
         // 50% - dispersion shield
         // 30% - reflector shield
-        var shieldRoll = GD.Randf();
+        var shieldRoll = QRandom.Float();
         if (shieldRoll < 0.2) {
             v.shield = IonCurtainShield.Design;
         } else if (shieldRoll < 0.7) {
@@ -450,7 +450,7 @@ public static class VesselFactory {
         v.design = VesselDesign.Find("Krigia", "Ashes");
         v.energySource = EnergySource.Find("Singularial Reactor");
 
-        float weaponRoll = GD.Randf();
+        float weaponRoll = QRandom.Float();
 
         v.weapons.Add(LancerWeapon.Design);
         v.weapons.Add(HurricaneWeapon.Design);
@@ -461,7 +461,7 @@ public static class VesselFactory {
         // 20% - ion shield
         // 50% - dispersion shield
         // 30% - reflector shield
-        var shieldRoll = GD.Randf();
+        var shieldRoll = QRandom.Float();
         if (shieldRoll < 0.2) {
             v.shield = IonCurtainShield.Design;
         } else if (shieldRoll < 0.7) {
@@ -478,7 +478,7 @@ public static class VesselFactory {
         // 50% - photon burst cannon
         // 30% - zap
         // 20% - point-laser defense
-        float weaponRoll = GD.Randf();
+        float weaponRoll = QRandom.Float();
         if (weaponRoll < 0.5) {
             v.weapons.Add(PhotonBurstCannonWeapon.Design);
         } else if (weaponRoll < 0.8) {
@@ -496,7 +496,7 @@ public static class VesselFactory {
 
         // 40% - lattice
         // 40% - laser perimeter
-        var shieldRoll = GD.Randf();
+        var shieldRoll = QRandom.Float();
         if (shieldRoll < 0.4) {
             v.shield = LatticeShield.Design;
         } else if (shieldRoll < 0.8) {
@@ -508,7 +508,7 @@ public static class VesselFactory {
         v.design = VesselDesign.Find("Wertu", "Guardian");
         v.energySource = EnergySource.Find("Vortex Battery");
 
-        float weaponRoll = GD.Randf();
+        float weaponRoll = QRandom.Float();
         // 70% - photon burst cannon
         // 30% - twin photon burst cannon
         if (weaponRoll < 0.7) {
@@ -516,7 +516,7 @@ public static class VesselFactory {
         } else {
             v.weapons.Add(TwinPhotonBurstCannonWeapon.Design);
         }
-        var weaponRoll2 = GD.Randf();
+        var weaponRoll2 = QRandom.Float();
         // 40% - point-laser defense
         // 30% - cutter
         // 30% - shield breaker
@@ -532,7 +532,7 @@ public static class VesselFactory {
         // 20% - lattice
         // 20% - laser perimeter
         // 20% - heat screen
-        var shieldRoll = GD.Randf();
+        var shieldRoll = QRandom.Float();
         if (shieldRoll < 0.2) {
             v.shield = LatticeShield.Design;
         } else if (shieldRoll < 0.4) {
@@ -546,7 +546,7 @@ public static class VesselFactory {
         v.design = VesselDesign.Find("Wertu", "Angel");
         v.energySource = EnergySource.Find("Cryogenic Block");
 
-        float weaponRoll = GD.Randf();
+        float weaponRoll = QRandom.Float();
         // 60% - point-defense laser
         // 40% - twin photon burst cannon
         if (weaponRoll < 0.6) {
@@ -557,7 +557,7 @@ public static class VesselFactory {
 
         // 70% - cutter
         // 30% - shield breaker
-        var weaponRoll2 = GD.Randf();
+        var weaponRoll2 = QRandom.Float();
         if (weaponRoll < 0.7) {
             v.weapons.Add(CutterWeapon.Design);
         } else {
@@ -566,7 +566,7 @@ public static class VesselFactory {
         v.specialWeapon = RestructuringRayWeapon.Design;
 
         // 40% - heat screen
-        var shieldRoll = GD.Randf();
+        var shieldRoll = QRandom.Float();
         if (shieldRoll < 0.4) {
             v.shield = HeatScreenShield.Design;
         }
@@ -576,7 +576,7 @@ public static class VesselFactory {
         v.design = VesselDesign.Find("Wertu", "Dominator");
         v.energySource = EnergySource.Find("Singularial Reactor");
 
-        float weaponRoll = GD.Randf();
+        float weaponRoll = QRandom.Float();
         // 70% - shield breaker
         // 30% - twin photon burst cannon
         if (weaponRoll < 0.7) {
@@ -588,7 +588,7 @@ public static class VesselFactory {
 
         // 50% - lattice
         // 50% - laser perimeter
-        var shieldRoll = GD.Randf();
+        var shieldRoll = QRandom.Float();
         if (shieldRoll < 0.5) {
             v.shield = LatticeShield.Design;
         } else {
@@ -600,7 +600,7 @@ public static class VesselFactory {
         v.design = VesselDesign.Find("Zyth", "Hunter");
         v.energySource = EnergySource.Find("Advanced Power Generator");
 
-        var weaponRoll2 = GD.Randf();
+        var weaponRoll2 = QRandom.Float();
         if (weaponRoll2 < 0.5) {
             v.specialWeapon = HarpoonWeapon.Design;
         } else {
@@ -611,7 +611,7 @@ public static class VesselFactory {
         // 30% - cutter
         // 20% - assault laser
         // 10% - disk thrower
-        float weaponRoll = GD.Randf();
+        float weaponRoll = QRandom.Float();
         if (weaponRoll < 0.4) {
             v.weapons.Add(HellfireWeapon.Design);
         } else if (weaponRoll < 0.7) {
@@ -624,7 +624,7 @@ public static class VesselFactory {
 
         // 40% - ion shield
         // 20% - heat shield
-        var shieldRoll = GD.Randf();
+        var shieldRoll = QRandom.Float();
         if (shieldRoll < 0.4) {
             v.shield = IonCurtainShield.Design;
         } else if (shieldRoll < 0.6) {

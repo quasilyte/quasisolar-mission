@@ -205,14 +205,14 @@ public class Projectile : Node2D, IProjectile {
 
         var speed = _weapon.projectileSpeed;
         if (_weapon == HellfireWeapon.Design) {
-            speed += (float)GD.RandRange(-75, 75);
+            speed += QRandom.FloatRange(-75, 75);
             if (_hp < 100) {
                 var m = _sprite.Modulate;
                 _sprite.Modulate = new Color(m.r, m.g, m.b, m.a - 0.05f);
             } else if (_sprite.Scale.x < 1.0) {
                 _sprite.Scale = new Vector2(_sprite.Scale.x + delta*2, _sprite.Scale.y + delta*2);
             }
-            Rotation += (float)GD.RandRange(-0.08, 0.08);
+            Rotation += QRandom.FloatRange(-0.08f, 0.08f);
         }
 
         float traveled = speed * delta;

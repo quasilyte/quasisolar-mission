@@ -68,7 +68,7 @@ public class LightningProjectile : Node2D, IProjectile {
                 _target = null;
             }
             if (_target != null) {
-                var dstRotation = _target.Position.AngleToPoint(Position) + (float)GD.RandRange(-0.5, 0.5);
+                var dstRotation = _target.Position.AngleToPoint(Position) + QRandom.FloatRange(-0.5f, 0.5f);
                 var rotationDiff = QMath.RotationDiff(dstRotation, Rotation);
                 var rotationAmount = 0.40f;
                 if (Math.Abs(rotationDiff) >= rotationAmount) {

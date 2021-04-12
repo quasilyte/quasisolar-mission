@@ -49,7 +49,7 @@ public class HellfireWeapon : IWeapon {
             for (int i = 0; i < 3; i++) {
                 var projectile = Projectile.New(Design, _owner);
                 projectile.GlobalTransform = _owner.Vessel.GlobalTransform;
-                projectile.Rotation += (float)GD.RandRange(-0.15, 0.15);
+                projectile.Rotation += QRandom.FloatRange(-0.15f, 0.15f);
                 _owner.Vessel.GetParent().AddChild(projectile);
             }
         }

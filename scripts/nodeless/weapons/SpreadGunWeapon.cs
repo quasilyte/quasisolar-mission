@@ -40,7 +40,7 @@ public class SpreadGunWeapon : IWeapon {
         
         var projectile = Projectile.New(Design, _owner);
         projectile.GlobalTransform = _owner.Vessel.GlobalTransform;
-        projectile.Rotation += (float)GD.RandRange(-0.3, 0.3);
+        projectile.Rotation += QRandom.FloatRange(-0.3f, 0.3f);
         _owner.Vessel.GetParent().AddChild(projectile);
 
         var sfx = SoundEffectNode.New(GD.Load<AudioStream>("res://audio/weapon/Spread_Gun.wav"), -5);

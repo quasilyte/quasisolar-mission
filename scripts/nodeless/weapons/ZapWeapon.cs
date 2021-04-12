@@ -102,8 +102,8 @@ public class ZapWeapon : IWeapon {
 
         var spark = SparkExplosionNode.New();
         spark.Position = QMath.RandomizedLocation(zapTo, 8);
-        spark.Rotation = (float)GD.RandRange(0, 2);
-        var sparkScale = (float)GD.RandRange(0.7, 1.1);
+        spark.Rotation = QRandom.FloatRange(0, 2);
+        var sparkScale = QRandom.FloatRange(0.7f, 1.1f);
         spark.Scale = new Vector2(sparkScale, sparkScale);
         _owner.Vessel.GetParent().AddChild(spark);
     }

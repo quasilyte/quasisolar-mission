@@ -32,9 +32,9 @@ public class StarBase {
     public StarBase(StarSystem sys, Player player) {
         system = sys;
         owner = player;
-        mineralsStock = 70 + RpgGameState.rng.RandiRange(0, 30);
-        organicStock = 10 + RpgGameState.rng.RandiRange(0, 50);
-        powerStock = RpgGameState.rng.RandiRange(0, 50);
+        mineralsStock = 70 + QRandom.IntRange(0, 30);
+        organicStock = 10 + QRandom.IntRange(0, 50);
+        powerStock = QRandom.IntRange(0, 50);
     }
 
     public Vessel PopVessel() {

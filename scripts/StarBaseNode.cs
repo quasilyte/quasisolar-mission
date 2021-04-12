@@ -28,19 +28,19 @@ public class StarBaseNode : Node2D {
         var pointsGained = 1f;
         if (starBase.mineralsStock >= 200) {
             pointsGained++;
-            if (RpgGameState.rng.Randf() < 0.5) {
+            if (QRandom.Float() < 0.5) {
                 starBase.mineralsStock--;
             }
         }
         if (starBase.organicStock >= 100) {
             pointsGained++;
-            if (RpgGameState.rng.Randf() < 0.5) {
+            if (QRandom.Float() < 0.5) {
                 starBase.organicStock--;
             }
         }
         if (starBase.powerStock >= 150) {
             pointsGained++;
-            if (RpgGameState.rng.Randf() < 0.5) {
+            if (QRandom.Float() < 0.5) {
                 starBase.powerStock--;
             }
         }
@@ -60,7 +60,7 @@ public class StarBaseNode : Node2D {
         // 20% consume power
         // 25% produce mineral
         // 10% produce power
-        var resourcesRoll = RpgGameState.rng.Randf();
+        var resourcesRoll = QRandom.Float();
         if (resourcesRoll < 0.35f) {
             starBase.mineralsStock = QMath.ClampMin(starBase.mineralsStock - 1, 0);
         } else if (resourcesRoll < 0.45f) {
@@ -99,7 +99,7 @@ public class StarBaseNode : Node2D {
         }
 
         starBase.mineralsStock--;
-        if (RpgGameState.rng.Randf() < 0.5) {
+        if (QRandom.Float() < 0.5) {
             starBase.powerStock--;
         }
 

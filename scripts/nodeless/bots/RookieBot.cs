@@ -113,7 +113,7 @@ class RookieBot : AbstractBot {
             return;
         }
 
-        var roll = GD.Randf();
+        var roll = QRandom.Float();
         if (TargetDistance() > 300 && roll < 5 && numActiveEnemies() > 1) {
             var closest = QMath.NearestEnemy(_vessel.Position, _pilot);
             if (closest != _currentTarget) {
@@ -297,7 +297,7 @@ class RookieBot : AbstractBot {
         }
 
         Vector2 cursor;
-        var snipeRoll = design.botHintSnipe == 0 ? 100 : GD.Randf();
+        var snipeRoll = design.botHintSnipe == 0 ? 100 : QRandom.Float();
         if (snipeRoll <= design.botHintSnipe) {
             var targetPos = TargetPosition();
             var dist = targetPos.DistanceTo(_vessel.Position);
@@ -348,7 +348,7 @@ class RookieBot : AbstractBot {
             return;
         }
 
-        if (QMath.RandBool()) {
+        if (QRandom.Bool()) {
             MaybeUseWeapon(0);
             MaybeUseWeapon(1);
         } else {

@@ -25,6 +25,8 @@ Weapon ideas:
 
 Special weapon idea:
 - afterburner: adds speed, leaves fire trail that can damage foes
+- a weapon that follows the crosshair
+- a weapon with charges
 
 */
 
@@ -171,9 +173,11 @@ public class Arena : Node2D {
     }
 
     public override void _Ready() {
-        GetNode<BackgroundMusic>("/root/BackgroundMusic").PlayBattleMusic();
+        var rng = new RandomNumberGenerator();
+        rng.Randomize();
+        QRandom.SetRandomNumberGenerator(rng);
 
-        GD.Randomize();
+        GetNode<BackgroundMusic>("/root/BackgroundMusic").PlayBattleMusic();
 
         if (ArenaSettings.speed != ArenaSettings.BattleSpeed.Normal) {
             if (ArenaSettings.speed == ArenaSettings.BattleSpeed.Slow) {
@@ -232,7 +236,7 @@ public class Arena : Node2D {
                     return;
                 }
             } else {
-                var roll = RpgGameState.rng.RandfRange(0.8f, 1.2f);
+                var roll = QRandom.FloatRange(0.8f, 1.2f);
                 var debris = (int)((float)p.Vessel.State.debris * roll);
                 if (p.player == RpgGameState.krigiaPlayer) {
                     result.krigiaDebris += debris;
@@ -318,19 +322,19 @@ public class Arena : Node2D {
         var screenWidth = GetTree().Root.Size.x;
         var screenHeight = GetTree().Root.Size.y;
         var asteroid = Asteroid.New();
-        uint side = GD.Randi() % 4;
+        int side = QRandom.IntRange(0, 3);
         if (side == 0) { // Right
-            asteroid.Position = new Vector2(screenWidth - 20, GD.Randf() * screenHeight);
-            asteroid.RotationDegrees = 160 + GD.Randf() * 40;
+            asteroid.Position = new Vector2(screenWidth - 20, QRandom.Float() * screenHeight);
+            asteroid.RotationDegrees = 160 + QRandom.Float() * 40;
         } else if (side == 1) { // Up
-            asteroid.Position = new Vector2(GD.Randf() * screenWidth, 20);
-            asteroid.RotationDegrees = 70 + GD.Randf() * 40;
+            asteroid.Position = new Vector2(QRandom.Float() * screenWidth, 20);
+            asteroid.RotationDegrees = 70 + QRandom.Float() * 40;
         } else if (side == 2) { // Left
-            asteroid.Position = new Vector2(20, GD.Randf() * screenHeight);
-            asteroid.RotationDegrees = -20 + GD.Randf() * 40;
+            asteroid.Position = new Vector2(20, QRandom.Float() * screenHeight);
+            asteroid.RotationDegrees = -20 + QRandom.Float() * 40;
         } else { // Down
-            asteroid.Position = new Vector2(GD.Randf() * screenWidth, screenHeight - 20);
-            asteroid.RotationDegrees = 250 + GD.Randf() * 40;
+            asteroid.Position = new Vector2(QRandom.Float() * screenWidth, screenHeight - 20);
+            asteroid.RotationDegrees = 250 + QRandom.Float() * 40;
         }
         asteroid.AddToGroup("asteroids");
         AddChild(asteroid);

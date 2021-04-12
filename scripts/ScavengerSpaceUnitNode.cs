@@ -54,7 +54,7 @@ public class ScavengerSpaceUnitNode : SpaceUnitNode {
 
         if (unit.botSystemLeaveDelay == 0) {
             var destinationOptions = RpgGameState.starSystemConnections[_currentSystem];
-            var nextSystem = destinationOptions[Math.Abs((int)RpgGameState.rng.Randi()) % destinationOptions.Count];
+            var nextSystem = QRandom.Element(destinationOptions);
             _currentSystem = null;
             unit.waypoint = nextSystem.pos;
             _canBeDetected = true;
@@ -76,7 +76,7 @@ public class ScavengerSpaceUnitNode : SpaceUnitNode {
 
         var starBase = _currentSystem.starBase;
         if (starBase == null || starBase.owner == RpgGameState.scavengerPlayer) {
-            unit.botSystemLeaveDelay = RpgGameState.rng.RandiRange(8, 32);
+            unit.botSystemLeaveDelay = QRandom.IntRange(8, 32);
             _canBeDetected = false;
             return;
         }
@@ -93,7 +93,7 @@ public class ScavengerSpaceUnitNode : SpaceUnitNode {
         }
 
         Func<int, int> collectAmount = (int resources) => {
-            var roll = RpgGameState.rng.RandiRange(2, 10);
+            var roll = QRandom.IntRange(2, 10);
             var collected = QMath.ClampMax(QMath.ClampMin(roll, cargoFree), resources);
             cargoFree -= collected;
             return collected;

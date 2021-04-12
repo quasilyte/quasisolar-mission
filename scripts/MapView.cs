@@ -67,6 +67,7 @@ public class MapView : Node2D {
     }
 
     public override void _Ready() {
+        QRandom.SetRandomNumberGenerator(RpgGameState.rng);
         GetNode<BackgroundMusic>("/root/BackgroundMusic").PlayMapMusic();
 
         RenderMap();
@@ -288,7 +289,7 @@ public class MapView : Node2D {
     }
 
     private RandomEventContext NewRandomEventContext() {
-        return new RandomEventContext { roll = RpgGameState.rng.Randf() };
+        return new RandomEventContext { roll = QRandom.Float() };
     }
 
     private void OnCheatsDone() {
@@ -395,7 +396,7 @@ public class MapView : Node2D {
             case RandomEvent.EffectKind.AddFleetBackupEnergyPercentage: {
                     var randRange = (Vector2)effect.value;
                     foreach (var v in RpgGameState.humanUnit.fleet) {
-                        var roll = RpgGameState.rng.RandfRange(randRange.x, randRange.y);
+                        var roll = QRandom.FloatRange(randRange.x, randRange.y);
                         v.energy = QMath.ClampMin(v.energy - v.energy * roll, 0);
                     }
                     return;
@@ -406,7 +407,7 @@ public class MapView : Node2D {
                         if (v.hp < 2) {
                             continue;
                         }
-                        var damageRoll = RpgGameState.rng.RandfRange(randRange.x, randRange.y);
+                        var damageRoll = QRandom.FloatRange(randRange.x, randRange.y);
                         v.hp -= v.hp * damageRoll;
                     }
                     return;
@@ -773,8 +774,8 @@ public class MapView : Node2D {
         if (RpgGameState.randomEventCooldown == 0 && sys.randomEventCooldown == 0) {
             MaybeTriggerEnterSystemEvent(sys);
             // TODO: should depend on the game settings.
-            sys.randomEventCooldown += RpgGameState.rng.RandiRange(250, 450);
-            RpgGameState.randomEventCooldown += RpgGameState.rng.RandiRange(100, 150);
+            sys.randomEventCooldown += QRandom.IntRange(250, 450);
+            RpgGameState.randomEventCooldown += QRandom.IntRange(100, 150);
         }
     }
 
@@ -797,7 +798,7 @@ public class MapView : Node2D {
             return;
         }
 
-        _randomEvent = enterSystemEvents[Math.Abs((int)RpgGameState.rng.Randi()) % enterSystemEvents.Count];
+        _randomEvent = QRandom.Element(enterSystemEvents);
         RpgGameState.randomEventsAvailable.Remove(_randomEvent);
         OpenRandomEvent();
     }
@@ -954,7 +955,7 @@ public class MapView : Node2D {
         }
 
         if (RpgGameState.scienceFunds > 0) {
-            var roll = RpgGameState.rng.RandiRange(5, 20);
+            var roll = QRandom.IntRange(5, 20);
             RpgGameState.scienceFunds = QMath.ClampMin(RpgGameState.scienceFunds - roll, 0);
         }
 
@@ -1194,13 +1195,13 @@ public class MapView : Node2D {
         }
 
         if (RpgGameState.mapState.mode != UnitMode.Attack) {
-            var roll = RpgGameState.rng.Randf();
+            var roll = QRandom.Float();
             if (roll >= 0.25) {
                 return;
             }
         }
 
-        var numAttackersRoll = RpgGameState.rng.Randf();
+        var numAttackersRoll = QRandom.Float();
         int numAttackers = 4;
         if (numAttackersRoll < 0.5) {
             numAttackers = 3;

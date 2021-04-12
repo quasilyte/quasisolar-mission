@@ -16,7 +16,7 @@ public class ResourcePlanet {
         organicPerDay = organic;
         mineralsPerDay = minerals;
 
-        var nameRoll = RpgGameState.rng.Randi();
+        var nameRoll = QRandom.PositiveInt();
         if (power > 0) {
             name = powerWorlds[nameRoll % powerWorlds.Length] + " World";
         } else if (organic > 0) {

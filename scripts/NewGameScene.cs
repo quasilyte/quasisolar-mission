@@ -179,8 +179,8 @@ public class NewGameScene : Node2D {
         var seed = GameSeed();
         GD.Print($"game seed = {seed}");
 
-        GD.Randomize();
         RpgGameState.Reset(seed);
+        QRandom.SetRandomNumberGenerator(RpgGameState.rng);
 
         InitBaseValues();
         GenerateWorld();
@@ -212,7 +212,7 @@ public class NewGameScene : Node2D {
 
     private StarSystem.Color RandomStarSystemColor() {
         var colorValues = Enum.GetValues(typeof(StarSystem.Color));
-        var colorRoll = RpgGameState.rng.Randi() % colorValues.Length;
+        var colorRoll = QRandom.IntRange(0, colorValues.Length - 1);
         return (StarSystem.Color)colorValues.GetValue(colorRoll);
     }
 
@@ -285,8 +285,8 @@ public class NewGameScene : Node2D {
 
     private static Vector2 RandomizedLocation(Vector2 loc, float size) {
         var halfSize = size / 2;
-        float x = loc.x + RpgGameState.rng.RandfRange(-halfSize, halfSize);
-        float y = loc.y + RpgGameState.rng.RandfRange(-halfSize, halfSize);
+        float x = loc.x + QRandom.FloatRange(-halfSize, halfSize);
+        float y = loc.y + QRandom.FloatRange(-halfSize, halfSize);
         return new Vector2(x, y);
     }
 
@@ -295,8 +295,8 @@ public class NewGameScene : Node2D {
         var result = Vector2.Zero;
         while (true) {
             attempts++;
-            var dist = RpgGameState.rng.RandfRange(175, 500);
-            var toBeConnected = sector.systems[Math.Abs((int)RpgGameState.rng.Randi()) % sector.systems.Count];
+            var dist = QRandom.FloatRange(175, 500);
+            var toBeConnected = QRandom.Element(sector.systems);
             var candidate = RandomizedLocation(toBeConnected.pos, dist);
             if (!rect.HasPoint(candidate)) {
                 continue;
@@ -330,7 +330,7 @@ public class NewGameScene : Node2D {
         const float powerCost = 0.21f;
 
         while (budget >= mineralCost) {
-            var resourceType = RpgGameState.rng.RandiRange(0, 2);
+            var resourceType = QRandom.IntRange(0, 2);
             if (resourceType == 2 && budget >= powerCost) {
                 budget -= powerCost;
                 power++;
@@ -396,7 +396,7 @@ public class NewGameScene : Node2D {
             if (fleet.Count == StarBase.maxGarrisonSize) {
                 break; // FIXME: do a better job at spending the budget
             }
-            var roll = RpgGameState.rng.Randf();
+            var roll = QRandom.Float();
             for (int i = templates.Length - 1; i >= 0; i--) {
                 var _template = templates[i];
                 if (roll < _template.roll) {
@@ -437,14 +437,14 @@ public class NewGameScene : Node2D {
 
     private void DeployBases(Player player, int numBases, Sector[] sectors, VesselTemplate[] templates) {
         while (numBases > 0) {
-            var col = RpgGameState.rng.RandiRange(1, numMapCols - 1);
-            var row = RpgGameState.rng.RandiRange(0, 1);
+            var col = QRandom.IntRange(1, numMapCols - 1);
+            var row = QRandom.IntRange(0, 1);
             var i = row * numMapCols + col;
             var sector = sectors[i];
-            var j = RpgGameState.rng.RandiRange(0, sector.systems.Count - 1);
+            var j = QRandom.IntRange(0, sector.systems.Count - 1);
             if (sector.systems[j].starBase == null) {
                 var fleetRollBonus = (float)col * 20;
-                var fleetRoll = RpgGameState.rng.RandfRange(40, 80) + fleetRollBonus;
+                var fleetRoll = QRandom.FloatRange(40, 80) + fleetRollBonus;
                 var starBase = new StarBase(sector.systems[j], player);
                 InitFleet(starBase, templates, fleetRoll);
                 sector.systems[j].starBase = starBase;
@@ -461,7 +461,7 @@ public class NewGameScene : Node2D {
         };
 
         var planetsRollBonus = (float)OptionIntValue("PlanetResources") * 0.20f;
-        var planetsBudget = RpgGameState.rng.RandfRange(0, 0.6f) + planetsRollBonus;
+        var planetsBudget = QRandom.FloatRange(0, 0.6f) + planetsRollBonus;
         if (planetsBudget < 0.1) {
             sys.resourcePlanets = new List<ResourcePlanet>{
                 new ResourcePlanet(1, 0, 0),
@@ -472,7 +472,7 @@ public class NewGameScene : Node2D {
                     sys.resourcePlanets.Add(NewResourcePlanet(planetsBudget));
                     break;
                 }
-                var toSpend = RpgGameState.rng.RandfRange(0.1f, planetsBudget);
+                var toSpend = QRandom.FloatRange(0.1f, planetsBudget);
                 if (toSpend > 0.6) {
                     var change = toSpend - 0.6f;
                     planetsBudget += change;
@@ -489,7 +489,7 @@ public class NewGameScene : Node2D {
     private void GenerateWorld() {
         // Player always starts in the left part of the map.
         var startingCol = 0;
-        var startingRow = RpgGameState.rng.RandiRange(0, 1);
+        var startingRow = QRandom.IntRange(0, 1);
         var startingSector = startingCol + startingRow * numMapCols;
 
         var sectors = new Sector[8];
@@ -506,7 +506,7 @@ public class NewGameScene : Node2D {
                 var color = RandomStarSystemColor();
                 sector.systems.Add(NewStarSystem(starSystenNames, RandomizedLocation(middle, 120)));
 
-                for (int j = 0; j < RpgGameState.rng.RandiRange(2, 4); j++) {
+                for (int j = 0; j < QRandom.IntRange(2, 4); j++) {
                     sector.systems.Add(NewStarSystem(starSystenNames, RandomStarSystemPosition(rect, sector)));
                 }
             }
@@ -520,9 +520,9 @@ public class NewGameScene : Node2D {
             new ResourcePlanet(1, 0, 0),
         };
 
-        var numKrigiaBases = RpgGameState.rng.RandiRange(7, 10) + OptionIntValue("KrigiaPresence");
-        var numWertuBases = RpgGameState.rng.RandiRange(3, 4);
-        var numZythBases = RpgGameState.rng.RandiRange(2, 3);
+        var numKrigiaBases = QRandom.IntRange(7, 10) + OptionIntValue("KrigiaPresence");
+        var numWertuBases = QRandom.IntRange(3, 4);
+        var numZythBases = QRandom.IntRange(2, 3);
         GD.Print($"deployed {numKrigiaBases} Krigia bases");
         GD.Print($"deployed {numWertuBases} Wertu bases");
         GD.Print($"deployed {numZythBases} Zyth bases");
@@ -542,7 +542,7 @@ public class NewGameScene : Node2D {
         {
             var secondSector = startingRow == 0 ? numMapCols : 0;
             var sector = sectors[secondSector];
-            var roll = RpgGameState.rng.RandfRange(35, 55);
+            var roll = QRandom.FloatRange(35, 55);
             sector.systems[0].starBase = new StarBase(sector.systems[0], RpgGameState.krigiaPlayer);
             InitKrigiaFleet(sector.systems[0].starBase, roll);
             sector.systems[1].starBase = new StarBase(sector.systems[1], RpgGameState.scavengerPlayer);
@@ -605,7 +605,7 @@ public class NewGameScene : Node2D {
         // var artifacts
         foreach (var art in ArtifactDesign.list) {
             while (true) {
-                var sys = RpgGameState.starSystems[Math.Abs((int)RpgGameState.rng.Randi()) % RpgGameState.starSystems.Count];
+                var sys = QRandom.Element(RpgGameState.starSystems);
                 if (sys.artifact != null) {
                     continue;
                 }
@@ -613,7 +613,7 @@ public class NewGameScene : Node2D {
                     continue;
                 }
                 sys.artifact = art;
-                sys.artifactRecoveryDelay = RpgGameState.rng.RandiRange(10, 40);
+                sys.artifactRecoveryDelay = QRandom.IntRange(10, 40);
                 GD.Print("placed " + art.name + " in " + sys.name + " with " + sys.artifactRecoveryDelay + " recovery delay");
                 break;
             }   

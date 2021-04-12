@@ -48,7 +48,7 @@ public class StormbringerWeapon : IWeapon {
         var lightningLine = LightningLine.New();
         var projectile = LightningProjectile.New(lightningLine, _owner, target);
         projectile.Position = _owner.Vessel.Position;
-        projectile.Rotation = _owner.Vessel.Rotation + (float)GD.RandRange(-0.4, 0.4);
+        projectile.Rotation = _owner.Vessel.Rotation + QRandom.FloatRange(-0.4f, 0.4f);
         _owner.Vessel.GetParent().AddChild(projectile);
         _owner.Vessel.GetParent().AddChild(lightningLine);
     

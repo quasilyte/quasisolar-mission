@@ -10,14 +10,14 @@ public static class StarSystemNames {
 
     public static string PeekStarSystemName(HashSet<string> alreadyUsed = null) {
         while (true) {
-            var name = _names[GD.Randi() % _names.Length];
+            var name = QRandom.Element(_names);
             if (alreadyUsed == null || !alreadyUsed.Contains(name)) {
                 return name;
             }
         }
     }
 
-    private static string[] _names = new string[]{
+    private static List<string> _names = new List<string>{
         "Wolf",
 
         "Acephalia",

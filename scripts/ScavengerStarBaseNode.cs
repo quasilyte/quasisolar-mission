@@ -35,7 +35,7 @@ public class ScavengerStarBaseNode : StarBaseNode {
     }
 
     private void ProcessResources() {
-        var resourceRoll = RpgGameState.rng.Randf();
+        var resourceRoll = QRandom.Float();
         if (resourceRoll < 0.2) {
             starBase.mineralsStock++;
         } else if (resourceRoll < 0.3) {
@@ -61,7 +61,7 @@ public class ScavengerStarBaseNode : StarBaseNode {
             starBase.productionQueue.Enqueue(VesselDesign.Find("Scavenger", "Marauder"));
             return;
         }
-        var roll = RpgGameState.rng.Randf();
+        var roll = QRandom.Float();
         if (roll < 0.6) {
             starBase.productionQueue.Enqueue(VesselDesign.Find("Scavenger", "Raider"));
         } else {
@@ -83,7 +83,7 @@ public class ScavengerStarBaseNode : StarBaseNode {
             pos = starBase.system.pos,
         };
 
-        var groupSize = RpgGameState.rng.RandiRange(1, 2);
+        var groupSize = QRandom.IntRange(1, 2);
         for (int i = 0; i < groupSize; i++) {
             spaceUnit.fleet.Add(starBase.PopVessel());
         }

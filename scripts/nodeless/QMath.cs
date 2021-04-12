@@ -32,13 +32,9 @@ static class QMath {
         return rotationDiff;
     }
 
-    public static bool RandBool() {
-        return (GD.Randi() & 1) != 0;
-    }
-
     public static Vector2 RandomizedLocation(Vector2 loc, float size) {
-        float x = loc.x + (float)GD.RandRange(-size, size);
-        float y = loc.y + (float)GD.RandRange(-size, size);
+        float x = loc.x + QRandom.FloatRange(-size, size);
+        float y = loc.y + QRandom.FloatRange(-size, size);
         return new Vector2(x, y);
     }
 

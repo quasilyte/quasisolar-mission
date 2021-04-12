@@ -245,6 +245,10 @@ public class QuickBattleMenu : Node2D {
     }
 
     public override void _Ready() {
+        var rng = new RandomNumberGenerator();
+        rng.Randomize();
+        QRandom.SetRandomNumberGenerator(rng);
+
         GetNode<BackgroundMusic>("/root/BackgroundMusic").PlayOutfitMusic();
 
         Engine.TimeScale = 1.0f;

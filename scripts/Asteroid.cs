@@ -16,7 +16,7 @@ public class Asteroid : Node2D {
     }
 
     public override void _Ready() {
-        _velocity = Transform.x * (_speed + GD.Randf() * 30);
+        _velocity = Transform.x * (_speed + QRandom.Float() * 30);
 
         var area = GetNode<Area2D>("Area2D");
         area.Connect("area_entered", this, nameof(OnCollision));
