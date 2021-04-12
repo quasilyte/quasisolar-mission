@@ -59,6 +59,7 @@ Weapons:
 * Point-Laser Defense
 * Zap
 * Cutter
+* **Shield Breaker**
 * **Twin Photon Burst Cannon**
 * **Plasma Emitter**
 
@@ -112,6 +113,7 @@ Special weapons:
 | Great Scythe | Krigia |
 | Twin Proton Burst Cannon | Wertu |
 | Hurricane | Earthlings, Krigia |
+| Shield Breaker | Wertu |
 | Restructuring Ray | Wertu |
 | Stinger | Krigia, Zyth |
 | Crystal Cannon | ? |
