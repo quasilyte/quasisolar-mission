@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://theme.tres" type="Theme" id=1]
+[ext_resource path="res://scripts/DamageScoreNode.cs" type="Script" id=2]
+[ext_resource path="res://images/shield.png" type="Texture" id=3]
+
+[node name="DamageScoreNode" type="Node2D"]
+z_index = 10
+z_as_relative = false
+script = ExtResource( 2 )
+
+[node name="Value" type="Label" parent="."]
+margin_left = -32.0
+margin_top = -16.0
+margin_right = 32.0
+margin_bottom = 16.0
+theme = ExtResource( 1 )
+text = "10"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Shield" type="Sprite" parent="."]
+visible = false
+texture = ExtResource( 3 )

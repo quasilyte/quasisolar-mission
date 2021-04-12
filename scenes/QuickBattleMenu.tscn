@@ -1,0 +1,506 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://images/bg/starbase_bg.png" type="Texture" id=1]
+[ext_resource path="res://scripts/QuickBattleMenu.cs" type="Script" id=2]
+[ext_resource path="res://theme.tres" type="Theme" id=3]
+[ext_resource path="res://fonts/droidmono30.tres" type="DynamicFont" id=4]
+[ext_resource path="res://fonts/droidmono18.tres" type="DynamicFont" id=5]
+
+[node name="QuickBattleMenu" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Background" type="TextureRect" parent="."]
+margin_right = 1920.0
+margin_bottom = 1080.0
+rect_pivot_offset = Vector2( 664.976, 336.505 )
+mouse_filter = 2
+texture = ExtResource( 1 )
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="StartBattleButton" type="Button" parent="."]
+margin_left = 160.0
+margin_top = 960.0
+margin_right = 416.0
+margin_bottom = 1024.0
+theme = ExtResource( 3 )
+text = "Start Battle"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BackButton" type="Button" parent="."]
+margin_left = 1104.0
+margin_top = 960.0
+margin_right = 1360.0
+margin_bottom = 1024.0
+theme = ExtResource( 3 )
+text = "Back"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="WeaponHeader" type="Label" parent="."]
+margin_left = 224.0
+margin_top = 160.0
+margin_right = 350.0
+margin_bottom = 196.0
+theme = ExtResource( 3 )
+custom_fonts/font = ExtResource( 4 )
+text = "Weapons"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HullHeader" type="Label" parent="."]
+margin_left = 752.0
+margin_top = 160.0
+margin_right = 860.0
+margin_bottom = 196.0
+custom_fonts/font = ExtResource( 4 )
+text = "Vessel"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PlayerHeader" type="Label" parent="."]
+margin_left = 1568.0
+margin_top = 160.0
+margin_right = 1694.0
+margin_bottom = 196.0
+custom_fonts/font = ExtResource( 4 )
+text = "Players"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TotalCostLabel" type="Label" parent="."]
+margin_left = 208.0
+margin_top = 800.0
+margin_right = 329.0
+margin_bottom = 832.0
+theme = ExtResource( 3 )
+custom_fonts/font = ExtResource( 5 )
+text = "Total Cost:"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TotalCostValue" type="Label" parent="."]
+margin_left = 352.0
+margin_top = 800.0
+margin_right = 448.0
+margin_bottom = 832.0
+theme = ExtResource( 3 )
+custom_fonts/font = ExtResource( 5 )
+text = "0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="WeaponSelectQ" type="OptionButton" parent="."]
+margin_left = 160.0
+margin_top = 224.0
+margin_right = 416.0
+margin_bottom = 288.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="WeaponSelectQ"]
+margin_left = 272.0
+margin_top = 16.0
+margin_right = 304.0
+margin_bottom = 52.0
+custom_fonts/font = ExtResource( 4 )
+text = "Q"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PlayerTab" type="OptionButton" parent="."]
+margin_left = 160.0
+margin_top = 64.0
+margin_right = 416.0
+margin_bottom = 128.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="PlayerTab"]
+margin_left = 272.0
+margin_top = 16.0
+margin_right = 464.0
+margin_bottom = 52.0
+custom_fonts/font = ExtResource( 4 )
+text = "Player Tab"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VesselSelect" type="OptionButton" parent="."]
+margin_left = 720.0
+margin_top = 224.0
+margin_right = 976.0
+margin_bottom = 288.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ArtifactSelect2" type="OptionButton" parent="."]
+margin_left = 1104.0
+margin_top = 352.0
+margin_right = 1360.0
+margin_bottom = 416.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ArtifactSelect3" type="OptionButton" parent="."]
+margin_left = 1104.0
+margin_top = 480.0
+margin_right = 1360.0
+margin_bottom = 544.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ArtifactHeader" type="Label" parent="."]
+margin_left = 1168.0
+margin_top = 160.0
+margin_right = 1330.0
+margin_bottom = 196.0
+custom_fonts/font = ExtResource( 4 )
+text = "Artifacts"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ArtifactSelect1" type="OptionButton" parent="."]
+margin_left = 1104.0
+margin_top = 224.0
+margin_right = 1360.0
+margin_bottom = 288.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EnergySourceSelect" type="OptionButton" parent="."]
+margin_left = 1104.0
+margin_top = 656.0
+margin_right = 1360.0
+margin_bottom = 720.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="EnergySourceSelect"]
+margin_left = 16.0
+margin_top = -64.0
+margin_right = 250.0
+margin_bottom = -28.0
+custom_fonts/font = ExtResource( 4 )
+text = "Energy Source"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ShieldSelect" type="OptionButton" parent="."]
+margin_left = 160.0
+margin_top = 656.0
+margin_right = 416.0
+margin_bottom = 720.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="ShieldSelect"]
+margin_left = 16.0
+margin_top = -64.0
+margin_right = 250.0
+margin_bottom = -28.0
+custom_fonts/font = ExtResource( 4 )
+text = "Shield"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PlayerSelect1" type="OptionButton" parent="."]
+margin_left = 1472.0
+margin_top = 224.0
+margin_right = 1728.0
+margin_bottom = 288.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpinBox" type="SpinBox" parent="PlayerSelect1"]
+margin_left = 272.0
+margin_top = 16.0
+margin_right = 352.0
+margin_bottom = 48.0
+min_value = 1.0
+max_value = 6.0
+value = 1.0
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PlayerSelect2" type="OptionButton" parent="."]
+margin_left = 1472.0
+margin_top = 352.0
+margin_right = 1728.0
+margin_bottom = 416.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpinBox" type="SpinBox" parent="PlayerSelect2"]
+margin_left = 272.0
+margin_top = 16.0
+margin_right = 352.0
+margin_bottom = 48.0
+min_value = 1.0
+max_value = 6.0
+value = 2.0
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PlayerSelect3" type="OptionButton" parent="."]
+margin_left = 1472.0
+margin_top = 480.0
+margin_right = 1728.0
+margin_bottom = 544.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpinBox" type="SpinBox" parent="PlayerSelect3"]
+margin_left = 272.0
+margin_top = 16.0
+margin_right = 352.0
+margin_bottom = 48.0
+min_value = 1.0
+max_value = 6.0
+value = 2.0
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PlayerSelect4" type="OptionButton" parent="."]
+margin_left = 1472.0
+margin_top = 608.0
+margin_right = 1728.0
+margin_bottom = 672.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpinBox" type="SpinBox" parent="PlayerSelect4"]
+margin_left = 272.0
+margin_top = 16.0
+margin_right = 352.0
+margin_bottom = 48.0
+min_value = 1.0
+max_value = 6.0
+value = 2.0
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PlayerSelect5" type="OptionButton" parent="."]
+margin_left = 1472.0
+margin_top = 736.0
+margin_right = 1728.0
+margin_bottom = 800.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpinBox" type="SpinBox" parent="PlayerSelect5"]
+margin_left = 272.0
+margin_top = 16.0
+margin_right = 352.0
+margin_bottom = 48.0
+min_value = 1.0
+max_value = 6.0
+value = 2.0
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PlayerSelect6" type="OptionButton" parent="."]
+margin_left = 1472.0
+margin_top = 864.0
+margin_right = 1728.0
+margin_bottom = 928.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpinBox" type="SpinBox" parent="PlayerSelect6"]
+margin_left = 272.0
+margin_top = 16.0
+margin_right = 352.0
+margin_bottom = 48.0
+min_value = 1.0
+max_value = 6.0
+value = 2.0
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GameSpeedSelect" type="OptionButton" parent="."]
+margin_left = 480.0
+margin_top = 960.0
+margin_right = 736.0
+margin_bottom = 1024.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="GameSpeedSelect"]
+margin_left = 272.0
+margin_top = 16.0
+margin_right = 288.0
+margin_bottom = 32.0
+custom_fonts/font = ExtResource( 4 )
+text = "Game Speed"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="WeaponSelectW" type="OptionButton" parent="."]
+margin_left = 160.0
+margin_top = 352.0
+margin_right = 416.0
+margin_bottom = 416.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="WeaponSelectW"]
+margin_left = 272.0
+margin_top = 16.0
+margin_right = 304.0
+margin_bottom = 52.0
+custom_fonts/font = ExtResource( 4 )
+text = "W"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpecialWeaponSelect" type="OptionButton" parent="."]
+margin_left = 160.0
+margin_top = 480.0
+margin_right = 416.0
+margin_bottom = 544.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="SpecialWeaponSelect"]
+margin_left = 272.0
+margin_top = 16.0
+margin_right = 304.0
+margin_bottom = 52.0
+custom_fonts/font = ExtResource( 4 )
+text = "E"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HelpPanel" type="Panel" parent="."]
+modulate = Color( 1, 1, 1, 0.862745 )
+margin_left = 512.0
+margin_top = 416.0
+margin_right = 1024.0
+margin_bottom = 720.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HelpText" type="Label" parent="HelpPanel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 16.0
+margin_top = 16.0
+margin_right = -16.0
+margin_bottom = -16.0
+size_flags_vertical = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AsteroidSelect" type="SpinBox" parent="."]
+margin_left = 352.0
+margin_top = 848.0
+margin_right = 509.0
+margin_bottom = 880.0
+theme = ExtResource( 3 )
+max_value = 10.0
+value = 1.0
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="AsteroidSelect"]
+margin_left = -144.0
+margin_right = -24.0
+margin_bottom = 32.0
+theme = ExtResource( 3 )
+custom_fonts/font = ExtResource( 5 )
+text = "Asteroids:"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpritePanel" type="Panel" parent="."]
+margin_left = 560.0
+margin_top = 192.0
+margin_right = 688.0
+margin_bottom = 320.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VesselPreview" type="Sprite" parent="SpritePanel"]
+position = Vector2( 64, 64 )
+scale = Vector2( 2.20689, 2.13333 )

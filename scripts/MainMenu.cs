@@ -1,0 +1,34 @@
+using Godot;
+using System;
+using System.Collections.Generic;
+
+public class MainMenu : Node2D {
+    public override void _Ready() {
+        GetNode<BackgroundMusic>("/root/BackgroundMusic").PlayMenuMusic();
+
+        GetNode<Button>("NewAdventureButton").Connect("pressed", this, nameof(OnNewAdventureButtonPressed));
+        GetNode<Button>("QuickBattleButton").Connect("pressed", this, nameof(OnQuickBattleButtonPressed));
+        GetNode<Button>("ExitButton").Connect("pressed", this, nameof(OnExitButtonPressed));
+
+        QuickBattleState.Reset();
+
+        GameControls.InitInputMap();
+        
+        ShieldDesign.InitLists();
+        WeaponDesign.InitLists();
+        RandomEvent.InitLists();
+        ArtifactDesign.InitLists();
+    }
+
+    private void OnNewAdventureButtonPressed() {
+        GetTree().ChangeScene("res://scenes/NewGameScene.tscn");
+    }
+
+    private void OnQuickBattleButtonPressed() {
+        GetTree().ChangeScene("res://scenes/QuickBattleMenu.tscn");
+    }
+
+    private void OnExitButtonPressed() {
+        GetTree().Quit();
+    }
+}

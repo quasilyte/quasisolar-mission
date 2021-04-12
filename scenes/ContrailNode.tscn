@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scripts/ContrailNode.cs" type="Script" id=1]
+
+[sub_resource type="Curve" id=1]
+_data = [ Vector2( 0.0198675, 0.918367 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.377551 ), 0.0, 0.0, 0, 0 ]
+
+[node name="ContrailNode" type="CPUParticles2D"]
+position = Vector2( -12, 0 )
+amount = 20
+lifetime = 0.2
+direction = Vector2( -1, 0 )
+spread = 5.0
+gravity = Vector2( 0, 0 )
+initial_velocity = 64.0
+angular_velocity = 200.0
+angle = 360.0
+angle_random = 1.0
+scale_amount = 1.5
+scale_amount_curve = SubResource( 1 )
+color = Color( 0.8, 0.819608, 0.882353, 1 )
+script = ExtResource( 1 )

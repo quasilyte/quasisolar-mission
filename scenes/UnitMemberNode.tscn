@@ -1,0 +1,65 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://theme.tres" type="Theme" id=1]
+[ext_resource path="res://images/vessel/Neutral_Slayer.png" type="Texture" id=2]
+[ext_resource path="res://images/spacemap/health_bar_green.png" type="Texture" id=3]
+[ext_resource path="res://images/spacemap/health_bar_gray.png" type="Texture" id=4]
+[ext_resource path="res://scripts/UnitMemberNode.cs" type="Script" id=5]
+[ext_resource path="res://images/spacemap/health_bar_purple.png" type="Texture" id=6]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.164706, 0.235294, 0.223529, 0.862745 )
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="UnitMember" type="Node2D"]
+script = ExtResource( 5 )
+
+[node name="Panel" type="Panel" parent="."]
+margin_left = -32.0
+margin_top = -32.0
+margin_right = 32.0
+margin_bottom = 32.0
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VesselSprite" type="Sprite" parent="."]
+texture = ExtResource( 2 )
+
+[node name="Name" type="Label" parent="."]
+margin_left = 48.0
+margin_top = -32.0
+margin_right = 208.0
+theme = ExtResource( 1 )
+text = "Pilot Name"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HealthBar" type="TextureProgress" parent="."]
+margin_left = 48.0
+margin_right = 208.0
+margin_bottom = 10.0
+value = 90.0
+texture_under = ExtResource( 4 )
+texture_progress = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EnergyBar" type="TextureProgress" parent="."]
+margin_left = 48.0
+margin_top = 16.0
+margin_right = 208.0
+margin_bottom = 26.0
+value = 90.0
+texture_under = ExtResource( 4 )
+texture_progress = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

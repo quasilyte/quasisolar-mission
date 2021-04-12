@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://theme.tres" type="Theme" id=1]
+[ext_resource path="res://scripts/PopupNode.cs" type="Script" id=2]
+
+[node name="PopupNode" type="PopupDialog"]
+margin_right = 256.0
+margin_bottom = 176.0
+theme = ExtResource( 1 )
+popup_exclusive = true
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

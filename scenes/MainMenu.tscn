@@ -1,0 +1,85 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://images/bg/menu_bg.jpg" type="Texture" id=1]
+[ext_resource path="res://scripts/MainMenu.cs" type="Script" id=2]
+[ext_resource path="res://theme.tres" type="Theme" id=3]
+
+[node name="MainMenu" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Background" type="TextureRect" parent="."]
+margin_right = 1920.0
+margin_bottom = 1080.0
+mouse_filter = 2
+texture = ExtResource( 1 )
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="NewAdventureButton" type="Button" parent="."]
+margin_left = 192.0
+margin_top = 944.0
+margin_right = 448.0
+margin_bottom = 1008.0
+rect_pivot_offset = Vector2( 98, 18.9512 )
+focus_mode = 0
+theme = ExtResource( 3 )
+text = "New Adventure"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LoadGameButton" type="Button" parent="."]
+margin_left = 512.0
+margin_top = 944.0
+margin_right = 768.0
+margin_bottom = 1008.0
+rect_pivot_offset = Vector2( 98, 18.9512 )
+focus_mode = 0
+theme = ExtResource( 3 )
+disabled = true
+text = "Load Game"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="QuickBattleButton" type="Button" parent="."]
+margin_left = 832.0
+margin_top = 944.0
+margin_right = 1088.0
+margin_bottom = 1008.0
+rect_pivot_offset = Vector2( 98, 18.9512 )
+focus_mode = 0
+theme = ExtResource( 3 )
+text = "Quick Battle"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SettingsButton" type="Button" parent="."]
+margin_left = 1152.0
+margin_top = 944.0
+margin_right = 1408.0
+margin_bottom = 1008.0
+rect_pivot_offset = Vector2( 98, 18.9512 )
+focus_mode = 0
+theme = ExtResource( 3 )
+disabled = true
+text = "Settings"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ExitButton" type="Button" parent="."]
+margin_left = 1472.0
+margin_top = 944.0
+margin_right = 1728.0
+margin_bottom = 1008.0
+rect_pivot_offset = Vector2( 98, 18.9512 )
+focus_mode = 0
+theme = ExtResource( 3 )
+text = "Exit"
+__meta__ = {
+"_edit_use_anchors_": false
+}

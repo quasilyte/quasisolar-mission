@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://images/ammo/ZapGun.png" type="Texture" id=1]
+[ext_resource path="res://scripts/ZapProjectileNode.cs" type="Script" id=2]
+
+[node name="ZapProjectileNode" type="Line2D"]
+points = PoolVector2Array( 0, 0, 192, 0 )
+default_color = Color( 0.160784, 0.686275, 0.847059, 0.72549 )
+texture = ExtResource( 1 )
+texture_mode = 2
+script = ExtResource( 2 )

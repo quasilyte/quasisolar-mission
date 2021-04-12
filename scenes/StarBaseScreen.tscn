@@ -1,0 +1,75 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://images/bg/starbase_bg.png" type="Texture" id=1]
+[ext_resource path="res://theme.tres" type="Theme" id=2]
+[ext_resource path="res://scripts/StarBaseScreen.cs" type="Script" id=3]
+
+[node name="StarBaseScreen" type="Node2D"]
+script = ExtResource( 3 )
+
+[node name="Background" type="Sprite" parent="."]
+position = Vector2( 960, 540 )
+texture = ExtResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="LeaveBase" type="Button" parent="."]
+margin_left = 832.0
+margin_top = 656.0
+margin_right = 1088.0
+margin_bottom = 688.0
+focus_mode = 0
+theme = ExtResource( 2 )
+text = "Leave Base"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Laboratory" type="Button" parent="."]
+margin_left = 832.0
+margin_top = 528.0
+margin_right = 1088.0
+margin_bottom = 560.0
+focus_mode = 0
+theme = ExtResource( 2 )
+disabled = true
+text = "Laboratory"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Shipyard" type="Button" parent="."]
+margin_left = 832.0
+margin_top = 464.0
+margin_right = 1088.0
+margin_bottom = 496.0
+focus_mode = 0
+theme = ExtResource( 2 )
+text = "Shipyard"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SkillTree" type="Button" parent="."]
+margin_left = 832.0
+margin_top = 592.0
+margin_right = 1088.0
+margin_bottom = 624.0
+theme = ExtResource( 2 )
+text = "Skill Tree"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EquipmentShop" type="Button" parent="."]
+margin_left = 832.0
+margin_top = 400.0
+margin_right = 1088.0
+margin_bottom = 432.0
+focus_mode = 0
+theme = ExtResource( 2 )
+text = "Equipment Shop"
+__meta__ = {
+"_edit_use_anchors_": false
+}
