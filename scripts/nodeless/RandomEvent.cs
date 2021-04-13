@@ -164,7 +164,7 @@ public class RandomEvent {
                 var liner = new Vessel {
                     isBot = true,
                     player = RpgGameState.wertuPlayer,
-                    name = "FIXME",
+                    pilotName = "FIXME",
                 };
                 VesselFactory.Init(liner, VesselDesign.Find("Wertu", "Transporter"));
                 var spaceUnit = new SpaceUnit {
@@ -218,13 +218,13 @@ public class RandomEvent {
             var v1 = new Vessel {
                 isBot = true,
                 player = RpgGameState.wertuPlayer, // FIXME
-                name = "FIXME",
+                pilotName = "FIXME",
             };
             VesselFactory.Init(v1, VesselDesign.Find("Neutral", "Pirate"));
             var v2 = new Vessel {
                 isBot = true,
                 player = RpgGameState.wertuPlayer, // FIXME
-                name = "FIXME",
+                pilotName = "FIXME",
             };
             VesselFactory.Init(v2, VesselDesign.Find("Neutral", "Pirate"));
             return new SpaceUnit {
@@ -372,7 +372,7 @@ public class RandomEvent {
                 var v = new Vessel {
                     isBot = true,
                     player = RpgGameState.zythPlayer,
-                    name = "FIXME",
+                    pilotName = "FIXME",
                 };
                 VesselFactory.Init(v, VesselDesign.Find("Zyth", "Hunter"));
                 return new Result {

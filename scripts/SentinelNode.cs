@@ -48,7 +48,7 @@ public class SentinelNode : Node2D {
 
     private void OnCollision(Area2D other) {
         if (other.GetParent() is PlasmaAura plasmaAura) {
-            if (plasmaAura.FiredBy.player.Alliance == pilot.player.Alliance) {
+            if (plasmaAura.FiredBy.alliance == pilot.alliance) {
                 return;
             }
             ApplyDamage(PlasmaEmitterWeapon.Design.damage, PlasmaEmitterWeapon.Design.damageKind);
@@ -57,7 +57,7 @@ public class SentinelNode : Node2D {
 
         if (other.GetParent() is IProjectile projectile) {
             var firedBy = projectile.FiredBy();
-            if (firedBy.player.Alliance == pilot.player.Alliance) {
+            if (firedBy.alliance == pilot.alliance) {
                 return;
             }
             var design = projectile.GetWeaponDesign();

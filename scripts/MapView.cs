@@ -440,7 +440,7 @@ public class MapView : Node2D {
         foreach (var v in RpgGameState.humanUnit.fleet) {
             var hpPercentage = QMath.Percantage(v.hp, v.design.maxHp);
             var energyPercentage = QMath.Percantage(v.energy, v.energySource.maxBackupEnergy);
-            var m = UnitMemberNode.New(v.name, v.design.Texture(), hpPercentage, energyPercentage);
+            var m = UnitMemberNode.New(v.pilotName, v.design.Texture(), hpPercentage, energyPercentage);
             _unitMembers.Add(m);
             box.AddChild(m);
         }

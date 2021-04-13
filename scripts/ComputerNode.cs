@@ -68,7 +68,7 @@ public class ComputerNode : Node2D {
     private void RunActions(List<IPilotAction> actions) {
         foreach (var a in actions) {
             if (!DoAction(a)) {
-                var msg = $"{pilot.PilotName}: action failed: {a.DebugString()}";
+                var msg = $"{pilot.name}: action failed: {a.DebugString()}";
                 GD.Print(msg);
                 throw new Exception(msg);
             }

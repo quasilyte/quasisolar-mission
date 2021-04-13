@@ -36,7 +36,7 @@ public class ShipyardScreen : Node2D {
                 continue;
             }
             var vessel = RpgGameState.humanUnit.fleet[i];
-            panel.GetNode<Label>("Name").Text = vessel.name;
+            panel.GetNode<Label>("Name").Text = vessel.pilotName;
             var slot = panel.GetNode<ItemSlotNode>("Slot");
             var itemNode = DraggableItemNode.New(slot, vessel);
             slot.ApplyItem(null, itemNode);
@@ -186,7 +186,7 @@ public class ShipyardScreen : Node2D {
             if (fromSlot.GetParent().HasNode("Name")) {
                 fromSlot.GetParent().GetNode<Label>("Name").Text = "";
             }
-            dragged.GetSlotNode().GetParent().GetNode<Label>("Name").Text = vessel.name;
+            dragged.GetSlotNode().GetParent().GetNode<Label>("Name").Text = vessel.pilotName;
         }
 
         // _sellItemFallbackSlot = fromSlot;

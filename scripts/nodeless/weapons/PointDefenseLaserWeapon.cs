@@ -43,7 +43,7 @@ public class PointDefenseLaserWeapon : IWeapon {
                 if (rocket.GetWeaponDesign() == ShieldBreakerWeapon.Design) {
                     continue;
                 }
-                if (rocket.FiredBy().player.Alliance == _owner.player.Alliance) {
+                if (rocket.FiredBy().alliance == _owner.alliance) {
                     continue;
                 }
                 if (rocket.Position.DistanceTo(_owner.Vessel.Position) > Design.range) {
@@ -52,7 +52,7 @@ public class PointDefenseLaserWeapon : IWeapon {
                 return true;
             }
             if (n is TorpedoNode torpedo) {
-                if (torpedo.FiredBy().player.Alliance == _owner.player.Alliance) {
+                if (torpedo.FiredBy().alliance == _owner.alliance) {
                     continue;
                 }
                 if (torpedo.Position.DistanceTo(_owner.Vessel.Position) > Design.range) {
@@ -94,7 +94,7 @@ public class PointDefenseLaserWeapon : IWeapon {
                 if (rocket.GetWeaponDesign() == ShieldBreakerWeapon.Design) {
                     continue;
                 }
-                if (rocket.FiredBy().player.Alliance == _owner.player.Alliance) {
+                if (rocket.FiredBy().alliance == _owner.alliance) {
                     continue;
                 }
                 if (rocket.Position.DistanceTo(_owner.Vessel.Position) > Design.range) {
@@ -107,7 +107,7 @@ public class PointDefenseLaserWeapon : IWeapon {
                 rocket.Explode();
             }
             if (n is TorpedoNode torpedo) {
-                if (torpedo.FiredBy().player.Alliance == _owner.player.Alliance) {
+                if (torpedo.FiredBy().alliance == _owner.alliance) {
                     continue;
                 }
                 if (torpedo.Position.DistanceTo(_owner.Vessel.Position) > Design.range) {

@@ -2,8 +2,8 @@ using Godot;
 using System.Collections.Generic;
 
 public class Pilot {
-    public Player player;
-    public string PilotName;
+    public int alliance;
+    public string name;
 
     public VesselNode Vessel;
     public List<Pilot> Enemies = new List<Pilot>();

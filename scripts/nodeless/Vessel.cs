@@ -9,7 +9,7 @@ public class Vessel: IItem {
     public int deviceId;
     public bool isGamepad;
 
-    public string name;
+    public string pilotName;
 
     public VesselDesign design;
     public EnergySource energySource;

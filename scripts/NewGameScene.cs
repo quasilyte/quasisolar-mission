@@ -408,7 +408,7 @@ public class NewGameScene : Node2D {
                 }
                 var v = new Vessel {
                     isBot = true,
-                    name = $"{starBase.owner.PlayerName}",
+                    pilotName = $"{starBase.owner.PlayerName}", // FIXME
                     player = starBase.owner,
                 };
                 VesselFactory.Init(v, _template.design);
@@ -626,7 +626,7 @@ public class NewGameScene : Node2D {
         var humanVessel = new Vessel {
             isGamepad = true,
             player = RpgGameState.humanPlayer,
-            name = RpgGameState.humanPlayer.PlayerName,
+            pilotName = PilotNames.UniqHumanName(RpgGameState.usedNames),
             design = vesselDesign,
             energySource = EnergySource.Find("Power Generator"),
             artifacts = new List<ArtifactDesign>{
@@ -649,7 +649,7 @@ public class NewGameScene : Node2D {
             var v = new Vessel {
                 isBot = true,
                 player = RpgGameState.humanPlayer,
-                name = PilotNames.UniqHumanName(RpgGameState.usedNames),
+                pilotName = PilotNames.UniqHumanName(RpgGameState.usedNames),
             };
             VesselFactory.Init(v, "Earthling Scout");
             fleet.Add(v);

@@ -165,7 +165,7 @@ class RookieBot : AbstractBot {
 
             if (other.GetParent() is IProjectile projectile) {
                 var firedBy = projectile.FiredBy();
-                if (firedBy.player.Alliance == _pilot.player.Alliance) {
+                if (firedBy.alliance == _pilot.alliance) {
                     continue;
                 }
                 if (!CanReduceDamage(projectile.GetWeaponDesign().damageKind)) {
@@ -228,7 +228,7 @@ class RookieBot : AbstractBot {
         }
         foreach (var n in _vessel.GetTree().GetNodesInGroup("rockets")) {
             if (n is Rocket rocket) {
-                if (rocket.FiredBy().player.Alliance == _pilot.player.Alliance) {
+                if (rocket.FiredBy().alliance == _pilot.alliance) {
                     continue;
                 }
                 var dist = rocket.Position.DistanceTo(_vessel.Position);
@@ -238,7 +238,7 @@ class RookieBot : AbstractBot {
                 }
             }
             if (n is TorpedoNode torpedo) {
-                if (torpedo.FiredBy().player.Alliance == _pilot.player.Alliance) {
+                if (torpedo.FiredBy().alliance == _pilot.alliance) {
                     continue;
                 }
                 var dist = torpedo.Position.DistanceTo(_vessel.Position);

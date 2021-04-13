@@ -110,7 +110,7 @@ public class StarBaseNode : Node2D {
         var v = new Vessel {
             isBot = true,
             player = starBase.owner,
-            name = PilotNames.UniqHumanName(RpgGameState.usedNames),
+            pilotName = PilotNames.UniqHumanName(RpgGameState.usedNames),
             design = design,
         };
         v.hp = v.design.maxHp;

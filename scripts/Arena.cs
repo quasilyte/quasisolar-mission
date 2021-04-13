@@ -33,6 +33,7 @@ Special weapon idea:
 public class Arena : Node2D {
     private List<Pilot> _pilots;
     private Dictionary<Vessel, Pilot> _pilotByVessel;
+    private Dictionary<Pilot, Vessel> _vesselByPilot;
 
     private void ApplyAllianceColor(Node2D n, int alliance) {
         // 1 normal (bright)
@@ -77,7 +78,7 @@ public class Arena : Node2D {
         }
         vesselNode.shield = ShieldFactory.New(v.shield, pilot);
 
-        ApplyAllianceColor(vesselNode.GetNode<Sprite>("Sprite"), pilot.player.Alliance);
+        ApplyAllianceColor(vesselNode.GetNode<Sprite>("Sprite"), pilot.alliance);
 
         return vesselNode;
     }
@@ -113,15 +114,17 @@ public class Arena : Node2D {
 
     public void Run(List<ArenaViewport> viewports) {
         _pilotByVessel = new Dictionary<Vessel, Pilot>();
+        _vesselByPilot = new Dictionary<Pilot, Vessel>();
         _pilots = new List<Pilot>();
         for (int i = 0; i < ArenaSettings.combatants.Count; i++) {
-            var combatant = ArenaSettings.combatants[i];
+            var vessel = ArenaSettings.combatants[i];
             var pilot = new Pilot{
-                PilotName = combatant.player.PlayerName, // FIXME: this is incorrect
-                player = combatant.player,
+                name = vessel.pilotName,
+                alliance = vessel.player.Alliance,
             };
             _pilots.Add(pilot);
-            _pilotByVessel[combatant] = pilot;
+            _pilotByVessel[vessel] = pilot;
+            _vesselByPilot[pilot] = vessel;
         }
 
         VesselNode humanVessel = null;
@@ -156,7 +159,7 @@ public class Arena : Node2D {
                 if (x == y) {
                     continue;
                 }
-                if (x.player.Alliance != y.player.Alliance) {
+                if (x.alliance != y.alliance) {
                     x.Enemies.Add(y);
                 } else {
                     x.Allies.Add(y);
@@ -231,26 +234,27 @@ public class Arena : Node2D {
         var alliances = new HashSet<int>();
         foreach (Pilot p in _pilots) {
             if (p.Active) {
-                alliances.Add(p.player.Alliance);
+                alliances.Add(p.alliance);
                 if (alliances.Count > 1) {
                     return;
                 }
             } else {
                 var roll = QRandom.FloatRange(0.8f, 1.2f);
                 var debris = (int)((float)p.Vessel.State.debris * roll);
-                if (p.player == RpgGameState.krigiaPlayer) {
+                var vessel = _vesselByPilot[p];
+                if (vessel.design.affiliation == "Krigia") {
                     result.krigiaDebris += debris;
                     RpgGameState.metKrigia = true;
-                } else if (p.player == RpgGameState.wertuPlayer) {
+                } else if (vessel.design.affiliation == "Wertu") {
                     result.wertuDebris += debris;
                     RpgGameState.metWertu = true;
-                } else if (p.player == RpgGameState.zythPlayer) {
+                } else if (vessel.design.affiliation == "Zyth") {
                     result.zythDebris += debris;
                     RpgGameState.metZyth = true;
                 } else {
                     result.genericDebris += debris;
                 }
-                if (p.player.Alliance != RpgGameState.humanPlayer.Alliance) {
+                if (p.alliance != RpgGameState.humanPlayer.Alliance) {
                     result.exp += p.Vessel.State.vesselLevel * 3;
                 }
             }
