@@ -8,6 +8,9 @@ public abstract class SpaceUnitNode : Node2D {
     public float speed;
 
     [Signal]
+    public delegate void Removed();
+
+    [Signal]
     public delegate void DestinationReached();
 
     [Signal]

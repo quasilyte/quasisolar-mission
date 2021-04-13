@@ -17,6 +17,7 @@ public class Research {
         NewEnergySource,
         NewShield,
         NewArtifact,
+        NewVesselDesign,
     }
 
     public string name;
@@ -92,6 +93,27 @@ public class Research {
             researchTime = 85,
             effect = "drones resource capacity increased by 50",
             dependencies = {"Drone Capacity II"},
+        },
+
+        // Vessel tech.
+
+        new Research{
+            name = "Vessel Lab Branch",
+            researchTime = 45,
+        },
+
+        new Research{
+            name = "Ark",
+            category = Category.NewVesselDesign,
+            researchTime = 50,
+            dependencies = {"Vessel Lab Branch"},
+        },
+
+        new Research{
+            name = "Interceptor",
+            category = Category.NewVesselDesign,
+            researchTime = 90,
+            dependencies = {"Vessel Lab Branch"},
         },
 
         // Shield tech.

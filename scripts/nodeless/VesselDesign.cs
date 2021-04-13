@@ -15,6 +15,12 @@ public class VesselDesign: IItem {
         Large,
     };
 
+    public enum ProductionAvailability {
+        Never,
+        ResearchRequired,
+        Always,
+    }
+
     public int level;
     public string name;
     public string affiliation;
@@ -24,6 +30,8 @@ public class VesselDesign: IItem {
     public int sellingPrice;
     public int debris;
     public int productionTime;
+
+    public ProductionAvailability availability = ProductionAvailability.Never;
 
     // Defense-related.
     public float maxHp;
@@ -102,6 +110,7 @@ public class VesselDesign: IItem {
             sellingPrice = 2200,
             debris = 30,
             productionTime = 10,
+            availability = ProductionAvailability.Always,
 
             maxHp = 110,
             maxShieldLevel = 1,
@@ -126,6 +135,7 @@ public class VesselDesign: IItem {
             sellingPrice = 3900,
             debris = 50,
             productionTime = 20,
+            availability = ProductionAvailability.Always,
 
             maxHp = 140,
             maxShieldLevel = 1,
@@ -150,6 +160,7 @@ public class VesselDesign: IItem {
             sellingPrice = 4500,
             debris = 100,
             productionTime = 35,
+            availability = ProductionAvailability.Always,
 
             maxHp = 260,
             maxShieldLevel = 1,
@@ -174,6 +185,7 @@ public class VesselDesign: IItem {
             sellingPrice = 5000,
             debris = 65,
             productionTime = 30,
+            availability = ProductionAvailability.Always,
 
             maxHp = 175,
             maxShieldLevel = 2,
@@ -198,6 +210,7 @@ public class VesselDesign: IItem {
             sellingPrice = 10500,
             debris = 75,
             productionTime = 50,
+            availability = ProductionAvailability.ResearchRequired,
 
             maxHp = 200,
             maxShieldLevel = 2,
@@ -222,6 +235,7 @@ public class VesselDesign: IItem {
             sellingPrice = 15000,
             debris = 150,
             productionTime = 60,
+            availability = ProductionAvailability.ResearchRequired,
 
             maxHp = 320,
             maxShieldLevel = 1,

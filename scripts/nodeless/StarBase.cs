@@ -6,6 +6,8 @@ public class StarBase {
 
     public StarSystem system;
 
+    public bool discoveredByKrigia = false;
+
     public int hp = 100;
 
     public int level = 1;
@@ -25,6 +27,7 @@ public class StarBase {
 
     // For bots: base-controlled space units.
     public HashSet<SpaceUnit> units = new HashSet<SpaceUnit>();
+    public int botPatrolDelay = 0;
 
     public const int maxGarrisonSize = 24;
     public const int maxBaseLevel = 5;

@@ -22,8 +22,8 @@ public class ScavengerSpaceUnitNode : SpaceUnitNode {
     public override void _Ready() {
         base._Ready();
         base.Connect("DestinationReached", this, nameof(OnDestinationReached));
-        _canBeDetected = unit.waypoint != Vector2.Zero;
 
+        _canBeDetected = unit.waypoint != Vector2.Zero;
         if (RpgGameState.starSystemByPos.ContainsKey(unit.pos)) {
             _currentSystem = RpgGameState.starSystemByPos[unit.pos];
         }

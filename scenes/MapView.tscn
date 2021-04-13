@@ -465,7 +465,6 @@ __meta__ = {
 }
 
 [node name="MiningPopup" type="Popup" parent="UI"]
-visible = true
 margin_left = 432.0
 margin_top = 432.0
 margin_right = 1328.0
@@ -1051,3 +1050,69 @@ margin_right = 560.0
 margin_bottom = 304.0
 focus_mode = 2
 text = "Leave"
+
+[node name="KrigiaPatrolPopup" parent="UI" instance=ExtResource( 18 )]
+margin_left = 752.0
+margin_top = 464.0
+margin_right = 1328.0
+margin_bottom = 784.0
+
+[node name="Label" type="Label" parent="UI/KrigiaPatrolPopup"]
+margin_right = 576.0
+margin_bottom = 32.0
+theme = ExtResource( 6 )
+text = "Krigia Patrol"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="UI/KrigiaPatrolPopup"]
+margin_left = 16.0
+margin_top = 32.0
+margin_right = 560.0
+margin_bottom = 256.0
+custom_styles/panel = ExtResource( 20 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Text" type="Label" parent="UI/KrigiaPatrolPopup/Panel"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 528.0
+margin_bottom = 208.0
+text = "Krigia unit patrols this area.
+
+They'll probably attack us if we don't take any action."
+align = 1
+valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FightButton" parent="UI/KrigiaPatrolPopup" instance=ExtResource( 19 )]
+margin_left = 16.0
+margin_top = 272.0
+margin_right = 176.0
+margin_bottom = 304.0
+focus_mode = 2
+text = "Attack"
+
+[node name="CommunicateButton" parent="UI/KrigiaPatrolPopup" instance=ExtResource( 19 )]
+margin_left = 208.0
+margin_top = 272.0
+margin_right = 368.0
+margin_bottom = 304.0
+focus_mode = 2
+text = "Communicate"
+
+[node name="LeaveButton" parent="UI/KrigiaPatrolPopup" instance=ExtResource( 19 )]
+margin_left = 400.0
+margin_top = 272.0
+margin_right = 560.0
+margin_bottom = 304.0
+focus_mode = 2
+text = "Retreat"

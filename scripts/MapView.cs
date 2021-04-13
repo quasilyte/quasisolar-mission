@@ -34,8 +34,9 @@ public class MapView : Node2D {
 
     private RandomEvent.EffectKind _randomEventResolutionPostEffect;
 
-    private SpaceUnit _scavengersEventUnit;
+    private SpaceUnit _eventUnit;
     private PopupNode _scavengersEventPopup;
+    private PopupNode _krigiaPatrolPopup;
 
     private HashSet<SpaceUnitNode> _spaceUnits = new HashSet<SpaceUnitNode>();
     private List<StarBaseNode> _starBases = new List<StarBaseNode>();
@@ -103,8 +104,12 @@ public class MapView : Node2D {
         GetNode<TextureButton>("UI/ActionMenuButton").Connect("pressed", this, nameof(OnActionMenuButton));
         GetNode<TextureButton>("UI/ResearchButton").Connect("pressed", this, nameof(OnResearchButton));
 
+        _krigiaPatrolPopup = GetNode<PopupNode>("UI/KrigiaPatrolPopup");
+        _krigiaPatrolPopup.GetNode<ButtonNode>("FightButton").Connect("pressed", this, nameof(OnFightEventUnit));
+        _krigiaPatrolPopup.GetNode<ButtonNode>("LeaveButton").Connect("pressed", this, nameof(OnKrigiaPatrolLeaveButton));
+
         _scavengersEventPopup = GetNode<PopupNode>("UI/ScavengersPopup");
-        _scavengersEventPopup.GetNode<ButtonNode>("FightButton").Connect("pressed", this, nameof(OnScavengersFightButton));
+        _scavengersEventPopup.GetNode<ButtonNode>("FightButton").Connect("pressed", this, nameof(OnFightEventUnit));
         _scavengersEventPopup.GetNode<ButtonNode>("LeaveButton").Connect("pressed", this, nameof(OnScavengersLeaveButton));
 
         _battleResult = GetNode<PopupNode>("UI/BattleResultPopup");
@@ -169,9 +174,8 @@ public class MapView : Node2D {
         UpdateUI();
     }
 
-    private void OnScavengersFightButton() {
-        var u = _scavengersEventUnit;
-
+    private void OnFightEventUnit() {
+        var u = _eventUnit;
         RpgGameState.enemyAttackerUnit = u;
         SetArenaSettings(u.fleet);
         GetTree().ChangeScene("res://scenes/ArenaScreen.tscn");
@@ -184,6 +188,13 @@ public class MapView : Node2D {
     private void OnScavengersLeaveButton() {
         _lockControls = false;
         _scavengersEventPopup.Hide();
+        RpgGameState.fuel -= RetreatFuelCost();
+        UpdateUI();
+    }
+
+    private void OnKrigiaPatrolLeaveButton() {
+        _lockControls = false;
+        _krigiaPatrolPopup.Hide();
         RpgGameState.fuel -= RetreatFuelCost();
         UpdateUI();
     }
@@ -684,10 +695,19 @@ public class MapView : Node2D {
         }
     }
 
-    private void OnSpaceUnitCreated(SpaceUnitNode unitNode) {
+    private void OnSpaceUnitRemoved(SpaceUnitNode unitNode) {
+        _spaceUnits.Remove(unitNode);
+    }
+
+    private void AddSpaceUnit(SpaceUnitNode unitNode) {
+        unitNode.Connect("Removed", this, nameof(OnSpaceUnitRemoved), new Godot.Collections.Array{unitNode});
         AddChild(unitNode);
-        unitNode.GlobalPosition = unitNode.unit.pos;
+        // unitNode.GlobalPosition = unitNode.unit.pos;
         _spaceUnits.Add(unitNode);
+    }
+
+    private void OnSpaceUnitCreated(SpaceUnitNode unitNode) {
+        AddSpaceUnit(unitNode);
     }
 
     private StarBaseNode NewStarBaseNode(StarSystem sys) {
@@ -697,6 +717,9 @@ public class MapView : Node2D {
             baseNode = HumanStarBaseNode.New(sys.starBase);
         } else if (sys.starBase.owner == RpgGameState.scavengerPlayer) {
             baseNode = ScavengerStarBaseNode.New(sys.starBase);
+            baseNode.Connect("SpaceUnitCreated", this, nameof(OnSpaceUnitCreated));
+        } else if (sys.starBase.owner == RpgGameState.krigiaPlayer) {
+            baseNode = KrigiaStarBaseNode.New(sys.starBase);
             baseNode.Connect("SpaceUnitCreated", this, nameof(OnSpaceUnitCreated));
         } else {
             baseNode = StarBaseNode.New(sys.starBase);
@@ -750,13 +773,14 @@ public class MapView : Node2D {
 
         foreach (var u in RpgGameState.spaceUnits) {
             SpaceUnitNode node;
-            if (u.kind == SpaceUnit.Kind.Scavenger) {
+            if (u.owner == RpgGameState.scavengerPlayer) {
                 node = ScavengerSpaceUnitNode.New(u);
+            } else if (u.owner == RpgGameState.krigiaPlayer) {
+                node = KrigiaSpaceUnitNode.New(u);
             } else {
-                throw new Exception("unexpected unit kind: " + u.kind.ToString());
+                throw new Exception("unexpected unit owner: " + u.owner.PlayerName);
             }
-            AddChild(node);
-            _spaceUnits.Add(node);
+            AddSpaceUnit(node);
         }
     }
 
@@ -1024,6 +1048,12 @@ public class MapView : Node2D {
             TriggerScavengersEvent(u);
             return true;
         }
+        if (u.owner == RpgGameState.krigiaPlayer) {
+            if (u.botProgram == SpaceUnit.Program.KrigiaPatrol) {
+                TriggerKrigiaPatrolEvent(u);
+            }
+            return true;
+        }
 
         return false;
     }
@@ -1035,6 +1065,16 @@ public class MapView : Node2D {
         var scavengersForce = u.FleetCost();
         var humanForce = RpgGameState.humanUnit.FleetCost();
         return scavengersForce * 2 > humanForce;
+    }
+
+    private void TriggerKrigiaPatrolEvent(SpaceUnit u) {
+        _krigiaPatrolPopup.GetNode<ButtonNode>("LeaveButton").Disabled = RpgGameState.fuel < RetreatFuelCost();
+
+        GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/interface/random_event.wav"));
+        StopMovement();
+        _lockControls = true;
+        _eventUnit = u;
+        _krigiaPatrolPopup.PopupCentered();
     }
 
     private void TriggerScavengersEvent(SpaceUnit u) {
@@ -1057,7 +1097,7 @@ public class MapView : Node2D {
         GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/interface/random_event.wav"));
         StopMovement();
         _lockControls = true;
-        _scavengersEventUnit = u;
+        _eventUnit = u;
         _scavengersEventPopup.PopupCentered();
     }
 

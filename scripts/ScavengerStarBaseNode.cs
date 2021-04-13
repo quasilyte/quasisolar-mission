@@ -81,7 +81,6 @@ public class ScavengerStarBaseNode : StarBaseNode {
 
         var spaceUnit = new SpaceUnit {
             owner = RpgGameState.scavengerPlayer,
-            kind = SpaceUnit.Kind.Scavenger,
             pos = starBase.system.pos,
         };
 

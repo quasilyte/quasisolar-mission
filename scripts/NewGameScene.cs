@@ -560,6 +560,9 @@ public class NewGameScene : Node2D {
                 if (sys == startingSystem) {
                     RpgGameState.startingSystemID = id;
                 }
+                if (sys.starBase != null && sys.starBase.owner == RpgGameState.krigiaPlayer) {
+                    sys.starBase.botPatrolDelay = QRandom.IntRange(10, 60);
+                }
                 sys.id = id;
                 RpgGameState.starSystems.Add(sys);
                 RpgGameState.starSystemByPos[sys.pos] = sys;

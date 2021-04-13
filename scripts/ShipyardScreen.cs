@@ -1,4 +1,5 @@
 using Godot;
+using System;
 using System.Collections.Generic;
 
 public class ShipyardScreen : Node2D {
@@ -62,9 +63,18 @@ public class ShipyardScreen : Node2D {
             if (_starBase.level < ItemInfo.MinStarBaseLevel(design)) {
                 continue;
             }
-            // TODO: check for the technology requirements instead.
-            if (design.affiliation != "Earthling") {
+            switch (design.availability) {
+            case VesselDesign.ProductionAvailability.Never:
                 continue;
+            case VesselDesign.ProductionAvailability.Always:
+                break;
+            case VesselDesign.ProductionAvailability.ResearchRequired:
+                if (!RpgGameState.technologiesResearched.Contains(design.name)) {
+                    continue;
+                }
+                break;
+            default:
+                throw new Exception("unexpected availability: " + design.availability.ToString());
             }
             selection.Add(design);
         }

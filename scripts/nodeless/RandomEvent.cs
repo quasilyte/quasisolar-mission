@@ -169,7 +169,6 @@ public class RandomEvent {
                 VesselFactory.Init(liner, VesselDesign.Find("Wertu", "Transporter"));
                 var spaceUnit = new SpaceUnit {
                     owner = RpgGameState.wertuPlayer,
-                    kind = SpaceUnit.Kind.Unknown,
                     pos = RpgGameState.humanUnit.pos,
                     fleet = new List<Vessel>{liner},
                 };
@@ -229,7 +228,6 @@ public class RandomEvent {
             VesselFactory.Init(v2, VesselDesign.Find("Neutral", "Pirate"));
             return new SpaceUnit {
                 owner = RpgGameState.wertuPlayer, // FIXME
-                kind = SpaceUnit.Kind.Unknown,
                 pos = RpgGameState.humanUnit.pos,
                 fleet = new List<Vessel>{v1, v2},
             };

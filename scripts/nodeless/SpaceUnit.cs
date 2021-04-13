@@ -2,17 +2,13 @@ using Godot;
 using System.Collections.Generic;
 
 public class SpaceUnit {
-    public enum Kind {
-        Player,
-        Enemy,
-        Ally,
-        Unknown,
-        Scavenger,
+    public enum Program {
+        GenericBehavior,
+        KrigiaPatrol,
     }
 
     public const int maxFleetSize = 4;
 
-    public Kind kind;
     public Player owner;
     public Vector2 pos;
     public Vector2 waypoint = Vector2.Zero;
@@ -20,6 +16,8 @@ public class SpaceUnit {
     public SpaceUnitCargo cargo = new SpaceUnitCargo();
 
     public int botSystemLeaveDelay = 0;
+    public Program botProgram = Program.GenericBehavior;
+    public StarBase botOrigin;
 
     public int FleetCost() {
         var cost = 0;
