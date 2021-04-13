@@ -30,8 +30,10 @@ public class ScavengerStarBaseNode : StarBaseNode {
 
         ProcessResources();
 
-        MaybeEnqueueVessel();
-        MaybeCreateSpaceUnit();
+        if (RpgGameState.day > 30) {
+            MaybeEnqueueVessel();
+            MaybeCreateSpaceUnit();
+        }
     }
 
     private void ProcessResources() {

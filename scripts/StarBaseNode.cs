@@ -20,8 +20,8 @@ public class StarBaseNode : Node2D {
     public override void _Ready() {
     }
 
-    public void SetColor(Team t) {
-        GetNode<Sprite>("Sprite").Frame = (int)t;
+    public void SetColor(MapNodeColor color) {
+        GetNode<Sprite>("Sprite").Frame = (int)color;
     }
 
     public virtual void ProcessDay() {

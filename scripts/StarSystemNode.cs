@@ -167,17 +167,21 @@ public class StarSystemNode : Node2D {
     }
 
     private void SetStarBaseColor() {
-        var p = RpgGameState.humanPlayer;
-        if (sys.starBase.owner == p) {
-            _starBase.SetColor(Team.Self);
-        } else if (sys.starBase.owner.Alliance != p.Alliance) {
-            _starBase.SetColor(Team.Enemy);
-        } else if (sys.starBase.owner.Alliance == p.Alliance) {
-            _starBase.SetColor(Team.Ally);
-        } else {
-            // FIXME: never happens.
-            _starBase.SetColor(Team.Unknown);
-        }
+        Func<MapNodeColor> baseColor = () => {
+            var owner = sys.starBase.owner;
+            if (owner == RpgGameState.humanPlayer) {
+                return MapNodeColor.Green;
+            }
+            if (owner == RpgGameState.scavengerPlayer) {
+                return MapNodeColor.Purple;
+            }
+            if (owner == RpgGameState.krigiaPlayer) {
+                return MapNodeColor.Red;
+            }
+            return MapNodeColor.Yellow;
+        };
+
+        _starBase.SetColor(baseColor());
     }
 
     private void OnFirstPlayerEnter(Player p) {

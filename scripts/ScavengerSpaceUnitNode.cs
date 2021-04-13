@@ -15,7 +15,7 @@ public class ScavengerSpaceUnitNode : SpaceUnitNode {
         var o = (ScavengerSpaceUnitNode)_scene.Instance();
         o.unit = unit;
         o.speed = 40;
-        o._spriteFrame = 4;
+        o._spriteColor = MapNodeColor.Purple;
         return o;
     }
 
