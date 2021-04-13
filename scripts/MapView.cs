@@ -828,6 +828,10 @@ public class MapView : Node2D {
             unit.UpdateStatus(hpPercentage, energyPercentage);
         }
 
+        foreach (var u in _spaceUnits) {
+            u.UpdateColor();
+        }
+
         UpdateDayValue();
         UpdateFuelValue();
         UpdateExpValue();

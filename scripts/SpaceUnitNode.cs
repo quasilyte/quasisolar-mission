@@ -1,7 +1,9 @@
 using Godot;
 
-public class SpaceUnitNode : Node2D {
+public abstract class SpaceUnitNode : Node2D {
     public SpaceUnit unit;
+
+    protected int _spriteFrame = 0;
 
     public float speed;
 
@@ -23,8 +25,20 @@ public class SpaceUnitNode : Node2D {
 
     public virtual void ProcessDay() {}
 
+    public void UpdateColor() {
+        if (unit.owner == RpgGameState.humanPlayer) {
+            GetNode<Sprite>("Sprite").Frame = 0;
+            return;
+        }
+        if (RpgGameState.technologiesResearched.Contains("Fleet Identifier")) {
+            GetNode<Sprite>("Sprite").Frame = _spriteFrame;
+        } else {
+            GetNode<Sprite>("Sprite").Frame = 3; // yellow
+        }
+    }
+
     public override void _Ready() {
-        // GetNode<Sprite>("Sprite").Frame = (int)unit.kind;
+        UpdateColor();
     }
 
     public override void _Process(float delta) {

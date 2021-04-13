@@ -8,13 +8,14 @@ public class ScavengerSpaceUnitNode : SpaceUnitNode {
     private bool _canBeDetected = false;
 
     private static PackedScene _scene = null;
-    public static new SpaceUnitNode New(SpaceUnit unit) {
+    public static new ScavengerSpaceUnitNode New(SpaceUnit unit) {
         if (_scene == null) {
             _scene = GD.Load<PackedScene>("res://scenes/ScavengerSpaceUnitNode.tscn");
         }
-        var o = (SpaceUnitNode)_scene.Instance();
+        var o = (ScavengerSpaceUnitNode)_scene.Instance();
         o.unit = unit;
         o.speed = 40;
+        o._spriteFrame = 4;
         return o;
     }
 
@@ -25,10 +26,6 @@ public class ScavengerSpaceUnitNode : SpaceUnitNode {
 
         if (RpgGameState.starSystemByPos.ContainsKey(unit.pos)) {
             _currentSystem = RpgGameState.starSystemByPos[unit.pos];
-        }
-
-        if (!RpgGameState.technologiesResearched.Contains("Fleet Identifier")) {
-            GetNode<Sprite>("Sprite").Frame = 3;
         }
 
         GlobalPosition = unit.pos;

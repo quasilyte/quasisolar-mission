@@ -655,6 +655,7 @@ public class NewGameScene : Node2D {
             fleet.Add(v);
         }
 
+        RpgGameState.humanUnit.owner = RpgGameState.humanPlayer;
         RpgGameState.humanUnit.fleet = fleet;
         RpgGameState.humanUnit.pos = startingSystem.pos;
     }
