@@ -672,7 +672,7 @@ public class RandomEvent {
                     effects = {
                         new Effect{
                             kind = EffectKind.AddFuel,
-                            value = -70f,
+                            value = -70,
                         },
                     },
                 };
