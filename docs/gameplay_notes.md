@@ -255,6 +255,11 @@ Notes:
 
 Patrols are usually weak and consist of the light vessels.
 
+A screenshot below illustrates a star base influence area.
+
+![image](https://user-images.githubusercontent.com/6286655/114607251-f7268b00-9ca4-11eb-8027-4e1441988167.png)
+
+
 ## Krigia Task Force Units
 
 If Krigia knows about an enemy star base location, there is a chance that it will launch a fleet to attack it.
