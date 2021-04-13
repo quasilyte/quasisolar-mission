@@ -7,7 +7,7 @@ This is something like a single player game mode design document.
 In short, player mission is simple: collect N artifacts (N may depend on the game difficulty) before
 the in-game day X (X depends on the game difficulty). Then player needs to defeat the main boss.
 
-The problem is, the player starts with a weak vessel and with one star base. A galaxy is quite big
+The problem is, the player starts with a weak fleet and with one star base. A galaxy is quite big
 and there are a lot of dangers out there. One can't simply fly through it and find all artifacts
 without any troubles.
 
@@ -25,6 +25,17 @@ Losing conditions:
 * Flagship is destroyed
 * N artifacts are not collected before the day X
 * The final hostile armada is not defeated
+
+## The Game Phases
+
+* Opening: 0-5% of the mission time
+* Early-game: 5-55% of the mission time
+* Mid-game: 55-85% of the mission time
+* Late-game: 85-100% of the mission time
+
+Depending on a current phase, the game plays a little bit differently.
+
+Obviously, it becomes harder with every phase.
 
 ## Flying Through The Galaxy
 
@@ -224,27 +235,45 @@ There are different fleets that may roam the space:
 
 * Unique groups (related to random encounters)
 * Star base patrols
-* Task force
-* Free roam group
+* Task forces
+* Free roam group (scavengers, for example)
+* And some other kinds (described in separate sections)
 
-Unique group could resolve into a battle or an ally. Most of the time they're bosses that the player can fight to get the reward.
+## Krigia Patrol Units
 
-Star base patrols are units that fly between the star systems that are located in the vicinity of that base. These
-fleets will attack their enemies, but will not attempt a siege of the other star base.
+These units dispatched from a Krigia star base from time to time.
 
-Task forces will try to besiege enemy star base. They'll either do it, or die. If they succeed, they'll return to the base
-from which they originated. If that base is destroyed, they'll try to find the closest allied base; if there are
-no allied bases, they'll turn into a free roam group.
+They visit a selected neighbor system, stay there for a while and then go back to the base.
 
-A free roam group travels through space without any particular destination. Most of the free roam groups belong to scavengers.
+Notes:
 
-## Scavengers
+* They are the only fair way of Krigia to discover human bases (to launch an assault later)
+* Just like scavengers, they leave a system immediately if it has a star base
+* Patrol unit stays in the system for a time span comparable with a scavengers raid unit
+* They will destroy mining droids
+* They may attempt an attack on the player unit if it's in the area
 
-Scavengers are the local "space pirates". They attack weak bases and fleets in attempt to scavenge their resources.
+Patrols are usually weak and consist of the light vessels.
 
-They don't have own star bases.
+A screenshot below illustrates a star base influence area.
 
-> TODO: explain where and when do they spawn.
+![image](https://user-images.githubusercontent.com/6286655/114607251-f7268b00-9ca4-11eb-8027-4e1441988167.png)
+
+
+## Krigia Task Force Units
+
+If Krigia knows about an enemy star base location, there is a chance that it will launch a fleet to attack it.
+
+Task forces are usually powerfull and consist of the elite vessels.
+
+## Krigia Reinforcement Units
+
+There are two main cases in which one base may send reinforcements to another:
+
+* That base is being attacked
+* It plans to launch an attack, but it lacks vessels
+
+In all cases, the base that sends help should be relatively close.
 
 ## Random Events
 
@@ -323,6 +352,14 @@ Ways to get experience points:
 
 * Winning in battles
 * Some random events can give you experience
+
+## Scavengers
+
+Scavengers are the local "space pirates". They attack weak bases and fleets in attempt to scavenge their resources.
+
+They don't have own star bases.
+
+> TODO: explain where and when do they spawn.
 
 ## Scavenger Bases
 
