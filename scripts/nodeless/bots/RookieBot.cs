@@ -7,14 +7,26 @@ class RookieBot : AbstractBot {
     private int _pointDefenseIndex = 0;
 
     private bool _preferCloseRange = false;
+    private bool _preferLongRange = false;
     private bool _energyUsed = false;
 
     private bool _hasShield = false;
     private ShieldDesign _shield;
 
     private float _attackCooldown = 0;
+    private float _fleeDelay = 0;
 
     public RookieBot(VesselNode vessel) : base(vessel) {
+        Func<IWeapon, bool> isLongRangeWeapon = (IWeapon w) => {
+            return w is TorpedoLauncherWeapon ||
+                w is MortarWeapon ||
+                w is LancerWeapon ||
+                w is DisruptorWeapon ||
+                w is PhotonBeamWeapon ||
+                w is DiskThrowerWeapon ||
+                w is ReaperCannonWeapon;
+        };
+
         for (int i = 0; i < vessel.weapons.Count; i++) {
             var w = vessel.weapons[i];
             if (w is PointDefenseLaserWeapon pointDefense) {
@@ -22,6 +34,7 @@ class RookieBot : AbstractBot {
                 _pointDefenseIndex = i;
                 continue;
             }
+
             if (w is SpreadGunWeapon) {
                 _preferCloseRange = true;
                 continue;
@@ -30,16 +43,27 @@ class RookieBot : AbstractBot {
                 _preferCloseRange = true;
                 continue;
             }
+
+            if (isLongRangeWeapon(w)) {
+                _preferLongRange = true;
+                continue;
+            }
         }
         _shield = vessel.shield.GetDesign();
         _hasShield = _shield != EmptyShield.Design;
+
+        if (!_preferLongRange) {
+            _preferLongRange = isLongRangeWeapon(vessel.specialWeapon);
+        }
+
+        if (_preferCloseRange && _preferLongRange) {
+            _preferCloseRange = false;
+        }
     }
 
     protected override void ActImpl(float delta, BotEvents events) {
-        _attackCooldown -= delta;
-        if (_attackCooldown < 0) {
-            _attackCooldown = 0;
-        }        
+        _attackCooldown = QMath.ClampMin(_attackCooldown - delta, 0);
+        _fleeDelay = QMath.ClampMin(_fleeDelay - delta, 0);
 
         _energyUsed = false;
 
@@ -69,7 +93,13 @@ class RookieBot : AbstractBot {
     }
 
     private void ChooseTarget() {
-        foreach (var e in _pilot.Enemies) {
+        var offset = QRandom.IntRange(0, _pilot.Enemies.Count - 1);
+        var numTried = 0;
+        for (int i = offset; numTried < _pilot.Enemies.Count; i++, numTried++) {
+            if (i >= _pilot.Enemies.Count) {
+                i = 0;
+            }
+            var e = _pilot.Enemies[i];
             if (e.Active) {
                 SetTarget(e);
                 break;
@@ -77,17 +107,52 @@ class RookieBot : AbstractBot {
         }
     }
 
+    private Vector2 FleeWaypoint() {
+        var fleePos = ((_vessel.Position - TargetPosition()).Normalized() * 256) + _vessel.Position;
+        return QMath.RandomizedLocation(fleePos, 32);
+    }
+
+    private Vector2 CorrectedPos(Vector2 pos) {
+        if (IsOutOfScreen(pos)) {
+            return QMath.RandomizedLocation(_screenCenter, 512);
+        }
+        return pos;
+    }
+
     private Vector2 PickWaypoint(float roll) {
+        if (roll < 0.15) {
+            return QMath.RandomizedLocation(_vessel.Position, 96);
+        }
+
+        var targetDistance = TargetDistance();
+
+        if (_preferLongRange && targetDistance < 192 && roll < 0.9) {
+            return FleeWaypoint();
+        }
+
+        if (roll < 0.55 || (targetDistance > 300 && roll < 0.65)) {
+            var pos = _vessel.Position.MoveToward(TargetPosition(), 192);
+            if (_preferLongRange && pos.DistanceTo(TargetPosition()) < 192) {
+                return FleeWaypoint();
+            }
+            return pos;
+        }
+
+        if (_preferLongRange) {
+            for (int i = 0; i < 3; i++) {
+                var pos = QMath.RandomizedLocation(TargetPosition(), 300);
+                if (pos.DistanceTo(TargetPosition()) >= 160) {
+                    return pos;
+                }
+            }
+        }
+
         if (_preferCloseRange) {
             return QMath.RandomizedLocation(TargetPosition(), 64);
         }
 
-        if (roll < 0.25) {
-            return QMath.RandomizedLocation(_vessel.Position, 96);
-        }
-
-        if (TargetDistance() > 500) {
-            return QMath.RandomizedLocation(TargetPosition(), 128);
+        if (targetDistance > 500) {
+            return QMath.RandomizedLocation(TargetPosition(), 160);
         }
 
         return QMath.RandomizedLocation(TargetPosition(), 192);
@@ -99,6 +164,13 @@ class RookieBot : AbstractBot {
                 if (_currentTarget != null && TargetDistance() < 300) {
                     var pos = QMath.RandomizedLocation(TargetPosition(), 32);
                     _actions.ChangeWaypoint(pos);
+                }
+            }
+            if (_preferLongRange && _fleeDelay == 0 && _currentTarget != null && TargetDistance() < 160) {
+                var fleeRoll = QRandom.Float();
+                if (fleeRoll < 0.05) {
+                    _fleeDelay = 3 + fleeRoll;
+                    _actions.ChangeWaypoint(CorrectedPos(PickWaypoint(fleeRoll)));
                 }
             }
             return;
@@ -114,19 +186,14 @@ class RookieBot : AbstractBot {
         }
 
         var roll = QRandom.Float();
-        if (TargetDistance() > 300 && roll < 5 && numActiveEnemies() > 1) {
+        if (TargetDistance() > 300 && roll < 0.1 && numActiveEnemies() > 1) {
             var closest = QMath.NearestEnemy(_vessel.Position, _pilot);
             if (closest != _currentTarget) {
                 SetTarget(closest);
             }
         }
 
-        var waypoint = PickWaypoint(roll);
-        if (IsOutOfScreen(waypoint)) {
-            _actions.AddWaypoint(QMath.RandomizedLocation(_screenCenter, 512));
-        } else {
-            _actions.AddWaypoint(waypoint);
-        }
+        _actions.AddWaypoint(CorrectedPos(PickWaypoint(roll)));
     }
 
     private bool CanReduceDamage(DamageKind damageKind) {
@@ -151,7 +218,7 @@ class RookieBot : AbstractBot {
             return;
         }
 
-        if (events.targetedByZap)  {
+        if (events.targetedByZap) {
             if (_shield.activeEnergyDamageReceive != 1) {
                 Shield();
                 return;
@@ -253,7 +320,7 @@ class RookieBot : AbstractBot {
     private void ActFight() {
         if (_currentTarget == null) {
             return;
-        }    
+        }
 
         UseSpecialWeapon();
         UseNormalWeapons();
