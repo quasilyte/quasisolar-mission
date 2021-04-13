@@ -1,7 +1,7 @@
 using Godot;
 
 public static class DrawUtils {
-    public static void DrawCircle(Node2D node, float radius, Color color) {
+    private static Vector2[] CirclePoints(float radius) {
         float angleFrom = 0;
         float angleTo = 360;
 
@@ -24,7 +24,21 @@ public static class DrawUtils {
             points[i] = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius;
         }
 
+        return points;
+    }
+
+    public static void DrawCircle(Node2D node, float radius, Color color) {
+        var points = CirclePoints(radius);
+        var num_points = points.Length - 1;
         for (int i = 0; i < num_points; i++) {
+            node.DrawLine(points[i], points[i + 1], color);
+        }
+    }
+
+    public static void DrawDashedCircle(Node2D node, float radius, Color color) {
+        var points = CirclePoints(radius);
+        var num_points = points.Length - 1;
+        for (int i = 0; i + 1 < num_points; i += 2) {
             node.DrawLine(points[i], points[i + 1], color);
         }
     }
