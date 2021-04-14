@@ -34,9 +34,11 @@ public class MapView : Node2D {
 
     private RandomEvent.EffectKind _randomEventResolutionPostEffect;
 
-    private SpaceUnit _eventUnit;
+    private SpaceUnitNode _eventUnit;
+    private PopupNode _starBaseAttackPopup;
     private PopupNode _scavengersEventPopup;
     private PopupNode _krigiaPatrolPopup;
+    private PopupNode _krigiaTaskForcePopup;
 
     private HashSet<SpaceUnitNode> _spaceUnits = new HashSet<SpaceUnitNode>();
     private List<StarBaseNode> _starBases = new List<StarBaseNode>();
@@ -71,6 +73,24 @@ public class MapView : Node2D {
         QRandom.SetRandomNumberGenerator(RpgGameState.rng);
         GetNode<BackgroundMusic>("/root/BackgroundMusic").PlayMapMusic();
 
+        if (RpgGameState.transition == RpgGameState.MapTransition.EnemyBaseAttackRepelled) {
+            ProcessUnitCasualties(RpgGameState.humanUnit);
+            ProcessStarBaseCasualties(RpgGameState.garrisonStarBase);
+            RpgGameState.garrisonStarBase = null;
+        } else if (RpgGameState.transition == RpgGameState.MapTransition.EnemyUnitDestroyed) {
+            ProcessUnitCasualties(RpgGameState.humanUnit);
+            ProcessUnitCasualties(RpgGameState.enemyAttackerUnit);
+            RpgGameState.enemyAttackerUnit = null;
+        } else if (RpgGameState.transition == RpgGameState.MapTransition.UnitDestroyed) {
+            GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/unit_destroyed.wav"));
+            GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/mission_failed.wav"));
+        } else if (RpgGameState.transition == RpgGameState.MapTransition.BaseAttackSimulation) {
+            ProcessStarBaseCasualties(RpgGameState.garrisonStarBase);
+            ProcessUnitCasualties(RpgGameState.enemyAttackerUnit);
+            RpgGameState.enemyAttackerUnit = null;
+            RpgGameState.garrisonStarBase = null;
+        }
+
         RenderMap();
 
         _movementToggle = GetNode<TextureButton>("UI/MovementToggle");
@@ -103,6 +123,13 @@ public class MapView : Node2D {
         GetNode<TextureButton>("UI/MiningButton").Connect("pressed", this, nameof(OnMiningButton));
         GetNode<TextureButton>("UI/ActionMenuButton").Connect("pressed", this, nameof(OnActionMenuButton));
         GetNode<TextureButton>("UI/ResearchButton").Connect("pressed", this, nameof(OnResearchButton));
+
+        _starBaseAttackPopup = GetNode<PopupNode>("UI/BaseUnderAttackPopup");
+        _starBaseAttackPopup.GetNode<ButtonNode>("PlayButton").Connect("pressed", this, nameof(OnStarBaseAttackPlayButton));
+
+        _krigiaTaskForcePopup = GetNode<PopupNode>("UI/KrigiaTaskForcePopup");
+        _krigiaTaskForcePopup.GetNode<ButtonNode>("FightButton").Connect("pressed", this, nameof(OnFightEventUnit));
+        _krigiaTaskForcePopup.GetNode<ButtonNode>("LeaveButton").Connect("pressed", this, nameof(OnKrigiaTaskForceLeaveButton));
 
         _krigiaPatrolPopup = GetNode<PopupNode>("UI/KrigiaPatrolPopup");
         _krigiaPatrolPopup.GetNode<ButtonNode>("FightButton").Connect("pressed", this, nameof(OnFightEventUnit));
@@ -154,18 +181,12 @@ public class MapView : Node2D {
         _cameraSpeed = new Vector2(256, 0);
 
         if (RpgGameState.transition == RpgGameState.MapTransition.EnemyBaseAttackRepelled) {
-            var list = _currentSystem.sys.starBase.garrison;
-            list.RemoveRange(0, Math.Min(RpgGameState.enemyBaseNumAttackers, list.Count));
             ShowBattleResults();
         } else if (RpgGameState.transition == RpgGameState.MapTransition.EnemyUnitDestroyed) {
             ShowBattleResults();
         } else if (RpgGameState.transition == RpgGameState.MapTransition.UnitDestroyed) {
-            // TODO: if there are more units left, it's not a defeat.
-            GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/unit_destroyed.wav"));
-            GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/mission_failed.wav"));
             _lockControls = true;
             _human.node.Visible = false;
-            return;
         }
 
         if (_currentSystem != null) {
@@ -174,10 +195,48 @@ public class MapView : Node2D {
         UpdateUI();
     }
 
+    private List<Vessel> FindSurvivors(List<Vessel> fleet) {
+        return fleet.FindAll(v => v.hp > 0);
+    }
+
+    private void ProcessStarBaseCasualties(StarBase starBase) {
+        starBase.garrison = FindSurvivors(starBase.garrison);
+        foreach (var v in starBase.garrison) {
+            v.energy = v.energySource.maxBackupEnergy;
+        }
+    }
+
+    private void ProcessUnitCasualties(SpaceUnit unit) {
+        unit.fleet = FindSurvivors(unit.fleet);
+        if (unit.fleet.Count == 0) {
+            if (unit.botOrigin != null) {
+                unit.botOrigin.units.Remove(unit);
+            }
+            RpgGameState.spaceUnits.Remove(unit);
+        }
+    }
+
+    private void OnStarBaseAttackPlayButton() {
+        var u = _eventUnit;
+        RpgGameState.enemyAttackerUnit = u.unit;
+
+        // TODO: allow units selection?
+        var starBase = RpgGameState.starSystemByPos[u.unit.pos].starBase;
+        var numDefenders = Math.Min(starBase.garrison.Count, 4);
+        var defenders = new List<Vessel>();
+        for (int i = 0; i < numDefenders; i++) {
+            defenders.Add(starBase.garrison[i]);
+        }
+        RpgGameState.garrisonStarBase = starBase;
+
+        SetArenaSettings(u.unit.fleet, defenders);
+        GetTree().ChangeScene("res://scenes/ArenaScreen.tscn");
+    }
+
     private void OnFightEventUnit() {
         var u = _eventUnit;
-        RpgGameState.enemyAttackerUnit = u;
-        SetArenaSettings(u.fleet);
+        RpgGameState.enemyAttackerUnit = u.unit;
+        SetArenaSettings(u.unit.fleet, RpgGameState.humanUnit.fleet);
         GetTree().ChangeScene("res://scenes/ArenaScreen.tscn");
     }
 
@@ -188,7 +247,16 @@ public class MapView : Node2D {
     private void OnScavengersLeaveButton() {
         _lockControls = false;
         _scavengersEventPopup.Hide();
-        RpgGameState.fuel -= RetreatFuelCost();
+
+        var u = (ScavengerSpaceUnitNode)_eventUnit;
+        if (ScavengersWantToAttack(u)) {
+            RpgGameState.fuel -= RetreatFuelCost();
+        } else {
+            // Scare them off.
+            u.unit.botSystemLeaveDelay = 0;
+            u.PickNewWaypoint();
+        }
+
         UpdateUI();
     }
 
@@ -197,6 +265,37 @@ public class MapView : Node2D {
         _krigiaPatrolPopup.Hide();
         RpgGameState.fuel -= RetreatFuelCost();
         UpdateUI();
+    }
+
+    private void OnKrigiaTaskForceLeaveButton() {
+        _lockControls = false;
+        _krigiaTaskForcePopup.Hide();
+        RpgGameState.fuel -= RetreatFuelCost();
+        UpdateUI();
+
+        if (_currentSystem.sys.starBase != null) {
+            TaskForceAttacksHumanBase(_currentSystem.sys.starBase, _eventUnit);
+        }
+    }
+
+    private void TaskForceAttacksHumanBase(StarBase starBase, SpaceUnitNode taskForce) {
+        if (starBase.garrison.Count != 0) {
+            var roll = QRandom.Float();
+            if (roll < 0.25) {
+                TriggerBaseAttackEvent(taskForce);
+            }
+            return;
+        }
+
+        var damage = RpgGameState.humanUnit.fleet.Count;
+        starBase.hp -= damage;
+        if (starBase.hp <= 0) {
+            // TODO: create notification.
+            StopMovement();
+            RpgGameState.humanBases.Remove(starBase);
+            _starSystems[starBase.system.id].DestroyStarBase();
+            GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/base_eradicated.wav"));
+        }
     }
 
     private void ShowBattleResults() {
@@ -437,7 +536,7 @@ public class MapView : Node2D {
             case RandomEvent.EffectKind.EnterArena: {
                     var unit = (SpaceUnit)effect.value;
                     RpgGameState.enemyAttackerUnit = unit;
-                    SetArenaSettings(unit.fleet);
+                    SetArenaSettings(unit.fleet, RpgGameState.humanUnit.fleet);
                     _randomEventResolutionPostEffect = effect.kind;
                     return;
                 }
@@ -606,6 +705,9 @@ public class MapView : Node2D {
     }
 
     private void OnMovementTogglePressed() {
+        if (_lockControls) {
+            return;
+        }
         RpgGameState.mapState.movementEnabled = !RpgGameState.mapState.movementEnabled;
     }
 
@@ -695,12 +797,45 @@ public class MapView : Node2D {
         }
     }
 
+    private void OnSpaceUnitAttackStarBase(SpaceUnitNode unitNode) {
+        if (unitNode.unit.owner != RpgGameState.krigiaPlayer) {
+            // Other race task forces are not implemented yet.
+            throw new Exception("unexpected star base attack from " + unitNode.unit.owner.PlayerName);
+        }
+
+        if (unitNode.unit.pos == RpgGameState.humanUnit.pos) {
+            TriggerKrigiaTaskForceEvent(unitNode);
+            return;
+        }
+        var sys = RpgGameState.starSystemByPos[unitNode.unit.pos];
+        TaskForceAttacksHumanBase(sys.starBase, unitNode);
+    }
+
     private void OnSpaceUnitRemoved(SpaceUnitNode unitNode) {
         _spaceUnits.Remove(unitNode);
     }
 
+    private void OnDroneDestroyed(SpaceUnitNode unitNode) {
+        GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/interface/generic_notification.wav"));
+        var notification = MapBadNotificationNode.New("Drone destroyed");
+        AddChild(notification);
+        notification.GlobalPosition = unitNode.GlobalPosition;
+    }
+
+    private void OnBaseDetected(SpaceUnitNode unitNode) {
+        GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/interface/generic_notification.wav"));
+        var notification = MapBadNotificationNode.New("Base detected");
+        AddChild(notification);
+        notification.GlobalPosition = unitNode.GlobalPosition;
+    }
+
     private void AddSpaceUnit(SpaceUnitNode unitNode) {
-        unitNode.Connect("Removed", this, nameof(OnSpaceUnitRemoved), new Godot.Collections.Array{unitNode});
+        var args = new Godot.Collections.Array{unitNode};
+        unitNode.Connect("AttackStarBase", this, nameof(OnSpaceUnitAttackStarBase), args);
+        unitNode.Connect("Removed", this, nameof(OnSpaceUnitRemoved), args);
+        unitNode.Connect("DroneDestroyed", this, nameof(OnDroneDestroyed), args);
+        unitNode.Connect("BaseDetected", this, nameof(OnBaseDetected), args);
+
         AddChild(unitNode);
         // unitNode.GlobalPosition = unitNode.unit.pos;
         _spaceUnits.Add(unitNode);
@@ -796,10 +931,13 @@ public class MapView : Node2D {
         }
 
         if (RpgGameState.randomEventCooldown == 0 && sys.randomEventCooldown == 0) {
-            MaybeTriggerEnterSystemEvent(sys);
-            // TODO: should depend on the game settings.
-            sys.randomEventCooldown += QRandom.IntRange(250, 450);
-            RpgGameState.randomEventCooldown += QRandom.IntRange(100, 150);
+            var roll = QRandom.Float();
+            if (roll < 0.5) {
+                MaybeTriggerEnterSystemEvent(sys);
+                // TODO: should depend on the game settings.
+                sys.randomEventCooldown += QRandom.IntRange(250, 450);
+                RpgGameState.randomEventCooldown += QRandom.IntRange(100, 150);
+            }
         }
     }
 
@@ -963,6 +1101,8 @@ public class MapView : Node2D {
         } else {
             ProcessStarSystemDay();
         }
+
+        ProcessKrigiaActions();
     }
 
     private void ProcessResearch() {
@@ -997,8 +1137,8 @@ public class MapView : Node2D {
 
         GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/research_completed.wav"));
 
-        var notification = MapNotificationNode.New("Research completed");
         var button = GetNode<TextureButton>("UI/ResearchButton");
+        var notification = MapNotificationNode.New("Research completed");
         button.AddChild(notification);
         notification.Position += button.RectSize / 2;
 
@@ -1028,8 +1168,8 @@ public class MapView : Node2D {
         _currentSystem.UpdateInfo();
         _currentSystem.RenderKnownInfo();
 
-        foreach (var u in RpgGameState.spaceUnits) {
-            if (u.pos == _currentSystem.sys.pos) {
+        foreach (var u in _spaceUnits) {
+            if (u.unit.pos == _currentSystem.sys.pos) {
                 if (RollUnitAttack(u)) {
                     return;
                 }
@@ -1043,13 +1183,13 @@ public class MapView : Node2D {
         }
     }
 
-    private bool RollUnitAttack(SpaceUnit u) {
-        if (u.owner == RpgGameState.scavengerPlayer) {
+    private bool RollUnitAttack(SpaceUnitNode u) {
+        if (u.unit.owner == RpgGameState.scavengerPlayer) {
             TriggerScavengersEvent(u);
             return true;
         }
-        if (u.owner == RpgGameState.krigiaPlayer) {
-            if (u.botProgram == SpaceUnit.Program.KrigiaPatrol) {
+        if (u.unit.owner == RpgGameState.krigiaPlayer) {
+            if (u.unit.botProgram == SpaceUnit.Program.KrigiaPatrol) {
                 TriggerKrigiaPatrolEvent(u);
             }
             return true;
@@ -1058,16 +1198,17 @@ public class MapView : Node2D {
         return false;
     }
 
-    private bool ScavengersWantToAttack(SpaceUnit u) {
-        if (u.CargoFree() == 0) {
-            return false;
-        }
-        var scavengersForce = u.FleetCost();
-        var humanForce = RpgGameState.humanUnit.FleetCost();
-        return scavengersForce * 2 > humanForce;
+    private bool ScavengersWantToAttack(SpaceUnitNode u) {
+        return false;
+        // if (u.CargoFree() == 0) {
+        //     return false;
+        // }
+        // var scavengersForce = u.FleetCost();
+        // var humanForce = RpgGameState.humanUnit.FleetCost();
+        // return scavengersForce * 2 > humanForce;
     }
 
-    private void TriggerKrigiaPatrolEvent(SpaceUnit u) {
+    private void TriggerKrigiaPatrolEvent(SpaceUnitNode u) {
         _krigiaPatrolPopup.GetNode<ButtonNode>("LeaveButton").Disabled = RpgGameState.fuel < RetreatFuelCost();
 
         GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/interface/random_event.wav"));
@@ -1077,10 +1218,28 @@ public class MapView : Node2D {
         _krigiaPatrolPopup.PopupCentered();
     }
 
-    private void TriggerScavengersEvent(SpaceUnit u) {
-        var pluralSuffix = u.fleet.Count == 1 ? "" : "s";
+    private void TriggerBaseAttackEvent(SpaceUnitNode u) {
+        GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/base_under_attack.wav"));
+        StopMovement();
+        _lockControls = true;
+        _eventUnit = u;
+        _starBaseAttackPopup.PopupCentered();
+    }
+
+    private void TriggerKrigiaTaskForceEvent(SpaceUnitNode u) {
+        _krigiaTaskForcePopup.GetNode<ButtonNode>("LeaveButton").Disabled = RpgGameState.fuel < RetreatFuelCost();
+
+        GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/interface/random_event.wav"));
+        StopMovement();
+        _lockControls = true;
+        _eventUnit = u;
+        _krigiaTaskForcePopup.PopupCentered();
+    }
+
+    private void TriggerScavengersEvent(SpaceUnitNode u) {
+        var pluralSuffix = u.unit.fleet.Count == 1 ? "" : "s";
         var text = "Short-range radars detect the scavengers raid unit. ";
-        text += "They have " + u.fleet.Count + " vessel" + pluralSuffix + ".\n\n";
+        text += "They have " + u.unit.fleet.Count + " vessel" + pluralSuffix + ".\n\n";
         if (ScavengersWantToAttack(u)) {
             text += "Based on the fact that it's moving towards your direction, ";
             text += "the battle is imminent, unless you sacrifice some fuel and warp away.";
@@ -1104,6 +1263,15 @@ public class MapView : Node2D {
     private void ProcessUnits() {
         foreach (var u in _spaceUnits) {
             u.ProcessDay();
+
+            // TODO: pass a star system node as an argument?
+            // if (!RpgGameState.starSystemByPos.ContainsKey(u.unit.pos)) {
+            //     u.ProcessDay(null);
+            // } else {
+            //     var sys = RpgGameState.starSystemByPos[u.unit.pos];
+            //     var sysNode = _starSystems[sys.id];
+            //     u.ProcessDay(sysNode);
+            // }
         }
     }
 
@@ -1210,23 +1378,21 @@ public class MapView : Node2D {
         return -1;
     }
 
-    private void SetArenaSettings(List<Vessel> enemyFleet) {
-        for (int i = 0; i < enemyFleet.Count; i++) {
-            var pos = new Vector2(1568, 288 + (i * 192));
-            enemyFleet[i].spawnPos = QMath.RandomizedLocation(pos, 40);
-        }
-
+    private void SetArenaSettings(List<Vessel> enemyFleet, List<Vessel> alliedFleet) {
         ArenaSettings.Reset();
         ArenaSettings.isQuickBattle = false;
 
-        for (int i = 0; i < RpgGameState.humanUnit.fleet.Count; i++) {
-            var pos = new Vector2(224, 288 + (i * 192));
-            var v = RpgGameState.humanUnit.fleet[i];
+        for (int i = 0; i < enemyFleet.Count; i++) {
+            var pos = new Vector2(1568, 288 + (i * 192));
+            var v = enemyFleet[i];
             v.spawnPos = QMath.RandomizedLocation(pos, 40);
             ArenaSettings.combatants.Add(v);
         }
 
-        foreach (var v in enemyFleet) {
+        for (int i = 0; i < alliedFleet.Count; i++) {
+            var pos = new Vector2(224, 288 + (i * 192));
+            var v = alliedFleet[i];
+            v.spawnPos = QMath.RandomizedLocation(pos, 40);
             ArenaSettings.combatants.Add(v);
         }
     }
@@ -1245,30 +1411,161 @@ public class MapView : Node2D {
             }
         }
 
-        var numAttackersRoll = QRandom.Float();
-        int numAttackers = 4;
-        if (numAttackersRoll < 0.5) {
-            numAttackers = 3;
+        var numDefenders = Math.Min(starBase.garrison.Count, 4);
+        var defenders = new List<Vessel>();
+        for (int i = 0; i < numDefenders; i++) {
+            defenders.Add(starBase.garrison[i]);
         }
+        RpgGameState.garrisonStarBase = starBase;
 
-        if (numAttackers > starBase.garrison.Count) {
-            numAttackers = starBase.garrison.Count;
-        }
-        RpgGameState.enemyBaseNumAttackers = numAttackers;
-
-        var enemyFleet = new List<Vessel>();
-        for (int i = 0; i < numAttackers; i++) {
-            enemyFleet.Add(starBase.garrison[i]);
-        }
-
-        SetArenaSettings(enemyFleet);
+        SetArenaSettings(defenders, RpgGameState.humanUnit.fleet);
 
         GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/unit_under_attack.wav"));
         StopMovement();
         _lockControls = true;
-        var pluralSuffix = numAttackers == 1 ? "" : "s";
-        _fleetAttackPopup.GetNode<Label>("Attackers").Text = $"Attackers: {numAttackers} {starBase.owner.PlayerName} ship" + pluralSuffix;
+        var pluralSuffix = numDefenders == 1 ? "" : "s";
+        _fleetAttackPopup.GetNode<Label>("Attackers").Text = $"Attackers: {numDefenders} {starBase.owner.PlayerName} ship" + pluralSuffix;
         _fleetAttackPopup.GetNode<Button>("RetreatButton").Disabled = RpgGameState.fuel < RetreatFuelCost();
         _fleetAttackPopup.PopupCentered();
+    }
+
+    private void KrigiaBaseRequestReinforcements(StarBase starBase) {
+        if (starBase.botReinforcementsDelay > 0) {
+            return;
+        }
+        starBase.botReinforcementsDelay = QRandom.IntRange(100, 200);
+
+        var connectedSystems = RpgGameState.starSystemConnections[starBase.system];
+        StarBase alliedBase = null;
+        foreach (var sys in connectedSystems) {
+            if (sys.starBase == null || sys.starBase.owner != starBase.owner) {
+                continue;
+            }
+            if (sys.starBase.garrison.Count <= starBase.garrison.Count) {
+                continue;
+            }
+            alliedBase = sys.starBase;
+            break;
+        }
+        if (alliedBase == null) {
+            return;
+        }
+
+        var reinforcementsFleet = new List<Vessel>();
+        var groupSize = QRandom.IntRange(2, 4);
+        var keptInGarrison = alliedBase.garrison.FindAll(v => {
+            if (v.design.level <= 2) {
+                return true;
+            }
+            if (reinforcementsFleet.Count == groupSize) {
+                return true;
+            }
+            reinforcementsFleet.Add(v);
+            return false;
+        });
+
+        if (reinforcementsFleet.Count < groupSize) {
+            return;
+        }
+
+        alliedBase.garrison = keptInGarrison;
+
+        var spaceUnit = new SpaceUnit {
+            owner = RpgGameState.krigiaPlayer,
+            pos = alliedBase.system.pos,
+            waypoint = starBase.system.pos,
+            botOrigin = alliedBase,
+            botProgram = SpaceUnit.Program.KrigiaReinforcements,
+            fleet = reinforcementsFleet,
+        };
+        RpgGameState.spaceUnits.Add(spaceUnit);
+        alliedBase.units.Add(spaceUnit);
+
+        var unitNode = KrigiaSpaceUnitNode.New(spaceUnit);
+        AddSpaceUnit(unitNode);
+    }
+
+    private void ProcessKrigiaActions() {
+        // 1 Choose a star base to attack
+        // 2 If nearest Krigia star base has enough vessels, attack from there
+        // 2.1 Otherwise send a reinforcement unit there from somewhere
+        // 2.2 If it's impossible to get enough vessels to do an attack, drop the idea
+        // 3 Send a task force unit from that Krigia star base
+
+        RpgGameState.krigiaPlans.taskForceDelay = QMath.ClampMin(RpgGameState.krigiaPlans.taskForceDelay - 1, 0);
+
+        if (RpgGameState.day < 400) {
+            return;
+        }
+
+        if (RpgGameState.krigiaPlans.taskForceDelay != 0) {
+            return;
+        }
+
+        var potentialTargets = new List<StarBase>();
+        foreach (var starBase in RpgGameState.humanBases) {
+            if (!starBase.discoveredByKrigia) {
+                continue;
+            }
+            potentialTargets.Add(starBase);
+        }
+        if (potentialTargets.Count == 0) {
+            return;
+        }
+
+        var targetBase = QRandom.Element(potentialTargets);
+
+        StarBase nearestStarBase = null;
+        var connectedSystems = RpgGameState.starSystemConnections[targetBase.system];
+        foreach (var sys in connectedSystems) {
+            if (sys.starBase == null || sys.starBase.owner != RpgGameState.krigiaPlayer) {
+                continue;
+            }
+            if (nearestStarBase == null) {
+                nearestStarBase = sys.starBase;
+            } else if (sys.pos.DistanceTo(targetBase.system.pos) < nearestStarBase.system.pos.DistanceTo(targetBase.system.pos)) {
+                nearestStarBase = sys.starBase;
+            }
+        }
+        if (nearestStarBase == null) {
+            return; // Target system is out of reach
+        }
+
+        var taskForceFleet = new List<Vessel>();
+        var groupSize = QRandom.IntRange(2, 4);
+        var keptInGarrison = nearestStarBase.garrison.FindAll(v => {
+            if (v.design.level <= 2) {
+                return true;
+            }
+            if (taskForceFleet.Count == groupSize) {
+                return true;
+            }
+            taskForceFleet.Add(v);
+            return false;
+        });
+
+        if (taskForceFleet.Count < groupSize) {
+            // Can't assemble a task force from this base.
+            KrigiaBaseRequestReinforcements(nearestStarBase);
+            RpgGameState.krigiaPlans.taskForceDelay = QRandom.IntRange(60, 90);
+            return;
+        }
+
+        nearestStarBase.garrison = keptInGarrison;
+
+        var spaceUnit = new SpaceUnit {
+            owner = RpgGameState.krigiaPlayer,
+            pos = nearestStarBase.system.pos,
+            waypoint = targetBase.system.pos,
+            botOrigin = nearestStarBase,
+            botProgram = SpaceUnit.Program.KrigiaTaskForce,
+            fleet = taskForceFleet,
+        };
+        RpgGameState.spaceUnits.Add(spaceUnit);
+        nearestStarBase.units.Add(spaceUnit);
+        RpgGameState.krigiaPlans.taskForceDelay = QRandom.IntRange(200, 300);
+
+        var unitNode = KrigiaSpaceUnitNode.New(spaceUnit);
+        AddSpaceUnit(unitNode);
     }
 }

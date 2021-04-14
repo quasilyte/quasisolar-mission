@@ -447,7 +447,7 @@ margin_top = 8.0
 margin_right = 336.0
 margin_bottom = 32.0
 theme = ExtResource( 6 )
-text = "We are under attack!"
+text = "Unit under attack!"
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -458,7 +458,7 @@ margin_top = 40.0
 margin_right = 352.0
 margin_bottom = 64.0
 theme = ExtResource( 6 )
-text = "Attackers: 3 Krigian ships"
+text = "Attackers: 3 Krigia ships"
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -1107,6 +1107,7 @@ margin_top = 272.0
 margin_right = 368.0
 margin_bottom = 304.0
 focus_mode = 2
+disabled = true
 text = "Communicate"
 
 [node name="LeaveButton" parent="UI/KrigiaPatrolPopup" instance=ExtResource( 19 )]
@@ -1116,3 +1117,118 @@ margin_right = 560.0
 margin_bottom = 304.0
 focus_mode = 2
 text = "Retreat"
+
+[node name="KrigiaTaskForcePopup" parent="UI" instance=ExtResource( 18 )]
+margin_left = 784.0
+margin_top = 32.0
+margin_right = 1360.0
+margin_bottom = 352.0
+
+[node name="Label" type="Label" parent="UI/KrigiaTaskForcePopup"]
+margin_right = 576.0
+margin_bottom = 32.0
+theme = ExtResource( 6 )
+text = "Krigia Task Force"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="UI/KrigiaTaskForcePopup"]
+margin_left = 16.0
+margin_top = 32.0
+margin_right = 560.0
+margin_bottom = 256.0
+custom_styles/panel = ExtResource( 20 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Text" type="Label" parent="UI/KrigiaTaskForcePopup/Panel"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 528.0
+margin_bottom = 208.0
+text = "Krigia fleet is about to attack a star base.
+
+You can try to escape, but that will put the star base in danger.
+
+Task force is in \"do or die\" mode, they'll not consider any negotiations."
+align = 1
+valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FightButton" parent="UI/KrigiaTaskForcePopup" instance=ExtResource( 19 )]
+margin_left = 16.0
+margin_top = 272.0
+margin_right = 176.0
+margin_bottom = 304.0
+focus_mode = 2
+text = "Attack"
+
+[node name="LeaveButton" parent="UI/KrigiaTaskForcePopup" instance=ExtResource( 19 )]
+margin_left = 400.0
+margin_top = 272.0
+margin_right = 560.0
+margin_bottom = 304.0
+focus_mode = 2
+text = "Retreat"
+
+[node name="BaseUnderAttackPopup" parent="UI" instance=ExtResource( 18 )]
+margin_left = 768.0
+margin_top = 208.0
+margin_right = 1184.0
+margin_bottom = 384.0
+
+[node name="Title" type="Label" parent="UI/BaseUnderAttackPopup"]
+margin_right = 416.0
+margin_bottom = 32.0
+text = "Base is under attack!"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PlayButton" parent="UI/BaseUnderAttackPopup" instance=ExtResource( 19 )]
+margin_left = 16.0
+margin_top = 128.0
+margin_right = 192.0
+margin_bottom = 160.0
+text = "Play Battle"
+
+[node name="QuickResultsButton" parent="UI/BaseUnderAttackPopup" instance=ExtResource( 19 )]
+margin_left = 224.0
+margin_top = 128.0
+margin_right = 400.0
+margin_bottom = 160.0
+focus_mode = 2
+disabled = true
+text = "Quick Results"
+
+[node name="Panel" type="Panel" parent="UI/BaseUnderAttackPopup"]
+margin_left = 16.0
+margin_top = 32.0
+margin_right = 400.0
+margin_bottom = 112.0
+custom_styles/panel = ExtResource( 20 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="UI/BaseUnderAttackPopup/Panel"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 368.0
+margin_bottom = 64.0
+text = "The star base garrison will try to repel the attack."
+align = 1
+valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}

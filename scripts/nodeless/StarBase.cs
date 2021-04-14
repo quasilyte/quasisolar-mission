@@ -28,6 +28,8 @@ public class StarBase {
     // For bots: base-controlled space units.
     public HashSet<SpaceUnit> units = new HashSet<SpaceUnit>();
     public int botPatrolDelay = 0;
+    public int botReinforcementsDelay = 0;
+    public int botProductionDelay = 0;
 
     public const int maxGarrisonSize = 24;
     public const int maxBaseLevel = 5;

@@ -16,6 +16,7 @@ public static class RpgGameState {
         ExitStarBase,
         ExitResearchScreen,
         UnitDestroyed,
+        BaseAttackSimulation,
         EnemyUnitDestroyed,
         EnemyBaseAttackRepelled,
     }
@@ -24,6 +25,12 @@ public static class RpgGameState {
         public bool movementEnabled;
         public UnitMode mode;
     }
+
+    public class KrigiaPlans {
+        public int taskForceDelay = 0;
+    }
+
+    public static KrigiaPlans krigiaPlans;
 
     public static MapTransition transition;
     public static BattleResult lastBattleResult;
@@ -103,6 +110,7 @@ public static class RpgGameState {
 
     public static int enemyBaseNumAttackers;
     public static SpaceUnit enemyAttackerUnit;
+    public static StarBase garrisonStarBase;
 
     public static StarSystem StartingSystem() { return starSystems[startingSystemID]; }
 
@@ -178,6 +186,8 @@ public static class RpgGameState {
         krigiaReputation = 0;
         wertuReputation = 0;
         zythReputation = 0;
+
+        krigiaPlans = new KrigiaPlans();
 
         researchProgress = 0;
         currentResearch = null;

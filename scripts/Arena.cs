@@ -34,6 +34,8 @@ public class Arena : Node2D {
     private List<Pilot> _pilots;
     private Dictionary<Vessel, Pilot> _pilotByVessel;
     private Dictionary<Pilot, Vessel> _vesselByPilot;
+    private Pilot _flagshipPilot;
+    private bool _battleIsOver = false;
 
     private void ApplyAllianceColor(Node2D n, int alliance) {
         // 1 normal (bright)
@@ -97,7 +99,11 @@ public class Arena : Node2D {
         human.camera = v.camera;
         human.canvas = v.canvasLayer;
         human.playerInput = new PlayerInput(isGamepad, deviceId);
-        human.Connect("Defeated", this, nameof(OnHumanDefeated));
+
+        if (deviceId == 0) {
+            _flagshipPilot = pilot;
+            human.Connect("Defeated", this, nameof(OnHumanDefeated));
+        }
 
         var sentinel = AttackSentinelNode.New(human.pilot.Vessel, SentinelDesign.list[0]);
         AddChild(sentinel);
@@ -229,8 +235,10 @@ public class Arena : Node2D {
         if (ArenaSettings.isQuickBattle) {
             return;
         }
+        if (_battleIsOver) {
+            return;
+        }
 
-        var result = new BattleResult();
         var alliances = new HashSet<int>();
         foreach (Pilot p in _pilots) {
             if (p.Active) {
@@ -238,10 +246,23 @@ public class Arena : Node2D {
                 if (alliances.Count > 1) {
                     return;
                 }
+            }
+        }
+
+        _battleIsOver = true;
+
+        var result = new BattleResult();
+        var survivors = new List<Pilot>();
+        foreach (Pilot p in _pilots) {
+            var vessel = _vesselByPilot[p];
+            if (p.Active) {
+                vessel.hp = p.Vessel.State.hp;
+                vessel.energy = p.Vessel.State.backupEnergy;
+                survivors.Add(p);
             } else {
+                vessel.hp = 0;
                 var roll = QRandom.FloatRange(0.8f, 1.2f);
                 var debris = (int)((float)p.Vessel.State.debris * roll);
-                var vessel = _vesselByPilot[p];
                 if (vessel.design.affiliation == "Krigia") {
                     result.krigiaDebris += debris;
                     RpgGameState.metKrigia = true;
@@ -263,48 +284,45 @@ public class Arena : Node2D {
         // alliances should contain only 1 element,
         // the victorious team.
         foreach (int alliance in alliances) {
-            HandleVictory(alliance, result);
+            HandleVictory(survivors, alliance, result);
+            break;
         }
     }
 
-    private void HandleVictory(int alliance, BattleResult result) {
+    private void HandleVictory(List<Pilot> survivors, int alliance, BattleResult result) {
         if (alliance != RpgGameState.humanPlayer.Alliance) {
-            TriggerDefeat();
+            if (_flagshipPilot != null) {
+                TriggerDefeat();
+                return;
+            }
+            RpgGameState.transition = RpgGameState.MapTransition.BaseAttackSimulation;
+            ChangeSceneAfterDelay("MapView");
             return;
         }
-
-        // TODO: if allies are possible, this mapping won't work.
-        var survivors = new List<Vessel>(RpgGameState.humanUnit.fleet.Count);
-        foreach (var vessel in RpgGameState.humanUnit.fleet) {
-            var pilot = _pilotByVessel[vessel];
-            if (!pilot.Active) {
-                continue;
-            }
-            vessel.hp = pilot.Vessel.State.hp;
-            vessel.energy = pilot.Vessel.State.backupEnergy;
-            survivors.Add(vessel);
-        }
-        RpgGameState.humanUnit.fleet = survivors;
-
-        if (RpgGameState.skillsLearned.Contains("Fighter")) {
-            result.exp += result.exp / 4;
-        }
-
-        // TODO: check for the cargo overflow.
-        RpgGameState.lastBattleResult = result;
 
         if (RpgGameState.enemyAttackerUnit != null) {
             var unit = RpgGameState.enemyAttackerUnit;
             result.minerals += unit.cargo.minerals / 2;
             result.organic += unit.cargo.organic / 2;
             result.power += unit.cargo.power / 2;
-    
-            RpgGameState.spaceUnits.Remove(RpgGameState.enemyAttackerUnit);
-            RpgGameState.enemyAttackerUnit = null;
-            RpgGameState.transition = RpgGameState.MapTransition.EnemyUnitDestroyed;
+
+            if (_flagshipPilot == null) {
+                RpgGameState.transition = RpgGameState.MapTransition.BaseAttackSimulation;
+            } else {
+                RpgGameState.transition = RpgGameState.MapTransition.EnemyUnitDestroyed;
+            }
         } else {
             RpgGameState.transition = RpgGameState.MapTransition.EnemyBaseAttackRepelled;
         }
+
+        if (_flagshipPilot != null) {
+            if (RpgGameState.skillsLearned.Contains("Fighter")) {
+                result.exp += result.exp / 4;
+            }
+            // TODO: check for the cargo overflow.
+            RpgGameState.lastBattleResult = result;
+        }
+
         ChangeSceneAfterDelay("MapView");
     }
 

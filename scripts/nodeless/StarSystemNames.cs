@@ -102,13 +102,10 @@ public static class StarSystemNames {
         "Kalliope",
         "Castor",
 
-        "Khamsin",
         "Nereida",
         "Fortuna",
         "Nemesis",
         "Echo",
-        "Deckard",
         "Aldebaran",
-        "Somnambulist",
     };
 }

@@ -40,6 +40,14 @@ public class ScavengerSpaceUnitNode : SpaceUnitNode {
         Visible = _canBeDetected && RpgGameState.humanUnit.pos.DistanceTo(GlobalPosition) <= RpgGameState.RadarRange();
     }
 
+    public void PickNewWaypoint() {
+        var destinationOptions = RpgGameState.starSystemConnections[_currentSystem];
+        var nextSystem = QRandom.Element(destinationOptions);
+        _currentSystem = null;
+        unit.waypoint = nextSystem.pos;
+        _canBeDetected = true;
+    }
+
     public override void ProcessDay() {
         base.ProcessDay();
 
@@ -50,11 +58,8 @@ public class ScavengerSpaceUnitNode : SpaceUnitNode {
         }
 
         if (unit.botSystemLeaveDelay == 0) {
-            var destinationOptions = RpgGameState.starSystemConnections[_currentSystem];
-            var nextSystem = QRandom.Element(destinationOptions);
-            _currentSystem = null;
-            unit.waypoint = nextSystem.pos;
-            _canBeDetected = true;
+            PickNewWaypoint();
+            return;
         }
 
         if (_currentSystem != null) {
@@ -96,8 +101,10 @@ public class ScavengerSpaceUnitNode : SpaceUnitNode {
             return collected;
         };
         foreach (var p in _currentSystem.resourcePlanets) {
-            // Destroy the drone.
-            p.hasMine = false;
+            if (p.hasMine) {
+                p.hasMine = false;
+                EmitSignal(nameof(DroneDestroyed));
+            }
 
             if (cargoFree == 0) {
                 break;

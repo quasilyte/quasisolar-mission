@@ -2,6 +2,9 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
+// TODO: star base level should affect what vessels are being produced
+// and how big the production delay is.
+
 public class KrigiaStarBaseNode : StarBaseNode {
     [Signal]
     public delegate void SpaceUnitCreated(SpaceUnitNode unit);
@@ -30,16 +33,25 @@ public class KrigiaStarBaseNode : StarBaseNode {
         var vesselProduced = ProcessProduction();
         if (vesselProduced != null) {
             VesselFactory.Init(vesselProduced, vesselProduced.design);
+            starBase.botProductionDelay = QRandom.IntRange(40, 80);
         }
 
         ProcessResources();
 
-        MaybeSendPatrol();
+        if (RpgGameState.day > 100) {
+            MaybeEnqueueVessel();
+        }
 
-        starBase.botPatrolDelay = QMath.ClampMin(starBase.botPatrolDelay - 1, 0);
+        if (RpgGameState.day > 60) {
+            MaybeSendPatrol();
+        }
     }
 
     private void ProcessResources() {
+        // Krigia has unlimited resources.
+        starBase.mineralsStock = 1000;
+        starBase.organicStock = 1000;
+        starBase.powerStock = 1000;
     }
 
     private void MaybeSendPatrol() {
@@ -91,10 +103,46 @@ public class KrigiaStarBaseNode : StarBaseNode {
         RpgGameState.spaceUnits.Add(spaceUnit);
         starBase.units.Add(spaceUnit);
 
-        starBase.botPatrolDelay = QRandom.IntRange(60, 140);
+        starBase.botPatrolDelay = QRandom.IntRange(100, 200);
 
         var unitNode = KrigiaSpaceUnitNode.New(spaceUnit);
         EmitSignal(nameof(SpaceUnitCreated), new object[] { unitNode });
+    }
+
+    private void MaybeEnqueueVessel() {
+        if (starBase.productionQueue.Count != 0) {
+            return;
+        }
+
+        var roll = QRandom.Float();
+        VesselDesign design = null;
+        if (RpgGameState.day < 1000) {
+            if (roll < 0.3) {
+                design = VesselDesign.Find("Krigia", "Talons");
+            } else if (roll < 0.6) {
+                design = VesselDesign.Find("Krigia", "Claws");
+            } else if (roll < 0.8) {
+                design = VesselDesign.Find("Krigia", "Fangs");
+            } else if (roll < 0.9) {
+                design = VesselDesign.Find("Krigia", "Tusks");
+            } else {
+                design = VesselDesign.Find("Krigia", "Horns");
+            }
+        } else {
+            if (roll < 0.1) {
+                design = VesselDesign.Find("Krigia", "Talons");
+            } else if (roll < 0.2) {
+                design = VesselDesign.Find("Krigia", "Claws");
+            } else if (roll < 0.6) {
+                design = VesselDesign.Find("Krigia", "Fangs");
+            } else if (roll < 0.8) {
+                design = VesselDesign.Find("Krigia", "Tusks");
+            } else {
+                design = VesselDesign.Find("Krigia", "Horns");
+            }
+        }
+
+        starBase.productionQueue.Enqueue(design);
     }
 
     private float InfluenceRadius() {

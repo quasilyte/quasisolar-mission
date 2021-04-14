@@ -5,6 +5,8 @@ public class SpaceUnit {
     public enum Program {
         GenericBehavior,
         KrigiaPatrol,
+        KrigiaTaskForce,
+        KrigiaReinforcements,
     }
 
     public const int maxFleetSize = 4;

@@ -25,6 +25,9 @@ public class StarBaseNode : Node2D {
     }
 
     public virtual void ProcessDay() {
+        starBase.botPatrolDelay = QMath.ClampMin(starBase.botPatrolDelay - 1, 0);
+        starBase.botReinforcementsDelay = QMath.ClampMin(starBase.botReinforcementsDelay - 1, 0);
+
         var pointsGained = 1f;
         if (starBase.mineralsStock >= 200) {
             pointsGained++;

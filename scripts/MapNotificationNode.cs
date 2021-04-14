@@ -2,7 +2,7 @@ using Godot;
 using System;
 
 public class MapNotificationNode : Node2D {
-    private string _text;
+    protected string _text;
 
     private static PackedScene _scene = null;
     public static MapNotificationNode New(string text) {
