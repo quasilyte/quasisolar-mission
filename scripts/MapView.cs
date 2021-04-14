@@ -81,9 +81,6 @@ public class MapView : Node2D {
             ProcessUnitCasualties(RpgGameState.humanUnit);
             ProcessUnitCasualties(RpgGameState.enemyAttackerUnit);
             RpgGameState.enemyAttackerUnit = null;
-        } else if (RpgGameState.transition == RpgGameState.MapTransition.UnitDestroyed) {
-            GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/unit_destroyed.wav"));
-            GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/mission_failed.wav"));
         } else if (RpgGameState.transition == RpgGameState.MapTransition.BaseAttackSimulation) {
             ProcessStarBaseCasualties(RpgGameState.garrisonStarBase);
             ProcessUnitCasualties(RpgGameState.enemyAttackerUnit);
@@ -187,6 +184,8 @@ public class MapView : Node2D {
         } else if (RpgGameState.transition == RpgGameState.MapTransition.UnitDestroyed) {
             _lockControls = true;
             _human.node.Visible = false;
+            GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/unit_destroyed.wav"));
+            GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/mission_failed.wav"));
         }
 
         if (_currentSystem != null) {
@@ -1199,13 +1198,12 @@ public class MapView : Node2D {
     }
 
     private bool ScavengersWantToAttack(SpaceUnitNode u) {
-        return false;
-        // if (u.CargoFree() == 0) {
-        //     return false;
-        // }
-        // var scavengersForce = u.FleetCost();
-        // var humanForce = RpgGameState.humanUnit.FleetCost();
-        // return scavengersForce * 2 > humanForce;
+        if (u.unit.CargoFree() == 0) {
+            return false;
+        }
+        var scavengersForce = u.unit.FleetCost();
+        var humanForce = RpgGameState.humanUnit.FleetCost();
+        return scavengersForce * 2 > humanForce;
     }
 
     private void TriggerKrigiaPatrolEvent(SpaceUnitNode u) {

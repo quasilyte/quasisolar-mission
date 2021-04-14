@@ -2,7 +2,7 @@ using Godot;
 using System;
 
 public class BackgroundMusic : AudioStreamPlayer {
-    public static bool _disabled = true;
+    public static bool _disabled = false;
 
     private AudioStream _mainMenuMusic = null;
     private AudioStream _outfitMusic = null;

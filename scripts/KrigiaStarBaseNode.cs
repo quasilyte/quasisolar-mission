@@ -38,11 +38,11 @@ public class KrigiaStarBaseNode : StarBaseNode {
 
         ProcessResources();
 
-        if (RpgGameState.day > 100) {
+        if (RpgGameState.day > 200) {
             MaybeEnqueueVessel();
         }
 
-        if (RpgGameState.day > 60) {
+        if (RpgGameState.day > 150) {
             MaybeSendPatrol();
         }
     }

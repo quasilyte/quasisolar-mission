@@ -107,7 +107,7 @@ public class VesselDesign: IItem {
             name = "Scout",
             affiliation = "Earthling",
             description = "A highly maneuverable budget design",
-            sellingPrice = 2200,
+            sellingPrice = 1750,
             debris = 30,
             productionTime = 10,
             availability = ProductionAvailability.Always,

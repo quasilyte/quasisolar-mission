@@ -47,7 +47,7 @@ public class NewGameScene : Node2D {
             new Option[]{
                 new Option{text = "12500", score = -25},
                 new Option{text = "4000", score = -10},
-                new Option{text = "1000", score = 0, selected = true},
+                new Option{text = "1500", score = 0, selected = true},
                 new Option{text = "0", score = 5},
             }
         },
@@ -74,9 +74,9 @@ public class NewGameScene : Node2D {
         {
             "KrigiaPresence",
             new Option[]{
-                new Option{text = "Minimal", value = "-3", score = -20},
-                new Option{text = "Normal", value = "0", score = 0, selected = true},
-                new Option{text = "High", value = "3", score = 15},
+                new Option{text = "Minimal", value = "minimal", score = -20},
+                new Option{text = "Normal", value = "normal", score = 0, selected = true},
+                new Option{text = "High", value = "high", score = 25},
             }
         },
 
@@ -520,7 +520,12 @@ public class NewGameScene : Node2D {
             new ResourcePlanet(1, 0, 0),
         };
 
-        var numKrigiaBases = QRandom.IntRange(7, 10) + OptionIntValue("KrigiaPresence");
+        var numKrigiaBases = QRandom.IntRange(7, 10);
+        if (OptionValue("KrigiaPresence") == "high") {
+            numKrigiaBases += 2;
+        } else if (OptionValue("KrigiaPresence") == "minimal") {
+            numKrigiaBases -= 2;
+        }
         var numWertuBases = QRandom.IntRange(3, 4);
         var numZythBases = QRandom.IntRange(2, 3);
         GD.Print($"deployed {numKrigiaBases} Krigia bases");
@@ -533,7 +538,7 @@ public class NewGameScene : Node2D {
         }
 
         // First step: deploy using the predetermined rules.
-        {
+        if (OptionValue("KrigiaPresence") != "minimal") {
             var sector = sectors[startingSector];
             sector.systems[1].starBase = new StarBase(sector.systems[1], RpgGameState.krigiaPlayer);
             InitKrigiaFleet(sector.systems[1].starBase, 25);
