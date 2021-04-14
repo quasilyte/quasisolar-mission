@@ -167,6 +167,15 @@ public static class RpgGameState {
     public static int OrganicSellPrice() { return 20; }
     public static int PowerSellPrice() { return 22; }
 
+    public static void PutItemToStorage(IItem item) {
+        for (int i = 0; i < 14; i++) {
+            if (RpgGameState.storage[i] == null) {
+                RpgGameState.storage[i] = item;
+                return;
+            }
+        }
+    }
+
     public static void Reset(ulong gameSeed) {
         day = 1;
 

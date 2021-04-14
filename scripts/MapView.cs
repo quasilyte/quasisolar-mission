@@ -1146,6 +1146,9 @@ public class MapView : Node2D {
 
         RpgGameState.technologiesResearched.Add(research.name);
 
+        var artifact = ArtifactDesign.Find(research.name);
+        RpgGameState.PutItemToStorage(artifact);
+
         RpgGameState.researchProgress = 0;
         RpgGameState.currentResearch = null;
 
