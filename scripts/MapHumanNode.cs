@@ -27,26 +27,13 @@ public class MapHumanNode : Node2D {
     }
 
     public override void _Draw() {
+        // FIXME: DrawCircle is slow.
         DrawUtils.DrawCircle(this, RpgGameState.RadarRange(), Color.Color8(200, 200, 200));
         if (node.GetDestination() == Vector2.Zero) {
             return;
         }
         DrawLine(Vector2.Zero, node.GetDestination() - GlobalPosition, Color.Color8(0x4b, 0xc2, 0x75), 1);
     }
-
-    /*
-    func draw_circle_arc(center, radius, angle_from, angle_to, color):
-    var nb_points = 32
-    var points_arc = PackedVector2Array()
-
-    for i in range(nb_points + 1):
-        var angle_point = deg2rad(angle_from + i * (angle_to-angle_from) / nb_points - 90)
-        points_arc.push_back(center + Vector2(cos(angle_point), sin(angle_point)) * radius)
-
-    for index_point in range(nb_points):
-        draw_line(points_arc[index_point], points_arc[index_point + 1], color)
-
-    */
 
     public void SetDestination(Vector2 dest) {
         node.SetDestination(dest);
