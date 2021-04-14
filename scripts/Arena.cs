@@ -256,7 +256,15 @@ public class Arena : Node2D {
         foreach (Pilot p in _pilots) {
             var vessel = _vesselByPilot[p];
             if (p.Active) {
-                vessel.hp = p.Vessel.State.hp;
+                var hpLoss = vessel.hp - p.Vessel.State.hp;
+                if (vessel.player == RpgGameState.humanPlayer) {
+                    if (RpgGameState.skillsLearned.Contains("Repair II")) {
+                        hpLoss *= 0.8f;
+                    } else if (RpgGameState.skillsLearned.Contains("Repair I")) {
+                        hpLoss *= 0.9f;
+                    }
+                }
+                vessel.hp -= hpLoss;
                 vessel.energy = p.Vessel.State.backupEnergy;
                 survivors.Add(p);
             } else {
@@ -302,9 +310,16 @@ public class Arena : Node2D {
 
         if (RpgGameState.enemyAttackerUnit != null) {
             var unit = RpgGameState.enemyAttackerUnit;
-            result.minerals += unit.cargo.minerals / 2;
-            result.organic += unit.cargo.organic / 2;
-            result.power += unit.cargo.power / 2;
+            if (RpgGameState.skillsLearned.Contains("Salvaging")) {
+                // Collect 80% of cargo instead of 50%.
+                result.minerals += QMath.IntAdjust(unit.cargo.minerals, 0.8);
+                result.organic += QMath.IntAdjust(unit.cargo.organic, 0.8);
+                result.power += QMath.IntAdjust(unit.cargo.power, 0.8);
+            } else {
+                result.minerals += unit.cargo.minerals / 2;
+                result.organic += unit.cargo.organic / 2;
+                result.power += unit.cargo.power / 2;
+            }
 
             if (_flagshipPilot == null) {
                 RpgGameState.transition = RpgGameState.MapTransition.BaseAttackSimulation;
@@ -315,9 +330,17 @@ public class Arena : Node2D {
             RpgGameState.transition = RpgGameState.MapTransition.EnemyBaseAttackRepelled;
         }
 
+        if (RpgGameState.skillsLearned.Contains("Salvaging")) {
+            // +5% debris.
+            result.genericDebris = QMath.IntAdjust(result.genericDebris, 1.05);
+            result.krigiaDebris = QMath.IntAdjust(result.krigiaDebris, 1.05);
+            result.wertuDebris = QMath.IntAdjust(result.wertuDebris, 1.05);
+            result.zythDebris = QMath.IntAdjust(result.zythDebris, 1.05);
+        }
+
         if (_flagshipPilot != null) {
             if (RpgGameState.skillsLearned.Contains("Fighter")) {
-                result.exp += result.exp / 4;
+                result.exp = QMath.IntAdjust(result.exp, 1.25);
             }
             // TODO: check for the cargo overflow.
             RpgGameState.lastBattleResult = result;

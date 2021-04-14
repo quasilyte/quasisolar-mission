@@ -240,7 +240,10 @@ public class MapView : Node2D {
     }
 
     private float RetreatFuelCost() {
-        return 75;
+        if (RpgGameState.skillsLearned.Contains("Escape Tactics")) {
+            return 35;
+        }
+        return 70;
     }
 
     private void OnScavengersLeaveButton() {
@@ -286,7 +289,7 @@ public class MapView : Node2D {
             return;
         }
 
-        var damage = RpgGameState.humanUnit.fleet.Count;
+        var damage = taskForce.unit.fleet.Count;
         starBase.hp -= damage;
         if (starBase.hp <= 0) {
             // TODO: create notification.
@@ -1075,11 +1078,11 @@ public class MapView : Node2D {
             travelSpeed /= 2;
         }
         if (RpgGameState.skillsLearned.Contains("Navigation III")) {
-            travelSpeed += travelSpeed * 0.2f;
+            travelSpeed += travelSpeed * 0.25f;
         } else if (RpgGameState.skillsLearned.Contains("Navigation II")) {
-            travelSpeed += travelSpeed * 0.15f;
+            travelSpeed += travelSpeed * 0.2f;
         } else if (RpgGameState.skillsLearned.Contains("Navigation I")) {
-            travelSpeed += travelSpeed * 0.1f;
+            travelSpeed += travelSpeed * 0.15f;
         }
         return travelSpeed;
     }
@@ -1306,22 +1309,32 @@ public class MapView : Node2D {
                 StopMovement();
                 return;
             }
-            if (starBase == null || starBase.garrison.Count != 0) {
-                return;
-            }
             if (starBase.owner.Alliance == RpgGameState.humanPlayer.Alliance) {
                 return;
             }
+            if (starBase == null) {
+                return;
+            }
+            
             RpgGameState.fuel -= 1;
-            if (starBase.owner.Alliance != _human.player.Alliance) {
-                var damage = RpgGameState.humanUnit.fleet.Count;
-                starBase.hp -= damage;
-                if (starBase.hp <= 0) {
-                    SetUnitMode(UnitMode.Idle);
-                    StopMovement();
-                    _currentSystem.DestroyStarBase();
-                    GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/enemy_base_eradicated.wav"));
+            
+            var damage = 0;
+            if (starBase.garrison.Count != 0) {
+                if (RpgGameState.skillsLearned.Contains("Siege Mastery II")) {
+                    damage = 1;
                 }
+            } else {
+                damage = RpgGameState.humanUnit.fleet.Count;
+                if (RpgGameState.skillsLearned.Contains("Siege Mastery I") || RpgGameState.skillsLearned.Contains("Siege Mastery II")) {
+                    damage *= 2;
+                }
+            }
+            starBase.hp -= damage;
+            if (starBase.hp <= 0) {
+                SetUnitMode(UnitMode.Idle);
+                StopMovement();
+                _currentSystem.DestroyStarBase();
+                GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/enemy_base_eradicated.wav"));
             }
             return;
         }

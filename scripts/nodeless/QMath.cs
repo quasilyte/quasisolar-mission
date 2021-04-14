@@ -21,6 +21,8 @@ static class QMath {
     public static float Rad2Deg(float rad) { return (float)((double)rad * (180 / Math.PI)); }
     public static float Deg2Rad(float deg) { return (float)((double)deg * (Math.PI / 180)); }
 
+    public static int IntAdjust(int x, double v) { return (int)((double)x * v); }
+
     public static float RotationDiff(float dstRotation, float rotation) {
         float rotationDiff = rotation - dstRotation;
         if (rotationDiff > Math.PI) {
