@@ -2,9 +2,6 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-// TODO: star base level should affect what vessels are being produced
-// and how big the production delay is.
-
 public class KrigiaStarBaseNode : StarBaseNode {
     [Signal]
     public delegate void SpaceUnitCreated(SpaceUnitNode unit);
@@ -117,40 +114,53 @@ public class KrigiaStarBaseNode : StarBaseNode {
         EmitSignal(nameof(SpaceUnitCreated), new object[] { unitNode });
     }
 
+    private VesselDesign ChooseVesselToProduce() {
+        VesselDesign design = null;
+        if (RpgGameState.day < 1000) {
+            while (true) {
+                var roll = QRandom.Float();
+                if (roll < 0.3) {
+                    design = VesselDesign.Find("Krigia", "Talons");
+                } else if (roll < 0.6) {
+                    design = VesselDesign.Find("Krigia", "Claws");
+                } else if (roll < 0.8) {
+                    design = VesselDesign.Find("Krigia", "Fangs");
+                } else if (roll < 0.9) {
+                    design = VesselDesign.Find("Krigia", "Tusks");
+                } else {
+                    design = VesselDesign.Find("Krigia", "Horns");
+                }
+                if (starBase.level >= ItemInfo.MinStarBaseLevel(design)) {
+                    return design;
+                }
+            }
+        } else {
+            while (true) {
+                var roll = QRandom.Float();
+                if (roll < 0.1) {
+                    design = VesselDesign.Find("Krigia", "Talons");
+                } else if (roll < 0.2) {
+                    design = VesselDesign.Find("Krigia", "Claws");
+                } else if (roll < 0.6) {
+                    design = VesselDesign.Find("Krigia", "Fangs");
+                } else if (roll < 0.8) {
+                    design = VesselDesign.Find("Krigia", "Tusks");
+                } else {
+                    design = VesselDesign.Find("Krigia", "Horns");
+                }
+                if (starBase.level >= ItemInfo.MinStarBaseLevel(design)) {
+                    return design;
+                }
+            }
+        }
+    }
+
     private void MaybeEnqueueVessel() {
         if (starBase.productionQueue.Count != 0) {
             return;
         }
 
-        var roll = QRandom.Float();
-        VesselDesign design = null;
-        if (RpgGameState.day < 1000) {
-            if (roll < 0.3) {
-                design = VesselDesign.Find("Krigia", "Talons");
-            } else if (roll < 0.6) {
-                design = VesselDesign.Find("Krigia", "Claws");
-            } else if (roll < 0.8) {
-                design = VesselDesign.Find("Krigia", "Fangs");
-            } else if (roll < 0.9) {
-                design = VesselDesign.Find("Krigia", "Tusks");
-            } else {
-                design = VesselDesign.Find("Krigia", "Horns");
-            }
-        } else {
-            if (roll < 0.1) {
-                design = VesselDesign.Find("Krigia", "Talons");
-            } else if (roll < 0.2) {
-                design = VesselDesign.Find("Krigia", "Claws");
-            } else if (roll < 0.6) {
-                design = VesselDesign.Find("Krigia", "Fangs");
-            } else if (roll < 0.8) {
-                design = VesselDesign.Find("Krigia", "Tusks");
-            } else {
-                design = VesselDesign.Find("Krigia", "Horns");
-            }
-        }
-
-        starBase.productionQueue.Enqueue(design);
+        starBase.productionQueue.Enqueue(ChooseVesselToProduce());
     }
 
     private float InfluenceRadius() {

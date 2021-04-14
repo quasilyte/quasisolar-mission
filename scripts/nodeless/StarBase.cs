@@ -34,7 +34,8 @@ public class StarBase {
     public const int maxGarrisonSize = 24;
     public const int maxBaseLevel = 5;
 
-    public StarBase(StarSystem sys, Player player) {
+    public StarBase(StarSystem sys, Player player, int level = 1) {
+        this.level = level;
         system = sys;
         owner = player;
         mineralsStock = 70 + QRandom.IntRange(0, 30);

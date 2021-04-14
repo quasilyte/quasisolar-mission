@@ -25,8 +25,42 @@ public class HumanStarBaseNode : StarBaseNode {
         notification.GlobalPosition = GlobalPosition;
     }
 
+    private void ProcessLevelProgression() {
+        var pointsGained = 1f;
+        if (starBase.mineralsStock >= 200) {
+            pointsGained++;
+            if (QRandom.Float() < 0.5) {
+                starBase.mineralsStock--;
+            }
+        }
+        if (starBase.organicStock >= 100) {
+            pointsGained++;
+            if (QRandom.Float() < 0.5) {
+                starBase.organicStock--;
+            }
+        }
+        if (starBase.powerStock >= 150) {
+            pointsGained++;
+            if (QRandom.Float() < 0.5) {
+                starBase.powerStock--;
+            }
+        }
+
+        starBase.levelProgression += pointsGained;
+        if (starBase.level < StarBase.maxBaseLevel) {
+            var upgradeCost = starBase.LevelUpgradeCost();
+            if (starBase.levelProgression >= upgradeCost) {
+                starBase.levelProgression = 0;
+                starBase.level++;
+                EmitSignal(nameof(LevelUpgraded));
+            }
+        }
+    }
+
     public override void ProcessDay() {
         base.ProcessDay();
+
+        ProcessLevelProgression();
 
         var vesselProduced = ProcessProduction();
         if (vesselProduced != null) {

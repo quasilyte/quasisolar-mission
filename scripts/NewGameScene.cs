@@ -445,6 +445,7 @@ public class NewGameScene : Node2D {
             if (sector.systems[j].starBase == null) {
                 var fleetRollBonus = (float)col * 20;
                 var fleetRoll = QRandom.FloatRange(40, 80) + fleetRollBonus;
+                var baseLevel = col + QRandom.IntRange(1, 2);
                 var starBase = new StarBase(sector.systems[j], player);
                 InitFleet(starBase, templates, fleetRoll);
                 sector.systems[j].starBase = starBase;
@@ -540,7 +541,8 @@ public class NewGameScene : Node2D {
         // First step: deploy using the predetermined rules.
         if (OptionValue("KrigiaPresence") != "minimal") {
             var sector = sectors[startingSector];
-            sector.systems[1].starBase = new StarBase(sector.systems[1], RpgGameState.krigiaPlayer);
+            var starBase = new StarBase(sector.systems[1], RpgGameState.krigiaPlayer, 2);
+            sector.systems[1].starBase = starBase;
             InitKrigiaFleet(sector.systems[1].starBase, 25);
             numKrigiaBases--;
         }
@@ -548,9 +550,9 @@ public class NewGameScene : Node2D {
             var secondSector = startingRow == 0 ? numMapCols : 0;
             var sector = sectors[secondSector];
             var roll = QRandom.FloatRange(35, 55);
-            sector.systems[0].starBase = new StarBase(sector.systems[0], RpgGameState.krigiaPlayer);
+            sector.systems[0].starBase = new StarBase(sector.systems[0], RpgGameState.krigiaPlayer, 3);
             InitKrigiaFleet(sector.systems[0].starBase, roll);
-            sector.systems[1].starBase = new StarBase(sector.systems[1], RpgGameState.scavengerPlayer);
+            sector.systems[1].starBase = new StarBase(sector.systems[1], RpgGameState.scavengerPlayer, 2);
             InitScavengerFleet(sector.systems[1].starBase, roll);
             numKrigiaBases--;
         }
