@@ -1492,7 +1492,7 @@ public class MapView : Node2D {
 
         RpgGameState.krigiaPlans.taskForceDelay = QMath.ClampMin(RpgGameState.krigiaPlans.taskForceDelay - 1, 0);
 
-        if (RpgGameState.day < 400) {
+        if (RpgGameState.day < 450) {
             return;
         }
 

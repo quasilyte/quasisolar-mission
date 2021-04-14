@@ -38,11 +38,11 @@ public class KrigiaStarBaseNode : StarBaseNode {
 
         ProcessResources();
 
-        if (RpgGameState.day > 200) {
+        if (RpgGameState.day > 250) {
             MaybeEnqueueVessel();
         }
 
-        if (RpgGameState.day > 150) {
+        if (RpgGameState.day > 200) {
             MaybeSendPatrol();
         }
     }
@@ -83,7 +83,15 @@ public class KrigiaStarBaseNode : StarBaseNode {
             botProgram = SpaceUnit.Program.KrigiaPatrol,
         };
 
-        var groupSize = QRandom.IntRange(1, 3);
+        var minGroupSize = 1;
+        var maxGroupSize = 1;
+        if (RpgGameState.day > 600) {
+            minGroupSize = 2;
+            maxGroupSize = 3;
+        } else if (RpgGameState.day > 350) {
+            maxGroupSize = 2;
+        }
+        var groupSize = QRandom.IntRange(minGroupSize, maxGroupSize);
         var keptInGarrison = starBase.garrison.FindAll(v => {
             if (v.design.level > 2) {
                 return true;
