@@ -507,7 +507,13 @@ public class NewGameScene : Node2D {
                 var color = RandomStarSystemColor();
                 sector.systems.Add(NewStarSystem(starSystenNames, RandomizedLocation(middle, 120)));
 
-                for (int j = 0; j < QRandom.IntRange(2, 4); j++) {
+                var minSystems = 2;
+                var maxSystems = 4;
+                if (col == startingCol && row == startingRow) {
+                    minSystems = 3;
+                }
+                var numSystems = QRandom.IntRange(minSystems, maxSystems)
+                for (int j = 0; j < numSystems; j++) {
                     sector.systems.Add(NewStarSystem(starSystenNames, RandomStarSystemPosition(rect, sector)));
                 }
             }
