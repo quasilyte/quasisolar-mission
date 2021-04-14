@@ -97,6 +97,12 @@ public class ScavengerStarBaseNode : StarBaseNode {
     }
 
     private int MaxUnits() {
+        if (RpgGameState.day < 200) {
+            return 1;
+        }
+        if (RpgGameState.day < 400) {
+            return 2;
+        }
         return 3;
     }
 }
