@@ -1,0 +1,11 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://images/arena/blue_nebula.png" type="Texture" id=1]
+[ext_resource path="res://scenes/EnvHazardNode.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scripts/BlueNebulaNode.cs" type="Script" id=3]
+
+[node name="BlueNebulaNode" instance=ExtResource( 2 )]
+script = ExtResource( 3 )
+
+[node name="Sprite" parent="." index="1"]
+texture = ExtResource( 1 )

@@ -37,6 +37,8 @@ public class Arena : Node2D {
     private Pilot _flagshipPilot;
     private bool _battleIsOver = false;
 
+    private float _envHazardTick = 0;
+
     private void ApplyAllianceColor(Node2D n, int alliance) {
         // 1 normal (bright)
         // 2 red
@@ -144,6 +146,7 @@ public class Arena : Node2D {
             vesselNode.State.backupEnergy = combatant.energy;
             pilot.Vessel = vesselNode;
             AddChild(vesselNode);
+            vesselNode.AddToGroup("affectedByEnvHazard");
             var centerPos = new Vector2(GetTree().Root.Size.x / 2, GetTree().Root.Size.y / 2);
             vesselNode.GlobalPosition = combatant.spawnPos;
             vesselNode.Rotation = centerPos.AngleToPoint(vesselNode.GlobalPosition);
@@ -182,6 +185,8 @@ public class Arena : Node2D {
     }
 
     public override void _Ready() {
+        ArenaState.Reset();
+
         var rng = new RandomNumberGenerator();
         rng.Randomize();
         QRandom.SetRandomNumberGenerator(rng);
@@ -197,9 +202,56 @@ public class Arena : Node2D {
                 Engine.TimeScale = 2.00f;
             }
         }
+
+        switch (ArenaSettings.envDanger) {
+        case ArenaSettings.EnvDanger.Star: {
+                var starHarard = StarHazardNode.New(ArenaSettings.starColor);
+                AddChild(starHarard);
+                starHarard.GlobalPosition = RandomScreenPosCentered();
+                ArenaState.starHazard = starHarard;
+                break;
+            }
+        case ArenaSettings.EnvDanger.PurpleNebula: {
+                var nebula = PurpleNebulaNode.New();
+                AddChild(nebula);
+                nebula.GlobalPosition = RandomScreenPos();
+                break;
+            }
+        case ArenaSettings.EnvDanger.BlueNebula: {
+                var nebula = BlueNebulaNode.New();
+                AddChild(nebula);
+                nebula.GlobalPosition = RandomScreenPos();
+                break;
+            }
+        }
+    }
+
+    private Vector2 RandomScreenPosCentered() {
+        var screenSize = GetTree().Root.Size;
+        return QMath.RandomizedLocation(new Vector2(screenSize.x / 2, screenSize.y / 2), 400);
+    }
+
+    private Vector2 RandomScreenPos() {
+        var screenSize = GetTree().Root.Size;
+        var x = QRandom.FloatRange(80, screenSize.x - 80);
+        var y = QRandom.FloatRange(80, screenSize.y - 80);
+        return new Vector2(x, y);
     }
 
     public override void _Process(float delta) {
+        _envHazardTick += delta;
+        if (_envHazardTick >= 1) {
+            var nodes = GetTree().GetNodesInGroup("affectedByEnvHazard");
+            foreach (var n in nodes) {
+                if (n is Asteroid asteroid) {
+                    asteroid.OnEnvHazardTick();
+                } else if (n is VesselNode vesselNode) {
+                    vesselNode.OnEnvHazardTick();
+                }
+            }
+            _envHazardTick = 0;
+        }
+
         if (GetTree().GetNodesInGroup("asteroids").Count < ArenaSettings.numAsteroids) {
             spawnAsteroid();
         }
@@ -382,6 +434,7 @@ public class Arena : Node2D {
             asteroid.RotationDegrees = 250 + QRandom.Float() * 40;
         }
         asteroid.AddToGroup("asteroids");
+        asteroid.AddToGroup("affectedByEnvHazard");
         AddChild(asteroid);
     }
 }

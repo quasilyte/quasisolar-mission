@@ -50,6 +50,22 @@ public class Asteroid : Node2D {
         }
     }
 
+    public void OnEnvHazardTick() {
+        if (ArenaState.starHazard != null) {
+            var distance = ArenaState.starHazard.GlobalPosition.DistanceTo(GlobalPosition);
+            if (distance > 200) {
+                return;
+            }
+            for (int i = 0; i < 4; i++) {
+                var flame = FireEffectNode.New();
+                AddChild(flame);
+                flame.Rotation = QRandom.FloatRange(-2, 2);
+                flame.Position = QMath.RandomizedLocation(Vector2.Zero, 16);
+            }
+            ApplyDamage(2);
+        }
+    }
+
     public override void _Process(float delta) {
         Rotation -= delta * 3;
 

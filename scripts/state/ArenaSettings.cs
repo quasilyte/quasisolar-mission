@@ -9,9 +9,19 @@ public class ArenaSettings {
         VeryFast,
     }
 
+    public enum EnvDanger {
+        None,
+        Star,
+        PurpleNebula,
+        BlueNebula,
+    }
+
     public static bool isQuickBattle;
 
     public static BattleSpeed speed;
+
+    public static StarColor starColor;
+    public static EnvDanger envDanger;
 
     // How many asteroids will fly around.
     // 0 is valid option here.

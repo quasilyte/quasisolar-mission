@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://images/arena/purple_nebula.png" type="Texture" id=1]
+[ext_resource path="res://scripts/EnvHazardNode.cs" type="Script" id=2]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 112.0
+
+[node name="EnvHazardNode" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 1 )

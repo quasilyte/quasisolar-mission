@@ -107,16 +107,27 @@ class RookieBot : AbstractBot {
         }
     }
 
-    private Vector2 FleeWaypoint() {
-        var fleePos = ((_vessel.Position - TargetPosition()).Normalized() * 256) + _vessel.Position;
+    private Vector2 FleeWaypoint(Vector2 danger, float distance = 256) {
+        var fleePos = ((_vessel.Position - danger).Normalized() * distance) + _vessel.Position;
         return QMath.RandomizedLocation(fleePos, 32);
     }
 
-    private Vector2 CorrectedPos(Vector2 pos) {
+    private Vector2 FixOutOfScreenPos(Vector2 pos) {
         if (IsOutOfScreen(pos)) {
             return QMath.RandomizedLocation(_screenCenter, 512);
         }
         return pos;
+    }
+
+    private Vector2 CorrectedPos(Vector2 pos) {
+        if (ArenaState.starHazard != null) {
+            var middlePos = pos.MoveToward(_vessel.Position, pos.DistanceTo(_vessel.Position) / 2);;
+            if (middlePos.DistanceTo(ArenaState.starHazard.Position) < 200 || pos.DistanceTo(ArenaState.starHazard.Position) < 150) {
+                var correctedPos = (_vessel.Position.Normalized().Rotated(0.4f) * 200) + _vessel.Position;
+                return FixOutOfScreenPos(correctedPos);
+            }
+        }
+        return FixOutOfScreenPos(pos);
     }
 
     private Vector2 PickWaypoint(float roll) {
@@ -127,13 +138,13 @@ class RookieBot : AbstractBot {
         var targetDistance = TargetDistance();
 
         if (_preferLongRange && targetDistance < 192 && roll < 0.9) {
-            return FleeWaypoint();
+            return FleeWaypoint(TargetPosition());
         }
 
         if (roll < 0.55 || (targetDistance > 300 && roll < 0.65)) {
             var pos = _vessel.Position.MoveToward(TargetPosition(), 192);
             if (_preferLongRange && pos.DistanceTo(TargetPosition()) < 192) {
-                return FleeWaypoint();
+                return FleeWaypoint(TargetPosition());
             }
             return pos;
         }

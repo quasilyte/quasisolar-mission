@@ -49,6 +49,7 @@ public class VesselNode : Node2D {
     public override void _Ready() {
         var area = GetNode<Area2D>("Area2D");
         area.Connect("area_entered", this, nameof(OnCollision));
+        area.Connect("area_exited", this, nameof(OnAreaExited));
 
         var sprite = GetNode<Sprite>("Sprite");
         sprite.Texture = _texture;
@@ -96,6 +97,22 @@ public class VesselNode : Node2D {
         Modulate = m;
     }
 
+    public void OnEnvHazardTick() {
+        if (State.insideBlueNebula) {
+            State.backupEnergy = QMath.ClampMin(State.backupEnergy - 2, 0);
+            State.energy = QMath.ClampMin(State.energy - 5, 0);
+        }
+        if (State.insideStarHazard) {
+            ApplyDamage(2, DamageKind.Thermal);
+            for (int i = 0; i < 4; i++) {
+                var flame = FireEffectNode.New();
+                AddChild(flame);
+                flame.Rotation = QRandom.FloatRange(-2, 2);
+                flame.Position = QMath.RandomizedLocation(Vector2.Zero, 16);
+            }
+        }
+    }
+
     public override void _Process(float delta) {
         foreach (var a in artifacts) {
             a.Apply(State, delta);
@@ -110,7 +127,7 @@ public class VesselNode : Node2D {
             State.energy += State.energyRegen * delta;
             if (State.energy > State.maxEnergy) {
                 State.energy = State.maxEnergy;
-            }    
+            }
         }
 
         State.speedPenalty -= delta;
@@ -143,7 +160,9 @@ public class VesselNode : Node2D {
         var moving = false;
         var contrailLength = 0.2f;
         if (_currentWaypoint != null) {
-            var rotationSpeed = State.rotationCrippledTime != 0 ? 0.5f : State.rotationSpeed;
+            var engineRotationSpeed = State.insidePurpleNebula ? State.rotationSpeed - 0.5f : State.rotationSpeed;
+            var rotationSpeed = State.rotationCrippledTime != 0 ? 0.5f : engineRotationSpeed;
+            rotationSpeed = Math.Max(rotationSpeed, 0.5f);
             var dstRotation = _currentWaypoint.Position.AngleToPoint(Position);
             var rotationDiff = QMath.RotationDiff(dstRotation, Rotation);
             var rotationAmount = rotationSpeed * delta;
@@ -155,7 +174,8 @@ public class VesselNode : Node2D {
                 }
             } else {
                 Rotation = dstRotation;
-                float maxSpeed = State.maxSpeed - State.speedPenalty;
+                var engineMaxSpeed = State.insidePurpleNebula ? State.maxSpeed / 2 : State.maxSpeed;
+                float maxSpeed = engineMaxSpeed - State.speedPenalty;
                 if (CurrentWaypointDistance() < 150) {
                     var diff = QMath.RotationDiff(dstRotation, State.velocity.Angle());
                     if (Math.Abs(diff) > 0.7) {
@@ -361,6 +381,24 @@ public class VesselNode : Node2D {
 
         if (!_phasing) {
             HandleCollision(other);
+        }
+
+        if (other.GetParent() is PurpleNebulaNode) {
+            State.insidePurpleNebula = true;
+        } else if (other.GetParent() is BlueNebulaNode) {
+            State.insideBlueNebula = true;
+        } else if (other.GetParent() is StarHazardNode) {
+            State.insideStarHazard = true;
+        }
+    }
+
+    private void OnAreaExited(Area2D other) {
+        if (other.GetParent() is PurpleNebulaNode) {
+            State.insidePurpleNebula = false;
+        } else if (other.GetParent() is BlueNebulaNode) {
+            State.insideBlueNebula = false;
+        } else if (other.GetParent() is StarHazardNode) {
+            State.insideStarHazard = false;
         }
     }
 }

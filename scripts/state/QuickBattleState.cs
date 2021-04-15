@@ -37,6 +37,7 @@ public static class QuickBattleState {
     public static string gameSpeed;
 
     public static int numAsteroids;
+    public static int envDanger;
 
     public static void Reset() {
         playerSettings = new PlayerSettings[2]{
@@ -45,6 +46,7 @@ public static class QuickBattleState {
         };
 
         numAsteroids = 1;
+        envDanger = 0;
 
         selectedPlayers = new PlayerSlot[]{
             new PlayerSlot{kind = "Human 1", alliance = 1},

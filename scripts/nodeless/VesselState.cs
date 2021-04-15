@@ -31,6 +31,10 @@ public class VesselState {
     public Node2D draggedBy = null;
     public float dragTime = 0;
 
+    public bool insidePurpleNebula = false;
+    public bool insideBlueNebula = false;
+    public bool insideStarHazard = false;
+
     public int debris;
 
     public VesselDesign.Size vesselSize;

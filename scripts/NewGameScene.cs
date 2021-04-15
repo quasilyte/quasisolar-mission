@@ -210,10 +210,10 @@ public class NewGameScene : Node2D {
         return new string(stringChars);
     }
 
-    private StarSystem.Color RandomStarSystemColor() {
-        var colorValues = Enum.GetValues(typeof(StarSystem.Color));
+    private StarColor RandomStarSystemColor() {
+        var colorValues = Enum.GetValues(typeof(StarColor));
         var colorRoll = QRandom.IntRange(0, colorValues.Length - 1);
-        return (StarSystem.Color)colorValues.GetValue(colorRoll);
+        return (StarColor)colorValues.GetValue(colorRoll);
     }
 
     private void AddScavengers() {
@@ -512,7 +512,7 @@ public class NewGameScene : Node2D {
                 if (col == startingCol && row == startingRow) {
                     minSystems = 3;
                 }
-                var numSystems = QRandom.IntRange(minSystems, maxSystems)
+                var numSystems = QRandom.IntRange(minSystems, maxSystems);
                 for (int j = 0; j < numSystems; j++) {
                     sector.systems.Add(NewStarSystem(starSystenNames, RandomStarSystemPosition(rect, sector)));
                 }
@@ -521,7 +521,7 @@ public class NewGameScene : Node2D {
 
         var startingSystem = sectors[startingSector].systems[0];
         startingSystem.name = "Quasisol";
-        startingSystem.color = StarSystem.Color.Yellow;
+        startingSystem.color = StarColor.Yellow;
         startingSystem.starBase = new StarBase(startingSystem, RpgGameState.humanPlayer);
         startingSystem.resourcePlanets = new List<ResourcePlanet>{
             new ResourcePlanet(1, 0, 0),

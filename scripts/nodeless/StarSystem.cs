@@ -2,18 +2,9 @@ using Godot;
 using System.Collections.Generic;
 
 public class StarSystem {
-    public enum Color {
-        Blue,
-        Green,
-        Yellow,
-        Orange,
-        Red,
-        White,
-    }
-
     public int id;
     public string name;
-    public Color color;
+    public StarColor color;
     public Vector2 pos;
 
     public int randomEventCooldown = 0;

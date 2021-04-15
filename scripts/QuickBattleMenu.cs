@@ -17,12 +17,15 @@ public class QuickBattleMenu : Node2D {
     private OptionButton[] _playerOptions;
     private OptionButton _specialWeaponOption;
     private OptionButton _shieldOption;
+    private OptionButton _hazardOption;
 
     private OptionButton _vesselOption;
     private OptionButton _energySourceOption;
 
+
     private Label _totalCost;
 
+    private List<ArenaSettings.EnvDanger> _hazardSelection = new List<ArenaSettings.EnvDanger>();
     private List<ShieldDesign> _shieldSelection = new List<ShieldDesign>();
     private List<WeaponDesign> _weaponSelection = new List<WeaponDesign>();
     private List<WeaponDesign> _specialWeaponSelection = new List<WeaponDesign>();
@@ -242,6 +245,18 @@ public class QuickBattleMenu : Node2D {
         }
 
         _helpText = GetNode<Label>("HelpPanel/HelpText");
+
+        _hazardSelection = new List<ArenaSettings.EnvDanger>{
+            ArenaSettings.EnvDanger.None,
+            ArenaSettings.EnvDanger.BlueNebula,
+            ArenaSettings.EnvDanger.PurpleNebula,
+            ArenaSettings.EnvDanger.Star,
+        };
+        _hazardOption = GetNode<OptionButton>("HazardSelect");
+        for (int i = 0; i < _hazardSelection.Count; i++) {
+            _hazardOption.AddItem(_hazardSelection[i].ToString(), i);
+        }
+        _hazardOption.Select(QuickBattleState.envDanger);
     }
 
     public override void _Ready() {
@@ -402,6 +417,9 @@ public class QuickBattleMenu : Node2D {
         ArenaSettings.Reset();
 
         ArenaSettings.isQuickBattle = true;
+
+        QuickBattleState.envDanger = _hazardOption.Selected;
+        ArenaSettings.envDanger = _hazardSelection[QuickBattleState.envDanger];
 
         if (QuickBattleState.gameSpeed == "Slow") {
             ArenaSettings.speed = ArenaSettings.BattleSpeed.Slow;
