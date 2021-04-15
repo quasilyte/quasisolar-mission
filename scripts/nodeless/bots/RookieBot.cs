@@ -121,10 +121,16 @@ class RookieBot : AbstractBot {
 
     private Vector2 CorrectedPos(Vector2 pos) {
         if (ArenaState.starHazard != null) {
-            var middlePos = pos.MoveToward(_vessel.Position, pos.DistanceTo(_vessel.Position) / 2);;
-            if (middlePos.DistanceTo(ArenaState.starHazard.Position) < 200 || pos.DistanceTo(ArenaState.starHazard.Position) < 150) {
-                var correctedPos = (_vessel.Position.Normalized().Rotated(0.4f) * 200) + _vessel.Position;
-                return FixOutOfScreenPos(correctedPos);
+            var middlePos = pos.MoveToward(_vessel.Position, pos.DistanceTo(_vessel.Position) / 2);
+            var starPos = ArenaState.starHazard.Position;
+            if (middlePos.DistanceTo(ArenaState.starHazard.Position) < 200 || pos.DistanceTo(starPos) < 150) {
+                var rotation = (middlePos - _vessel.Position).Normalized();
+                var pos1 = (rotation.Rotated(0.5f) * 200) + _vessel.Position;
+                var pos2 = (rotation.Rotated(-0.5f) * 200) + _vessel.Position;
+                if (pos1.DistanceTo(starPos) > pos2.DistanceTo(starPos)) {
+                    return FixOutOfScreenPos(pos1);
+                }
+                return FixOutOfScreenPos(pos2);
             }
         }
         return FixOutOfScreenPos(pos);
