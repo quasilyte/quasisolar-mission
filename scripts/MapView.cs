@@ -220,7 +220,8 @@ public class MapView : Node2D {
         RpgGameState.enemyAttackerUnit = u.unit;
 
         // TODO: allow units selection?
-        var starBase = RpgGameState.starSystemByPos[u.unit.pos].starBase;
+        var system = RpgGameState.starSystemByPos[u.unit.pos];
+        var starBase = system.starBase;
         var numDefenders = Math.Min(starBase.garrison.Count, 4);
         var defenders = new List<Vessel>();
         for (int i = 0; i < numDefenders; i++) {
@@ -228,14 +229,14 @@ public class MapView : Node2D {
         }
         RpgGameState.garrisonStarBase = starBase;
 
-        SetArenaSettings(u.unit.fleet, defenders);
+        SetArenaSettings(system, u.unit.fleet, defenders);
         GetTree().ChangeScene("res://scenes/ArenaScreen.tscn");
     }
 
     private void OnFightEventUnit() {
         var u = _eventUnit;
         RpgGameState.enemyAttackerUnit = u.unit;
-        SetArenaSettings(u.unit.fleet, RpgGameState.humanUnit.fleet);
+        SetArenaSettings(_currentSystem.sys, u.unit.fleet, RpgGameState.humanUnit.fleet);
         GetTree().ChangeScene("res://scenes/ArenaScreen.tscn");
     }
 
@@ -538,7 +539,7 @@ public class MapView : Node2D {
             case RandomEvent.EffectKind.EnterArena: {
                     var unit = (SpaceUnit)effect.value;
                     RpgGameState.enemyAttackerUnit = unit;
-                    SetArenaSettings(unit.fleet, RpgGameState.humanUnit.fleet);
+                    SetArenaSettings(_currentSystem.sys, unit.fleet, RpgGameState.humanUnit.fleet);
                     _randomEventResolutionPostEffect = effect.kind;
                     return;
                 }
@@ -1397,7 +1398,7 @@ public class MapView : Node2D {
         return -1;
     }
 
-    private void SetArenaSettings(List<Vessel> enemyFleet, List<Vessel> alliedFleet) {
+    private void SetArenaSettings(StarSystem location, List<Vessel> enemyFleet, List<Vessel> alliedFleet) {
         ArenaSettings.Reset();
         ArenaSettings.isQuickBattle = false;
 
@@ -1417,7 +1418,7 @@ public class MapView : Node2D {
         } else {
             ArenaSettings.envDanger = ArenaSettings.EnvDanger.Star;
         }
-        ArenaSettings.starColor = _currentSystem.sys.color;
+        ArenaSettings.starColor = location.color;
 
         for (int i = 0; i < enemyFleet.Count; i++) {
             var pos = new Vector2(1568, 288 + (i * 192));
@@ -1455,7 +1456,7 @@ public class MapView : Node2D {
         }
         RpgGameState.garrisonStarBase = starBase;
 
-        SetArenaSettings(defenders, RpgGameState.humanUnit.fleet);
+        SetArenaSettings(_currentSystem.sys, defenders, RpgGameState.humanUnit.fleet);
 
         GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/unit_under_attack.wav"));
         StopMovement();
