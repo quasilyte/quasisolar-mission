@@ -203,7 +203,7 @@ class RookieBot : AbstractBot {
         }
 
         var roll = QRandom.Float();
-        if (TargetDistance() > 300 && roll < 0.1 && numActiveEnemies() > 1) {
+        if (TargetDistance() > 350 && roll > 0.5 && numActiveEnemies() > 1) {
             var closest = QMath.NearestEnemy(_vessel.Position, _pilot);
             if (closest != _currentTarget) {
                 SetTarget(closest);
