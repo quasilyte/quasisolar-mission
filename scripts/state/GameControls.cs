@@ -3,6 +3,8 @@ using Godot;
 class GameControls {
     private static bool _initialized = false;
 
+    public static bool preferGamepad = true;
+
     public static void InitInputMap() {
         if (_initialized) {
             return;

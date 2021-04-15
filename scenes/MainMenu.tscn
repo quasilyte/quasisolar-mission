@@ -65,7 +65,6 @@ margin_bottom = 1008.0
 rect_pivot_offset = Vector2( 98, 18.9512 )
 focus_mode = 0
 theme = ExtResource( 3 )
-disabled = true
 text = "Settings"
 __meta__ = {
 "_edit_use_anchors_": false

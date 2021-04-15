@@ -1,0 +1,65 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://images/bg/galaxy_map.png" type="Texture" id=1]
+[ext_resource path="res://scenes/ButtonNode.tscn" type="PackedScene" id=2]
+[ext_resource path="res://theme.tres" type="Theme" id=3]
+[ext_resource path="res://scripts/SettingsScreen.cs" type="Script" id=4]
+
+[node name="SettingsScreen" type="Node2D"]
+script = ExtResource( 4 )
+
+[node name="Background" type="Sprite" parent="."]
+position = Vector2( 960, 540 )
+texture = ExtResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="ExitButton" parent="." instance=ExtResource( 2 )]
+margin_left = 880.0
+margin_top = 608.0
+margin_right = 1040.0
+margin_bottom = 640.0
+text = "OK"
+
+[node name="ControlMethod" type="OptionButton" parent="."]
+margin_left = 800.0
+margin_top = 544.0
+margin_right = 976.0
+margin_bottom = 576.0
+theme = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="ControlMethod"]
+margin_left = 192.0
+margin_right = 432.0
+margin_bottom = 32.0
+theme = ExtResource( 3 )
+text = "Control Method"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MusicVolume" type="OptionButton" parent="."]
+margin_left = 800.0
+margin_top = 480.0
+margin_right = 976.0
+margin_bottom = 512.0
+theme = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="MusicVolume"]
+margin_left = 192.0
+margin_right = 432.0
+margin_bottom = 32.0
+theme = ExtResource( 3 )
+text = "Music"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}

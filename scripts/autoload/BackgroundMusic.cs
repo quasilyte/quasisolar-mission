@@ -2,7 +2,7 @@ using Godot;
 using System;
 
 public class BackgroundMusic : AudioStreamPlayer {
-    private static bool _disabled = true;
+    public static bool disabled = true;
 
     private AudioStream _mainMenuMusic = null;
     private AudioStream _outfitMusic = null;
@@ -13,7 +13,7 @@ public class BackgroundMusic : AudioStreamPlayer {
     public override void _Ready() {}
 
     public void PlayMenuMusic() {
-        if (_disabled) {
+        if (disabled) {
             return;
         }
         if (Playing && Stream == _mainMenuMusic) {
@@ -29,7 +29,7 @@ public class BackgroundMusic : AudioStreamPlayer {
     }
 
     public void PlayOutfitMusic() {
-        if (_disabled) {
+        if (disabled) {
             return;
         }
         if (Playing && Stream == _outfitMusic) {
@@ -45,7 +45,7 @@ public class BackgroundMusic : AudioStreamPlayer {
     }
 
     public void PlayShipyardMusic() {
-        if (_disabled) {
+        if (disabled) {
             return;
         }
         if (Playing && Stream == _shipyardMusic) {
@@ -61,7 +61,7 @@ public class BackgroundMusic : AudioStreamPlayer {
     }
 
     public void PlayMapMusic() {
-        if (_disabled) {
+        if (disabled) {
             return;
         }
         if (Playing && Stream == _mapMusic) {
@@ -77,7 +77,7 @@ public class BackgroundMusic : AudioStreamPlayer {
     }
 
     public void PlayBattleMusic() {
-        if (_disabled) {
+        if (disabled) {
             return;
         }
         if (Playing && Stream == _battleMusic) {

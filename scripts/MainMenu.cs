@@ -8,6 +8,7 @@ public class MainMenu : Node2D {
 
         GetNode<Button>("NewAdventureButton").Connect("pressed", this, nameof(OnNewAdventureButtonPressed));
         GetNode<Button>("QuickBattleButton").Connect("pressed", this, nameof(OnQuickBattleButtonPressed));
+        GetNode<Button>("SettingsButton").Connect("pressed", this, nameof(OnSettingsButtonPressed));
         GetNode<Button>("ExitButton").Connect("pressed", this, nameof(OnExitButtonPressed));
 
         QuickBattleState.Reset();
@@ -18,6 +19,10 @@ public class MainMenu : Node2D {
         WeaponDesign.InitLists();
         RandomEvent.InitLists();
         ArtifactDesign.InitLists();
+    }
+    
+    private void OnSettingsButtonPressed() {
+        GetTree().ChangeScene("res://scenes/SettingsScreen.tscn");
     }
 
     private void OnNewAdventureButtonPressed() {

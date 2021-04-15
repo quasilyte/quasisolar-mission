@@ -283,7 +283,7 @@ public class ShipyardScreen : Node2D {
     public void UpdateFleet() {
         var list = VesselArrayToList(_fleetSlots);
         list[0].isBot = false;
-        list[0].isGamepad = true;
+        list[0].isGamepad = GameControls.preferGamepad;
         RpgGameState.humanUnit.fleet = list;
     }
 

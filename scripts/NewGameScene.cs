@@ -641,7 +641,7 @@ public class NewGameScene : Node2D {
         var vesselDesign = VesselDesign.Find("Earthling", OptionValue("FlagshipDesign"));
         var fleet = new List<Vessel>();
         var humanVessel = new Vessel {
-            isGamepad = true,
+            isGamepad = GameControls.preferGamepad,
             player = RpgGameState.humanPlayer,
             pilotName = PilotNames.UniqHumanName(RpgGameState.usedNames),
             design = vesselDesign,
