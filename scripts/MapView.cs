@@ -1542,7 +1542,10 @@ public class MapView : Node2D {
 
         var potentialTargets = new List<StarBase>();
         foreach (var starBase in RpgGameState.humanBases) {
-            if (!starBase.discoveredByKrigia) {
+            if (starBase.discoveredByKrigia == 0) {
+                continue;
+            }
+            if (RpgGameState.day - starBase.discoveredByKrigia < 100) {
                 continue;
             }
             potentialTargets.Add(starBase);

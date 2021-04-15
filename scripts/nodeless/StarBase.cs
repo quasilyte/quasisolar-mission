@@ -6,7 +6,9 @@ public class StarBase {
 
     public StarSystem system;
 
-    public bool discoveredByKrigia = false;
+    // 0 - not discovered.
+    // Non-zero value represents the day at which this base was discovered.
+    public int discoveredByKrigia = 0;
 
     public int hp = 100;
 

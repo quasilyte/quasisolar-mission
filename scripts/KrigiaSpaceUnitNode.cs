@@ -164,8 +164,8 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
 
         if (starBase != null && starBase.owner == RpgGameState.humanPlayer) {
             if (RpgGameState.humanUnit.pos != _currentSystem.pos) {
-                if (!starBase.discoveredByKrigia) {
-                    starBase.discoveredByKrigia = true;
+                if (starBase.discoveredByKrigia == 0) {
+                    starBase.discoveredByKrigia = RpgGameState.day;
                     EmitSignal(nameof(BaseDetected));
                 }
             }
