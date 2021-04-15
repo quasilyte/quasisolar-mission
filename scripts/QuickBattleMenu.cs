@@ -108,27 +108,27 @@ public class QuickBattleMenu : Node2D {
             "Human 1",
             "Human 1 (Gamepad 1)",
             "Human 2 (Gamepad 2)",
-            "Computer Neutral Pirate",
-            "Computer Zyth Hunter",
-            "Computer Earthling Scout",
-            "Computer Earthling Explorer",
-            "Computer Earthling Fighter",
-            "Computer Earthling Interceptor",
-            "Computer Earthling Ark",
-            "Computer Scavenger Raider",
-            "Computer Scavenger Marauder",
-            "Computer Krigia Talons",
-            "Computer Krigia Claws",
-            "Computer Krigia Fangs",
-            "Computer Krigia Tusks",
-            "Computer Krigia Horns",
-            "Computer Krigia Ashes",
-            "Computer Wertu Probe",
-            "Computer Wertu Transporter",
-            "Computer Wertu Guardian",
-            "Computer Wertu Angel",
-            "Computer Wertu Dominator",
-            "Computer Unique Spectre",
+            "Neutral Pirate",
+            "Zyth Hunter",
+            "Earthling Scout",
+            "Earthling Explorer",
+            "Earthling Fighter",
+            "Earthling Interceptor",
+            "Earthling Ark",
+            "Scavenger Raider",
+            "Scavenger Marauder",
+            "Krigia Talons",
+            "Krigia Claws",
+            "Krigia Fangs",
+            "Krigia Tusks",
+            "Krigia Horns",
+            "Krigia Ashes",
+            "Wertu Probe",
+            "Wertu Transporter",
+            "Wertu Guardian",
+            "Wertu Angel",
+            "Wertu Dominator",
+            "Unique Spectre",
         };
 
         _specialWeaponOption = GetNode<OptionButton>("SpecialWeaponSelect");
@@ -468,8 +468,7 @@ public class QuickBattleMenu : Node2D {
             if (slot.kind.StartsWith("Human")) {
                 InitHuman(v);
             } else {
-                var kind = slot.kind.Substring("Computer ".Length);
-                VesselFactory.Init(v, kind);
+                VesselFactory.Init(v, slot.kind);
             }
 
             v.hp = v.design.maxHp;
