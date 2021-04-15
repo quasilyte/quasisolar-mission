@@ -64,18 +64,8 @@ public class HumanStarBaseNode : StarBaseNode {
 
         var vesselProduced = ProcessProduction();
         if (vesselProduced != null) {
-            vesselProduced.energySource = EnergySource.Find("None");
-            vesselProduced.weapons = new List<WeaponDesign>{
-                EmptyWeapon.Design,
-                EmptyWeapon.Design,
-            };
-            vesselProduced.artifacts = new List<ArtifactDesign>{
-                EmptyArtifact.Design,
-                EmptyArtifact.Design,
-                EmptyArtifact.Design,
-                EmptyArtifact.Design,
-                EmptyArtifact.Design,
-            };
+            vesselProduced.pilotName = PilotNames.UniqHumanName(RpgGameState.usedNames);
+            VesselFactory.PadEquipment(vesselProduced);
             GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/production_completed.wav"));
             var notification = MapNotificationNode.New("Production completed");
             GetParent().AddChild(notification);

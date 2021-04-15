@@ -79,14 +79,7 @@ public class StarBaseNode : Node2D {
         return vessel;
     }
 
-    private Vessel NewVessel(VesselDesign design) {        
-        var v = new Vessel {
-            isBot = true,
-            player = starBase.owner,
-            pilotName = PilotNames.UniqHumanName(RpgGameState.usedNames),
-            design = design,
-        };
-        v.hp = v.design.maxHp;
-        return v;
+    private Vessel NewVessel(VesselDesign design) {    
+        return VesselFactory.NewVessel(starBase.owner, design);
     }
 }

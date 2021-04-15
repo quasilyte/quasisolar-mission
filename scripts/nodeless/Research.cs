@@ -116,6 +116,12 @@ public class Research {
             dependencies = {"Vessel Lab Branch"},
         },
 
+        new Research{
+            name = "Ark Exodus",
+            researchTime = 35,
+            dependencies = {"Ark"},
+        },
+
         // Shield tech.
 
         new Research{

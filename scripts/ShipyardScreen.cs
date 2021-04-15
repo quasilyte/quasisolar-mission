@@ -8,6 +8,9 @@ public class ShipyardScreen : Node2D {
         public VesselDesign item;
     }
 
+    private bool _lockControls = false;
+    private PopupNode _exodusPopup;
+
     private Merchandise _selectedMerchandise = new Merchandise { };
     private List<VesselDesign> _vesselSelection;
 
@@ -23,8 +26,26 @@ public class ShipyardScreen : Node2D {
         UpdateUI();
     }
 
+    private int FleetEmptySlots() {
+        var n = 0;
+        for (int i = 0; i < _garrisonSlots.Length; i++) {
+            if (_garrisonSlots[i] == null) {
+                n++;
+            }
+        }
+        return n;
+    }
+
+    private bool CanTurnIntoArk() {
+        return RpgGameState.technologiesResearched.Contains("Ark Exodus") &&
+            FleetEmptySlots() > 0 &&
+            RpgGameState.credits > RpgGameState.exodusPrice;
+    }
+
     private void UpdateUI() {
         GetNode<Label>("Status/CreditsValue").Text = RpgGameState.credits.ToString();
+
+        GetNode<ButtonNode>("Status/ArkButton").Disabled = !CanTurnIntoArk();
 
         GetNode<Button>("VesselProduction/StartProduction").Disabled = _selectedMerchandise.sprite == null ||
             ItemInfo.BuyingPrice(_selectedMerchandise.item) > RpgGameState.credits ||
@@ -81,7 +102,42 @@ public class ShipyardScreen : Node2D {
         return selection;
     }
 
+    private void OnArkButton() {
+        _lockControls = true;
+        _exodusPopup.PopupCentered();
+    }
+
+    private void OnArkCancelButton() {
+        _lockControls = false;
+        _exodusPopup.Hide();
+    }
+
+    private void OnArkAcceptButton() {
+        if (!CanTurnIntoArk()) {
+            return;
+        }
+
+        var system = RpgGameState.enteredBase.system;
+        system.starBase = null;
+
+        UpdateFleet();
+        UpdateGarrison();
+
+        var ark = VesselFactory.NewVessel(RpgGameState.humanPlayer, VesselDesign.Find("Earthling", "Ark"));
+        ark.pilotName = PilotNames.UniqHumanName(RpgGameState.usedNames);
+        VesselFactory.PadEquipment(ark);
+        RpgGameState.humanUnit.fleet.Add(ark);
+
+        GetTree().ChangeScene("res://scenes/MapView.tscn");
+    }
+
     private void SetupUI() {
+        _exodusPopup = GetNode<PopupNode>("ExodusPopup");
+        _exodusPopup.GetNode<ButtonNode>("CancelButton").Connect("pressed", this, nameof(OnArkCancelButton));
+        _exodusPopup.GetNode<ButtonNode>("AcceptButton").Connect("pressed", this, nameof(OnArkAcceptButton));
+
+        GetNode<ButtonNode>("Status/ArkButton").Connect("pressed", this, nameof(OnArkButton));
+
         GetNode<Button>("Status/LeaveButton").Connect("pressed", this, nameof(OnLeaveButton));
 
         GetNode<Button>("VesselProduction/StartProduction").Connect("pressed", this, nameof(OnStartProductionButton));

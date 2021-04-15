@@ -248,6 +248,7 @@ public class NewGameScene : Node2D {
             droneCapacity = 500,
         };
 
+        RpgGameState.exodusPrice = 5000;
         RpgGameState.dronePrice = 1200;
         RpgGameState.credits = OptionIntValue("StartingCredits");
         RpgGameState.fuelPrice = 3;

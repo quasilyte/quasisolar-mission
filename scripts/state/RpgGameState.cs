@@ -59,6 +59,7 @@ public static class RpgGameState {
 
     public static int repairPrice;
     public static int fuelPrice;
+    public static int exodusPrice;
 
     public static int experience;
 
