@@ -30,9 +30,14 @@ public class ArenaSettings {
     public static List<Vessel> combatants;
 
     public static void Reset() {
+        isQuickBattle = false;
+
         combatants = new List<Vessel>();
         
         speed = BattleSpeed.Normal;
         numAsteroids = 1;
+
+        starColor = StarColor.Yellow;
+        envDanger = EnvDanger.None;
     }
 }

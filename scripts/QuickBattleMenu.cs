@@ -434,12 +434,12 @@ public class QuickBattleMenu : Node2D {
         ArenaSettings.numAsteroids = QuickBattleState.numAsteroids;
 
         var playerSpawnSpots = new Vector2[]{
-            new Vector2(200, 200),
-            new Vector2(1200, 200),
-            new Vector2(200, 600),
-            new Vector2(1200, 600),
-            new Vector2(200, 1000),
-            new Vector2(1200, 1000),
+            new Vector2(224, 288 + (192 * 0)),
+            new Vector2(1568, 288  + (192 * 0)),
+            new Vector2(224, 288 + (192 * 1)),
+            new Vector2(1568, 288 + (192 * 1)),
+            new Vector2(224, 288 + (192 * 2)),
+            new Vector2(1568, 288 + (192 * 2)),
         };
 
         for (int i = 0; i < QuickBattleState.selectedPlayers.Length; i++) {

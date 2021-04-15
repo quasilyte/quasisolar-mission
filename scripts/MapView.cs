@@ -1396,6 +1396,24 @@ public class MapView : Node2D {
         ArenaSettings.Reset();
         ArenaSettings.isQuickBattle = false;
 
+        // TODO: respect the game settings here.
+        ArenaSettings.numAsteroids = QRandom.IntRange(0, 3);
+        // 30% - none
+        // 20% - purple nebula
+        // 20% - blue nebula
+        // 30% - star
+        var envHazardRoll = QRandom.Float();
+        if (envHazardRoll < 0.3) {
+            ArenaSettings.envDanger = ArenaSettings.EnvDanger.None;
+        } else if (envHazardRoll < 0.5) {
+            ArenaSettings.envDanger = ArenaSettings.EnvDanger.PurpleNebula;
+        } else if (envHazardRoll < 0.7) {
+            ArenaSettings.envDanger = ArenaSettings.EnvDanger.BlueNebula;
+        } else {
+            ArenaSettings.envDanger = ArenaSettings.EnvDanger.Star;
+        }
+        ArenaSettings.starColor = _currentSystem.sys.color;
+
         for (int i = 0; i < enemyFleet.Count; i++) {
             var pos = new Vector2(1568, 288 + (i * 192));
             var v = enemyFleet[i];

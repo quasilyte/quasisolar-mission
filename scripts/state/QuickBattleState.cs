@@ -50,7 +50,7 @@ public static class QuickBattleState {
 
         selectedPlayers = new PlayerSlot[]{
             new PlayerSlot{kind = "Human 1", alliance = 1},
-            new PlayerSlot{kind = "Computer Krigia Claws", alliance = 2},
+            new PlayerSlot{kind = "Krigia Claws", alliance = 2},
             new PlayerSlot{kind = "None", alliance = 2},
             new PlayerSlot{kind = "None", alliance = 2},
             new PlayerSlot{kind = "None", alliance = 2},

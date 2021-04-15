@@ -228,13 +228,15 @@ public class Arena : Node2D {
 
     private Vector2 RandomScreenPosCentered() {
         var screenSize = GetTree().Root.Size;
-        return QMath.RandomizedLocation(new Vector2(screenSize.x / 2, screenSize.y / 2), 400);
+        var x = QRandom.FloatRange(640, screenSize.x - 640);
+        var y = QRandom.FloatRange(96, screenSize.y - 96);
+        return new Vector2(x, y);
     }
 
     private Vector2 RandomScreenPos() {
         var screenSize = GetTree().Root.Size;
-        var x = QRandom.FloatRange(80, screenSize.x - 80);
-        var y = QRandom.FloatRange(80, screenSize.y - 80);
+        var x = QRandom.FloatRange(128, screenSize.x - 128);
+        var y = QRandom.FloatRange(128, screenSize.y - 128);
         return new Vector2(x, y);
     }
 
