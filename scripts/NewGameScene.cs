@@ -179,14 +179,13 @@ public class NewGameScene : Node2D {
         var seed = GameSeed();
         GD.Print($"game seed = {seed}");
 
-        RpgGameState.Reset(seed);
-        QRandom.SetRandomNumberGenerator(RpgGameState.rng);
+        var gameConfig = NewGameConfig(seed);
+        QRandom.SetRandomNumberGenerator(gameConfig.rng);
+        GenerateWorld(gameConfig);
+        var gameStateInstance = new RpgGameState(gameConfig);
+        RpgGameState.instance = gameStateInstance;
 
-        InitBaseValues();
-        GenerateWorld();
-        AddScavengers();
 
-        RpgGameState.transition = RpgGameState.MapTransition.NewGame;
         GetTree().ChangeScene("res://scenes/MapView.tscn");
     }
 
@@ -216,72 +215,66 @@ public class NewGameScene : Node2D {
         return (StarColor)colorValues.GetValue(colorRoll);
     }
 
-    private void AddScavengers() {
-        // foreach (var sys in RpgGameState.starSystems) {
-        //     if (sys.starBase == null || sys.starBase.owner != RpgGameState.scavengerPlayer) {
-        //         continue;
-        //     }
+    private RpgGameState.Config NewGameConfig(ulong gameSeed) {
+        var rng = new RandomNumberGenerator();
+        rng.Seed = gameSeed;
 
-        //     var v = new Vessel {
-        //         isBot = true,
-        //         player = RpgGameState.scavengerPlayer,
-        //         name = "Foobar",
-        //     };
-        //     VesselFactory.Init(v, "Scavenger Raider");
-
-        //     var spaceUnit = new SpaceUnit{
-        //         owner = RpgGameState.scavengerPlayer,
-        //         kind = SpaceUnit.Kind.Scavenger,
-        //         pos = RpgGameState.StartingSystem().pos + new Vector2(100, 100),
-        //         waypoint = RpgGameState.StartingSystem().pos,
-        //         fleet = {v},
-        //     };
-        //     RpgGameState.spaceUnits.Add(spaceUnit);
-
-        //     sys.starBase.units.Add(spaceUnit);
-        // }
-    }
-
-    private void InitBaseValues() {
-        RpgGameState.limits = new RpgGameState.GameLimits {
+        var limits = new RpgGameState.GameLimits {
             maxFuel = 500,
             droneCapacity = 500,
         };
 
-        RpgGameState.exodusPrice = 5000;
-        RpgGameState.dronePrice = 1200;
-        RpgGameState.credits = OptionIntValue("StartingCredits");
-        RpgGameState.fuelPrice = 3;
-        RpgGameState.repairPrice = 7;
-        RpgGameState.fuel = RpgGameState.MaxFuel() - 100;
+        var skills = new HashSet<string>();
+        var startingSkill = OptionValue("StartingSkill");
+        if (!startingSkill.Empty()) {
+            skills.Add(startingSkill);
+        }
 
-        RpgGameState.travelSpeed = 60;
-        RpgGameState.randomEventCooldown = 20;
+        var randomEvents = new HashSet<RandomEvent>();
+        foreach (var e in RandomEvent.list) {
+            randomEvents.Add(e);
+        }
 
-        RpgGameState.humanPlayer = new Player {
-            PlayerName = GetNode<LineEdit>("PlayerName").Text,
-            Alliance = 1,
+        var config = new RpgGameState.Config{
+            limits = limits,
+            exodusPrice = 5000,
+            dronePrice = 1200,
+            startingCredits = OptionIntValue("StartingCredits"),
+            startingFuel = (int)(limits.maxFuel) - 100,
+            fuelPrice = 3,
+            repairPrice = 7,
+            travelSpeed = 60,
+            randomEventCooldown = 20,
+
+            gameSeed = gameSeed,
+            rng = rng,
+
+            skills = skills,
+            randomEvents = randomEvents,
+
+            humanPlayer = new Player {
+                PlayerName = GetNode<LineEdit>("PlayerName").Text,
+                Alliance = 1,
+            },
+            scavengerPlayer = new Player{
+                PlayerName = "Scavenger",
+                Alliance = 6,
+            },
+            krigiaPlayer = new Player {
+                PlayerName = "Krigia",
+                Alliance = 2,
+            },
+            wertuPlayer = new Player {
+                PlayerName = "Wertu",
+                Alliance = 4,
+            },
+            zythPlayer = new Player {
+                PlayerName = "Zyth",
+                Alliance = 3,
+            },
         };
 
-        RpgGameState.scavengerPlayer = new Player{
-            PlayerName = "Scavenger",
-            Alliance = 6,
-        };;
-
-        RpgGameState.krigiaPlayer = new Player {
-            PlayerName = "Krigia",
-            Alliance = 2,
-        };
-
-        RpgGameState.zythPlayer = new Player {
-            PlayerName = "Zyth",
-            Alliance = 3,
-        };
-
-        RpgGameState.wertuPlayer = new Player {
-            PlayerName = "Wertu",
-            Alliance = 4,
-        };
+        return config;
     }
 
     private static Vector2 RandomizedLocation(Vector2 loc, float size) {
@@ -488,7 +481,7 @@ public class NewGameScene : Node2D {
         return sys;
     }
 
-    private void GenerateWorld() {
+    private void GenerateWorld(RpgGameState.Config config) {
         // Player always starts in the left part of the map.
         var startingCol = 0;
         var startingRow = QRandom.IntRange(0, 1);
@@ -523,7 +516,7 @@ public class NewGameScene : Node2D {
         var startingSystem = sectors[startingSector].systems[0];
         startingSystem.name = "Quasisol";
         startingSystem.color = StarColor.Yellow;
-        startingSystem.starBase = new StarBase(startingSystem, RpgGameState.humanPlayer);
+        startingSystem.starBase = new StarBase(startingSystem, config.humanPlayer);
         startingSystem.resourcePlanets = new List<ResourcePlanet>{
             new ResourcePlanet(1, 0, 0),
         };
@@ -540,15 +533,10 @@ public class NewGameScene : Node2D {
         GD.Print($"deployed {numWertuBases} Wertu bases");
         GD.Print($"deployed {numZythBases} Zyth bases");
 
-        var startingSkill = OptionValue("StartingSkill");
-        if (!startingSkill.Empty()) {
-            RpgGameState.skillsLearned.Add(startingSkill);
-        }
-
         // First step: deploy using the predetermined rules.
         if (OptionValue("KrigiaPresence") != "minimal") {
             var sector = sectors[startingSector];
-            var starBase = new StarBase(sector.systems[1], RpgGameState.krigiaPlayer, 2);
+            var starBase = new StarBase(sector.systems[1], config.krigiaPlayer, 2);
             sector.systems[1].starBase = starBase;
             InitKrigiaFleet(sector.systems[1].starBase, 25);
             numKrigiaBases--;
@@ -557,35 +545,35 @@ public class NewGameScene : Node2D {
             var secondSector = startingRow == 0 ? numMapCols : 0;
             var sector = sectors[secondSector];
             var roll = QRandom.FloatRange(35, 55);
-            sector.systems[0].starBase = new StarBase(sector.systems[0], RpgGameState.krigiaPlayer, 3);
+            sector.systems[0].starBase = new StarBase(sector.systems[0], config.krigiaPlayer, 3);
             InitKrigiaFleet(sector.systems[0].starBase, roll);
-            sector.systems[1].starBase = new StarBase(sector.systems[1], RpgGameState.scavengerPlayer, 2);
+            sector.systems[1].starBase = new StarBase(sector.systems[1], config.scavengerPlayer, 2);
             InitScavengerFleet(sector.systems[1].starBase, roll);
             numKrigiaBases--;
         }
 
         // Second step: fill everything else.
-        DeployBases(RpgGameState.krigiaPlayer, numKrigiaBases, sectors, _krigiaTemplates);
-        DeployBases(RpgGameState.wertuPlayer, numWertuBases, sectors, _wertuTemplates);
+        DeployBases(config.krigiaPlayer, numKrigiaBases, sectors, _krigiaTemplates);
+        DeployBases(config.wertuPlayer, numWertuBases, sectors, _wertuTemplates);
 
         foreach (var sector in sectors) {
             foreach (var sys in sector.systems) {
-                var id = RpgGameState.starSystems.Count;
+                var id = config.starSystems.Count;
                 if (sys == startingSystem) {
-                    RpgGameState.startingSystemID = id;
+                    config.startingSystemID = id;
                 }
-                if (sys.starBase != null && sys.starBase.owner == RpgGameState.krigiaPlayer) {
+                if (sys.starBase != null && sys.starBase.owner == config.krigiaPlayer) {
                     sys.starBase.botPatrolDelay = QRandom.IntRange(10, 60);
                 }
                 sys.id = id;
-                RpgGameState.starSystems.Add(sys);
-                RpgGameState.starSystemByPos[sys.pos] = sys;
+                config.starSystems.Add(sys);
+                config.starSystemByPos[sys.pos] = sys;
             }
         }
-        GD.Print($"generated {RpgGameState.starSystems.Count} star systems");
+        GD.Print($"generated {config.starSystems.Count} star systems");
 
         // TODO: do it more efficiently than O(n^2)?
-        var graph = RpgGameState.starSystemConnections;
+        var graph = config.starSystemConnections;
         Func<StarSystem, StarSystem, bool> addToGraph = (StarSystem sys, StarSystem connected) => {
             if (!graph.ContainsKey(sys)) {
                 graph.Add(sys, new List<StarSystem>());
@@ -594,13 +582,13 @@ public class NewGameScene : Node2D {
             list.Add(connected);
             return true;
         };
-        for (int i = 0; i < RpgGameState.starSystems.Count; i++) {
-            var sys = RpgGameState.starSystems[i];
-            for (int j = 0; j < RpgGameState.starSystems.Count; j++) {
+        for (int i = 0; i < config.starSystems.Count; i++) {
+            var sys = config.starSystems[i];
+            for (int j = 0; j < config.starSystems.Count; j++) {
                 if (i == j) {
                     continue;
                 }
-                var other = RpgGameState.starSystems[j];
+                var other = config.starSystems[j];
                 if (sys.pos.DistanceTo(other.pos) > 600) {
                     continue;
                 }
@@ -608,7 +596,7 @@ public class NewGameScene : Node2D {
                 addToGraph(other, sys);
             }
         }
-        foreach (var sys in RpgGameState.starSystems) {
+        foreach (var sys in config.starSystems) {
             if (!graph.ContainsKey(sys)) {
                 throw new Exception("found a system that is not included into the graph");
             }
@@ -622,7 +610,7 @@ public class NewGameScene : Node2D {
         // var artifacts
         foreach (var art in ArtifactDesign.list) {
             while (true) {
-                var sys = QRandom.Element(RpgGameState.starSystems);
+                var sys = QRandom.Element(config.starSystems);
                 if (sys.artifact != null) {
                     continue;
                 }
@@ -636,14 +624,14 @@ public class NewGameScene : Node2D {
             }   
         }
 
-        RpgGameState.humanBases.Add(startingSystem.starBase);
+        config.humanBases.Add(startingSystem.starBase);
 
         var vesselDesign = VesselDesign.Find("Earthling", OptionValue("FlagshipDesign"));
         var fleet = new List<Vessel>();
         var humanVessel = new Vessel {
             isGamepad = GameControls.preferGamepad,
-            player = RpgGameState.humanPlayer,
-            pilotName = PilotNames.UniqHumanName(RpgGameState.usedNames),
+            player = config.humanPlayer,
+            pilotName = PilotNames.UniqHumanName(config.usedNames),
             design = vesselDesign,
             energySource = EnergySource.Find("Power Generator"),
             artifacts = new List<ArtifactDesign>{
@@ -665,15 +653,16 @@ public class NewGameScene : Node2D {
         for (int i = 0; i < OptionIntValue("StartingFleet"); i++) {
             var v = new Vessel {
                 isBot = true,
-                player = RpgGameState.humanPlayer,
-                pilotName = PilotNames.UniqHumanName(RpgGameState.usedNames),
+                player = config.humanPlayer,
+                pilotName = PilotNames.UniqHumanName(config.usedNames),
             };
             VesselFactory.Init(v, "Earthling Scout");
             fleet.Add(v);
         }
 
-        RpgGameState.humanUnit.owner = RpgGameState.humanPlayer;
-        RpgGameState.humanUnit.fleet = fleet;
-        RpgGameState.humanUnit.pos = startingSystem.pos;
+        config.humanUnit = new SpaceUnit();
+        config.humanUnit.owner = config.humanPlayer;
+        config.humanUnit.fleet = fleet;
+        config.humanUnit.pos = startingSystem.pos;
     }
 }

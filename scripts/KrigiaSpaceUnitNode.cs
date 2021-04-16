@@ -36,8 +36,8 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
         base.Connect("DestinationReached", this, nameof(OnDestinationReached));
 
         _canBeDetected = unit.waypoint != Vector2.Zero || unit.botProgram == SpaceUnit.Program.KrigiaTaskForce;
-        if (RpgGameState.starSystemByPos.ContainsKey(unit.pos)) {
-            _currentSystem = RpgGameState.starSystemByPos[unit.pos];
+        if (_gameState.starSystemByPos.ContainsKey(unit.pos)) {
+            _currentSystem = _gameState.starSystemByPos[unit.pos];
         }
 
         GlobalPosition = unit.pos;
@@ -85,7 +85,7 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
             return;
         }
 
-        if (RpgGameState.humanUnit.pos == unit.pos) {
+        if (_gameState.humanUnit.pos == unit.pos) {
             return;
         }
 
@@ -127,14 +127,14 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
             GD.Print("WARNING: can't board all the ships");
         }
         starBase.units.Remove(unit);
-        RpgGameState.spaceUnits.Remove(unit);
+        _gameState.spaceUnits.Remove(unit);
         EmitSignal(nameof(Removed));
         QueueFree();
     }
 
     private void ReinforcementsDestinationReached() {
-        _currentSystem = RpgGameState.starSystemByPos[unit.waypoint];
-        if (_currentSystem.starBase != null && _currentSystem.starBase.owner == RpgGameState.krigiaPlayer) {
+        _currentSystem = _gameState.starSystemByPos[unit.waypoint];
+        if (_currentSystem.starBase != null && _currentSystem.starBase.owner == _gameState.krigiaPlayer) {
             EnterBase(_currentSystem.starBase);
         } else {
             unit.waypoint = unit.botOrigin.system.pos;
@@ -144,7 +144,7 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
     }
 
     private void TaskForceDestinationReached() {
-        _currentSystem = RpgGameState.starSystemByPos[unit.waypoint];
+        _currentSystem = _gameState.starSystemByPos[unit.waypoint];
 
         var starBase = _currentSystem.starBase;
         if (_currentSystem == unit.botOrigin.system) {
@@ -154,7 +154,7 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
     }
 
     private void PatrolDestinationReached() {
-        _currentSystem = RpgGameState.starSystemByPos[unit.waypoint];
+        _currentSystem = _gameState.starSystemByPos[unit.waypoint];
 
         var starBase = _currentSystem.starBase;
         if (_currentSystem == unit.botOrigin.system) {
@@ -162,10 +162,10 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
             return;
         }
 
-        if (starBase != null && starBase.owner == RpgGameState.humanPlayer) {
-            if (RpgGameState.humanUnit.pos != _currentSystem.pos) {
+        if (starBase != null && starBase.owner == _gameState.humanPlayer) {
+            if (_gameState.humanUnit.pos != _currentSystem.pos) {
                 if (starBase.discoveredByKrigia == 0) {
-                    starBase.discoveredByKrigia = RpgGameState.day;
+                    starBase.discoveredByKrigia = _gameState.day;
                     EmitSignal(nameof(BaseDetected));
                 }
             }
@@ -178,6 +178,6 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
     }
 
     private void UpdateVisibility() {
-        Visible = _canBeDetected && RpgGameState.humanUnit.pos.DistanceTo(GlobalPosition) <= RpgGameState.RadarRange();
+        Visible = _canBeDetected && _gameState.humanUnit.pos.DistanceTo(GlobalPosition) <= RpgGameState.RadarRange();
     }
 }

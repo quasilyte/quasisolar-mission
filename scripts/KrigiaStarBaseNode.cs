@@ -35,11 +35,11 @@ public class KrigiaStarBaseNode : StarBaseNode {
 
         ProcessResources();
 
-        if (RpgGameState.day > 250) {
+        if (_gameState.day > 250) {
             MaybeEnqueueVessel();
         }
 
-        if (RpgGameState.day > 200) {
+        if (_gameState.day > 200) {
             MaybeSendPatrol();
         }
     }
@@ -63,7 +63,7 @@ public class KrigiaStarBaseNode : StarBaseNode {
         }
 
         var destination = Vector2.Zero;
-        var destinationOptions = RpgGameState.starSystemConnections[starBase.system];
+        var destinationOptions = _gameState.starSystemConnections[starBase.system];
         var destinationSystem = QRandom.Element(destinationOptions);
         if (destinationSystem.pos.DistanceTo(starBase.system.pos) <= InfluenceRadius()) {
             destination = destinationSystem.pos;
@@ -73,7 +73,7 @@ public class KrigiaStarBaseNode : StarBaseNode {
         }
 
         var spaceUnit = new SpaceUnit {
-            owner = RpgGameState.krigiaPlayer,
+            owner = _gameState.krigiaPlayer,
             pos = starBase.system.pos,
             waypoint = destination,
             botOrigin = starBase,
@@ -82,10 +82,10 @@ public class KrigiaStarBaseNode : StarBaseNode {
 
         var minGroupSize = 1;
         var maxGroupSize = 1;
-        if (RpgGameState.day > 600) {
+        if (_gameState.day > 600) {
             minGroupSize = 2;
             maxGroupSize = 3;
-        } else if (RpgGameState.day > 350) {
+        } else if (_gameState.day > 350) {
             maxGroupSize = 2;
         }
         var groupSize = QRandom.IntRange(minGroupSize, maxGroupSize);
@@ -105,7 +105,7 @@ public class KrigiaStarBaseNode : StarBaseNode {
         }
         starBase.garrison = keptInGarrison;
 
-        RpgGameState.spaceUnits.Add(spaceUnit);
+        _gameState.spaceUnits.Add(spaceUnit);
         starBase.units.Add(spaceUnit);
 
         starBase.botPatrolDelay = QRandom.IntRange(100, 200);
@@ -116,7 +116,7 @@ public class KrigiaStarBaseNode : StarBaseNode {
 
     private VesselDesign ChooseVesselToProduce() {
         VesselDesign design = null;
-        if (RpgGameState.day < 1000) {
+        if (_gameState.day < 1000) {
             while (true) {
                 var roll = QRandom.Float();
                 if (roll < 0.3) {

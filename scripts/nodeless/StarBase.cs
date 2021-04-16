@@ -57,8 +57,10 @@ public class StarBase {
     public void UpdateShopSelection() {
         shopSelection = new List<IItem>();
 
+        var technologiesResearched = RpgGameState.instance.technologiesResearched;
+
         foreach (WeaponDesign weapon in WeaponDesign.list) {
-            if (!Research.IsAvailable(RpgGameState.technologiesResearched, weapon.technologiesNeeded)) {
+            if (!Research.IsAvailable(technologiesResearched, weapon.technologiesNeeded)) {
                 continue;
             }
             if (level < ItemInfo.MinStarBaseLevel(weapon)) {
@@ -68,7 +70,7 @@ public class StarBase {
         }
 
         foreach (WeaponDesign weapon in WeaponDesign.specialList) {
-            if (!Research.IsAvailable(RpgGameState.technologiesResearched, weapon.technologiesNeeded)) {
+            if (!Research.IsAvailable(technologiesResearched, weapon.technologiesNeeded)) {
                 continue;
             }
             if (level < ItemInfo.MinStarBaseLevel(weapon)) {
@@ -78,13 +80,13 @@ public class StarBase {
         }
 
         foreach (ShieldDesign shield in ShieldDesign.list) {
-            if (!Research.IsAvailable(RpgGameState.technologiesResearched, shield.technologiesNeeded)) {
+            if (!Research.IsAvailable(technologiesResearched, shield.technologiesNeeded)) {
                 continue;
             }
             if (level < ItemInfo.MinStarBaseLevel(shield)) {
                 continue;
             }
-            if (shield.researchRequired && !RpgGameState.technologiesResearched.Contains(shield.name)) {
+            if (shield.researchRequired && !technologiesResearched.Contains(shield.name)) {
                 continue;
             }
             shopSelection.Add(shield);
@@ -93,14 +95,14 @@ public class StarBase {
         // Start from 1 to skip the "None" energy source.
         for (int i = 1; i < EnergySource.list.Length; i++) {
             var energySource = EnergySource.list[i];
-            if (energySource.researchRequired && !RpgGameState.technologiesResearched.Contains(energySource.name)) {
+            if (energySource.researchRequired && !technologiesResearched.Contains(energySource.name)) {
                 continue;
             }
             shopSelection.Add(energySource);
         }
 
         foreach (var art in ArtifactDesign.list) {
-            if (!RpgGameState.technologiesResearched.Contains(art.name)) {
+            if (!technologiesResearched.Contains(art.name)) {
                 continue;
             }
             shopSelection.Add(art);

@@ -169,13 +169,13 @@ public class StarSystemNode : Node2D {
     private void SetStarBaseColor() {
         Func<MapNodeColor> baseColor = () => {
             var owner = sys.starBase.owner;
-            if (owner == RpgGameState.humanPlayer) {
+            if (owner == RpgGameState.instance.humanPlayer) {
                 return MapNodeColor.Green;
             }
-            if (owner == RpgGameState.scavengerPlayer) {
+            if (owner == RpgGameState.instance.scavengerPlayer) {
                 return MapNodeColor.Purple;
             }
-            if (owner == RpgGameState.krigiaPlayer) {
+            if (owner == RpgGameState.instance.krigiaPlayer) {
                 return MapNodeColor.Red;
             }
             return MapNodeColor.Yellow;
@@ -199,19 +199,19 @@ public class StarSystemNode : Node2D {
     }
 
     public void ProcessDay() {
-        if (RpgGameState.day % 10 != 0) {
+        if (RpgGameState.instance.day % 10 != 0) {
             return;
         }
-        if (sys.starBase == null || sys.starBase.owner != RpgGameState.humanPlayer) {
+        if (sys.starBase == null || sys.starBase.owner != RpgGameState.instance.humanPlayer) {
             return;
         }
         foreach (var p in sys.resourcePlanets) {
             if (!p.hasMine) {
                 continue;
             }
-            RpgGameState.credits += RpgGameState.MineralsSellPrice() * p.mineralsCollected;
-            RpgGameState.credits += RpgGameState.OrganicSellPrice() * p.organicCollected;
-            RpgGameState.credits += RpgGameState.PowerSellPrice() * p.powerCollected;
+            RpgGameState.instance.credits += RpgGameState.MineralsSellPrice() * p.mineralsCollected;
+            RpgGameState.instance.credits += RpgGameState.OrganicSellPrice() * p.organicCollected;
+            RpgGameState.instance.credits += RpgGameState.PowerSellPrice() * p.powerCollected;
             sys.starBase.mineralsStock += p.mineralsCollected;
             sys.starBase.organicStock += p.organicCollected;
             sys.starBase.powerStock += p.powerCollected;

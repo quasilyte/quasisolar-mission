@@ -17,11 +17,14 @@ public class MapViewCheatMenuPopup : PopupDialog {
     [Signal]
     public delegate void CommandExecuted(Command command);
 
+    private RpgGameState _gameState;
+
     private Label _textLog;
 
     private Command _command;
 
     public override void _Ready() {
+        _gameState = RpgGameState.instance;
         _textLog = GetNode<Label>("ScrollContainer/MarginContainer/Label");
 
         GetNode<ButtonNode>("Execute").Connect("pressed", this, nameof(OnExecute));
@@ -72,12 +75,12 @@ public class MapViewCheatMenuPopup : PopupDialog {
                 return;
 
             case "cheat.exp":
-                RpgGameState.experience = QMath.ClampMin(ParseInt(arg) + RpgGameState.experience, 0);
+                _gameState.experience = QMath.ClampMin(ParseInt(arg) + _gameState.experience, 0);
                 _command = new Command { kind = CommandKind.StatsChange };
                 Log($"Experience value changed");
                 return;
             case "cheat.credits":
-                RpgGameState.credits = QMath.ClampMin(ParseInt(arg) + RpgGameState.credits, 0);
+                _gameState.credits = QMath.ClampMin(ParseInt(arg) + _gameState.credits, 0);
                 _command = new Command { kind = CommandKind.StatsChange };
                 Log($"Credits value changed");
                 return;
@@ -87,17 +90,17 @@ public class MapViewCheatMenuPopup : PopupDialog {
                 Log($"Fuel value changed");
                 return;
             case "cheat.minerals":
-                RpgGameState.humanUnit.CargoAddMinerals(ParseInt(arg));
+                _gameState.humanUnit.CargoAddMinerals(ParseInt(arg));
                 _command = new Command { kind = CommandKind.StatsChange };
                 Log($"Minerals cargo value changed");
                 return;
             case "cheat.organic":
-                RpgGameState.humanUnit.CargoAddOrganic(ParseInt(arg));
+                _gameState.humanUnit.CargoAddOrganic(ParseInt(arg));
                 _command = new Command { kind = CommandKind.StatsChange };
                 Log($"Organic cargo value changed");
                 return;
             case "cheat.power":
-                RpgGameState.humanUnit.CargoAddPower(ParseInt(arg));
+                _gameState.humanUnit.CargoAddPower(ParseInt(arg));
                 _command = new Command { kind = CommandKind.StatsChange };
                 Log($"Power cargo value changed");
                 return;
@@ -115,7 +118,7 @@ public class MapViewCheatMenuPopup : PopupDialog {
                 return;
 
             case "cheat.research.complete":
-                if (RpgGameState.currentResearch == null) {
+                if (_gameState.currentResearch == null) {
                     throw new Exception("current research is not set");
                 }
                 _command = new Command { kind = CommandKind.ResearchComplete };
@@ -123,7 +126,7 @@ public class MapViewCheatMenuPopup : PopupDialog {
 
             case "cheat.base.level": {
                     StarSystem sys;
-                    if (!RpgGameState.starSystemByPos.TryGetValue(RpgGameState.humanUnit.pos, out sys)) {
+                    if (!_gameState.starSystemByPos.TryGetValue(_gameState.humanUnit.pos, out sys)) {
                         throw new Exception("located outside of a system");
                     }
                     if (sys.starBase == null) {
@@ -143,10 +146,10 @@ public class MapViewCheatMenuPopup : PopupDialog {
                 if (!skill.IsAvailable()) {
                     throw new Exception($"{skill.name} skill requirements are not satisfied");
                 }
-                if (RpgGameState.skillsLearned.Contains(skill.name)) {
+                if (_gameState.skillsLearned.Contains(skill.name)) {
                     throw new Exception($"{skill.name} is already learned");
                 }
-                RpgGameState.skillsLearned.Add(skill.name);
+                _gameState.skillsLearned.Add(skill.name);
                 Log($"Learned {skill.name} skill");
                 _command = new Command { kind = CommandKind.StatsChange };
                 return;

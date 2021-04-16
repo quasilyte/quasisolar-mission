@@ -16,6 +16,8 @@ public class EquipmentShopScreen : Node2D {
     private Popup _dronesPopup;
     private Popup _sellEquipmentPopup;
 
+    private RpgGameState _gameState;
+
     private ItemSlotNode _sellItemSlot;
     private ItemSlotNode _sellItemFallbackSlot;
     private DraggableItemNode _sellItemNode;
@@ -36,6 +38,8 @@ public class EquipmentShopScreen : Node2D {
     };
 
     public override void _Ready() {
+        _gameState = RpgGameState.instance;
+
         SetupUI();
 
         GetNode<Button>("Status/LeaveButton").Connect("pressed", this, nameof(OnLeavePressed));
@@ -58,7 +62,7 @@ public class EquipmentShopScreen : Node2D {
         _refuelPopup.GetNode<Button>("BuyFull").Connect("pressed", this, nameof(OnBuyFullFuelButton));
         _refuelPopup.GetNode<Button>("BuyMinor").Connect("pressed", this, nameof(OnBuyMinorFuelButton));
         _refuelPopup.GetNode<Button>("Done").Connect("pressed", this, nameof(OnRefuelDoneButton));
-        _refuelPopup.GetNode<Label>("BuyMinor/Label").Text = (RpgGameState.fuelPrice * 50).ToString() + " cr";
+        _refuelPopup.GetNode<Label>("BuyMinor/Label").Text = (_gameState.fuelPrice * 50).ToString() + " cr";
 
         _repairPopup = GetNode<Popup>("RepairPopup");
         _repairPopup.GetNode<Button>("RepairFull").Connect("pressed", this, nameof(OnFullRepairButton));
@@ -76,12 +80,12 @@ public class EquipmentShopScreen : Node2D {
         _dronesPopup.GetNode<Button>("Done").Connect("pressed", this, nameof(OnDronesDoneButton));
         _dronesPopup.GetNode<Button>("BuyDrone").Connect("pressed", this, nameof(OnDronesBuyButton));
 
-        if (RpgGameState.fuel == RpgGameState.MaxFuel()) {
+        if (_gameState.fuel == RpgGameState.MaxFuel()) {
             GetNode<Button>("Status/RefuelButton").Disabled = true;
         }
 
-        for (int i = 0; i < RpgGameState.humanUnit.fleet.Count; i++) {
-            var u = RpgGameState.humanUnit.fleet[i];
+        for (int i = 0; i < _gameState.humanUnit.fleet.Count; i++) {
+            var u = _gameState.humanUnit.fleet[i];
             if (u == null) {
                 break;
             }
@@ -168,15 +172,15 @@ public class EquipmentShopScreen : Node2D {
                 var storagePanel = GetNode<Sprite>($"Storage/Item{i}");
                 var itemSlot = ItemSlotNode.New(i, ItemKind.Storage);
                 itemSlot.SetAssignItemCallback((int index, DraggableItemNode itemNode) => {
-                    RpgGameState.storage[index] = itemNode != null ? itemNode.item : null;
+                    _gameState.storage[index] = itemNode != null ? itemNode.item : null;
                     return true;
                 });
                 itemSlot.Reset(null, true);
                 itemSlot.Name = "Slot";
                 storagePanel.AddChild(itemSlot);
 
-                if (RpgGameState.storage[i] != null) {
-                    var itemNode = DraggableItemNode.New(itemSlot, RpgGameState.storage[i]);
+                if (_gameState.storage[i] != null) {
+                    var itemNode = DraggableItemNode.New(itemSlot, _gameState.storage[i]);
                     itemSlot.ApplyItem(null, itemNode);
                     GetTree().CurrentScene.AddChild(itemNode);
                     itemNode.GlobalPosition = storagePanel.GlobalPosition;
@@ -204,14 +208,14 @@ public class EquipmentShopScreen : Node2D {
     private void SelectMember(int vesselIndex) {
         var panel = GetNode<Panel>("UnitMenu");
 
-        for (int i = 0; i < RpgGameState.humanUnit.fleet.Count; i++) {
+        for (int i = 0; i < _gameState.humanUnit.fleet.Count; i++) {
             GetNode<Sprite>($"UnitMenu/Unit{i}").Frame = 1;
         }
 
         var unitPanel = GetNode<Sprite>($"UnitMenu/Unit{vesselIndex}");
         unitPanel.Frame = 2;
 
-        var u = RpgGameState.humanUnit.fleet[vesselIndex];
+        var u = _gameState.humanUnit.fleet[vesselIndex];
         _selectedVessel = u;
 
         panel.GetNode<Sprite>("VesselDesign/Sprite").Texture = u.design.Texture();
@@ -314,8 +318,8 @@ public class EquipmentShopScreen : Node2D {
 
         int i = 0;
         category = category.Replace(" ", ""); // "Special Weapon" -> "SpecialWeapon"
-        for (int itemIndex = 0; itemIndex < RpgGameState.enteredBase.shopSelection.Count; itemIndex++) {
-            var item = RpgGameState.enteredBase.shopSelection[itemIndex];
+        for (int itemIndex = 0; itemIndex < _gameState.enteredBase.shopSelection.Count; itemIndex++) {
+            var item = _gameState.enteredBase.shopSelection[itemIndex];
             if (item.Kind().ToString() != category) {
                 continue;
             }
@@ -334,7 +338,7 @@ public class EquipmentShopScreen : Node2D {
         if (_selectedMerchandise.sprite != null) {
             _selectedMerchandise.sprite.Frame = 1;
         }
-        var item = RpgGameState.enteredBase.shopSelection[itemIndex];
+        var item = _gameState.enteredBase.shopSelection[itemIndex];
         _selectedMerchandise.sprite = _equipmentSlots[merchIndex];
         _selectedMerchandise.item = item;
         _selectedMerchandise.sprite.Frame = 2;
@@ -347,19 +351,19 @@ public class EquipmentShopScreen : Node2D {
     private void OnShopBuyButton() {
         var item = _selectedMerchandise.item;
         var price = ItemInfo.BuyingPrice(item);
-        if (price > RpgGameState.credits) {
+        if (price > _gameState.credits) {
             return;
         }
-        RpgGameState.credits -= price;
+        _gameState.credits -= price;
         PlayMoneySound();
-        for (int i = 0; i < RpgGameState.storage.Length; i++) {
-            if (RpgGameState.storage[i] == null) {
-                RpgGameState.storage[i] = item;
+        for (int i = 0; i < _gameState.storage.Length; i++) {
+            if (_gameState.storage[i] == null) {
+                _gameState.storage[i] = item;
 
                 var storagePanel = GetNode<Sprite>($"Storage/Item{i}");
                 var itemSlot = storagePanel.GetNode<ItemSlotNode>("Slot");
                 itemSlot.Reset(null, true);
-                var itemNode = DraggableItemNode.New(itemSlot, RpgGameState.storage[i]);
+                var itemNode = DraggableItemNode.New(itemSlot, _gameState.storage[i]);
                 itemSlot.ApplyItem(null, itemNode);
                 GetTree().CurrentScene.AddChild(itemNode);
                 itemNode.GlobalPosition = storagePanel.GlobalPosition;
@@ -384,39 +388,39 @@ public class EquipmentShopScreen : Node2D {
     }
 
     private void UpdateUI() {
-        var starBase = RpgGameState.enteredBase;
+        var starBase = _gameState.enteredBase;
 
-        _dronesPopup.GetNode<Label>("ControlLimitValue").Text = RpgGameState.dronwsOwned + "/" + RpgGameState.MaxDrones();
+        _dronesPopup.GetNode<Label>("ControlLimitValue").Text = _gameState.dronwsOwned + "/" + RpgGameState.MaxDrones();
 
-        GetNode<Label>("Status/CreditsValue").Text = RpgGameState.credits.ToString();
-        GetNode<Label>("Status/FuelValue").Text = ((int)RpgGameState.fuel).ToString() + "/" + RpgGameState.MaxFuel().ToString();
-        GetNode<Label>("Status/CargoValue").Text = RpgGameState.humanUnit.CargoSize() + "/" + RpgGameState.humanUnit.CargoCapacity();
+        GetNode<Label>("Status/CreditsValue").Text = _gameState.credits.ToString();
+        GetNode<Label>("Status/FuelValue").Text = ((int)_gameState.fuel).ToString() + "/" + RpgGameState.MaxFuel().ToString();
+        GetNode<Label>("Status/CargoValue").Text = _gameState.humanUnit.CargoSize() + "/" + _gameState.humanUnit.CargoCapacity();
 
         GetNode<TextureProgress>("UnitMenu/HealthBar").Value = QMath.Percantage(_selectedVessel.hp, _selectedVessel.design.maxHp);
 
         GetNode<Button>("Status/RepairButton").Disabled = _selectedVessel.hp == _selectedVessel.design.maxHp;
 
-        var missingFuel = (int)(RpgGameState.MaxFuel() - RpgGameState.fuel);
-        _refuelPopup.GetNode<Button>("BuyMinor").Disabled = RpgGameState.fuel + 50 > RpgGameState.MaxFuel();
-        _refuelPopup.GetNode<Label>("BuyFull/Label").Text = (RpgGameState.fuelPrice * missingFuel).ToString() + " cr";
+        var missingFuel = (int)(RpgGameState.MaxFuel() - _gameState.fuel);
+        _refuelPopup.GetNode<Button>("BuyMinor").Disabled = _gameState.fuel + 50 > RpgGameState.MaxFuel();
+        _refuelPopup.GetNode<Label>("BuyFull/Label").Text = (_gameState.fuelPrice * missingFuel).ToString() + " cr";
 
-        _dronesPopup.GetNode<Label>("BuyDrone/Value").Text = RpgGameState.drones.ToString();
+        _dronesPopup.GetNode<Label>("BuyDrone/Value").Text = _gameState.drones.ToString();
         _dronesPopup.GetNode<Button>("BuyDrone").Disabled = !CanBuyDrone();
 
-        _cargoPopup.GetNode<Label>("SellDebris/Value").Text = RpgGameState.humanUnit.DebrisCount().ToString();
+        _cargoPopup.GetNode<Label>("SellDebris/Value").Text = _gameState.humanUnit.DebrisCount().ToString();
         _cargoPopup.GetNode<Label>("SellDebris/Price").Text = RpgGameState.DebrisSellPrice().ToString();
-        _cargoPopup.GetNode<Label>("SellMinerals/Value").Text = RpgGameState.humanUnit.cargo.minerals.ToString();
+        _cargoPopup.GetNode<Label>("SellMinerals/Value").Text = _gameState.humanUnit.cargo.minerals.ToString();
         _cargoPopup.GetNode<Label>("SellMinerals/Price").Text = RpgGameState.MineralsSellPrice().ToString();
         _cargoPopup.GetNode<Label>("SellMinerals/Stock").Text = starBase.mineralsStock.ToString();
-        _cargoPopup.GetNode<Label>("SellOrganic/Value").Text = RpgGameState.humanUnit.cargo.organic.ToString();
+        _cargoPopup.GetNode<Label>("SellOrganic/Value").Text = _gameState.humanUnit.cargo.organic.ToString();
         _cargoPopup.GetNode<Label>("SellOrganic/Price").Text = RpgGameState.OrganicSellPrice().ToString();
         _cargoPopup.GetNode<Label>("SellOrganic/Stock").Text = starBase.organicStock.ToString();
-        _cargoPopup.GetNode<Label>("SellPower/Value").Text = RpgGameState.humanUnit.cargo.power.ToString();
+        _cargoPopup.GetNode<Label>("SellPower/Value").Text = _gameState.humanUnit.cargo.power.ToString();
         _cargoPopup.GetNode<Label>("SellPower/Price").Text = RpgGameState.PowerSellPrice().ToString();
         _cargoPopup.GetNode<Label>("SellPower/Stock").Text = starBase.powerStock.ToString();
 
         GetNode<Button>("EquipmentShop/Buy").Disabled = _selectedMerchandise.sprite == null ||
-            ItemInfo.BuyingPrice(_selectedMerchandise.item) > RpgGameState.credits;
+            ItemInfo.BuyingPrice(_selectedMerchandise.item) > _gameState.credits;
     }
 
     private void OnSellEquipmentItemDragged(ItemSlotNode fromSlot, DraggableItemNode dragged) {
@@ -438,7 +442,7 @@ public class EquipmentShopScreen : Node2D {
     }
 
     private bool CanBuyDrone() {
-        return RpgGameState.credits >= RpgGameState.dronePrice && RpgGameState.dronwsOwned < RpgGameState.MaxDrones();
+        return _gameState.credits >= _gameState.dronePrice && _gameState.dronwsOwned < RpgGameState.MaxDrones();
     }
 
     private void PlayMoneySound() {
@@ -450,7 +454,7 @@ public class EquipmentShopScreen : Node2D {
         _sellItemSlot.MakeEmpty();
 
         var sellingPrice = ItemInfo.SellingPrice(_sellItemNode.item) / 2;
-        RpgGameState.credits += sellingPrice;
+        _gameState.credits += sellingPrice;
         UpdateUI();
 
         PlayMoneySound();
@@ -471,20 +475,20 @@ public class EquipmentShopScreen : Node2D {
             return;
         }
 
-        _dronesPopup.GetNode<Label>("BuyDrone/Value").Text = RpgGameState.drones.ToString();
-        _dronesPopup.GetNode<Label>("BuyDrone/Price").Text = "(" + RpgGameState.dronePrice + " cr/unit)";
+        _dronesPopup.GetNode<Label>("BuyDrone/Value").Text = _gameState.drones.ToString();
+        _dronesPopup.GetNode<Label>("BuyDrone/Price").Text = "(" + _gameState.dronePrice + " cr/unit)";
 
         _lockControls = true;
         _dronesPopup.PopupCentered();
     }
 
     private void OnDronesBuyButton() {
-        if (RpgGameState.credits < RpgGameState.dronePrice) {
+        if (_gameState.credits < _gameState.dronePrice) {
             return;
         }
-        RpgGameState.drones++;
-        RpgGameState.dronwsOwned++;
-        RpgGameState.credits -= RpgGameState.dronePrice;
+        _gameState.drones++;
+        _gameState.dronwsOwned++;
+        _gameState.credits -= _gameState.dronePrice;
         PlayMoneySound();
         UpdateUI();
     }
@@ -495,12 +499,12 @@ public class EquipmentShopScreen : Node2D {
     }
 
     private void OnCargoSellDebrisButton() {
-        var cargo = RpgGameState.humanUnit.cargo;
+        var cargo = _gameState.humanUnit.cargo;
 
-        RpgGameState.credits += RpgGameState.DebrisSellPrice() * RpgGameState.humanUnit.DebrisCount();
-        RpgGameState.krigiaMaterial += cargo.krigiaDeris;
-        RpgGameState.wertuMaterial += cargo.wertuDebris;
-        RpgGameState.zythMaterial += cargo.zythDebris;
+        _gameState.credits += RpgGameState.DebrisSellPrice() * _gameState.humanUnit.DebrisCount();
+        _gameState.krigiaMaterial += cargo.krigiaDeris;
+        _gameState.wertuMaterial += cargo.wertuDebris;
+        _gameState.zythMaterial += cargo.zythDebris;
 
         cargo.genericDebris = 0;
         cargo.krigiaDeris = 0;
@@ -512,25 +516,25 @@ public class EquipmentShopScreen : Node2D {
     }
 
     private void OnCargoSellMineralsButton() {
-        RpgGameState.credits += RpgGameState.MineralsSellPrice() * RpgGameState.humanUnit.cargo.minerals;
-        RpgGameState.enteredBase.mineralsStock += RpgGameState.humanUnit.cargo.minerals;
-        RpgGameState.humanUnit.cargo.minerals = 0;
+        _gameState.credits += RpgGameState.MineralsSellPrice() * _gameState.humanUnit.cargo.minerals;
+        _gameState.enteredBase.mineralsStock += _gameState.humanUnit.cargo.minerals;
+        _gameState.humanUnit.cargo.minerals = 0;
         PlayMoneySound();
         UpdateUI();
     }
 
     private void OnCargoSellOrganicButton() {
-        RpgGameState.credits += RpgGameState.OrganicSellPrice() * RpgGameState.humanUnit.cargo.organic;
-        RpgGameState.enteredBase.organicStock += RpgGameState.humanUnit.cargo.organic;
-        RpgGameState.humanUnit.cargo.organic = 0;
+        _gameState.credits += RpgGameState.OrganicSellPrice() * _gameState.humanUnit.cargo.organic;
+        _gameState.enteredBase.organicStock += _gameState.humanUnit.cargo.organic;
+        _gameState.humanUnit.cargo.organic = 0;
         PlayMoneySound();
         UpdateUI();
     }
 
     private void OnCargoSellPowerButton() {
-        RpgGameState.credits += RpgGameState.PowerSellPrice() * RpgGameState.humanUnit.cargo.power;
-        RpgGameState.enteredBase.powerStock += RpgGameState.humanUnit.cargo.power;
-        RpgGameState.humanUnit.cargo.power = 0;
+        _gameState.credits += RpgGameState.PowerSellPrice() * _gameState.humanUnit.cargo.power;
+        _gameState.enteredBase.powerStock += _gameState.humanUnit.cargo.power;
+        _gameState.humanUnit.cargo.power = 0;
         PlayMoneySound();
         UpdateUI();
     }
@@ -560,9 +564,9 @@ public class EquipmentShopScreen : Node2D {
         }
 
         var missingHp = (int)(_selectedVessel.design.maxHp - _selectedVessel.hp);
-        _repairPopup.GetNode<Label>("RepairFull/Label").Text = (RpgGameState.repairPrice * missingHp).ToString() + " cr";
+        _repairPopup.GetNode<Label>("RepairFull/Label").Text = (_gameState.repairPrice * missingHp).ToString() + " cr";
         _repairPopup.GetNode<Button>("RepairMinor").Disabled = _selectedVessel.hp + 25 > _selectedVessel.design.maxHp;
-        _repairPopup.GetNode<Label>("RepairMinor/Label").Text = (RpgGameState.repairPrice * 25).ToString() + " cr";
+        _repairPopup.GetNode<Label>("RepairMinor/Label").Text = (_gameState.repairPrice * 25).ToString() + " cr";
 
         _lockControls = true;
         _repairPopup.PopupCentered();
@@ -572,12 +576,12 @@ public class EquipmentShopScreen : Node2D {
         _repairPopup.Hide();
         _lockControls = false;
         var missingHp = (int)(_selectedVessel.design.maxHp - _selectedVessel.hp);
-        var price = RpgGameState.repairPrice * missingHp;
-        if (RpgGameState.credits < price) {
+        var price = _gameState.repairPrice * missingHp;
+        if (_gameState.credits < price) {
             return;
         }
         _selectedVessel.hp = _selectedVessel.design.maxHp;
-        RpgGameState.credits -= price;
+        _gameState.credits -= price;
         GetParent().AddChild(SoundEffectNode.New(GD.Load<AudioStream>("res://audio/interface/repair.wav")));
         UpdateUI();
     }
@@ -585,12 +589,12 @@ public class EquipmentShopScreen : Node2D {
     private void OnMinorRepairButton() {
         _repairPopup.Hide();
         _lockControls = false;
-        var price = RpgGameState.repairPrice * 25;
-        if (RpgGameState.credits < price) {
+        var price = _gameState.repairPrice * 25;
+        if (_gameState.credits < price) {
             return;
         }
         _selectedVessel.hp += 25;
-        RpgGameState.credits -= price;
+        _gameState.credits -= price;
         PlayMoneySound();
         UpdateUI();
     }
@@ -610,13 +614,13 @@ public class EquipmentShopScreen : Node2D {
     }
 
     private void OnBuyFullFuelButton() {
-        var missingFuel = (int)(RpgGameState.MaxFuel() - RpgGameState.fuel);
-        var price = RpgGameState.fuelPrice * missingFuel;
-        if (RpgGameState.credits < price) {
+        var missingFuel = (int)(RpgGameState.MaxFuel() - _gameState.fuel);
+        var price = _gameState.fuelPrice * missingFuel;
+        if (_gameState.credits < price) {
             return;
         }
-        RpgGameState.fuel = RpgGameState.MaxFuel();
-        RpgGameState.credits -= price;
+        _gameState.fuel = RpgGameState.MaxFuel();
+        _gameState.credits -= price;
         PlayMoneySound();
         UpdateUI();
 
@@ -625,12 +629,12 @@ public class EquipmentShopScreen : Node2D {
     }
 
     private void OnBuyMinorFuelButton() {
-        var price = RpgGameState.fuelPrice * 50;
-        if (RpgGameState.credits < price) {
+        var price = _gameState.fuelPrice * 50;
+        if (_gameState.credits < price) {
             return;
         }
-        RpgGameState.fuel += 50;
-        RpgGameState.credits -= price;
+        _gameState.fuel += 50;
+        _gameState.credits -= price;
         PlayMoneySound();
         UpdateUI();
     }

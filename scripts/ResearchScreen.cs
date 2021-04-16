@@ -9,13 +9,17 @@ public class ResearchScreen : Node2D {
         public ButtonNode button;
     }
 
+    private RpgGameState _gameState;
+
     private List<Research> _researchList;
     private List<ResearchNode> _researchNodes = new List<ResearchNode>();
 
     public override void _Ready() {
+        _gameState = RpgGameState.instance;
+
         _researchList = new List<Research>(Research.list);
 
-        foreach (var art in RpgGameState.artifactsRecovered) {
+        foreach (var art in _gameState.artifactsRecovered) {
             _researchList.Add(new Research{
                 name = art.name,
                 category = Research.Category.NewArtifact,
@@ -35,19 +39,19 @@ public class ResearchScreen : Node2D {
 
         var projectsPanel = GetNode<VBoxContainer>("ProjectList/ScrollContainer/List");
         foreach (var r in _researchList) {
-            if (RpgGameState.technologiesResearched.Contains(r.name)) {
+            if (_gameState.technologiesResearched.Contains(r.name)) {
                 continue;
             }
-            if (!Research.IsAvailable(RpgGameState.technologiesResearched, r.dependencies)) {
+            if (!Research.IsAvailable(_gameState.technologiesResearched, r.dependencies)) {
                 continue;
             }
-            if (r.material == Research.Material.Krigia && !RpgGameState.metKrigia) {
+            if (r.material == Research.Material.Krigia && !_gameState.metKrigia) {
                 continue;
             }
-            if (r.material == Research.Material.Wertu && !RpgGameState.metWertu) {
+            if (r.material == Research.Material.Wertu && !_gameState.metWertu) {
                 continue;
             }
-            if (r.material == Research.Material.Zyth && !RpgGameState.metZyth) {
+            if (r.material == Research.Material.Zyth && !_gameState.metZyth) {
                 continue;
             }
 
@@ -82,7 +86,7 @@ public class ResearchScreen : Node2D {
 
     private void OnStartProjectButton(int index) {
         var project = _researchNodes[index];
-        RpgGameState.currentResearch = project.value;
+        _gameState.currentResearch = project.value;
         UpdateUI();
     }
 
@@ -133,49 +137,49 @@ public class ResearchScreen : Node2D {
     }
 
     private void UpdateUI() {
-        GetNode<Button>("Status/InvestButton").Disabled = RpgGameState.credits < 1000;
+        GetNode<Button>("Status/InvestButton").Disabled = _gameState.credits < 1000;
 
-        GetNode<Label>("Status/KrigiaMaterialValue").Text = RpgGameState.krigiaMaterial.ToString();
-        GetNode<Label>("Status/WertuMaterialValue").Text = RpgGameState.wertuMaterial.ToString();
-        GetNode<Label>("Status/ZythMaterialValue").Text = RpgGameState.zythMaterial.ToString();
+        GetNode<Label>("Status/KrigiaMaterialValue").Text = _gameState.krigiaMaterial.ToString();
+        GetNode<Label>("Status/WertuMaterialValue").Text = _gameState.wertuMaterial.ToString();
+        GetNode<Label>("Status/ZythMaterialValue").Text = _gameState.zythMaterial.ToString();
 
-        GetNode<Label>("Status/CreditsValue").Text = RpgGameState.credits.ToString();
-        GetNode<Label>("Status/ScienceFuncsValue").Text = RpgGameState.scienceFunds.ToString();
+        GetNode<Label>("Status/CreditsValue").Text = _gameState.credits.ToString();
+        GetNode<Label>("Status/ScienceFuncsValue").Text = _gameState.scienceFunds.ToString();
 
-        if (RpgGameState.currentResearch == null) {
+        if (_gameState.currentResearch == null) {
             GetNode<Label>("ResearchProgress/Subject").Text = "<No Research Subject>";
             GetNode<Label>("ResearchProgress/Status").Text = "";
             GetNode<TextureProgress>("ResearchProgress/ProgressBar").Visible = false;
             GetNode<TextureProgress>("ResearchProgress/ProgressBar").Value = 0;
         } else {
             var statusText = "Research rate: " + (int)(100 * RpgGameState.ResearchRate()) + "%";
-            GetNode<Label>("ResearchProgress/Subject").Text = "<" + RpgGameState.currentResearch.name + ">";
+            GetNode<Label>("ResearchProgress/Subject").Text = "<" + _gameState.currentResearch.name + ">";
             GetNode<Label>("ResearchProgress/Status").Text = statusText;
             GetNode<TextureProgress>("ResearchProgress/ProgressBar").Visible = true;
-            GetNode<TextureProgress>("ResearchProgress/ProgressBar").Value = QMath.Percantage((int)RpgGameState.researchProgress, RpgGameState.currentResearch.researchTime);
+            GetNode<TextureProgress>("ResearchProgress/ProgressBar").Value = QMath.Percantage((int)_gameState.researchProgress, _gameState.currentResearch.researchTime);
         }
 
         for (int i = 0; i < _researchNodes.Count; i++) {
             var project = _researchNodes[i];
-            project.button.Disabled = RpgGameState.currentResearch != null;
+            project.button.Disabled = _gameState.currentResearch != null;
             project.label.AddColorOverride("font_color", Color.Color8(255, 255, 255));
-            if (project.value == RpgGameState.currentResearch) {
+            if (project.value == _gameState.currentResearch) {
                 project.label.AddColorOverride("font_color", Color.Color8(0x34, 0x8c, 0x2b));
             }
         }
     }
 
     private void OnInvestButton() {
-        if (RpgGameState.credits < 1000) {
+        if (_gameState.credits < 1000) {
             return;
         }
-        RpgGameState.credits -= 1000;
-        RpgGameState.scienceFunds += 1000;
+        _gameState.credits -= 1000;
+        _gameState.scienceFunds += 1000;
         UpdateUI();
     }
 
     private void OnLeaveButton() {
-        RpgGameState.transition = RpgGameState.MapTransition.ExitResearchScreen;
+        _gameState.transition = RpgGameState.MapTransition.ExitResearchScreen;
         GetTree().ChangeScene("res://scenes/MapView.tscn");
     }
 }

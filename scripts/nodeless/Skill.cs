@@ -11,11 +11,11 @@ public class Skill {
     public string effect2 = "";
 
     public bool IsAvailable() {
-        return requires == "" || RpgGameState.skillsLearned.Contains(requires);
+        return requires == "" || RpgGameState.instance.skillsLearned.Contains(requires);
     }
 
     public bool IsLearned() {
-        return RpgGameState.skillsLearned.Contains(name);
+        return RpgGameState.instance.skillsLearned.Contains(name);
     }
 
     public static Skill[] list = {

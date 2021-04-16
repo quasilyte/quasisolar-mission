@@ -125,16 +125,16 @@ public class SkillsScreen : Node2D {
 
     private void OnLearnSkillButton(int skillNodeIndex) {
         var s = skillNodes[skillNodeIndex];
-        if (RpgGameState.experience < s.value.expCost) {
+        if (RpgGameState.instance.experience < s.value.expCost) {
             return;
         }
-        RpgGameState.experience -= s.value.expCost;
-        RpgGameState.skillsLearned.Add(s.value.name);
+        RpgGameState.instance.experience -= s.value.expCost;
+        RpgGameState.instance.skillsLearned.Add(s.value.name);
         UpdateUI();
     }
 
     private void UpdateUI() {
-        GetNode<Label>("Status/ExperienceValue").Text = RpgGameState.experience.ToString();
+        GetNode<Label>("Status/ExperienceValue").Text = RpgGameState.instance.experience.ToString();
 
         foreach (var s in skillNodes) {
             s.label.AddColorOverride("font_color", Color.Color8(255, 255, 255));
@@ -150,7 +150,7 @@ public class SkillsScreen : Node2D {
                 s.button.Disabled = true;
                 continue;
             }
-            if (RpgGameState.experience < s.value.expCost) {
+            if (RpgGameState.instance.experience < s.value.expCost) {
                 s.button.Disabled = true;
                 continue;
             }

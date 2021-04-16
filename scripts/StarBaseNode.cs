@@ -7,6 +7,8 @@ public class StarBaseNode : Node2D {
 
     public StarBase starBase;
 
+    protected RpgGameState _gameState;
+
     private static PackedScene _scene = null;
     public static StarBaseNode New(StarBase starBase) {
         if (_scene == null) {
@@ -18,6 +20,7 @@ public class StarBaseNode : Node2D {
     }
 
     public override void _Ready() {
+        _gameState = RpgGameState.instance;
     }
 
     public void SetColor(MapNodeColor color) {

@@ -6,16 +6,6 @@ public class ArenaCameraNode : Camera2D {
 
     private float _cameraSpeed = 100;
 
-    // private static PackedScene _scene = null;
-    // public static ArenaCameraNode New(Node2D target) {
-    //     if (_scene == null) {
-    //         _scene = GD.Load<PackedScene>("res://scenes/ArenaCameraNode.tscn");
-    //     }
-    //     var o = (ArenaCameraNode)_scene.Instance();
-    //     o._target = target;
-    //     return o;
-    // }
-
     public override void _Ready() {
         var screenWidth = GetTree().Root.Size.x;
         var screenHeight = GetTree().Root.Size.y;

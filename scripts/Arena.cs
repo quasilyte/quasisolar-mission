@@ -37,6 +37,8 @@ public class Arena : Node2D {
     private Pilot _flagshipPilot;
     private bool _battleIsOver = false;
 
+    private RpgGameState _gameState;
+
     private float _envHazardTick = 0;
 
     private void ApplyAllianceColor(Node2D n, int alliance) {
@@ -187,6 +189,8 @@ public class Arena : Node2D {
     public override void _Ready() {
         ArenaState.Reset();
 
+        _gameState = RpgGameState.instance;
+
         var rng = new RandomNumberGenerator();
         rng.Randomize();
         QRandom.SetRandomNumberGenerator(rng);
@@ -278,10 +282,10 @@ public class Arena : Node2D {
     }
 
     private void TriggerDefeat() {
-        RpgGameState.transition = RpgGameState.MapTransition.UnitDestroyed;
-        RpgGameState.humanUnit.fleet = new List<Vessel>{RpgGameState.humanUnit.fleet[0]};
-        RpgGameState.humanUnit.fleet[0].hp = 0;
-        RpgGameState.humanUnit.fleet[0].energy = 0;
+        _gameState.transition = RpgGameState.MapTransition.UnitDestroyed;
+        _gameState.humanUnit.fleet = new List<Vessel>{_gameState.humanUnit.fleet[0]};
+        _gameState.humanUnit.fleet[0].hp = 0;
+        _gameState.humanUnit.fleet[0].energy = 0;
         ChangeSceneAfterDelay("MapView");
     }
 
@@ -311,16 +315,16 @@ public class Arena : Node2D {
             var vessel = _vesselByPilot[p];
             if (p.Active) {
                 var hpLoss = vessel.hp - p.Vessel.State.hp;
-                if (vessel.player == RpgGameState.humanPlayer) {
-                    if (RpgGameState.skillsLearned.Contains("Repair II")) {
+                if (vessel.player == _gameState.humanPlayer) {
+                    if (_gameState.skillsLearned.Contains("Repair II")) {
                         hpLoss *= 0.8f;
-                    } else if (RpgGameState.skillsLearned.Contains("Repair I")) {
+                    } else if (_gameState.skillsLearned.Contains("Repair I")) {
                         hpLoss *= 0.9f;
                     }
                 }
                 var energyLoss = vessel.energy - p.Vessel.State.backupEnergy;
-                if (vessel.player == RpgGameState.humanPlayer) {
-                    if (RpgGameState.skillsLearned.Contains("Repair II")) {
+                if (vessel.player == _gameState.humanPlayer) {
+                    if (_gameState.skillsLearned.Contains("Repair II")) {
                         energyLoss *= 0.75f;
                     }
                 }
@@ -333,17 +337,17 @@ public class Arena : Node2D {
                 var debris = (int)((float)p.Vessel.State.debris * roll);
                 if (vessel.design.affiliation == "Krigia") {
                     result.krigiaDebris += debris;
-                    RpgGameState.metKrigia = true;
+                    _gameState.metKrigia = true;
                 } else if (vessel.design.affiliation == "Wertu") {
                     result.wertuDebris += debris;
-                    RpgGameState.metWertu = true;
+                    _gameState.metWertu = true;
                 } else if (vessel.design.affiliation == "Zyth") {
                     result.zythDebris += debris;
-                    RpgGameState.metZyth = true;
+                    _gameState.metZyth = true;
                 } else {
                     result.genericDebris += debris;
                 }
-                if (p.alliance != RpgGameState.humanPlayer.Alliance) {
+                if (p.alliance != _gameState.humanPlayer.Alliance) {
                     result.exp += p.Vessel.State.vesselLevel * 3;
                 }
             }
@@ -358,19 +362,19 @@ public class Arena : Node2D {
     }
 
     private void HandleVictory(List<Pilot> survivors, int alliance, BattleResult result) {
-        if (alliance != RpgGameState.humanPlayer.Alliance) {
+        if (alliance != _gameState.humanPlayer.Alliance) {
             if (_flagshipPilot != null) {
                 TriggerDefeat();
                 return;
             }
-            RpgGameState.transition = RpgGameState.MapTransition.BaseAttackSimulation;
+            _gameState.transition = RpgGameState.MapTransition.BaseAttackSimulation;
             ChangeSceneAfterDelay("MapView");
             return;
         }
 
-        if (RpgGameState.enemyAttackerUnit != null) {
-            var unit = RpgGameState.enemyAttackerUnit;
-            if (RpgGameState.skillsLearned.Contains("Salvaging")) {
+        if (_gameState.enemyAttackerUnit != null) {
+            var unit = _gameState.enemyAttackerUnit;
+            if (_gameState.skillsLearned.Contains("Salvaging")) {
                 // Collect 80% of cargo instead of 50%.
                 result.minerals += QMath.IntAdjust(unit.cargo.minerals, 0.8);
                 result.organic += QMath.IntAdjust(unit.cargo.organic, 0.8);
@@ -382,15 +386,15 @@ public class Arena : Node2D {
             }
 
             if (_flagshipPilot == null) {
-                RpgGameState.transition = RpgGameState.MapTransition.BaseAttackSimulation;
+                _gameState.transition = RpgGameState.MapTransition.BaseAttackSimulation;
             } else {
-                RpgGameState.transition = RpgGameState.MapTransition.EnemyUnitDestroyed;
+                _gameState.transition = RpgGameState.MapTransition.EnemyUnitDestroyed;
             }
         } else {
-            RpgGameState.transition = RpgGameState.MapTransition.EnemyBaseAttackRepelled;
+            _gameState.transition = RpgGameState.MapTransition.EnemyBaseAttackRepelled;
         }
 
-        if (RpgGameState.skillsLearned.Contains("Salvaging")) {
+        if (_gameState.skillsLearned.Contains("Salvaging")) {
             // +5% debris.
             result.genericDebris = QMath.IntAdjust(result.genericDebris, 1.05);
             result.krigiaDebris = QMath.IntAdjust(result.krigiaDebris, 1.05);
@@ -399,11 +403,11 @@ public class Arena : Node2D {
         }
 
         if (_flagshipPilot != null) {
-            if (RpgGameState.skillsLearned.Contains("Fighter")) {
+            if (_gameState.skillsLearned.Contains("Fighter")) {
                 result.exp = QMath.IntAdjust(result.exp, 1.33);
             }
             // TODO: check for the cargo overflow.
-            RpgGameState.lastBattleResult = result;
+            _gameState.lastBattleResult = result;
         }
 
         ChangeSceneAfterDelay("MapView");

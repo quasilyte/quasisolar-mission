@@ -5,6 +5,8 @@ public class MapHumanNode : Node2D {
     public SpaceUnitNode node;
     public Player player;
 
+    private RpgGameState _gameState;
+
     private Label _destDistValueLabel;
 
     private static PackedScene _scene = null;
@@ -18,6 +20,7 @@ public class MapHumanNode : Node2D {
     }
 
     public override void _Ready() {
+        _gameState = RpgGameState.instance;
         _destDistValueLabel = GetNode<Label>("DestinationDistanceValue");
         node.Connect("PositionChanged", this, nameof(OnPositionChanged));
         node.Connect("DestinationReached", this, nameof(OnDestinationReached));
@@ -49,14 +52,14 @@ public class MapHumanNode : Node2D {
     }
 
     private void OnDestinationReached() {
-        RpgGameState.humanUnit.pos = node.GlobalPosition;
+        _gameState.humanUnit.pos = node.GlobalPosition;
         _destDistValueLabel.Visible = false;
     }
 
     private void OnPositionChanged(float traveled) {
         GlobalPosition = node.GlobalPosition;
-        RpgGameState.fuel -= traveled / 2;
-        RpgGameState.humanUnit.pos = node.GlobalPosition;
+        _gameState.fuel -= traveled / 2;
+        _gameState.humanUnit.pos = node.GlobalPosition;
         var dest = node.GetDestination();
         if (dest == Vector2.Zero) {
             return;

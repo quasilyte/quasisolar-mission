@@ -30,7 +30,7 @@ public class ScavengerStarBaseNode : StarBaseNode {
 
         ProcessResources();
 
-        if (RpgGameState.day > 30) {
+        if (_gameState.day > 30) {
             MaybeEnqueueVessel();
             MaybeCreateSpaceUnit();
         }
@@ -80,7 +80,7 @@ public class ScavengerStarBaseNode : StarBaseNode {
         }
 
         var spaceUnit = new SpaceUnit {
-            owner = RpgGameState.scavengerPlayer,
+            owner = _gameState.scavengerPlayer,
             pos = starBase.system.pos,
         };
 
@@ -89,7 +89,7 @@ public class ScavengerStarBaseNode : StarBaseNode {
             spaceUnit.fleet.Add(starBase.PopVessel());
         }
 
-        RpgGameState.spaceUnits.Add(spaceUnit);
+        _gameState.spaceUnits.Add(spaceUnit);
         starBase.units.Add(spaceUnit);
 
         var unitNode = ScavengerSpaceUnitNode.New(spaceUnit);
@@ -97,10 +97,10 @@ public class ScavengerStarBaseNode : StarBaseNode {
     }
 
     private int MaxUnits() {
-        if (RpgGameState.day < 200) {
+        if (_gameState.day < 200) {
             return 1;
         }
-        if (RpgGameState.day < 400) {
+        if (_gameState.day < 400) {
             return 2;
         }
         return 3;

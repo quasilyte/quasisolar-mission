@@ -39,7 +39,7 @@ public static class ItemInfo {
 
     private static int ItemPrice(IItem item, bool selling) {
         if (item is WeaponDesign weapon) {
-            if (!selling && weapon == NeedleGunWeapon.Design && RpgGameState.technologiesResearched.Contains("Gauss Production")) {
+            if (!selling && weapon == NeedleGunWeapon.Design && RpgGameState.instance.technologiesResearched.Contains("Gauss Production")) {
                 return (int)(weapon.sellingPrice * 0.8);
             }
             return weapon.sellingPrice;

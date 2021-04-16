@@ -11,6 +11,8 @@ public class ShipyardScreen : Node2D {
     private bool _lockControls = false;
     private PopupNode _exodusPopup;
 
+    private RpgGameState _gameState;
+
     private Merchandise _selectedMerchandise = new Merchandise { };
     private List<VesselDesign> _vesselSelection;
 
@@ -20,7 +22,8 @@ public class ShipyardScreen : Node2D {
     private StarBase _starBase;
 
     public override void _Ready() {
-        _starBase = RpgGameState.enteredBase;
+        _gameState = RpgGameState.instance;
+        _starBase = _gameState.enteredBase;
         _vesselSelection = VesselSelection();
         SetupUI();
         UpdateUI();
@@ -37,27 +40,27 @@ public class ShipyardScreen : Node2D {
     }
 
     private bool CanTurnIntoArk() {
-        return RpgGameState.technologiesResearched.Contains("Ark Exodus") &&
+        return _gameState.technologiesResearched.Contains("Ark Exodus") &&
             FleetEmptySlots() > 0 &&
-            RpgGameState.credits > RpgGameState.exodusPrice;
+            _gameState.credits > _gameState.exodusPrice;
     }
 
     private void UpdateUI() {
-        GetNode<Label>("Status/CreditsValue").Text = RpgGameState.credits.ToString();
+        GetNode<Label>("Status/CreditsValue").Text = _gameState.credits.ToString();
 
         GetNode<ButtonNode>("Status/ArkButton").Disabled = !CanTurnIntoArk();
 
         GetNode<Button>("VesselProduction/StartProduction").Disabled = _selectedMerchandise.sprite == null ||
-            ItemInfo.BuyingPrice(_selectedMerchandise.item) > RpgGameState.credits ||
+            ItemInfo.BuyingPrice(_selectedMerchandise.item) > _gameState.credits ||
             _starBase.productionQueue.Count >= 4;
 
         for (int i = 0; i < _fleetSlots.Length; i++) {
             var panel = GetNode<Sprite>($"ActiveFleet/Vessel{i}");
             panel.GetNode<Label>("Name").Text = "";
-            if (RpgGameState.humanUnit.fleet.Count <= i) {
+            if (_gameState.humanUnit.fleet.Count <= i) {
                 continue;
             }
-            var vessel = RpgGameState.humanUnit.fleet[i];
+            var vessel = _gameState.humanUnit.fleet[i];
             panel.GetNode<Label>("Name").Text = vessel.pilotName;
             var slot = panel.GetNode<ItemSlotNode>("Slot");
             var itemNode = DraggableItemNode.New(slot, vessel);
@@ -90,7 +93,7 @@ public class ShipyardScreen : Node2D {
             case VesselDesign.ProductionAvailability.Always:
                 break;
             case VesselDesign.ProductionAvailability.ResearchRequired:
-                if (!RpgGameState.technologiesResearched.Contains(design.name)) {
+                if (!_gameState.technologiesResearched.Contains(design.name)) {
                     continue;
                 }
                 break;
@@ -117,16 +120,16 @@ public class ShipyardScreen : Node2D {
             return;
         }
 
-        var system = RpgGameState.enteredBase.system;
+        var system = _gameState.enteredBase.system;
         system.starBase = null;
 
         UpdateFleet();
         UpdateGarrison();
 
-        var ark = VesselFactory.NewVessel(RpgGameState.humanPlayer, VesselDesign.Find("Earthling", "Ark"));
-        ark.pilotName = PilotNames.UniqHumanName(RpgGameState.usedNames);
+        var ark = VesselFactory.NewVessel(_gameState.humanPlayer, VesselDesign.Find("Earthling", "Ark"));
+        ark.pilotName = PilotNames.UniqHumanName(_gameState.usedNames);
         VesselFactory.PadEquipment(ark);
-        RpgGameState.humanUnit.fleet.Add(ark);
+        _gameState.humanUnit.fleet.Add(ark);
 
         GetTree().ChangeScene("res://scenes/MapView.tscn");
     }
@@ -212,10 +215,10 @@ public class ShipyardScreen : Node2D {
     }
 
     private void OnStartProductionButton() {
-        if (RpgGameState.credits < ItemInfo.BuyingPrice(_selectedMerchandise.item)) {
+        if (_gameState.credits < ItemInfo.BuyingPrice(_selectedMerchandise.item)) {
             return;
         }
-        var starBase = RpgGameState.enteredBase;
+        var starBase = _gameState.enteredBase;
         if (starBase.productionQueue.Count >= 4) {
             return;
         }
@@ -223,7 +226,7 @@ public class ShipyardScreen : Node2D {
             return;
         }
 
-        RpgGameState.credits -= ItemInfo.BuyingPrice(_selectedMerchandise.item);
+        _gameState.credits -= ItemInfo.BuyingPrice(_selectedMerchandise.item);
         if (starBase.productionQueue.Count == 0) {
             GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/production_started.wav"));
         }
@@ -277,14 +280,14 @@ public class ShipyardScreen : Node2D {
 
     private void UpdateGarrison() {
         var list = VesselArrayToList(_garrisonSlots);
-        RpgGameState.enteredBase.garrison = list;
+        _gameState.enteredBase.garrison = list;
     }
 
     public void UpdateFleet() {
         var list = VesselArrayToList(_fleetSlots);
         list[0].isBot = false;
         list[0].isGamepad = GameControls.preferGamepad;
-        RpgGameState.humanUnit.fleet = list;
+        _gameState.humanUnit.fleet = list;
     }
 
     private List<Vessel> VesselArrayToList(Vessel[] arr) {

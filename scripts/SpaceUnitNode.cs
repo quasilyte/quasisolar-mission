@@ -3,6 +3,8 @@ using Godot;
 public abstract class SpaceUnitNode : Node2D {
     public SpaceUnit unit;
 
+    protected RpgGameState _gameState;
+
     protected MapNodeColor _spriteColor = MapNodeColor.Yellow;
 
     public float speed;
@@ -38,11 +40,11 @@ public abstract class SpaceUnitNode : Node2D {
     public virtual void ProcessDay() {}
 
     public void UpdateColor() {
-        if (unit.owner == RpgGameState.humanPlayer) {
+        if (unit.owner == _gameState.humanPlayer) {
             GetNode<Sprite>("Sprite").Frame = (int)MapNodeColor.Green;
             return;
         }
-        if (RpgGameState.technologiesResearched.Contains("Fleet Identifier")) {
+        if (_gameState.technologiesResearched.Contains("Fleet Identifier")) {
             GetNode<Sprite>("Sprite").Frame = (int)_spriteColor;
         } else {
             GetNode<Sprite>("Sprite").Frame = (int)MapNodeColor.Yellow;
@@ -50,11 +52,12 @@ public abstract class SpaceUnitNode : Node2D {
     }
 
     public override void _Ready() {
+        _gameState = RpgGameState.instance;
         UpdateColor();
     }
 
     public override void _Process(float delta) {
-        if (RpgGameState.mapState.movementEnabled) {
+        if (_gameState.mapState.movementEnabled) {
             Move(delta);
         }
     }

@@ -24,8 +24,8 @@ public class ScavengerSpaceUnitNode : SpaceUnitNode {
         base.Connect("DestinationReached", this, nameof(OnDestinationReached));
 
         _canBeDetected = unit.waypoint != Vector2.Zero;
-        if (RpgGameState.starSystemByPos.ContainsKey(unit.pos)) {
-            _currentSystem = RpgGameState.starSystemByPos[unit.pos];
+        if (_gameState.starSystemByPos.ContainsKey(unit.pos)) {
+            _currentSystem = _gameState.starSystemByPos[unit.pos];
         }
 
         GlobalPosition = unit.pos;
@@ -37,11 +37,11 @@ public class ScavengerSpaceUnitNode : SpaceUnitNode {
     // }
 
     private void UpdateVisibility() {
-        Visible = _canBeDetected && RpgGameState.humanUnit.pos.DistanceTo(GlobalPosition) <= RpgGameState.RadarRange();
+        Visible = _canBeDetected && _gameState.humanUnit.pos.DistanceTo(GlobalPosition) <= RpgGameState.RadarRange();
     }
 
     public void PickNewWaypoint() {
-        var destinationOptions = RpgGameState.starSystemConnections[_currentSystem];
+        var destinationOptions = _gameState.starSystemConnections[_currentSystem];
         var nextSystem = QRandom.Element(destinationOptions);
         _currentSystem = null;
         unit.waypoint = nextSystem.pos;
@@ -74,10 +74,10 @@ public class ScavengerSpaceUnitNode : SpaceUnitNode {
     }
 
     private void OnDestinationReached() {
-        _currentSystem = RpgGameState.starSystemByPos[unit.waypoint];
+        _currentSystem = _gameState.starSystemByPos[unit.waypoint];
 
         var starBase = _currentSystem.starBase;
-        if (starBase == null || starBase.owner == RpgGameState.scavengerPlayer) {
+        if (starBase == null || starBase.owner == _gameState.scavengerPlayer) {
             unit.botSystemLeaveDelay = QRandom.IntRange(8, 32);
             _canBeDetected = false;
             return;
@@ -85,7 +85,7 @@ public class ScavengerSpaceUnitNode : SpaceUnitNode {
     }
 
     private void MaybeCollectResources() {
-        if (RpgGameState.humanUnit.pos == unit.pos) {
+        if (_gameState.humanUnit.pos == unit.pos) {
             return;
         }
 
@@ -139,7 +139,7 @@ public class ScavengerSpaceUnitNode : SpaceUnitNode {
 
     private void ProcessStarBaseDay() {
         var starBase = _currentSystem.starBase;
-        if (starBase.owner == RpgGameState.scavengerPlayer) {
+        if (starBase.owner == _gameState.scavengerPlayer) {
             if (unit.CargoSize() != 0) {
                 OffloadResourcesTo(starBase);
                 GD.Print("scavenger offloads resources");
