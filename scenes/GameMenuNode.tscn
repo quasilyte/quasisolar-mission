@@ -9,7 +9,7 @@ script = ExtResource( 3 )
 
 [node name="PopupNode" parent="." instance=ExtResource( 1 )]
 visible = true
-margin_bottom = 304.0
+margin_bottom = 352.0
 
 [node name="Title" type="Label" parent="PopupNode"]
 margin_left = 16.0
@@ -38,18 +38,27 @@ margin_bottom = 144.0
 focus_mode = 2
 text = "Load Game"
 
+[node name="Settings" parent="PopupNode" instance=ExtResource( 2 )]
+margin_left = 16.0
+margin_top = 160.0
+margin_right = 240.0
+margin_bottom = 192.0
+focus_mode = 2
+disabled = true
+text = "Settings"
+
 [node name="MainMenu" parent="PopupNode" instance=ExtResource( 2 )]
 margin_left = 16.0
-margin_top = 176.0
+margin_top = 224.0
 margin_right = 240.0
-margin_bottom = 208.0
+margin_bottom = 256.0
 focus_mode = 2
 text = "Exit Game"
 
 [node name="CloseMenu" parent="PopupNode" instance=ExtResource( 2 )]
 margin_left = 16.0
-margin_top = 240.0
+margin_top = 288.0
 margin_right = 240.0
-margin_bottom = 272.0
+margin_bottom = 320.0
 focus_mode = 2
 text = "Close Menu"
