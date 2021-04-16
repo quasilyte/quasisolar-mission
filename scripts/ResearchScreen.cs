@@ -1,5 +1,6 @@
 using Godot;
 using System.Collections.Generic;
+using System;
 
 public class ResearchScreen : Node2D {
     class ResearchNode {
@@ -89,6 +90,9 @@ public class ResearchScreen : Node2D {
         if (category == Research.Category.Upgrade) {
             return "upgrade";
         }
+        if (category == Research.Category.NewVesselDesign) {
+            return "new vessel design";
+        }
         if (category == Research.Category.NewWeapon) {
             return "new weapon";
         }
@@ -101,7 +105,10 @@ public class ResearchScreen : Node2D {
         if (category == Research.Category.NewArtifact) {
             return "artifact";
         }
-        return "fundamental";
+        if (category == Research.Category.Fundamental) {
+            return "fundamental";
+        }
+        throw new Exception("unexpected research category: " + category.ToString());
     }
 
     private void OnProjectHover(int index) {
