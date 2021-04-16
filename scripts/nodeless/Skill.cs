@@ -20,6 +20,25 @@ public class Skill {
 
     public static Skill[] list = {
         new Skill{
+            name = "Drone Control I",
+            expCost = 50,
+            effect = "can own up to 10 drones",
+        },
+
+        new Skill{
+            name = "Drone Control II",
+            expCost = 60,
+            effect = "can own up to 15 drones",
+            requires = "Drone Control I",
+        },
+
+        new Skill{
+            name = "Scholar",
+            expCost = 50,
+            effect = "-10 research time to all technologies",
+        },
+
+        new Skill{
             name = "Navigation I",
             expCost = 25,
             effect = "15% faster map travel speed",
@@ -42,18 +61,18 @@ public class Skill {
         new Skill{
             name = "Fighter",
             expCost = 40,
-            effect = "25% more exp gain pfrom battles",
+            effect = "33% more exp gain from battles",
         },
 
-        new Skill{
-            name = "Mentor",
-            expCost = 40,
-            effect = "50% more allied pilots exp gain from battles",
-        },
+        // new Skill{
+        //     name = "Mentor",
+        //     expCost = 40,
+        //     effect = "50% more allied pilots exp gain from battles",
+        // },
 
         new Skill{
             name = "Diplomacy",
-            expCost = 75,
+            expCost = 65,
             effect = "better deals in negotiations",
         },
 
@@ -75,26 +94,20 @@ public class Skill {
             expCost = 60,
             requires = "Repair I",
             effect = "after a battle, recover 20% of damage taken",
+            effect2 = "after a battle, recover 25% of energy used",
         },
 
         new Skill{
             name = "Escape Tactics",
-            expCost = 60,
+            expCost = 45,
             effect = "retreating is costs 2 times less fuel units"
         },
 
         new Skill{
-            name = "Siege Mastery I",
-            expCost = 40,
+            name = "Siege Mastery",
+            expCost = 50,
             effect = "when in attack mode, do double damage against bases",
-        },
-
-        new Skill{
-            name = "Siege Mastery II",
-            expCost = 70,
-            requires = "Siege Mastery I",
-            effect = "when in attack mode, do double damage against bases",
-            effect2 = "do 1 point of base damage even if garrison is not empty",
+            effect2 = "inflict damage even if garrison is not empty",
         },
 
         new Skill{

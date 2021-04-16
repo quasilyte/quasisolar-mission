@@ -6,7 +6,7 @@ public class SpreadGunWeapon : IWeapon {
         level = 1,
         description = "TODO",
         targeting = "forward-only, projectiles",
-        sellingPrice = 450,
+        sellingPrice = 350,
         cooldown = 0.15f,
         range = 200.0f,
         damage = 3.0f,

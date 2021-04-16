@@ -318,8 +318,14 @@ public class Arena : Node2D {
                         hpLoss *= 0.9f;
                     }
                 }
+                var energyLoss = vessel.energy - p.Vessel.State.backupEnergy;
+                if (vessel.player == RpgGameState.humanPlayer) {
+                    if (RpgGameState.skillsLearned.Contains("Repair II")) {
+                        energyLoss *= 0.75f;
+                    }
+                }
                 vessel.hp -= hpLoss;
-                vessel.energy = p.Vessel.State.backupEnergy;
+                vessel.energy -= energyLoss;
                 survivors.Add(p);
             } else {
                 vessel.hp = 0;
@@ -394,7 +400,7 @@ public class Arena : Node2D {
 
         if (_flagshipPilot != null) {
             if (RpgGameState.skillsLearned.Contains("Fighter")) {
-                result.exp = QMath.IntAdjust(result.exp, 1.25);
+                result.exp = QMath.IntAdjust(result.exp, 1.33);
             }
             // TODO: check for the cargo overflow.
             RpgGameState.lastBattleResult = result;

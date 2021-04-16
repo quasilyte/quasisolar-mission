@@ -49,6 +49,7 @@ public static class RpgGameState {
 
     public static int drones;
     public static int dronePrice;
+    public static int dronwsOwned = 0;
 
     public static ulong seed;
     public static RandomNumberGenerator rng;
@@ -137,6 +138,16 @@ public static class RpgGameState {
         return value;
     }
 
+    public static int MaxDrones() {
+        var value = 5;
+        if (RpgGameState.skillsLearned.Contains("Drone Control II")) {
+            value = 15;
+        } else if (RpgGameState.skillsLearned.Contains("Drone Control I")) {
+            value = 10;
+        }
+        return value;
+    }
+
     public static void AddFuel(float amount) {
         fuel = QMath.Clamp(fuel + amount, 0, MaxFuel());
     }
@@ -181,6 +192,7 @@ public static class RpgGameState {
         day = 1;
 
         drones = 0;
+        dronwsOwned = 0;
         credits = 0;
 
         seed = gameSeed;

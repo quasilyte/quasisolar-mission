@@ -386,6 +386,8 @@ public class EquipmentShopScreen : Node2D {
     private void UpdateUI() {
         var starBase = RpgGameState.enteredBase;
 
+        _dronesPopup.GetNode<Label>("ControlLimitValue").Text = RpgGameState.dronwsOwned + "/" + RpgGameState.MaxDrones();
+
         GetNode<Label>("Status/CreditsValue").Text = RpgGameState.credits.ToString();
         GetNode<Label>("Status/FuelValue").Text = ((int)RpgGameState.fuel).ToString() + "/" + RpgGameState.MaxFuel().ToString();
         GetNode<Label>("Status/CargoValue").Text = RpgGameState.humanUnit.CargoSize() + "/" + RpgGameState.humanUnit.CargoCapacity();
@@ -399,7 +401,7 @@ public class EquipmentShopScreen : Node2D {
         _refuelPopup.GetNode<Label>("BuyFull/Label").Text = (RpgGameState.fuelPrice * missingFuel).ToString() + " cr";
 
         _dronesPopup.GetNode<Label>("BuyDrone/Value").Text = RpgGameState.drones.ToString();
-        _dronesPopup.GetNode<Button>("BuyDrone").Disabled = RpgGameState.credits < RpgGameState.dronePrice;
+        _dronesPopup.GetNode<Button>("BuyDrone").Disabled = !CanBuyDrone();
 
         _cargoPopup.GetNode<Label>("SellDebris/Value").Text = RpgGameState.humanUnit.DebrisCount().ToString();
         _cargoPopup.GetNode<Label>("SellDebris/Price").Text = RpgGameState.DebrisSellPrice().ToString();
@@ -433,6 +435,10 @@ public class EquipmentShopScreen : Node2D {
         
         _lockControls = true;
         _sellEquipmentPopup.PopupCentered();
+    }
+
+    private bool CanBuyDrone() {
+        return RpgGameState.credits >= RpgGameState.dronePrice && RpgGameState.dronwsOwned < RpgGameState.MaxDrones();
     }
 
     private void PlayMoneySound() {
@@ -477,6 +483,7 @@ public class EquipmentShopScreen : Node2D {
             return;
         }
         RpgGameState.drones++;
+        RpgGameState.dronwsOwned++;
         RpgGameState.credits -= RpgGameState.dronePrice;
         PlayMoneySound();
         UpdateUI();

@@ -822,6 +822,7 @@ public class MapView : Node2D {
     }
 
     private void OnDroneDestroyed(SpaceUnitNode unitNode) {
+        RpgGameState.dronwsOwned--;
         GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/interface/generic_notification.wav"));
         var notification = MapBadNotificationNode.New("Drone destroyed");
         AddChild(notification);
@@ -1133,7 +1134,12 @@ public class MapView : Node2D {
             RpgGameState.scienceFunds = QMath.ClampMin(RpgGameState.scienceFunds - roll, 0);
         }
 
-        if ((int)RpgGameState.researchProgress >= research.researchTime) {
+        var researchTime = research.researchTime;
+        if (RpgGameState.skillsLearned.Contains("Scholar")) {
+            researchTime -= 10;
+        }
+
+        if ((int)RpgGameState.researchProgress >= researchTime) {
             ResearchCompleted();
         }
     }
@@ -1326,17 +1332,12 @@ public class MapView : Node2D {
             }
             
             RpgGameState.fuel -= 1;
-            
-            var damage = 0;
-            if (starBase.garrison.Count != 0) {
-                if (RpgGameState.skillsLearned.Contains("Siege Mastery II")) {
-                    damage = 1;
-                }
-            } else {
-                damage = RpgGameState.humanUnit.fleet.Count;
-                if (RpgGameState.skillsLearned.Contains("Siege Mastery I") || RpgGameState.skillsLearned.Contains("Siege Mastery II")) {
-                    damage *= 2;
-                }
+            if (starBase.garrison.Count != 0 && !RpgGameState.skillsLearned.Contains("Siege Mastery")) {
+                return;
+            }
+            var damage = RpgGameState.humanUnit.fleet.Count;
+            if (RpgGameState.skillsLearned.Contains("Siege Mastery")) {
+                damage *= 2;
             }
             starBase.hp -= damage;
             if (starBase.hp <= 0) {

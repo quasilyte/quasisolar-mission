@@ -16,7 +16,7 @@ public class NewGameScene : Node2D {
             new Option[]{
                 new Option{text = "Salvaging", value = "Salvaging", score = 0},
                 new Option{text = "Fighter", value = "Fighter", score = 0},
-                new Option{text = "Siege Mastery I", value = "Siege Mastery I", score = 0},
+                new Option{text = "Siege Mastery", value = "Siege Mastery", score = 0},
                 new Option{text = "Luck", value = "Luck", score = 0, selected = true},
                 new Option{text = "No bonus skill", value = "", score = 10},
             }
