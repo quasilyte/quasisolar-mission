@@ -30,6 +30,7 @@ public class MapView : Node2D {
     private PopupNode _randomEventPopup;
     private PopupNode _randomEventResolvedPopup;
     private PopupNode _battleResult;
+    private PopupNode _researchCompletedPopup;
     private MapViewCheatMenuPopup _cheatsPopup;
 
     private RandomEvent.EffectKind _randomEventResolutionPostEffect;
@@ -120,6 +121,9 @@ public class MapView : Node2D {
         GetNode<TextureButton>("UI/MiningButton").Connect("pressed", this, nameof(OnMiningButton));
         GetNode<TextureButton>("UI/ActionMenuButton").Connect("pressed", this, nameof(OnActionMenuButton));
         GetNode<TextureButton>("UI/ResearchButton").Connect("pressed", this, nameof(OnResearchButton));
+
+        _researchCompletedPopup = GetNode<PopupNode>("UI/ResearchCompletedPopup");
+        _researchCompletedPopup.GetNode<ButtonNode>("DoneButton").Connect("pressed", this, nameof(OnResearchCompleteDoneButton));
 
         _starBaseAttackPopup = GetNode<PopupNode>("UI/BaseUnderAttackPopup");
         _starBaseAttackPopup.GetNode<ButtonNode>("PlayButton").Connect("pressed", this, nameof(OnStarBaseAttackPlayButton));
@@ -381,6 +385,7 @@ public class MapView : Node2D {
     private void OnCheatCommandExecuted(MapViewCheatMenuPopup.Command command) {
         switch (command.kind) {
             case CheatCommandKind.ResearchComplete:
+                OnCheatsDone();
                 ResearchCompleted();
                 return;
 
@@ -1144,15 +1149,15 @@ public class MapView : Node2D {
         }
     }
 
+    private void OnResearchCompleteDoneButton() {
+        _lockControls = false;
+        _researchCompletedPopup.Hide();
+    }
+
     private void ResearchCompleted() {
         var research = RpgGameState.currentResearch;
 
         GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/research_completed.wav"));
-
-        var button = GetNode<TextureButton>("UI/ResearchButton");
-        var notification = MapNotificationNode.New("Research completed");
-        button.AddChild(notification);
-        notification.Position += button.RectSize / 2;
 
         RpgGameState.technologiesResearched.Add(research.name);
 
@@ -1166,6 +1171,38 @@ public class MapView : Node2D {
 
         StopMovement();
         UpdateUI();
+
+        _researchCompletedPopup.GetNode<Label>("SubTitle").Text = research.name;
+        var text = "";
+        if (research.category == Research.Category.NewArtifact) {
+            text += "New artifact is available for production.\n\n";
+        } else if (research.category == Research.Category.NewEnergySource) {
+            text += "New energy source is available for production.\n\n";
+        } else if (research.category == Research.Category.NewShield) {
+            text += "New shield is available for production.\n\n";
+        } else if (research.category == Research.Category.NewSpecialWeapon) {
+            text += "New special weapon is available for production.\n\n";
+        } else if (research.category == Research.Category.NewVesselDesign) {
+            text += "New special vessel is available for production.\n\n";
+        } else if (research.category == Research.Category.NewWeapon) {
+            text += "New weapon is available for production.\n\n";
+        } else if (research.category == Research.Category.Upgrade) {
+            text += "Upgrade is now active.\n\n";
+        }
+        var newProjects = Research.list.FindAll(r => r.dependencies.Contains(research.name));
+        if (newProjects.Count != 0) {
+            text += "New research projects available:\n\n";
+            foreach (var r in newProjects) {
+                text += r.name + "\n";
+            }
+        } else {
+            text += "No new research projects available.";
+        }
+
+        _researchCompletedPopup.GetNode<Label>("Panel/Text").Text = text;
+
+        _lockControls = true;
+        _researchCompletedPopup.PopupCentered();
     }
 
     private void ProcessInterstellarDay() {

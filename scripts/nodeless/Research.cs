@@ -37,7 +37,7 @@ public class Research {
         return true;
     }
 
-    public static Research[] list = {
+    public static List<Research> list = new List<Research>{
         // Misc tech.
 
         new Research{
@@ -60,7 +60,7 @@ public class Research {
         new Research{
             name = "Alien Tech Lab",
             category = Category.Upgrade,
-            researchTime = 120,
+            researchTime = 70,
             effect = "+10% research rate for alien projects",
         },
 
@@ -352,21 +352,21 @@ public class Research {
         new Research{
             name = "Fleet Identifier",
             category = Category.Upgrade,
-            researchTime = 60,
+            researchTime = 40,
             effect = "color-coding for space units on the map",
         },
 
         new Research{
             name = "Jump Tracer Mk2",
             category = Category.Upgrade,
-            researchTime = 75,
+            researchTime = 50,
             effect = "+15% radar range",
         },
 
         new Research{
             name = "Jump Tracer Mk3",
             category = Category.Upgrade,
-            researchTime = 150,
+            researchTime = 85,
             dependencies = {"Jump Tracer Mk2"},
             effect = "+25% radar range",
         },
