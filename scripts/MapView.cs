@@ -1159,7 +1159,11 @@ public class MapView : Node2D {
 
         GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/research_completed.wav"));
 
+        Func<Research, bool> researchAvailable = r => Research.IsAvailable(RpgGameState.technologiesResearched, r.dependencies);
+        var availableBefore = new HashSet<Research>(Research.list.FindAll(r => researchAvailable(r)));
         RpgGameState.technologiesResearched.Add(research.name);
+        var availableAfter = new HashSet<Research>(Research.list.FindAll(r => researchAvailable(r)));
+        availableAfter.ExceptWith(availableBefore);
 
         if (research.category == Research.Category.NewArtifact) {
             var artifact = ArtifactDesign.Find(research.name);
@@ -1189,10 +1193,9 @@ public class MapView : Node2D {
         } else if (research.category == Research.Category.Upgrade) {
             text += "Upgrade is now active.\n\n";
         }
-        var newProjects = Research.list.FindAll(r => r.dependencies.Contains(research.name));
-        if (newProjects.Count != 0) {
+        if (availableAfter.Count != 0) {
             text += "New research projects available:\n\n";
-            foreach (var r in newProjects) {
+            foreach (var r in availableAfter) {
                 text += r.name + "\n";
             }
         } else {
