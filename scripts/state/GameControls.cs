@@ -12,6 +12,14 @@ class GameControls {
         _initialized = true;
 
         {
+            InputMap.AddAction("escape");
+
+            var e = new InputEventKey();
+            e.Scancode = (uint)KeyList.Escape;
+            InputMap.ActionAddEvent("escape", e);
+        }
+
+        {
             InputMap.AddAction("openConsole");
 
             var e = new InputEventKey();

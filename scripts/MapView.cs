@@ -9,6 +9,8 @@ public class MapView : Node2D {
     private RandomEvent _randomEvent;
     private RandomEventContext _randomEventContext;
 
+    private GameMenuNode _menuNode;
+
     private float _dayCounter = 0;
 
     private MapHumanNode _human;
@@ -196,6 +198,10 @@ public class MapView : Node2D {
             _currentSystem.OnPlayerEnter(RpgGameState.humanPlayer);
         }
         UpdateUI();
+
+        _menuNode = GameMenuNode.New();
+        AddChild(_menuNode);
+        _menuNode.Connect("Closed", this, nameof(OnGameMenuClosed));
     }
 
     private List<Vessel> FindSurvivors(List<Vessel> fleet) {
@@ -762,8 +768,21 @@ public class MapView : Node2D {
         _camera.Position = new Vector2(x, y);
     }
 
+    private void OnGameMenuClosed() {
+        _lockControls = false;
+    }
+
+    private void OpenGameMenu() {
+        _lockControls = true;
+        _menuNode.Open();
+    }
+
     public override void _Process(float delta) {
         PanCamera(delta);
+
+        if (!_lockControls && Input.IsActionJustPressed("escape")) {
+            OpenGameMenu();
+        }
 
         if (!_lockControls && Input.IsActionJustPressed("mapMovementToggle")) {
             _movementToggle.Pressed = !_movementToggle.Pressed;
