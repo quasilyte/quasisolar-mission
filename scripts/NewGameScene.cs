@@ -230,9 +230,9 @@ public class NewGameScene : Node2D {
             skills.Add(startingSkill);
         }
 
-        var randomEvents = new HashSet<RandomEvent>();
+        var randomEvents = new HashSet<string>();
         foreach (var e in RandomEvent.list) {
-            randomEvents.Add(e);
+            randomEvents.Add(e.title);
         }
 
         var config = new RpgGameState.Config{

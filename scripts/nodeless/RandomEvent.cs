@@ -683,6 +683,7 @@ public class RandomEvent {
     public static List<RandomEvent> onSystemEnteredList;
     public static List<RandomEvent> onSystemPatrolingList;
     public static List<RandomEvent> onSpaceTravellingList;
+    public static Dictionary<string, RandomEvent> eventByTitle;
 
     public static void InitLists() {
         list = new RandomEvent[]{
@@ -698,7 +699,9 @@ public class RandomEvent {
         onSystemEnteredList = new List<RandomEvent>();
         onSystemPatrolingList = new List<RandomEvent>();
         onSpaceTravellingList = new List<RandomEvent>();
+        eventByTitle = new Dictionary<string, RandomEvent>();
         foreach (var e in list) {
+            eventByTitle.Add(e.title, e);
             if (e.trigger == TriggerKind.OnSystemEntered) {
                 onSystemEnteredList.Add(e);
             } else if (e.trigger == TriggerKind.OnSystemPatroling) {

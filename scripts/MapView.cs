@@ -981,7 +981,8 @@ public class MapView : Node2D {
         }
 
         var enterSystemEvents = new List<RandomEvent>();
-        foreach (var e in _gameState.randomEventsAvailable) {
+        foreach (var eventTitle in _gameState.randomEventsAvailable) {
+            var e = RandomEvent.eventByTitle[eventTitle];
             if (e.trigger != RandomEvent.TriggerKind.OnSystemEntered) {
                 continue;
             }
@@ -995,7 +996,7 @@ public class MapView : Node2D {
         }
 
         _randomEvent = QRandom.Element(enterSystemEvents);
-        _gameState.randomEventsAvailable.Remove(_randomEvent);
+        _gameState.randomEventsAvailable.Remove(_randomEvent.title);
         OpenRandomEvent();
     }
 

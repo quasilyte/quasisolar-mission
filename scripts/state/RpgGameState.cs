@@ -23,7 +23,7 @@ public class RpgGameState {
 
         public int startingSystemID;
 
-        public HashSet<RandomEvent> randomEvents;
+        public HashSet<string> randomEvents;
 
         public HashSet<string> skills;
 
@@ -178,7 +178,7 @@ public class RpgGameState {
 
     public HashSet<SpaceUnit> spaceUnits = new HashSet<SpaceUnit>{};
 
-    public HashSet<RandomEvent> randomEventsAvailable;
+    public HashSet<string> randomEventsAvailable;
     public int randomEventCooldown;
 
     public SpaceUnit humanUnit;
