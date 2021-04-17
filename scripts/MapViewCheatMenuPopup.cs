@@ -126,7 +126,7 @@ public class MapViewCheatMenuPopup : PopupDialog {
 
             case "cheat.base.level": {
                     StarSystem sys;
-                    if (!_gameState.starSystemByPos.TryGetValue(_gameState.humanUnit.pos, out sys)) {
+                    if (!RpgGameState.starSystemByPos.TryGetValue(_gameState.humanUnit.pos, out sys)) {
                         throw new Exception("located outside of a system");
                     }
                     if (sys.starBase == null) {

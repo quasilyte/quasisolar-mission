@@ -63,7 +63,7 @@ public class KrigiaStarBaseNode : StarBaseNode {
         }
 
         var destination = Vector2.Zero;
-        var destinationOptions = _gameState.starSystemConnections[starBase.system];
+        var destinationOptions = RpgGameState.starSystemConnections[starBase.system];
         var destinationSystem = QRandom.Element(destinationOptions);
         if (destinationSystem.pos.DistanceTo(starBase.system.pos) <= InfluenceRadius()) {
             destination = destinationSystem.pos;

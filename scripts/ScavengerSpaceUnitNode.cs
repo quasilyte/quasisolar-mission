@@ -24,8 +24,8 @@ public class ScavengerSpaceUnitNode : SpaceUnitNode {
         base.Connect("DestinationReached", this, nameof(OnDestinationReached));
 
         _canBeDetected = unit.waypoint != Vector2.Zero;
-        if (_gameState.starSystemByPos.ContainsKey(unit.pos)) {
-            _currentSystem = _gameState.starSystemByPos[unit.pos];
+        if (RpgGameState.starSystemByPos.ContainsKey(unit.pos)) {
+            _currentSystem = RpgGameState.starSystemByPos[unit.pos];
         }
 
         GlobalPosition = unit.pos;
@@ -41,7 +41,7 @@ public class ScavengerSpaceUnitNode : SpaceUnitNode {
     }
 
     public void PickNewWaypoint() {
-        var destinationOptions = _gameState.starSystemConnections[_currentSystem];
+        var destinationOptions = RpgGameState.starSystemConnections[_currentSystem];
         var nextSystem = QRandom.Element(destinationOptions);
         _currentSystem = null;
         unit.waypoint = nextSystem.pos;
@@ -74,7 +74,7 @@ public class ScavengerSpaceUnitNode : SpaceUnitNode {
     }
 
     private void OnDestinationReached() {
-        _currentSystem = _gameState.starSystemByPos[unit.waypoint];
+        _currentSystem = RpgGameState.starSystemByPos[unit.waypoint];
 
         var starBase = _currentSystem.starBase;
         if (starBase == null || starBase.owner == _gameState.scavengerPlayer) {

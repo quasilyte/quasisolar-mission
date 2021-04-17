@@ -567,44 +567,9 @@ public class NewGameScene : Node2D {
                 }
                 sys.id = id;
                 config.starSystems.Add(sys);
-                config.starSystemByPos[sys.pos] = sys;
             }
         }
         GD.Print($"generated {config.starSystems.Count} star systems");
-
-        // TODO: do it more efficiently than O(n^2)?
-        var graph = config.starSystemConnections;
-        Func<StarSystem, StarSystem, bool> addToGraph = (StarSystem sys, StarSystem connected) => {
-            if (!graph.ContainsKey(sys)) {
-                graph.Add(sys, new List<StarSystem>());
-            }
-            var list = graph[sys];
-            list.Add(connected);
-            return true;
-        };
-        for (int i = 0; i < config.starSystems.Count; i++) {
-            var sys = config.starSystems[i];
-            for (int j = 0; j < config.starSystems.Count; j++) {
-                if (i == j) {
-                    continue;
-                }
-                var other = config.starSystems[j];
-                if (sys.pos.DistanceTo(other.pos) > 600) {
-                    continue;
-                }
-                addToGraph(sys, other);
-                addToGraph(other, sys);
-            }
-        }
-        foreach (var sys in config.starSystems) {
-            if (!graph.ContainsKey(sys)) {
-                throw new Exception("found a system that is not included into the graph");
-            }
-            var connections = graph[sys];
-            if (connections.Count == 0) {
-                throw new Exception("found a system with 0 connections");
-            }
-        }
 
         // var artifactsNeeded = 10;
         // var artifacts

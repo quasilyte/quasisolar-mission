@@ -7,6 +7,9 @@ public class RpgGameState {
 
     public static RandomNumberGenerator rng;
 
+    public static Dictionary<StarSystem, List<StarSystem>> starSystemConnections;
+    public static Dictionary<Vector2, StarSystem> starSystemByPos;
+
     public class Config {
         public ulong gameSeed;
 
@@ -32,8 +35,6 @@ public class RpgGameState {
         public HashSet<string> usedNames = new HashSet<string>();
 
         public List<StarSystem> starSystems = new List<StarSystem>();
-        public Dictionary<StarSystem, List<StarSystem>> starSystemConnections = new Dictionary<StarSystem, List<StarSystem>>();
-        public Dictionary<Vector2, StarSystem> starSystemByPos = new Dictionary<Vector2, StarSystem>();
 
         public GameLimits limits;
 
@@ -85,8 +86,6 @@ public class RpgGameState {
         exodusPrice = c.exodusPrice;
 
         starSystems = c.starSystems;
-        starSystemByPos = c.starSystemByPos;
-        starSystemConnections = c.starSystemConnections;
 
         fuel = c.startingFuel;
         credits = c.startingCredits;
@@ -112,6 +111,46 @@ public class RpgGameState {
         krigiaPlayer = c.krigiaPlayer;
         wertuPlayer = c.wertuPlayer;
         zythPlayer = c.zythPlayer;
+
+        starSystemByPos = new Dictionary<Vector2, StarSystem>();
+        foreach (var sys in c.starSystems) {
+            starSystemByPos[sys.pos] = sys;
+        }
+
+        // TODO: do it more efficiently than O(n^2)?
+        starSystemConnections = new Dictionary<StarSystem, List<StarSystem>>();
+        var graph = starSystemConnections;
+        Func<StarSystem, StarSystem, bool> addToGraph = (StarSystem sys, StarSystem connected) => {
+            if (!graph.ContainsKey(sys)) {
+                graph.Add(sys, new List<StarSystem>());
+            }
+            var list = graph[sys];
+            list.Add(connected);
+            return true;
+        };
+        for (int i = 0; i < c.starSystems.Count; i++) {
+            var sys = c.starSystems[i];
+            for (int j = 0; j < c.starSystems.Count; j++) {
+                if (i == j) {
+                    continue;
+                }
+                var other = c.starSystems[j];
+                if (sys.pos.DistanceTo(other.pos) > 600) {
+                    continue;
+                }
+                addToGraph(sys, other);
+                addToGraph(other, sys);
+            }
+        }
+        foreach (var sys in c.starSystems) {
+            if (!graph.ContainsKey(sys)) {
+                throw new Exception("found a system that is not included into the graph");
+            }
+            var connections = graph[sys];
+            if (connections.Count == 0) {
+                throw new Exception("found a system with 0 connections");
+            }
+        }
     }
 
     public KrigiaPlans krigiaPlans = new KrigiaPlans();
@@ -187,9 +226,6 @@ public class RpgGameState {
     // starSystems is a list of all star systems existing in this session.
     // starSystems[startingSystemID] is a starting star system.
     public List<StarSystem> starSystems;
-
-    public Dictionary<StarSystem, List<StarSystem>> starSystemConnections;
-    public Dictionary<Vector2, StarSystem> starSystemByPos;
 
     public int startingSystemID;
 

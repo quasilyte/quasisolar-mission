@@ -233,7 +233,7 @@ public class MapView : Node2D {
         _gameState.enemyAttackerUnit = u.unit;
 
         // TODO: allow units selection?
-        var system = _gameState.starSystemByPos[u.unit.pos];
+        var system = RpgGameState.starSystemByPos[u.unit.pos];
         var starBase = system.starBase;
         var numDefenders = Math.Min(starBase.garrison.Count, 4);
         var defenders = new List<Vessel>();
@@ -840,7 +840,7 @@ public class MapView : Node2D {
             TriggerKrigiaTaskForceEvent(unitNode);
             return;
         }
-        var sys = _gameState.starSystemByPos[unitNode.unit.pos];
+        var sys = RpgGameState.starSystemByPos[unitNode.unit.pos];
         TaskForceAttacksHumanBase(sys.starBase, unitNode);
     }
 
@@ -930,7 +930,7 @@ public class MapView : Node2D {
         playerUnit.speed = CalculateFleetSpeed();
         AddChild(playerUnit);
         if (playerUnit.unit.waypoint != Vector2.Zero) {
-            _dstSystem = _starSystems[_gameState.starSystemByPos[playerUnit.unit.waypoint].id];
+            _dstSystem = _starSystems[RpgGameState.starSystemByPos[playerUnit.unit.waypoint].id];
         }
         _human = MapHumanNode.New(playerUnit);
         _human.player = _gameState.humanPlayer;
@@ -1537,7 +1537,7 @@ public class MapView : Node2D {
         }
         starBase.botReinforcementsDelay = QRandom.IntRange(100, 200);
 
-        var connectedSystems = _gameState.starSystemConnections[starBase.system];
+        var connectedSystems = RpgGameState.starSystemConnections[starBase.system];
         StarBase alliedBase = null;
         foreach (var sys in connectedSystems) {
             if (sys.starBase == null || sys.starBase.owner != starBase.owner) {
@@ -1621,7 +1621,7 @@ public class MapView : Node2D {
         var targetBase = QRandom.Element(potentialTargets);
 
         StarBase nearestStarBase = null;
-        var connectedSystems = _gameState.starSystemConnections[targetBase.system];
+        var connectedSystems = RpgGameState.starSystemConnections[targetBase.system];
         foreach (var sys in connectedSystems) {
             if (sys.starBase == null || sys.starBase.owner != _gameState.krigiaPlayer) {
                 continue;
