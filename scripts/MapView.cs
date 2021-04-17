@@ -76,7 +76,7 @@ public class MapView : Node2D {
 
     public override void _Ready() {
         _gameState = RpgGameState.instance;
-        QRandom.SetRandomNumberGenerator(_gameState.rng);
+        QRandom.SetRandomNumberGenerator(RpgGameState.rng);
         GetNode<BackgroundMusic>("/root/BackgroundMusic").PlayMapMusic();
 
         if (_gameState.transition == RpgGameState.MapTransition.EnemyBaseAttackRepelled) {

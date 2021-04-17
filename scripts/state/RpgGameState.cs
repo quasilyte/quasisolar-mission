@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class RpgGameState {
     public static RpgGameState instance;
 
+    public static RandomNumberGenerator rng;
+
     public class Config {
         public ulong gameSeed;
 
@@ -134,7 +136,6 @@ public class RpgGameState {
     public int dronwsOwned = 0;
 
     public ulong seed;
-    public RandomNumberGenerator rng;
 
     public AbstractItem[] storage = new AbstractItem[14];
 
