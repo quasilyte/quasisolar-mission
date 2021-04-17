@@ -179,10 +179,15 @@ public class NewGameScene : Node2D {
         var seed = GameSeed();
         GD.Print($"game seed = {seed}");
 
+        var rng = new RandomNumberGenerator();
+        rng.Seed = seed;
+
         var gameConfig = NewGameConfig(seed);
-        QRandom.SetRandomNumberGenerator(gameConfig.rng);
+        QRandom.SetRandomNumberGenerator(rng);
+        RpgGameState.rng = rng;
         GenerateWorld(gameConfig);
-        var gameStateInstance = new RpgGameState(gameConfig);
+        var gameStateInstance = RpgGameState.New(gameConfig);
+        gameStateInstance.InitStaticState();
         RpgGameState.instance = gameStateInstance;
 
 
@@ -216,9 +221,6 @@ public class NewGameScene : Node2D {
     }
 
     private RpgGameState.Config NewGameConfig(ulong gameSeed) {
-        var rng = new RandomNumberGenerator();
-        rng.Seed = gameSeed;
-
         var limits = new RpgGameState.GameLimits {
             maxFuel = 500,
             droneCapacity = 500,
@@ -247,7 +249,6 @@ public class NewGameScene : Node2D {
             randomEventCooldown = 20,
 
             gameSeed = gameSeed,
-            rng = rng,
 
             skills = skills,
             randomEvents = randomEvents,

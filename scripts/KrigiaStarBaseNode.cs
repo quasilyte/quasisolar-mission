@@ -63,9 +63,9 @@ public class KrigiaStarBaseNode : StarBaseNode {
         }
 
         var destination = Vector2.Zero;
-        var destinationOptions = RpgGameState.starSystemConnections[starBase.system];
+        var destinationOptions = RpgGameState.starSystemConnections[starBase.System()];
         var destinationSystem = QRandom.Element(destinationOptions);
-        if (destinationSystem.pos.DistanceTo(starBase.system.pos) <= InfluenceRadius()) {
+        if (destinationSystem.pos.DistanceTo(starBase.System().pos) <= InfluenceRadius()) {
             destination = destinationSystem.pos;
         }
         if (destination == Vector2.Zero) {
@@ -74,7 +74,7 @@ public class KrigiaStarBaseNode : StarBaseNode {
 
         var spaceUnit = new SpaceUnit {
             owner = _gameState.krigiaPlayer,
-            pos = starBase.system.pos,
+            pos = starBase.System().pos,
             waypoint = destination,
             botProgram = SpaceUnit.Program.KrigiaPatrol,
         };

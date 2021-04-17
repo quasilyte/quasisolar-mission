@@ -309,7 +309,7 @@ public class MapView : Node2D {
             // TODO: create notification.
             StopMovement();
             _gameState.humanBases.Remove(starBase);
-            _starSystems[starBase.system.id].DestroyStarBase();
+            _starSystems[starBase.System().id].DestroyStarBase();
             GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/base_eradicated.wav"));
         }
     }
@@ -1538,7 +1538,7 @@ public class MapView : Node2D {
         }
         starBase.botReinforcementsDelay = QRandom.IntRange(100, 200);
 
-        var connectedSystems = RpgGameState.starSystemConnections[starBase.system];
+        var connectedSystems = RpgGameState.starSystemConnections[starBase.System()];
         StarBase alliedBase = null;
         foreach (var sys in connectedSystems) {
             if (sys.starBase == null || sys.starBase.owner != starBase.owner) {
@@ -1575,8 +1575,8 @@ public class MapView : Node2D {
 
         var spaceUnit = new SpaceUnit {
             owner = _gameState.krigiaPlayer,
-            pos = alliedBase.system.pos,
-            waypoint = starBase.system.pos,
+            pos = alliedBase.System().pos,
+            waypoint = starBase.System().pos,
             botProgram = SpaceUnit.Program.KrigiaReinforcements,
             fleet = reinforcementsFleet,
         };
@@ -1622,14 +1622,14 @@ public class MapView : Node2D {
         var targetBase = QRandom.Element(potentialTargets);
 
         StarBase nearestStarBase = null;
-        var connectedSystems = RpgGameState.starSystemConnections[targetBase.system];
+        var connectedSystems = RpgGameState.starSystemConnections[targetBase.System()];
         foreach (var sys in connectedSystems) {
             if (sys.starBase == null || sys.starBase.owner != _gameState.krigiaPlayer) {
                 continue;
             }
             if (nearestStarBase == null) {
                 nearestStarBase = sys.starBase;
-            } else if (sys.pos.DistanceTo(targetBase.system.pos) < nearestStarBase.system.pos.DistanceTo(targetBase.system.pos)) {
+            } else if (sys.pos.DistanceTo(targetBase.System().pos) < nearestStarBase.System().pos.DistanceTo(targetBase.System().pos)) {
                 nearestStarBase = sys.starBase;
             }
         }
@@ -1661,8 +1661,8 @@ public class MapView : Node2D {
 
         var spaceUnit = new SpaceUnit {
             owner = _gameState.krigiaPlayer,
-            pos = nearestStarBase.system.pos,
-            waypoint = targetBase.system.pos,
+            pos = nearestStarBase.System().pos,
+            waypoint = targetBase.System().pos,
             botProgram = SpaceUnit.Program.KrigiaTaskForce,
             fleet = taskForceFleet,
         };

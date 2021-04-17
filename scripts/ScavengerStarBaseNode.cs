@@ -81,7 +81,7 @@ public class ScavengerStarBaseNode : StarBaseNode {
 
         var spaceUnit = new SpaceUnit {
             owner = _gameState.scavengerPlayer,
-            pos = starBase.system.pos,
+            pos = starBase.System().pos,
         };
 
         var groupSize = QRandom.IntRange(1, 2);

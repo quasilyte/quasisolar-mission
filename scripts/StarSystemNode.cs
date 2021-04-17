@@ -82,11 +82,25 @@ public class StarSystemNode : Node2D {
     }
 
     public void UpdateInfo() {
+        var numPlanets = sys.resourcePlanets.Count;
+        int numMines = 0;
+        foreach (var planet in sys.resourcePlanets) {
+            if (planet.hasMine) {
+                numMines++;
+            }
+        }
         sys.intel = new StarSystemIntel{
-            starBase = sys.starBase,
-            artifact = sys.artifact,
-            resourcePlanets = sys.resourcePlanets,
+            hasArtifact = sys.artifact != null,
+            hasBase = sys.starBase != null,
+            numResourcePlanets = numPlanets,
+            numMines = numMines,
         };
+        if (sys.starBase != null) {
+            sys.intel.baseOwner = sys.starBase.owner;
+            sys.intel.garrisonSize = sys.starBase.garrison.Count;
+            sys.intel.baseLevel = sys.starBase.level;
+            sys.intel.baseHp = sys.starBase.hp;
+        }
     }
 
     private static Label CreateLabel(string name) {
@@ -101,11 +115,11 @@ public class StarSystemNode : Node2D {
         var box = _infoBox.GetNode<VBoxContainer>("Box");
         var info = sys.intel;
 
-        var owner = info.starBase != null ? info.starBase.owner.PlayerName : "Neutral";
+        var owner = info.hasBase ? info.baseOwner.PlayerName : "Neutral";
         var titleLabel = box.GetNode<Label>("Title");
         titleLabel.Text = owner + " System";
 
-        if (info.starBase != null) {
+        if (info.hasBase) {
             Label baseLabel;
             if (box.HasNode("Base")) {
                 baseLabel = box.GetNode<Label>("Base");
@@ -113,17 +127,17 @@ public class StarSystemNode : Node2D {
                 baseLabel = CreateLabel("Base");
                 box.AddChild(baseLabel);
             }
-            var numShips = info.starBase.garrison.Count;
+            var numShips = info.garrisonSize;
             var pluralSuffix = numShips == 1 ? "" : "s";
-            var level = Utils.IntToRoman(info.starBase.level);
-            baseLabel.Text = $"Base {level}: {info.starBase.hp}% HP, {numShips} ship" + pluralSuffix;
+            var level = Utils.IntToRoman(info.baseLevel);
+            baseLabel.Text = $"Base {level}: {info.baseHp}% HP, {numShips} ship" + pluralSuffix;
         } else {
             if (box.HasNode("Base")) {
                 box.GetNode<Label>("Base").QueueFree();
             }
         }
 
-        if (info.artifact != null) {
+        if (info.hasArtifact) {
             Label artifactLabel;
             if (box.HasNode("Artifact")) {
                 artifactLabel = box.GetNode<Label>("Artifact");
@@ -134,7 +148,7 @@ public class StarSystemNode : Node2D {
             artifactLabel.Text = "Artifact Detected";
         }
 
-        if (info.resourcePlanets.Count != 0) {
+        if (info.numResourcePlanets != 0) {
             Label resourcePlanetsLabel;
             if (box.HasNode("ResourcePlanets")) {
                 resourcePlanetsLabel = box.GetNode<Label>("ResourcePlanets");
@@ -142,18 +156,11 @@ public class StarSystemNode : Node2D {
                 resourcePlanetsLabel = CreateLabel("ResourcePlanets");
                 box.AddChild(resourcePlanetsLabel);
             }
-            var numPlanets = info.resourcePlanets.Count;
-            int numMines = 0;
-            foreach (var planet in info.resourcePlanets) {
-                if (planet.hasMine) {
-                    numMines++;
-                }
-            }
-            if (numMines == 0) {
-                resourcePlanetsLabel.Text = $"Resource planets: {numPlanets}";
+            if (info.numMines == 0) {
+                resourcePlanetsLabel.Text = $"Resource planets: {info.numResourcePlanets}";
             } else {
-                var pluralSuffix = numMines == 1 ? "" : "s";
-                resourcePlanetsLabel.Text = $"Resource planets: {numPlanets} ({numMines} mine{pluralSuffix})";
+                var pluralSuffix = info.numMines == 1 ? "" : "s";
+                resourcePlanetsLabel.Text = $"Resource planets: {info.numResourcePlanets} ({info.numMines} mine{pluralSuffix})";
             }
         }
     }

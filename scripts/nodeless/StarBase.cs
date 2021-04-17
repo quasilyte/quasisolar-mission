@@ -4,8 +4,6 @@ using Godot;
 public class StarBase {
     public Player owner;
 
-    public StarSystem system;
-
     // 0 - not discovered.
     // Non-zero value represents the day at which this base was discovered.
     public int discoveredByKrigia = 0;
@@ -36,9 +34,10 @@ public class StarBase {
     public const int maxGarrisonSize = 24;
     public const int maxBaseLevel = 5;
 
+    public StarSystem System() { return RpgGameState.instance.starSystemByStarBase[this]; }
+
     public StarBase(StarSystem sys, Player player, int level = 1) {
         this.level = level;
-        system = sys;
         owner = player;
         mineralsStock = 70 + QRandom.IntRange(0, 30);
         organicStock = 10 + QRandom.IntRange(0, 50);

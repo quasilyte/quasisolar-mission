@@ -76,51 +76,12 @@ public class RpgGameState {
         public int taskForceDelay = 0;
     }
 
-    public RpgGameState(Config c) {
-        seed = c.gameSeed;
-        rng = c.rng;
+    public RpgGameState() {}
 
-        dronePrice = c.dronePrice;
-        repairPrice = c.repairPrice;
-        fuelPrice = c.fuelPrice;
-        exodusPrice = c.exodusPrice;
-
-        starSystems = c.starSystems;
-
-        fuel = c.startingFuel;
-        credits = c.startingCredits;
-
-        usedNames = c.usedNames;
-
-        humanBases = c.humanBases;
-        humanUnit = c.humanUnit;
-
-        limits = c.limits;
-
-        startingSystemID = c.startingSystemID;
-
-        travelSpeed = c.travelSpeed;
-
-        randomEventCooldown = c.randomEventCooldown;
-        randomEventsAvailable = c.randomEvents;
-
-        skillsLearned = c.skills;
-
-        humanPlayer = c.humanPlayer;
-        scavengerPlayer = c.scavengerPlayer;
-        krigiaPlayer = c.krigiaPlayer;
-        wertuPlayer = c.wertuPlayer;
-        zythPlayer = c.zythPlayer;
-
+    public void InitStaticState() {
         starSystemByPos = new Dictionary<Vector2, StarSystem>();
-        starBaseBySpaceUnit = new Dictionary<SpaceUnit, StarBase>();
-        foreach (var sys in c.starSystems) {
+        foreach (var sys in starSystems) {
             starSystemByPos[sys.pos] = sys;
-            if (sys.starBase != null) {
-                foreach (var u in sys.starBase.units) {
-                    starBaseBySpaceUnit.Add(u, sys.starBase);
-                }
-            }
         }
 
         // TODO: do it more efficiently than O(n^2)?
@@ -134,13 +95,13 @@ public class RpgGameState {
             list.Add(connected);
             return true;
         };
-        for (int i = 0; i < c.starSystems.Count; i++) {
-            var sys = c.starSystems[i];
-            for (int j = 0; j < c.starSystems.Count; j++) {
+        for (int i = 0; i < starSystems.Count; i++) {
+            var sys = starSystems[i];
+            for (int j = 0; j < starSystems.Count; j++) {
                 if (i == j) {
                     continue;
                 }
-                var other = c.starSystems[j];
+                var other = starSystems[j];
                 if (sys.pos.DistanceTo(other.pos) > 600) {
                     continue;
                 }
@@ -148,7 +109,7 @@ public class RpgGameState {
                 addToGraph(other, sys);
             }
         }
-        foreach (var sys in c.starSystems) {
+        foreach (var sys in starSystems) {
             if (!graph.ContainsKey(sys)) {
                 throw new Exception("found a system that is not included into the graph");
             }
@@ -159,9 +120,61 @@ public class RpgGameState {
         }
     }
 
+    public static RpgGameState New(Config c) {
+        var o = new RpgGameState();
+
+        o.seed = c.gameSeed;
+
+        o.dronePrice = c.dronePrice;
+        o.repairPrice = c.repairPrice;
+        o.fuelPrice = c.fuelPrice;
+        o.exodusPrice = c.exodusPrice;
+
+        o.starSystems = c.starSystems;
+
+        o.fuel = c.startingFuel;
+        o.credits = c.startingCredits;
+
+        o.usedNames = c.usedNames;
+
+        o.humanBases = c.humanBases;
+        o.humanUnit = c.humanUnit;
+
+        o.limits = c.limits;
+
+        o.startingSystemID = c.startingSystemID;
+
+        o.travelSpeed = c.travelSpeed;
+
+        o.randomEventCooldown = c.randomEventCooldown;
+        o.randomEventsAvailable = c.randomEvents;
+
+        o.skillsLearned = c.skills;
+
+        o.humanPlayer = c.humanPlayer;
+        o.scavengerPlayer = c.scavengerPlayer;
+        o.krigiaPlayer = c.krigiaPlayer;
+        o.wertuPlayer = c.wertuPlayer;
+        o.zythPlayer = c.zythPlayer;
+
+        o.starBaseBySpaceUnit = new Dictionary<SpaceUnit, StarBase>();
+        o.starSystemByStarBase = new Dictionary<StarBase, StarSystem>();
+        foreach (var sys in c.starSystems) {
+            if (sys.starBase != null) {
+                o.starSystemByStarBase.Add(sys.starBase, sys);
+                foreach (var u in sys.starBase.units) {
+                    o.starBaseBySpaceUnit.Add(u, sys.starBase);
+                }
+            }
+        }
+        
+        return o;
+    }
+
     public KrigiaPlans krigiaPlans = new KrigiaPlans();
 
     public Dictionary<SpaceUnit, StarBase> starBaseBySpaceUnit;
+    public Dictionary<StarBase, StarSystem> starSystemByStarBase;
 
     public MapTransition transition = MapTransition.NewGame;
     public BattleResult lastBattleResult = null;

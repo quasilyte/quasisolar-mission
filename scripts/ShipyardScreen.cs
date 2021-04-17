@@ -120,7 +120,7 @@ public class ShipyardScreen : Node2D {
             return;
         }
 
-        var system = _gameState.enteredBase.system;
+        var system = _gameState.enteredBase.System();
         system.starBase = null;
 
         UpdateFleet();
