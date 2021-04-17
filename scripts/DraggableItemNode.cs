@@ -5,11 +5,11 @@ public class DraggableItemNode : Node2D {
     private static DraggableItemNode _dragging = null;
     private static ItemSlotNode _fallbackSlot = null;
 
-    public IItem item;
+    public AbstractItem item;
     private ItemSlotNode _slot;
 
     private static PackedScene _scene = null;
-    public static DraggableItemNode New(ItemSlotNode slot, IItem item) {
+    public static DraggableItemNode New(ItemSlotNode slot, AbstractItem item) {
         if (_scene == null) {
             _scene = GD.Load<PackedScene>("res://scenes/DraggableItemNode.tscn");
         }

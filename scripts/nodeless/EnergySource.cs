@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-public class EnergySource : IItem {
+public class EnergySource : AbstractItem {
     public string name;
     public string description;
 
@@ -22,9 +22,9 @@ public class EnergySource : IItem {
         throw new Exception($"can't find {name} energy source");
     }
 
-    public ItemKind Kind() { return ItemKind.EnergySource; }
+    public override ItemKind Kind() { return ItemKind.EnergySource; }
 
-    public string RenderHelp() {
+    public override string RenderHelp() {
         if (name == "None") {
             // A special case.
             return "An empty energy source slot";

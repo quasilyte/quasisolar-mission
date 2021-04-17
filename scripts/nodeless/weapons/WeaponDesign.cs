@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System;
 
-public class WeaponDesign : IItem {
+public class WeaponDesign : AbstractItem {
     public static WeaponDesign[] list;
     public static WeaponDesign[] specialList;
 
@@ -35,11 +35,11 @@ public class WeaponDesign : IItem {
 
     public float projectileSpeed = 0;
 
-    public ItemKind Kind() {
+    public override ItemKind Kind() {
         return isSpecial ? ItemKind.SpecialWeapon : ItemKind.Weapon;
     }
 
-    public string RenderHelp() {
+    public override string RenderHelp() {
         if (name == "Empty") {
             // A special case.
             return "An empty weapon slot";

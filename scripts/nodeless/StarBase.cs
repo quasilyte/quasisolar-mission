@@ -25,7 +25,7 @@ public class StarBase {
 
     public List<Vessel> garrison = new List<Vessel>();
 
-    public List<IItem> shopSelection = new List<IItem> { };
+    public List<AbstractItem> shopSelection = new List<AbstractItem> { };
 
     // For bots: base-controlled space units.
     public HashSet<SpaceUnit> units = new HashSet<SpaceUnit>();
@@ -55,7 +55,7 @@ public class StarBase {
     }
 
     public void UpdateShopSelection() {
-        shopSelection = new List<IItem>();
+        shopSelection = new List<AbstractItem>();
 
         var technologiesResearched = RpgGameState.instance.technologiesResearched;
 

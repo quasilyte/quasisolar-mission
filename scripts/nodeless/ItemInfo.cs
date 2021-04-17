@@ -2,7 +2,7 @@ using Godot;
 using System;
 
 public static class ItemInfo {
-    public static string Name(IItem item) {
+    public static string Name(AbstractItem item) {
         if (item is WeaponDesign weapon) {
             return weapon.name;
         } else if (item is EnergySource energySource) {
@@ -19,7 +19,7 @@ public static class ItemInfo {
         return "unknown_item";
     }
 
-    public static Texture Texture(IItem item) {
+    public static Texture Texture(AbstractItem item) {
         var name = Name(item);
         name = name.Replace(' ', '_');
         name = name.Replace('-', '_');
@@ -29,15 +29,15 @@ public static class ItemInfo {
         return GD.Load<Texture>($"res://images/items/{name}.png");
     }
 
-    public static int BuyingPrice(IItem item) {
+    public static int BuyingPrice(AbstractItem item) {
         return ItemPrice(item, false);
     }
 
-    public static int SellingPrice(IItem item) {
+    public static int SellingPrice(AbstractItem item) {
         return ItemPrice(item, true);
     }
 
-    private static int ItemPrice(IItem item, bool selling) {
+    private static int ItemPrice(AbstractItem item, bool selling) {
         if (item is WeaponDesign weapon) {
             if (!selling && weapon == NeedleGunWeapon.Design && RpgGameState.instance.technologiesResearched.Contains("Gauss Production")) {
                 return (int)(weapon.sellingPrice * 0.8);
@@ -58,7 +58,7 @@ public static class ItemInfo {
         throw new Exception("unexpected item type: " + item.GetType().Name);
     }
 
-    public static int MinStarBaseLevel(IItem item) {
+    public static int MinStarBaseLevel(AbstractItem item) {
         if (item is WeaponDesign weapon) {
             return WeaponMinStarBaseLevel(weapon);
         } else if (item is ShieldDesign shield) {

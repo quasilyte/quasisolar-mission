@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class EquipmentShopScreen : Node2D {
     class Merchandise {
         public Sprite sprite;
-        public IItem item;
+        public AbstractItem item;
     }
 
     private bool _lockControls = false;

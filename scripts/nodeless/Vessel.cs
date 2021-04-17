@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Godot;
 
-public class Vessel: IItem {
+public class Vessel: AbstractItem {
     public Player player;
 
     public bool isBot;
@@ -23,13 +23,13 @@ public class Vessel: IItem {
     public float hp;
     public float energy;
 
-    public ItemKind Kind() { return ItemKind.Vessel; }
+    public override ItemKind Kind() { return ItemKind.Vessel; }
 
     public void AddEnergy(float amount) {
         energy = QMath.Clamp(energy + amount, 0, energySource.maxBackupEnergy);
     }
 
-    public string RenderHelp() {
+    public override string RenderHelp() {
         return "TODO!";
     }
 

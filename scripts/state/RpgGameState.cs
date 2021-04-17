@@ -136,7 +136,7 @@ public class RpgGameState {
     public ulong seed;
     public RandomNumberGenerator rng;
 
-    public IItem[] storage = new IItem[14];
+    public AbstractItem[] storage = new AbstractItem[14];
 
     public int credits = 0;
 
@@ -263,7 +263,7 @@ public class RpgGameState {
     public static int OrganicSellPrice() { return 20; }
     public static int PowerSellPrice() { return 22; }
 
-    public static void PutItemToStorage(IItem item) {
+    public static void PutItemToStorage(AbstractItem item) {
         for (int i = 0; i < 14; i++) {
             if (instance.storage[i] == null) {
                 instance.storage[i] = item;
