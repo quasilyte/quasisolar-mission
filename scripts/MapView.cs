@@ -221,8 +221,8 @@ public class MapView : Node2D {
     private void ProcessUnitCasualties(SpaceUnit unit) {
         unit.fleet = FindSurvivors(unit.fleet);
         if (unit.fleet.Count == 0) {
-            if (unit.botOrigin != null) {
-                unit.botOrigin.units.Remove(unit);
+            if (_gameState.starBaseBySpaceUnit.ContainsKey(unit)) {
+                _gameState.starBaseBySpaceUnit[unit].units.Remove(unit);
             }
             _gameState.spaceUnits.Remove(unit);
         }
@@ -1377,7 +1377,8 @@ public class MapView : Node2D {
         var starBase = _currentSystem.sys.starBase;
 
         if (_gameState.mapState.mode == UnitMode.Idle) {
-            _gameState.fuel = QMath.ClampMax(_gameState.fuel + 1, RpgGameState.MaxFuel());
+            var toAdd = _gameState.technologiesResearched.Contains("Recycling") ? 2 : 1;
+            _gameState.fuel = QMath.ClampMax(_gameState.fuel + toAdd, RpgGameState.MaxFuel());
             return;
         }
 
@@ -1576,10 +1577,10 @@ public class MapView : Node2D {
             owner = _gameState.krigiaPlayer,
             pos = alliedBase.system.pos,
             waypoint = starBase.system.pos,
-            botOrigin = alliedBase,
             botProgram = SpaceUnit.Program.KrigiaReinforcements,
             fleet = reinforcementsFleet,
         };
+        _gameState.starBaseBySpaceUnit[spaceUnit] = alliedBase;
         _gameState.spaceUnits.Add(spaceUnit);
         alliedBase.units.Add(spaceUnit);
 
@@ -1662,10 +1663,10 @@ public class MapView : Node2D {
             owner = _gameState.krigiaPlayer,
             pos = nearestStarBase.system.pos,
             waypoint = targetBase.system.pos,
-            botOrigin = nearestStarBase,
             botProgram = SpaceUnit.Program.KrigiaTaskForce,
             fleet = taskForceFleet,
         };
+        _gameState.starBaseBySpaceUnit[spaceUnit] = nearestStarBase;
         _gameState.spaceUnits.Add(spaceUnit);
         nearestStarBase.units.Add(spaceUnit);
         _gameState.krigiaPlans.taskForceDelay = QRandom.IntRange(200, 300);

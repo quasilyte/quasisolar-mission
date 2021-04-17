@@ -113,8 +113,14 @@ public class RpgGameState {
         zythPlayer = c.zythPlayer;
 
         starSystemByPos = new Dictionary<Vector2, StarSystem>();
+        starBaseBySpaceUnit = new Dictionary<SpaceUnit, StarBase>();
         foreach (var sys in c.starSystems) {
             starSystemByPos[sys.pos] = sys;
+            if (sys.starBase != null) {
+                foreach (var u in sys.starBase.units) {
+                    starBaseBySpaceUnit.Add(u, sys.starBase);
+                }
+            }
         }
 
         // TODO: do it more efficiently than O(n^2)?
@@ -154,6 +160,8 @@ public class RpgGameState {
     }
 
     public KrigiaPlans krigiaPlans = new KrigiaPlans();
+
+    public Dictionary<SpaceUnit, StarBase> starBaseBySpaceUnit;
 
     public MapTransition transition = MapTransition.NewGame;
     public BattleResult lastBattleResult = null;

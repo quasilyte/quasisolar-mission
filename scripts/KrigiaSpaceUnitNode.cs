@@ -4,6 +4,7 @@ using System;
 public class KrigiaSpaceUnitNode : SpaceUnitNode {
     private StarSystem _currentSystem;
     private bool _canBeDetected = false;
+    private StarBase _botOrigin;
 
     private static PackedScene _scene = null;
     public static new KrigiaSpaceUnitNode New(SpaceUnit unit) {
@@ -34,6 +35,8 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
     public override void _Ready() {
         base._Ready();
         base.Connect("DestinationReached", this, nameof(OnDestinationReached));
+
+        _botOrigin = _gameState.starBaseBySpaceUnit[unit];
 
         _canBeDetected = unit.waypoint != Vector2.Zero || unit.botProgram == SpaceUnit.Program.KrigiaTaskForce;
         if (RpgGameState.starSystemByPos.ContainsKey(unit.pos)) {
@@ -68,7 +71,7 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
     private void TaskForceProcessDay() {
         // Base is destroyed. Can return home.
         if (_currentSystem.starBase == null) {
-            unit.waypoint = unit.botOrigin.system.pos;
+            unit.waypoint = _botOrigin.system.pos;
             _currentSystem = null;
             _canBeDetected = true;
             return;
@@ -79,7 +82,7 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
 
     private void PatrolProcessDay() {
         if (unit.botSystemLeaveDelay == 0) {
-            unit.waypoint = unit.botOrigin.system.pos;
+            unit.waypoint = _botOrigin.system.pos;
             _currentSystem = null;
             _canBeDetected = true;
             return;
@@ -137,7 +140,7 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
         if (_currentSystem.starBase != null && _currentSystem.starBase.owner == _gameState.krigiaPlayer) {
             EnterBase(_currentSystem.starBase);
         } else {
-            unit.waypoint = unit.botOrigin.system.pos;
+            unit.waypoint = _botOrigin.system.pos;
             _currentSystem = null;
             _canBeDetected = true;
         }
@@ -147,7 +150,7 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
         _currentSystem = RpgGameState.starSystemByPos[unit.waypoint];
 
         var starBase = _currentSystem.starBase;
-        if (_currentSystem == unit.botOrigin.system) {
+        if (_currentSystem == _botOrigin.system) {
             EnterBase(starBase);
             return;
         }
@@ -157,7 +160,7 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
         _currentSystem = RpgGameState.starSystemByPos[unit.waypoint];
 
         var starBase = _currentSystem.starBase;
-        if (_currentSystem == unit.botOrigin.system) {
+        if (_currentSystem == _botOrigin.system) {
             EnterBase(starBase);
             return;
         }

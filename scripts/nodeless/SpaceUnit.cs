@@ -19,7 +19,6 @@ public class SpaceUnit {
 
     public int botSystemLeaveDelay = 0;
     public Program botProgram = Program.GenericBehavior;
-    public StarBase botOrigin;
 
     public int FleetCost() {
         var cost = 0;

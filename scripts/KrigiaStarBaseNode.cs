@@ -76,9 +76,9 @@ public class KrigiaStarBaseNode : StarBaseNode {
             owner = _gameState.krigiaPlayer,
             pos = starBase.system.pos,
             waypoint = destination,
-            botOrigin = starBase,
             botProgram = SpaceUnit.Program.KrigiaPatrol,
         };
+        _gameState.starBaseBySpaceUnit[spaceUnit] = starBase;
 
         var minGroupSize = 1;
         var maxGroupSize = 1;
