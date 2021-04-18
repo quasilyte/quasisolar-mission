@@ -373,8 +373,8 @@ public class Arena : Node2D {
             return;
         }
 
-        if (_gameState.enemyAttackerUnit != null) {
-            var unit = _gameState.enemyAttackerUnit;
+        if (RpgGameState.enemyAttackerUnit != null) {
+            var unit = RpgGameState.enemyAttackerUnit;
             if (_gameState.skillsLearned.Contains("Salvaging")) {
                 // Collect 80% of cargo instead of 50%.
                 result.minerals += QMath.IntAdjust(unit.cargo.minerals, 0.8);

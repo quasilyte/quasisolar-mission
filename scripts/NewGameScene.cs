@@ -583,14 +583,12 @@ public class NewGameScene : Node2D {
                 if (sys == startingSystem) {
                     continue;
                 }
-                sys.artifact = art;
+                sys.artifact = art.name;
                 sys.artifactRecoveryDelay = QRandom.IntRange(10, 40);
                 GD.Print("placed " + art.name + " in " + sys.name + " with " + sys.artifactRecoveryDelay + " recovery delay");
                 break;
             }   
         }
-
-        config.humanBases.Add(startingSystem.starBase);
 
         var fleet = new List<Vessel>();
         var humanVessel = new Vessel {

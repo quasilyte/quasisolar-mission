@@ -21,7 +21,7 @@ public class ResearchScreen : Node2D {
 
         foreach (var art in _gameState.artifactsRecovered) {
             _researchList.Add(new Research{
-                name = art.name,
+                name = art,
                 category = Research.Category.NewArtifact,
                 researchTime = 40,
             });

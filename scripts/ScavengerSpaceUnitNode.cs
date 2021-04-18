@@ -103,6 +103,7 @@ public class ScavengerSpaceUnitNode : SpaceUnitNode {
         foreach (var p in _currentSystem.resourcePlanets) {
             if (p.hasMine) {
                 p.hasMine = false;
+                RpgGameState.planetsWithMines.Remove(p);
                 EmitSignal(nameof(DroneDestroyed));
             }
 

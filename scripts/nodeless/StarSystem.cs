@@ -17,6 +17,6 @@ public class StarSystem {
 
     public StarBase starBase;
 
-    public ArtifactDesign artifact;
+    public string artifact;
     public int artifactRecoveryDelay;
 }

@@ -9,6 +9,12 @@ public class RpgGameState {
 
     public static Dictionary<StarSystem, List<StarSystem>> starSystemConnections;
     public static Dictionary<Vector2, StarSystem> starSystemByPos;
+    public static HashSet<ResourcePlanet> planetsWithMines;
+    public static HashSet<StarBase> humanBases;
+
+    public static int enemyBaseNumAttackers = 0;
+    public static SpaceUnit enemyAttackerUnit;
+    public static StarBase garrisonStarBase = null;
 
     public class Config {
         public ulong gameSeed;
@@ -37,8 +43,6 @@ public class RpgGameState {
         public List<StarSystem> starSystems = new List<StarSystem>();
 
         public GameLimits limits;
-
-        public HashSet<StarBase> humanBases = new HashSet<StarBase>();
 
         public SpaceUnit humanUnit;
 
@@ -79,6 +83,30 @@ public class RpgGameState {
     public RpgGameState() {}
 
     public void InitStaticState() {
+        enemyBaseNumAttackers = 0;
+        enemyAttackerUnit = null;
+        garrisonStarBase = null;
+
+        humanBases = new HashSet<StarBase>();
+        foreach (var sys in starSystems) {
+            if (sys.starBase == null) {
+                continue;
+            }
+            if (sys.starBase.owner != humanPlayer) {
+                continue;
+            }
+            humanBases.Add(sys.starBase);
+        }
+
+        planetsWithMines = new HashSet<ResourcePlanet>();
+        foreach (var sys in starSystems) {
+            foreach (var p in sys.resourcePlanets) {
+                if (p.hasMine) {
+                    planetsWithMines.Add(p);
+                }
+            }
+        }
+
         starSystemByPos = new Dictionary<Vector2, StarSystem>();
         foreach (var sys in starSystems) {
             starSystemByPos[sys.pos] = sys;
@@ -137,7 +165,6 @@ public class RpgGameState {
 
         o.usedNames = c.usedNames;
 
-        o.humanBases = c.humanBases;
         o.humanUnit = c.humanUnit;
 
         o.limits = c.limits;
@@ -218,7 +245,7 @@ public class RpgGameState {
 
     public GameLimits limits;
 
-    public HashSet<ArtifactDesign> artifactsRecovered = new HashSet<ArtifactDesign>{};
+    public HashSet<string> artifactsRecovered = new HashSet<string>{};
 
     public HashSet<string> technologiesResearched = new HashSet<string>{};
     public double researchProgress = 0;
@@ -234,8 +261,6 @@ public class RpgGameState {
     public HashSet<string> skillsLearned;
 
     public HashSet<string> usedNames;
-    public HashSet<ResourcePlanet> planetsWithMines = new HashSet<ResourcePlanet>{};
-    public HashSet<StarBase> humanBases;
 
     public HashSet<SpaceUnit> spaceUnits = new HashSet<SpaceUnit>{};
 
@@ -249,10 +274,6 @@ public class RpgGameState {
     public List<StarSystem> starSystems;
 
     public int startingSystemID;
-
-    public int enemyBaseNumAttackers = 0;
-    public SpaceUnit enemyAttackerUnit;
-    public StarBase garrisonStarBase = null;
 
     public static StarSystem StartingSystem() {
         return instance.starSystems[instance.startingSystemID];

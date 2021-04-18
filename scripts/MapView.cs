@@ -81,17 +81,17 @@ public class MapView : Node2D {
 
         if (_gameState.transition == RpgGameState.MapTransition.EnemyBaseAttackRepelled) {
             ProcessUnitCasualties(_gameState.humanUnit);
-            ProcessStarBaseCasualties(_gameState.garrisonStarBase);
-            _gameState.garrisonStarBase = null;
+            ProcessStarBaseCasualties(RpgGameState.garrisonStarBase);
+            RpgGameState.garrisonStarBase = null;
         } else if (_gameState.transition == RpgGameState.MapTransition.EnemyUnitDestroyed) {
             ProcessUnitCasualties(_gameState.humanUnit);
-            ProcessUnitCasualties(_gameState.enemyAttackerUnit);
-            _gameState.enemyAttackerUnit = null;
+            ProcessUnitCasualties(RpgGameState.enemyAttackerUnit);
+            RpgGameState.enemyAttackerUnit = null;
         } else if (_gameState.transition == RpgGameState.MapTransition.BaseAttackSimulation) {
-            ProcessStarBaseCasualties(_gameState.garrisonStarBase);
-            ProcessUnitCasualties(_gameState.enemyAttackerUnit);
-            _gameState.enemyAttackerUnit = null;
-            _gameState.garrisonStarBase = null;
+            ProcessStarBaseCasualties(RpgGameState.garrisonStarBase);
+            ProcessUnitCasualties(RpgGameState.enemyAttackerUnit);
+            RpgGameState.enemyAttackerUnit = null;
+            RpgGameState.garrisonStarBase = null;
         }
 
         RenderMap();
@@ -205,6 +205,8 @@ public class MapView : Node2D {
         _menuNode = GameMenuNode.New();
         AddChild(_menuNode);
         _menuNode.Connect("Closed", this, nameof(OnGameMenuClosed));
+
+        GameStateSerializer.Encode();
     }
 
     private List<Vessel> FindSurvivors(List<Vessel> fleet) {
@@ -230,7 +232,7 @@ public class MapView : Node2D {
 
     private void OnStarBaseAttackPlayButton() {
         var u = _eventUnit;
-        _gameState.enemyAttackerUnit = u.unit;
+        RpgGameState.enemyAttackerUnit = u.unit;
 
         // TODO: allow units selection?
         var system = RpgGameState.starSystemByPos[u.unit.pos];
@@ -240,7 +242,7 @@ public class MapView : Node2D {
         for (int i = 0; i < numDefenders; i++) {
             defenders.Add(starBase.garrison[i]);
         }
-        _gameState.garrisonStarBase = starBase;
+        RpgGameState.garrisonStarBase = starBase;
 
         SetArenaSettings(system, u.unit.fleet, defenders);
         GetTree().ChangeScene("res://scenes/ArenaScreen.tscn");
@@ -248,7 +250,7 @@ public class MapView : Node2D {
 
     private void OnFightEventUnit() {
         var u = _eventUnit;
-        _gameState.enemyAttackerUnit = u.unit;
+        RpgGameState.enemyAttackerUnit = u.unit;
         SetArenaSettings(_currentSystem.sys, u.unit.fleet, _gameState.humanUnit.fleet);
         GetTree().ChangeScene("res://scenes/ArenaScreen.tscn");
     }
@@ -308,7 +310,7 @@ public class MapView : Node2D {
         if (starBase.hp <= 0) {
             // TODO: create notification.
             StopMovement();
-            _gameState.humanBases.Remove(starBase);
+            RpgGameState.humanBases.Remove(starBase);
             _starSystems[starBase.System().id].DestroyStarBase();
             GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/base_eradicated.wav"));
         }
@@ -552,7 +554,7 @@ public class MapView : Node2D {
 
             case RandomEvent.EffectKind.EnterArena: {
                     var unit = (SpaceUnit)effect.value;
-                    _gameState.enemyAttackerUnit = unit;
+                    RpgGameState.enemyAttackerUnit = unit;
                     SetArenaSettings(_currentSystem.sys, unit.fleet, _gameState.humanUnit.fleet);
                     _randomEventResolutionPostEffect = effect.kind;
                     return;
@@ -615,7 +617,7 @@ public class MapView : Node2D {
         starBase.mineralsStock = 0;
         starBase.organicStock = 0;
         starBase.powerStock = 0;
-        _gameState.humanBases.Add(starBase);
+        RpgGameState.humanBases.Add(starBase);
         _currentSystem.sys.starBase = starBase;
 
         var starBaseNode = NewStarBaseNode(_currentSystem.sys);
@@ -655,11 +657,11 @@ public class MapView : Node2D {
         if (p.hasMine) {
             p.hasMine = false;
             _gameState.drones++;
-            _gameState.planetsWithMines.Remove(p);
+            RpgGameState.planetsWithMines.Remove(p);
         } else {
             p.hasMine = true;
             _gameState.drones--;
-            _gameState.planetsWithMines.Add(p);
+            RpgGameState.planetsWithMines.Add(p);
         }
         UpdateUI();
     }
@@ -1366,7 +1368,7 @@ public class MapView : Node2D {
     }
 
     private void ProcessMines() {
-        foreach (ResourcePlanet p in _gameState.planetsWithMines) {
+        foreach (ResourcePlanet p in RpgGameState.planetsWithMines) {
             p.mineralsCollected = QMath.ClampMax(p.mineralsCollected + p.mineralsPerDay, _gameState.limits.droneCapacity);
             p.organicCollected = QMath.ClampMax(p.organicCollected + p.organicPerDay, _gameState.limits.droneCapacity);
             p.powerCollected = QMath.ClampMax(p.powerCollected + p.powerPerDay, _gameState.limits.droneCapacity);
@@ -1519,7 +1521,7 @@ public class MapView : Node2D {
         for (int i = 0; i < numDefenders; i++) {
             defenders.Add(starBase.garrison[i]);
         }
-        _gameState.garrisonStarBase = starBase;
+        RpgGameState.garrisonStarBase = starBase;
 
         SetArenaSettings(_currentSystem.sys, defenders, _gameState.humanUnit.fleet);
 
@@ -1606,7 +1608,7 @@ public class MapView : Node2D {
         }
 
         var potentialTargets = new List<StarBase>();
-        foreach (var starBase in _gameState.humanBases) {
+        foreach (var starBase in RpgGameState.humanBases) {
             if (starBase.discoveredByKrigia == 0) {
                 continue;
             }
