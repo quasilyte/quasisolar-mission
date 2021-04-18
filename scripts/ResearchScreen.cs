@@ -86,7 +86,7 @@ public class ResearchScreen : Node2D {
 
     private void OnStartProjectButton(int index) {
         var project = _researchNodes[index];
-        _gameState.currentResearch = project.value;
+        _gameState.currentResearch = project.value.name;
         UpdateUI();
     }
 
@@ -146,24 +146,25 @@ public class ResearchScreen : Node2D {
         GetNode<Label>("Status/CreditsValue").Text = _gameState.credits.ToString();
         GetNode<Label>("Status/ScienceFuncsValue").Text = _gameState.scienceFunds.ToString();
 
-        if (_gameState.currentResearch == null) {
+        if (_gameState.currentResearch == "") {
             GetNode<Label>("ResearchProgress/Subject").Text = "<No Research Subject>";
             GetNode<Label>("ResearchProgress/Status").Text = "";
             GetNode<TextureProgress>("ResearchProgress/ProgressBar").Visible = false;
             GetNode<TextureProgress>("ResearchProgress/ProgressBar").Value = 0;
         } else {
+            var research = Research.Find(_gameState.currentResearch);
             var statusText = "Research rate: " + (int)(100 * RpgGameState.ResearchRate()) + "%";
-            GetNode<Label>("ResearchProgress/Subject").Text = "<" + _gameState.currentResearch.name + ">";
+            GetNode<Label>("ResearchProgress/Subject").Text = "<" + _gameState.currentResearch + ">";
             GetNode<Label>("ResearchProgress/Status").Text = statusText;
             GetNode<TextureProgress>("ResearchProgress/ProgressBar").Visible = true;
-            GetNode<TextureProgress>("ResearchProgress/ProgressBar").Value = QMath.Percantage((int)_gameState.researchProgress, _gameState.currentResearch.researchTime);
+            GetNode<TextureProgress>("ResearchProgress/ProgressBar").Value = QMath.Percantage((int)_gameState.researchProgress, research.researchTime);
         }
 
         for (int i = 0; i < _researchNodes.Count; i++) {
             var project = _researchNodes[i];
-            project.button.Disabled = _gameState.currentResearch != null;
+            project.button.Disabled = _gameState.currentResearch != "";
             project.label.AddColorOverride("font_color", Color.Color8(255, 255, 255));
-            if (project.value == _gameState.currentResearch) {
+            if (project.value.name == _gameState.currentResearch) {
                 project.label.AddColorOverride("font_color", Color.Color8(0x34, 0x8c, 0x2b));
             }
         }
@@ -179,7 +180,7 @@ public class ResearchScreen : Node2D {
     }
 
     private void OnLeaveButton() {
-        _gameState.transition = RpgGameState.MapTransition.ExitResearchScreen;
+        RpgGameState.transition = RpgGameState.MapTransition.ExitResearchScreen;
         GetTree().ChangeScene("res://scenes/MapView.tscn");
     }
 }

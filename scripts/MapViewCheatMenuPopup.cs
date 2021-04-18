@@ -118,7 +118,7 @@ public class MapViewCheatMenuPopup : PopupDialog {
                 return;
 
             case "cheat.research.complete":
-                if (_gameState.currentResearch == null) {
+                if (_gameState.currentResearch == "") {
                     throw new Exception("current research is not set");
                 }
                 _command = new Command { kind = CommandKind.ResearchComplete };

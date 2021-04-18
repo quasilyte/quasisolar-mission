@@ -318,8 +318,8 @@ public class EquipmentShopScreen : Node2D {
 
         int i = 0;
         category = category.Replace(" ", ""); // "Special Weapon" -> "SpecialWeapon"
-        for (int itemIndex = 0; itemIndex < _gameState.enteredBase.shopSelection.Count; itemIndex++) {
-            var item = _gameState.enteredBase.shopSelection[itemIndex];
+        for (int itemIndex = 0; itemIndex < RpgGameState.enteredBase.shopSelection.Count; itemIndex++) {
+            var item = RpgGameState.enteredBase.shopSelection[itemIndex];
             if (item.Kind().ToString() != category) {
                 continue;
             }
@@ -338,7 +338,7 @@ public class EquipmentShopScreen : Node2D {
         if (_selectedMerchandise.sprite != null) {
             _selectedMerchandise.sprite.Frame = 1;
         }
-        var item = _gameState.enteredBase.shopSelection[itemIndex];
+        var item = RpgGameState.enteredBase.shopSelection[itemIndex];
         _selectedMerchandise.sprite = _equipmentSlots[merchIndex];
         _selectedMerchandise.item = item;
         _selectedMerchandise.sprite.Frame = 2;
@@ -388,7 +388,7 @@ public class EquipmentShopScreen : Node2D {
     }
 
     private void UpdateUI() {
-        var starBase = _gameState.enteredBase;
+        var starBase = RpgGameState.enteredBase;
 
         _dronesPopup.GetNode<Label>("ControlLimitValue").Text = _gameState.dronesOwned + "/" + RpgGameState.MaxDrones();
 
@@ -517,7 +517,7 @@ public class EquipmentShopScreen : Node2D {
 
     private void OnCargoSellMineralsButton() {
         _gameState.credits += RpgGameState.MineralsSellPrice() * _gameState.humanUnit.cargo.minerals;
-        _gameState.enteredBase.mineralsStock += _gameState.humanUnit.cargo.minerals;
+        RpgGameState.enteredBase.mineralsStock += _gameState.humanUnit.cargo.minerals;
         _gameState.humanUnit.cargo.minerals = 0;
         PlayMoneySound();
         UpdateUI();
@@ -525,7 +525,7 @@ public class EquipmentShopScreen : Node2D {
 
     private void OnCargoSellOrganicButton() {
         _gameState.credits += RpgGameState.OrganicSellPrice() * _gameState.humanUnit.cargo.organic;
-        _gameState.enteredBase.organicStock += _gameState.humanUnit.cargo.organic;
+        RpgGameState.enteredBase.organicStock += _gameState.humanUnit.cargo.organic;
         _gameState.humanUnit.cargo.organic = 0;
         PlayMoneySound();
         UpdateUI();
@@ -533,7 +533,7 @@ public class EquipmentShopScreen : Node2D {
 
     private void OnCargoSellPowerButton() {
         _gameState.credits += RpgGameState.PowerSellPrice() * _gameState.humanUnit.cargo.power;
-        _gameState.enteredBase.powerStock += _gameState.humanUnit.cargo.power;
+        RpgGameState.enteredBase.powerStock += _gameState.humanUnit.cargo.power;
         _gameState.humanUnit.cargo.power = 0;
         PlayMoneySound();
         UpdateUI();

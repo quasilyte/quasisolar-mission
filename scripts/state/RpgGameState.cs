@@ -15,6 +15,9 @@ public class RpgGameState {
     public static int enemyBaseNumAttackers = 0;
     public static SpaceUnit enemyAttackerUnit;
     public static StarBase garrisonStarBase = null;
+    public static StarBase enteredBase = null;
+    public static MapTransition transition = MapTransition.NewGame;
+    public static BattleResult lastBattleResult = null;
 
     public class Config {
         public ulong gameSeed;
@@ -63,6 +66,7 @@ public class RpgGameState {
 
     public enum MapTransition {
         NewGame,
+        LoadGame,
         ExitStarBase,
         ExitResearchScreen,
         UnitDestroyed,
@@ -82,10 +86,13 @@ public class RpgGameState {
 
     public RpgGameState() {}
 
-    public void InitStaticState() {
+    public void InitStaticState(bool newGame) {
         enemyBaseNumAttackers = 0;
         enemyAttackerUnit = null;
         garrisonStarBase = null;
+        enteredBase = null;
+        transition = newGame ? MapTransition.NewGame : MapTransition.LoadGame;
+        lastBattleResult = null;
 
         humanBases = new HashSet<StarBase>();
         foreach (var sys in starSystems) {
@@ -203,11 +210,6 @@ public class RpgGameState {
     public Dictionary<SpaceUnit, StarBase> starBaseBySpaceUnit;
     public Dictionary<StarBase, StarSystem> starSystemByStarBase;
 
-    public MapTransition transition = MapTransition.NewGame;
-    public BattleResult lastBattleResult = null;
-
-    public StarBase enteredBase = null;
-
     public Player humanPlayer = null;
     public Player scavengerPlayer = null;
     public Player krigiaPlayer = null;
@@ -249,7 +251,7 @@ public class RpgGameState {
 
     public HashSet<string> technologiesResearched = new HashSet<string>{};
     public double researchProgress = 0;
-    public Research currentResearch = null;
+    public string currentResearch = "";
     public int krigiaMaterial = 0;
     public int wertuMaterial = 0;
     public int zythMaterial = 0;
@@ -285,17 +287,20 @@ public class RpgGameState {
             var fundsScore = (Math.Log((double)instance.scienceFunds / 3) / 100) * 5;
             value += QMath.ClampMax(fundsScore, 0.5);
         }
-        if (instance.currentResearch != null && instance.currentResearch.material != Research.Material.None) {
-            // Without needed material, research is performed at the 25% rate.
-            if (instance.currentResearch.material == Research.Material.Krigia && instance.krigiaMaterial == 0) {
-                value *= 0.25;
-            } else if (instance.currentResearch.material == Research.Material.Wertu && instance.wertuMaterial == 0) {
-                value *= 0.25;
-            } else if (instance.currentResearch.material == Research.Material.Zyth && instance.zythMaterial == 0) {
-                value *= 0.25;
-            }
-            if (instance.technologiesResearched.Contains("Alien Tech Lab")) {
-                value = QMath.ClampMax(value + 0.1, 1);
+        if (instance.currentResearch != "") {
+            var research = Research.Find(instance.currentResearch);
+            if (research.material != Research.Material.None) {
+                // Without needed material, research is performed at the 25% rate.
+                if (research.material == Research.Material.Krigia && instance.krigiaMaterial == 0) {
+                    value *= 0.25;
+                } else if (research.material == Research.Material.Wertu && instance.wertuMaterial == 0) {
+                    value *= 0.25;
+                } else if (research.material == Research.Material.Zyth && instance.zythMaterial == 0) {
+                    value *= 0.25;
+                }
+                if (instance.technologiesResearched.Contains("Alien Tech Lab")) {
+                    value = QMath.ClampMax(value + 0.1, 1);
+                }
             }
         }
         return value;

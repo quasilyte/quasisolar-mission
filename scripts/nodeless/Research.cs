@@ -37,6 +37,19 @@ public class Research {
         return true;
     }
 
+    public static Dictionary<string, Research> researchByName;
+
+    public static Research Find(string name) {
+        return researchByName[name];
+    }
+
+    public static void InitLists() {
+        researchByName = new Dictionary<string, Research>();
+        foreach (var r in list) {
+            researchByName.Add(r.name, r);
+        }
+    }
+
     public static List<Research> list = new List<Research>{
         // Misc tech.
 
@@ -392,14 +405,6 @@ public class Research {
             material = Material.Wertu,
             researchTime = 110,
             dependencies = {"Wertu Weapons I"},
-        },
-
-        new Research{
-            name = "Twin Photon Burst Cannon",
-            material = Material.Wertu,
-            category = Category.NewWeapon,
-            researchTime = 20,
-            dependencies = {"Wertu Weapons II"},
         },
 
         new Research{

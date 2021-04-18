@@ -79,15 +79,15 @@ public class MapView : Node2D {
         QRandom.SetRandomNumberGenerator(RpgGameState.rng);
         GetNode<BackgroundMusic>("/root/BackgroundMusic").PlayMapMusic();
 
-        if (_gameState.transition == RpgGameState.MapTransition.EnemyBaseAttackRepelled) {
+        if (RpgGameState.transition == RpgGameState.MapTransition.EnemyBaseAttackRepelled) {
             ProcessUnitCasualties(_gameState.humanUnit);
             ProcessStarBaseCasualties(RpgGameState.garrisonStarBase);
             RpgGameState.garrisonStarBase = null;
-        } else if (_gameState.transition == RpgGameState.MapTransition.EnemyUnitDestroyed) {
+        } else if (RpgGameState.transition == RpgGameState.MapTransition.EnemyUnitDestroyed) {
             ProcessUnitCasualties(_gameState.humanUnit);
             ProcessUnitCasualties(RpgGameState.enemyAttackerUnit);
             RpgGameState.enemyAttackerUnit = null;
-        } else if (_gameState.transition == RpgGameState.MapTransition.BaseAttackSimulation) {
+        } else if (RpgGameState.transition == RpgGameState.MapTransition.BaseAttackSimulation) {
             ProcessStarBaseCasualties(RpgGameState.garrisonStarBase);
             ProcessUnitCasualties(RpgGameState.enemyAttackerUnit);
             RpgGameState.enemyAttackerUnit = null;
@@ -186,11 +186,11 @@ public class MapView : Node2D {
         _camera.Position = new Vector2(_gameState.humanUnit.pos.x, GetViewport().Size.y / 2);
         _cameraSpeed = new Vector2(256, 0);
 
-        if (_gameState.transition == RpgGameState.MapTransition.EnemyBaseAttackRepelled) {
+        if (RpgGameState.transition == RpgGameState.MapTransition.EnemyBaseAttackRepelled) {
             ShowBattleResults();
-        } else if (_gameState.transition == RpgGameState.MapTransition.EnemyUnitDestroyed) {
+        } else if (RpgGameState.transition == RpgGameState.MapTransition.EnemyUnitDestroyed) {
             ShowBattleResults();
-        } else if (_gameState.transition == RpgGameState.MapTransition.UnitDestroyed) {
+        } else if (RpgGameState.transition == RpgGameState.MapTransition.UnitDestroyed) {
             _lockControls = true;
             _human.node.Visible = false;
             GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/unit_destroyed.wav"));
@@ -205,8 +205,6 @@ public class MapView : Node2D {
         _menuNode = GameMenuNode.New();
         AddChild(_menuNode);
         _menuNode.Connect("Closed", this, nameof(OnGameMenuClosed));
-
-        GameStateSerializer.Encode();
     }
 
     private List<Vessel> FindSurvivors(List<Vessel> fleet) {
@@ -324,7 +322,7 @@ public class MapView : Node2D {
 
         var lines = new List<string>();
 
-        var result = _gameState.lastBattleResult;
+        var result = RpgGameState.lastBattleResult;
 
         if (result.exp != 0) {
             _gameState.experience += result.exp;
@@ -636,7 +634,7 @@ public class MapView : Node2D {
 
     private void OnEnterBaseButton() {
         _currentSystem.sys.starBase.UpdateShopSelection();
-        _gameState.enteredBase = _currentSystem.sys.starBase;
+        RpgGameState.enteredBase = _currentSystem.sys.starBase;
         GetTree().ChangeScene("res://scenes/StarBaseScreen.tscn");
     }
 
@@ -1143,11 +1141,11 @@ public class MapView : Node2D {
     }
 
     private void ProcessResearch() {
-        if (_gameState.currentResearch == null) {
+        if (_gameState.currentResearch == "") {
             return;
         }
 
-        var research = _gameState.currentResearch;
+        var research = Research.Find(_gameState.currentResearch);
 
         _gameState.researchProgress += RpgGameState.ResearchRate();
 
@@ -1180,7 +1178,7 @@ public class MapView : Node2D {
     }
 
     private void ResearchCompleted() {
-        var research = _gameState.currentResearch;
+        var research = Research.Find(_gameState.currentResearch);
 
         GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/research_completed.wav"));
 
@@ -1196,7 +1194,7 @@ public class MapView : Node2D {
         }
 
         _gameState.researchProgress = 0;
-        _gameState.currentResearch = null;
+        _gameState.currentResearch = "";
 
         StopMovement();
         UpdateUI();

@@ -282,7 +282,7 @@ public class Arena : Node2D {
     }
 
     private void TriggerDefeat() {
-        _gameState.transition = RpgGameState.MapTransition.UnitDestroyed;
+        RpgGameState.transition = RpgGameState.MapTransition.UnitDestroyed;
         _gameState.humanUnit.fleet = new List<Vessel>{_gameState.humanUnit.fleet[0]};
         _gameState.humanUnit.fleet[0].hp = 0;
         _gameState.humanUnit.fleet[0].energy = 0;
@@ -368,7 +368,7 @@ public class Arena : Node2D {
                 TriggerDefeat();
                 return;
             }
-            _gameState.transition = RpgGameState.MapTransition.BaseAttackSimulation;
+            RpgGameState.transition = RpgGameState.MapTransition.BaseAttackSimulation;
             ChangeSceneAfterDelay("MapView");
             return;
         }
@@ -387,12 +387,12 @@ public class Arena : Node2D {
             }
 
             if (_flagshipPilot == null) {
-                _gameState.transition = RpgGameState.MapTransition.BaseAttackSimulation;
+                RpgGameState.transition = RpgGameState.MapTransition.BaseAttackSimulation;
             } else {
-                _gameState.transition = RpgGameState.MapTransition.EnemyUnitDestroyed;
+                RpgGameState.transition = RpgGameState.MapTransition.EnemyUnitDestroyed;
             }
         } else {
-            _gameState.transition = RpgGameState.MapTransition.EnemyBaseAttackRepelled;
+            RpgGameState.transition = RpgGameState.MapTransition.EnemyBaseAttackRepelled;
         }
 
         if (_gameState.skillsLearned.Contains("Salvaging")) {
@@ -408,7 +408,7 @@ public class Arena : Node2D {
                 result.exp = QMath.IntAdjust(result.exp, 1.33);
             }
             // TODO: check for the cargo overflow.
-            _gameState.lastBattleResult = result;
+            RpgGameState.lastBattleResult = result;
         }
 
         ChangeSceneAfterDelay("MapView");

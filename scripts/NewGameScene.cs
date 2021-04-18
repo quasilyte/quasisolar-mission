@@ -187,7 +187,7 @@ public class NewGameScene : Node2D {
         RpgGameState.rng = rng;
         GenerateWorld(gameConfig);
         var gameStateInstance = RpgGameState.New(gameConfig);
-        gameStateInstance.InitStaticState();
+        gameStateInstance.InitStaticState(true);
         RpgGameState.instance = gameStateInstance;
 
 

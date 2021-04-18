@@ -23,7 +23,7 @@ public class ShipyardScreen : Node2D {
 
     public override void _Ready() {
         _gameState = RpgGameState.instance;
-        _starBase = _gameState.enteredBase;
+        _starBase = RpgGameState.enteredBase;
         _vesselSelection = VesselSelection();
         SetupUI();
         UpdateUI();
@@ -120,7 +120,7 @@ public class ShipyardScreen : Node2D {
             return;
         }
 
-        var system = _gameState.enteredBase.System();
+        var system = RpgGameState.enteredBase.System();
         system.starBase = null;
 
         UpdateFleet();
@@ -218,7 +218,7 @@ public class ShipyardScreen : Node2D {
         if (_gameState.credits < ItemInfo.BuyingPrice(_selectedMerchandise.item)) {
             return;
         }
-        var starBase = _gameState.enteredBase;
+        var starBase = RpgGameState.enteredBase;
         if (starBase.productionQueue.Count >= 4) {
             return;
         }
@@ -280,7 +280,7 @@ public class ShipyardScreen : Node2D {
 
     private void UpdateGarrison() {
         var list = VesselArrayToList(_garrisonSlots);
-        _gameState.enteredBase.garrison = list;
+        RpgGameState.enteredBase.garrison = list;
     }
 
     public void UpdateFleet() {
