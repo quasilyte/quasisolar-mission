@@ -5,7 +5,7 @@ public static class QuickBattleState {
     }
 
     public class PlayerSettings {
-        public VesselDesign vessel;
+        public string vesselDesignName;
         public EnergySource energySource;
         public WeaponDesign[] weapons;
         public WeaponDesign specialWeapon;
@@ -13,7 +13,7 @@ public static class QuickBattleState {
         public ShieldDesign shield;
 
         public PlayerSettings() {
-            vessel = VesselDesign.Find("Earthling", "Explorer");
+            vesselDesignName = "Explorer";
             energySource = EnergySource.Find("Power Generator");
             specialWeapon = EmptyWeapon.Design;
             shield = IonCurtainShield.Design;

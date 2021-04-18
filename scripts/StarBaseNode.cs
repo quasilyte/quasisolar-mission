@@ -59,7 +59,8 @@ public class StarBaseNode : Node2D {
         }
         
         Vessel vessel = null;
-        var vesselDesign = starBase.productionQueue.Peek();
+        var vesselDesignName = starBase.productionQueue.Peek();
+        var vesselDesign = VesselDesign.Find(vesselDesignName);
         if ((starBase.productionProgress + 1) >= vesselDesign.productionTime) {
             if (starBase.garrison.Count >= StarBase.maxGarrisonSize) {
                 // The vessel is ready, but can't be produced
@@ -68,7 +69,7 @@ public class StarBaseNode : Node2D {
             }
             starBase.productionProgress = 0;
             starBase.productionQueue.Dequeue();
-            vessel = NewVessel(vesselDesign);
+            vessel = VesselFactory.NewVessel(starBase.owner, vesselDesign);
             starBase.garrison.Add(vessel);
         } else {
             starBase.productionProgress++;
@@ -80,9 +81,5 @@ public class StarBaseNode : Node2D {
         }
 
         return vessel;
-    }
-
-    private Vessel NewVessel(VesselDesign design) {    
-        return VesselFactory.NewVessel(starBase.owner, design);
     }
 }

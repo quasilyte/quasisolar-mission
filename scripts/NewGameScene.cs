@@ -364,23 +364,23 @@ public class NewGameScene : Node2D {
     const int numMapRows = 2;
 
     private VesselTemplate[] _scavengerTemplates = new VesselTemplate[]{
-        new VesselTemplate{design = VesselDesign.Find("Scavenger", "Raider"), roll = 0},
-        new VesselTemplate{design = VesselDesign.Find("Scavenger", "Marauder"), roll = 0.65f},
+        new VesselTemplate{design = VesselDesign.Find("Raider"), roll = 0},
+        new VesselTemplate{design = VesselDesign.Find("Marauder"), roll = 0.65f},
     };
 
     private VesselTemplate[] _krigiaTemplates = new VesselTemplate[]{
-        new VesselTemplate{design = VesselDesign.Find("Krigia", "Talons"), roll = 0},
-        new VesselTemplate{design = VesselDesign.Find("Krigia", "Claws"), roll = 0.3f},
-        new VesselTemplate{design = VesselDesign.Find("Krigia", "Fangs"), roll = 0.55f},
-        new VesselTemplate{design = VesselDesign.Find("Krigia", "Tusks"), roll = 0.75f},
-        new VesselTemplate{design = VesselDesign.Find("Krigia", "Horns"), roll = 0.90f},
+        new VesselTemplate{design = VesselDesign.Find("Talons"), roll = 0},
+        new VesselTemplate{design = VesselDesign.Find("Claws"), roll = 0.3f},
+        new VesselTemplate{design = VesselDesign.Find("Fangs"), roll = 0.55f},
+        new VesselTemplate{design = VesselDesign.Find("Tusks"), roll = 0.75f},
+        new VesselTemplate{design = VesselDesign.Find("Horns"), roll = 0.90f},
     };
 
     private VesselTemplate[] _wertuTemplates = new VesselTemplate[]{
-        new VesselTemplate{design = VesselDesign.Find("Wertu", "Probe"), roll = 0},
-        new VesselTemplate{design = VesselDesign.Find("Wertu", "Guardian"), roll = 0.3f},
-        new VesselTemplate{design = VesselDesign.Find("Wertu", "Angel"), roll = 0.70f},
-        new VesselTemplate{design = VesselDesign.Find("Wertu", "Dominator"), roll = 0.85f},
+        new VesselTemplate{design = VesselDesign.Find("Probe"), roll = 0},
+        new VesselTemplate{design = VesselDesign.Find("Guardian"), roll = 0.3f},
+        new VesselTemplate{design = VesselDesign.Find("Angel"), roll = 0.70f},
+        new VesselTemplate{design = VesselDesign.Find("Dominator"), roll = 0.85f},
     };
 
     private void InitFleet(StarBase starBase, VesselTemplate[] templates, float budget) {
@@ -592,26 +592,25 @@ public class NewGameScene : Node2D {
 
         config.humanBases.Add(startingSystem.starBase);
 
-        var vesselDesign = VesselDesign.Find("Earthling", OptionValue("FlagshipDesign"));
         var fleet = new List<Vessel>();
         var humanVessel = new Vessel {
             isGamepad = GameControls.preferGamepad,
             player = config.humanPlayer,
             pilotName = PilotNames.UniqHumanName(config.usedNames),
-            design = vesselDesign,
-            energySource = EnergySource.Find("Power Generator"),
-            artifacts = new List<ArtifactDesign>{
-                EmptyArtifact.Design,
-                EmptyArtifact.Design,
-                EmptyArtifact.Design,
-                EmptyArtifact.Design,
-                EmptyArtifact.Design,
+            designName = OptionValue("FlagshipDesign"),
+            energySourceName = "Power Generator",
+            artifacts = new List<string>{
+                EmptyArtifact.Design.name,
+                EmptyArtifact.Design.name,
+                EmptyArtifact.Design.name,
+                EmptyArtifact.Design.name,
+                EmptyArtifact.Design.name,
             },
-            weapons = new List<WeaponDesign>{
-                IonCannonWeapon.Design,
-                EmptyWeapon.Design,
+            weapons = new List<string>{
+                IonCannonWeapon.Design.name,
+                EmptyWeapon.Design.name,
             },
-            specialWeapon = EmptyWeapon.Design,
+            specialWeaponName = EmptyWeapon.Design.name,
         };
         VesselFactory.InitStats(humanVessel);
         fleet.Add(humanVessel);

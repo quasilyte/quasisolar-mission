@@ -19,7 +19,7 @@ public class StarBase {
     public int powerStock = 0;
 
     public int productionProgress = 0;
-    public Queue<VesselDesign> productionQueue = new Queue<VesselDesign>();
+    public Queue<string> productionQueue = new Queue<string>();
 
     public List<Vessel> garrison = new List<Vessel>();
 

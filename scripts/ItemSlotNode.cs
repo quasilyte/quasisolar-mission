@@ -62,7 +62,7 @@ public class ItemSlotNode : Node2D {
                 if (itemNode.item.Kind() != ItemKind.Shield) {
                     return false;
                 }
-                if (_vessel != null && _vessel.design.maxShieldLevel < ((ShieldDesign)itemNode.item).level) {
+                if (_vessel != null && _vessel.Design().maxShieldLevel < ((ShieldDesign)itemNode.item).level) {
                     return false;
                 }
                 break;

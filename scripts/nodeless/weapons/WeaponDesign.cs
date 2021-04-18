@@ -4,6 +4,7 @@ using System;
 public class WeaponDesign : AbstractItem {
     public static WeaponDesign[] list;
     public static WeaponDesign[] specialList;
+    public static Dictionary<string, WeaponDesign> weaponByName;
 
     public string name = "";
     public string description = "";
@@ -37,6 +38,10 @@ public class WeaponDesign : AbstractItem {
 
     public override ItemKind Kind() {
         return isSpecial ? ItemKind.SpecialWeapon : ItemKind.Weapon;
+    }
+
+    public static WeaponDesign Find(string name) {
+        return weaponByName[name];
     }
 
     public override string RenderHelp() {
@@ -125,6 +130,10 @@ public class WeaponDesign : AbstractItem {
             LancerWeapon.Design,
         };
         Array.Sort(list, (x, y) => x.sellingPrice.CompareTo(y.sellingPrice));
+        weaponByName = new Dictionary<string, WeaponDesign>();
+        foreach (var w in list) {
+            weaponByName.Add(w.name, w);
+        }
 
         specialList = new WeaponDesign[]{
             HarpoonWeapon.Design,
@@ -137,5 +146,8 @@ public class WeaponDesign : AbstractItem {
             DisruptorWeapon.Design,
         };
         Array.Sort(specialList, (x, y) => x.sellingPrice.CompareTo(y.sellingPrice));
+        foreach (var w in specialList) {
+            weaponByName.Add(w.name, w);
+        }
     }
 }

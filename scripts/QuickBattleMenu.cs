@@ -35,7 +35,7 @@ public class QuickBattleMenu : Node2D {
 
     private void UpdateVessel() {
         var vesselPreview = GetNode<Sprite>("SpritePanel/VesselPreview");
-        var d = QuickBattleState.playerSettings[_playerIndex].vessel;
+        var d = VesselDesign.Find(QuickBattleState.playerSettings[_playerIndex].vesselDesignName);
         vesselPreview.Texture = GD.Load<Texture>($"res://images/vessel/{d.affiliation}_{d.name}.png");
 
         GetNode<OptionButton>("SpecialWeaponSelect").Disabled = !d.specialSlot;
@@ -54,7 +54,7 @@ public class QuickBattleMenu : Node2D {
     private void UpdatePlayerTab() {
         var settings = QuickBattleState.playerSettings[_playerIndex];
 
-        _vesselOption.Select(Array.IndexOf(VesselDesign.list, settings.vessel));
+        _vesselOption.Select(Array.IndexOf(VesselDesign.list, VesselDesign.Find(settings.vesselDesignName)));
 
         _energySourceOption.Select(Array.IndexOf(EnergySource.list, settings.energySource));
 
@@ -320,7 +320,7 @@ public class QuickBattleMenu : Node2D {
     }
 
     private void OnVesselHover() {
-        _helpText.Text = PlayerSettings().vessel.RenderHelp();
+        _helpText.Text = VesselDesign.Find(PlayerSettings().vesselDesignName).RenderHelp();
     }
 
     private void OnArtifactHover(int slotIndex) {
@@ -347,14 +347,14 @@ public class QuickBattleMenu : Node2D {
             }
         }
         cost += PlayerSettings().energySource.sellingPrice;
-        cost += PlayerSettings().vessel.sellingPrice;
+        cost += VesselDesign.Find(PlayerSettings().vesselDesignName).sellingPrice;
         cost += PlayerSettings().shield.sellingPrice;
         return cost;
     }
 
     private void OnVesselSelected(int id) {
         var d = VesselDesign.list[id];
-        PlayerSettings().vessel = d;
+        PlayerSettings().vesselDesignName = d.name;
         UpdateVessel();
         UpdateTotalCost();
         OnVesselHover();
@@ -471,7 +471,7 @@ public class QuickBattleMenu : Node2D {
                 VesselFactory.Init(v, slot.kind);
             }
 
-            v.hp = v.design.maxHp;
+            v.hp = v.Design().maxHp;
 
             ArenaSettings.combatants.Add(v);
         }
@@ -480,47 +480,49 @@ public class QuickBattleMenu : Node2D {
     public static void InitHuman(Vessel v) {
         var settings = QuickBattleState.playerSettings[v.deviceId];
 
-        v.design = settings.vessel;
-        v.energySource = settings.energySource;
-        v.energy = v.energySource.maxBackupEnergy;
+        v.designName = settings.vesselDesignName;
+        v.energySourceName = settings.energySource.name;
+        v.energy = settings.energySource.maxBackupEnergy;
 
         var artifacts = settings.artifacts;
         var weapons = settings.weapons;
         var specialWeapon = settings.specialWeapon;
         var shield = settings.shield;
 
+        var design = v.Design();
+
         var artifactSet = new HashSet<ArtifactDesign>();
         foreach (ArtifactDesign a in artifacts) {
-            if (v.artifacts.Count >= v.design.artifactSlots) {
+            if (v.artifacts.Count >= design.artifactSlots) {
                 break;
             }
             if (!artifactSet.Contains(a)) {
                 artifactSet.Add(a);
-                v.artifacts.Add(a);
+                v.artifacts.Add(a.name);
             } else {
-                v.artifacts.Add(EmptyArtifact.Design);
+                v.artifacts.Add(EmptyArtifact.Design.name);
             }
         }
 
-        if (v.design.maxShieldLevel >= shield.level) {
-            v.shield = shield;
+        if (design.maxShieldLevel >= shield.level) {
+            v.shieldName = shield.name;
         }
 
-        v.weapons.Add(weapons[0]);
-        if (v.design.weaponSlots >= 2) {
-            v.weapons.Add(weapons[1]);
+        v.weapons.Add(weapons[0].name);
+        if (design.weaponSlots >= 2) {
+            v.weapons.Add(weapons[1].name);
         } else {
-            v.weapons.Add(EmptyWeapon.Design);
+            v.weapons.Add(EmptyWeapon.Design.name);
         }
-        if (v.design.weaponSlots >= 3) {
-            v.weapons.Add(weapons[2]);
+        if (design.weaponSlots >= 3) {
+            v.weapons.Add(weapons[2].name);
         } else {
-            v.weapons.Add(EmptyWeapon.Design);
+            v.weapons.Add(EmptyWeapon.Design.name);
         }
-        if (v.design.specialSlot) {
-            v.specialWeapon = specialWeapon;
+        if (design.specialSlot) {
+            v.specialWeaponName = specialWeapon.name;
         } else {
-            v.specialWeapon = EmptyWeapon.Design;
+            v.specialWeaponName = EmptyWeapon.Design.name;
         }
     }
 }

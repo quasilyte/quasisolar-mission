@@ -31,7 +31,7 @@ public class SpaceUnit {
     public int CargoCapacity() {
         int max = 0;
         foreach (var v in fleet) {
-            max += v.design.cargoSpace;
+            max += v.Design().cargoSpace;
         }
         return max;
     }

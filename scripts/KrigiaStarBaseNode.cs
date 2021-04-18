@@ -29,7 +29,7 @@ public class KrigiaStarBaseNode : StarBaseNode {
 
         var vesselProduced = ProcessProduction();
         if (vesselProduced != null) {
-            VesselFactory.Init(vesselProduced, vesselProduced.design);
+            VesselFactory.Init(vesselProduced, vesselProduced.Design());
             starBase.botProductionDelay = QRandom.IntRange(40, 80);
         }
 
@@ -90,7 +90,7 @@ public class KrigiaStarBaseNode : StarBaseNode {
         }
         var groupSize = QRandom.IntRange(minGroupSize, maxGroupSize);
         var keptInGarrison = starBase.garrison.FindAll(v => {
-            if (v.design.level > 2) {
+            if (v.Design().level > 2) {
                 return true;
             }
             if (spaceUnit.fleet.Count == groupSize) {
@@ -114,23 +114,23 @@ public class KrigiaStarBaseNode : StarBaseNode {
         EmitSignal(nameof(SpaceUnitCreated), new object[] { unitNode });
     }
 
-    private VesselDesign ChooseVesselToProduce() {
-        VesselDesign design = null;
+    private string ChooseVesselToProduce() {
+        string design = "";
         if (_gameState.day < 1000) {
             while (true) {
                 var roll = QRandom.Float();
                 if (roll < 0.3) {
-                    design = VesselDesign.Find("Krigia", "Talons");
+                    design ="Talons";
                 } else if (roll < 0.6) {
-                    design = VesselDesign.Find("Krigia", "Claws");
+                    design ="Claws";
                 } else if (roll < 0.8) {
-                    design = VesselDesign.Find("Krigia", "Fangs");
+                    design ="Fangs";
                 } else if (roll < 0.9) {
-                    design = VesselDesign.Find("Krigia", "Tusks");
+                    design ="Tusks";
                 } else {
-                    design = VesselDesign.Find("Krigia", "Horns");
+                    design ="Horns";
                 }
-                if (starBase.level >= ItemInfo.MinStarBaseLevel(design)) {
+                if (starBase.level >= ItemInfo.MinStarBaseLevel(VesselDesign.Find(design))) {
                     return design;
                 }
             }
@@ -138,17 +138,17 @@ public class KrigiaStarBaseNode : StarBaseNode {
             while (true) {
                 var roll = QRandom.Float();
                 if (roll < 0.1) {
-                    design = VesselDesign.Find("Krigia", "Talons");
+                    design ="Talons";
                 } else if (roll < 0.2) {
-                    design = VesselDesign.Find("Krigia", "Claws");
+                    design ="Claws";
                 } else if (roll < 0.6) {
-                    design = VesselDesign.Find("Krigia", "Fangs");
+                    design ="Fangs";
                 } else if (roll < 0.8) {
-                    design = VesselDesign.Find("Krigia", "Tusks");
+                    design ="Tusks";
                 } else {
-                    design = VesselDesign.Find("Krigia", "Horns");
+                    design ="Horns";
                 }
-                if (starBase.level >= ItemInfo.MinStarBaseLevel(design)) {
+                if (starBase.level >= ItemInfo.MinStarBaseLevel(VesselDesign.Find(design))) {
                     return design;
                 }
             }

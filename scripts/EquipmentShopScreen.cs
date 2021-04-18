@@ -94,7 +94,7 @@ public class EquipmentShopScreen : Node2D {
             button.RectSize = new Vector2(64, 64);
             button.Expand = true;
             button.StretchMode = TextureButton.StretchModeEnum.KeepCentered;
-            button.TextureNormal = u.design.Texture();
+            button.TextureNormal = u.Design().Texture();
             panel.AddChild(button);
             button.Connect("pressed", this, nameof(OnMemberSelected), new Godot.Collections.Array { i });
         }
@@ -112,7 +112,7 @@ public class EquipmentShopScreen : Node2D {
             var weaponPanel = panel.GetNode<Sprite>($"Weapon{i}");
             var weaponSlot = ItemSlotNode.New(i, ItemKind.Weapon);
             weaponSlot.SetAssignItemCallback((int index, DraggableItemNode itemNode) => {
-                _selectedVessel.weapons[index] = itemNode != null ? (WeaponDesign)itemNode.item : EmptyWeapon.Design;
+                _selectedVessel.weapons[index] = itemNode != null ? ((WeaponDesign)itemNode.item).name : EmptyWeapon.Design.name;
                 return true;
             });
             weaponSlot.Name = "Slot";
@@ -124,7 +124,7 @@ public class EquipmentShopScreen : Node2D {
             var weaponPanel = panel.GetNode<Sprite>("SpecialWeapon");
             var weaponSlot = ItemSlotNode.New(0, ItemKind.SpecialWeapon);
             weaponSlot.SetAssignItemCallback((int index, DraggableItemNode itemNode) => {
-                _selectedVessel.specialWeapon = itemNode != null ? (WeaponDesign)itemNode.item : EmptyWeapon.Design;
+                _selectedVessel.specialWeaponName = itemNode != null ? ((WeaponDesign)itemNode.item).name : EmptyWeapon.Design.name;
                 return true;
             });
             weaponSlot.Name = "Slot";
@@ -135,7 +135,7 @@ public class EquipmentShopScreen : Node2D {
             var energySourcePanel = panel.GetNode<Sprite>("EnergySource");
             var energySourceSlot = ItemSlotNode.New(0, ItemKind.EnergySource);
             energySourceSlot.SetAssignItemCallback((int index, DraggableItemNode itemNode) => {
-                _selectedVessel.energySource = itemNode != null ? (EnergySource)itemNode.item : EnergySource.Find("None");
+                _selectedVessel.energySourceName = itemNode != null ? ((EnergySource)itemNode.item).name : "None";
                 return true;
             });
             energySourceSlot.Name = "Slot";
@@ -146,7 +146,7 @@ public class EquipmentShopScreen : Node2D {
             var shieldPanel = panel.GetNode<Sprite>("Shield");
             var shieldSlot = ItemSlotNode.New(0, ItemKind.Shield);
             shieldSlot.SetAssignItemCallback((int index, DraggableItemNode itemNode) => {
-                _selectedVessel.shield = itemNode != null ? (ShieldDesign)itemNode.item : EmptyShield.Design;
+                _selectedVessel.shieldName = itemNode != null ? ((ShieldDesign)itemNode.item).name : EmptyShield.Design.name;
                 return true;
             });
             shieldSlot.Name = "Slot";
@@ -157,7 +157,7 @@ public class EquipmentShopScreen : Node2D {
             var artifactPanel = panel.GetNode<Sprite>($"Artifact{i}");
             var artifactSlot = ItemSlotNode.New(i, ItemKind.Artifact);
             artifactSlot.SetAssignItemCallback((int index, DraggableItemNode itemNode) => {
-                _selectedVessel.artifacts[index] = itemNode != null ? (ArtifactDesign)itemNode.item : EmptyArtifact.Design;
+                _selectedVessel.artifacts[index] = itemNode != null ? ((ArtifactDesign)itemNode.item).name : EmptyArtifact.Design.name;
                 return true;
             });
             artifactSlot.Name = "Slot";
@@ -218,16 +218,16 @@ public class EquipmentShopScreen : Node2D {
         var u = _gameState.humanUnit.fleet[vesselIndex];
         _selectedVessel = u;
 
-        panel.GetNode<Sprite>("VesselDesign/Sprite").Texture = u.design.Texture();
+        panel.GetNode<Sprite>("VesselDesign/Sprite").Texture = u.Design().Texture();
 
-        panel.GetNode<TextureProgress>("HealthBar").Value = QMath.Percantage(u.hp, u.design.maxHp);
+        panel.GetNode<TextureProgress>("HealthBar").Value = QMath.Percantage(u.hp, u.Design().maxHp);
 
         {
             var energySourcePanel = panel.GetNode<Sprite>("EnergySource");
             var energySourceSlot = energySourcePanel.GetNode<ItemSlotNode>("Slot");
             energySourceSlot.Reset(u, true);
-            if (u.energySource != EnergySource.Find("None")) {
-                var itemNode = DraggableItemNode.New(energySourceSlot, u.energySource);
+            if (u.energySourceName != "None") {
+                var itemNode = DraggableItemNode.New(energySourceSlot, u.GetEnergySource());
                 energySourceSlot.ApplyItem(null, itemNode);
                 GetTree().CurrentScene.AddChild(itemNode);
                 itemNode.GlobalPosition = energySourcePanel.GlobalPosition;
@@ -238,8 +238,8 @@ public class EquipmentShopScreen : Node2D {
             var shieldPanel = panel.GetNode<Sprite>("Shield");
             var shieldSlot = shieldPanel.GetNode<ItemSlotNode>("Slot");
             shieldSlot.Reset(u, true);
-            if (u.shield != EmptyShield.Design) {
-                var itemNode = DraggableItemNode.New(shieldSlot, u.shield);
+            if (u.Shield() != EmptyShield.Design) {
+                var itemNode = DraggableItemNode.New(shieldSlot, u.Shield());
                 shieldSlot.ApplyItem(null, itemNode);
                 GetTree().CurrentScene.AddChild(itemNode);
                 itemNode.GlobalPosition = shieldPanel.GlobalPosition;
@@ -249,10 +249,10 @@ public class EquipmentShopScreen : Node2D {
         {
             var specialWeaponPanel = panel.GetNode<Sprite>("SpecialWeapon");
             var specialWeaponSlot = specialWeaponPanel.GetNode<ItemSlotNode>("Slot");
-            specialWeaponPanel.Frame = u.design.specialSlot ? 1 : 0;
-            specialWeaponSlot.Reset(u, u.design.specialSlot);
-            if (u.design.specialSlot && u.specialWeapon != EmptyWeapon.Design) {
-                var itemNode = DraggableItemNode.New(specialWeaponSlot, u.specialWeapon);
+            specialWeaponPanel.Frame = u.Design().specialSlot ? 1 : 0;
+            specialWeaponSlot.Reset(u, u.Design().specialSlot);
+            if (u.Design().specialSlot && u.SpecialWeapon() != EmptyWeapon.Design) {
+                var itemNode = DraggableItemNode.New(specialWeaponSlot, u.SpecialWeapon());
                 specialWeaponSlot.ApplyItem(null, itemNode);
                 GetTree().CurrentScene.AddChild(itemNode);
                 itemNode.GlobalPosition = specialWeaponPanel.GlobalPosition;
@@ -260,7 +260,7 @@ public class EquipmentShopScreen : Node2D {
         }
 
         for (int j = 0; j < u.weapons.Count; j++) {
-            bool slotAvailable = j < u.design.weaponSlots;
+            bool slotAvailable = j < u.Design().weaponSlots;
             var weaponPanel = panel.GetNode<Sprite>($"Weapon{j}");
             var weaponSlot = weaponPanel.GetNode<ItemSlotNode>("Slot");
             var w = u.weapons[j];
@@ -269,18 +269,18 @@ public class EquipmentShopScreen : Node2D {
             if (!slotAvailable) {
                 continue;
             }
-            if (w == EmptyWeapon.Design) {
+            if (w == EmptyWeapon.Design.name) {
                 continue;
             }
 
-            var itemNode = DraggableItemNode.New(weaponSlot, w);
+            var itemNode = DraggableItemNode.New(weaponSlot, WeaponDesign.Find(w));
             weaponSlot.ApplyItem(null, itemNode);
             GetTree().CurrentScene.AddChild(itemNode);
             itemNode.GlobalPosition = weaponPanel.GlobalPosition;
         }
 
         for (int j = 0; j < u.artifacts.Count; j++) {
-            bool slotAvailable = j < u.design.artifactSlots;
+            bool slotAvailable = j < u.Design().artifactSlots;
             var artifactPanel = panel.GetNode<Sprite>($"Artifact{j}");
             var artifactSlot = artifactPanel.GetNode<ItemSlotNode>("Slot");
             var art = u.artifacts[j];
@@ -290,11 +290,11 @@ public class EquipmentShopScreen : Node2D {
             if (!slotAvailable) {
                 continue;
             }
-            if (art == EmptyArtifact.Design) {
+            if (art == EmptyArtifact.Design.name) {
                 continue;
             }
 
-            var itemNode = DraggableItemNode.New(artifactSlot, art);
+            var itemNode = DraggableItemNode.New(artifactSlot, ArtifactDesign.Find(art));
             artifactSlot.ApplyItem(null, itemNode);
             GetTree().CurrentScene.AddChild(itemNode);
             itemNode.GlobalPosition = artifactPanel.GlobalPosition;
@@ -384,7 +384,7 @@ public class EquipmentShopScreen : Node2D {
     }
 
     private void OnWeaponSlotHover(int weaponIndex) {
-        GetNode<Label>("EquipmentInfo/InfoBoxOwn/Body").Text = _selectedVessel.weapons[weaponIndex].RenderHelp();
+        GetNode<Label>("EquipmentInfo/InfoBoxOwn/Body").Text = WeaponDesign.Find(_selectedVessel.weapons[weaponIndex]).RenderHelp();
     }
 
     private void UpdateUI() {
@@ -396,9 +396,9 @@ public class EquipmentShopScreen : Node2D {
         GetNode<Label>("Status/FuelValue").Text = ((int)_gameState.fuel).ToString() + "/" + RpgGameState.MaxFuel().ToString();
         GetNode<Label>("Status/CargoValue").Text = _gameState.humanUnit.CargoSize() + "/" + _gameState.humanUnit.CargoCapacity();
 
-        GetNode<TextureProgress>("UnitMenu/HealthBar").Value = QMath.Percantage(_selectedVessel.hp, _selectedVessel.design.maxHp);
+        GetNode<TextureProgress>("UnitMenu/HealthBar").Value = QMath.Percantage(_selectedVessel.hp, _selectedVessel.Design().maxHp);
 
-        GetNode<Button>("Status/RepairButton").Disabled = _selectedVessel.hp == _selectedVessel.design.maxHp;
+        GetNode<Button>("Status/RepairButton").Disabled = _selectedVessel.hp == _selectedVessel.Design().maxHp;
 
         var missingFuel = (int)(RpgGameState.MaxFuel() - _gameState.fuel);
         _refuelPopup.GetNode<Button>("BuyMinor").Disabled = _gameState.fuel + 50 > RpgGameState.MaxFuel();
@@ -563,9 +563,9 @@ public class EquipmentShopScreen : Node2D {
             return;
         }
 
-        var missingHp = (int)(_selectedVessel.design.maxHp - _selectedVessel.hp);
+        var missingHp = (int)(_selectedVessel.Design().maxHp - _selectedVessel.hp);
         _repairPopup.GetNode<Label>("RepairFull/Label").Text = (_gameState.repairPrice * missingHp).ToString() + " cr";
-        _repairPopup.GetNode<Button>("RepairMinor").Disabled = _selectedVessel.hp + 25 > _selectedVessel.design.maxHp;
+        _repairPopup.GetNode<Button>("RepairMinor").Disabled = _selectedVessel.hp + 25 > _selectedVessel.Design().maxHp;
         _repairPopup.GetNode<Label>("RepairMinor/Label").Text = (_gameState.repairPrice * 25).ToString() + " cr";
 
         _lockControls = true;
@@ -575,12 +575,12 @@ public class EquipmentShopScreen : Node2D {
     private void OnFullRepairButton() {
         _repairPopup.Hide();
         _lockControls = false;
-        var missingHp = (int)(_selectedVessel.design.maxHp - _selectedVessel.hp);
+        var missingHp = (int)(_selectedVessel.Design().maxHp - _selectedVessel.hp);
         var price = _gameState.repairPrice * missingHp;
         if (_gameState.credits < price) {
             return;
         }
-        _selectedVessel.hp = _selectedVessel.design.maxHp;
+        _selectedVessel.hp = _selectedVessel.Design().maxHp;
         _gameState.credits -= price;
         GetParent().AddChild(SoundEffectNode.New(GD.Load<AudioStream>("res://audio/interface/repair.wav")));
         UpdateUI();

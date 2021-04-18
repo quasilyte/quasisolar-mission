@@ -166,7 +166,7 @@ public class RandomEvent {
                     player = RpgGameState.instance.wertuPlayer,
                     pilotName = "FIXME",
                 };
-                VesselFactory.Init(liner, VesselDesign.Find("Wertu", "Transporter"));
+                VesselFactory.Init(liner, VesselDesign.Find("Transporter"));
                 var spaceUnit = new SpaceUnit {
                     owner = RpgGameState.instance.wertuPlayer,
                     pos = RpgGameState.instance.humanUnit.pos,
@@ -219,13 +219,13 @@ public class RandomEvent {
                 player = RpgGameState.instance.wertuPlayer, // FIXME
                 pilotName = "FIXME",
             };
-            VesselFactory.Init(v1, VesselDesign.Find("Neutral", "Pirate"));
+            VesselFactory.Init(v1, VesselDesign.Find("Pirate"));
             var v2 = new Vessel {
                 isBot = true,
                 player = RpgGameState.instance.wertuPlayer, // FIXME
                 pilotName = "FIXME",
             };
-            VesselFactory.Init(v2, VesselDesign.Find("Neutral", "Pirate"));
+            VesselFactory.Init(v2, VesselDesign.Find("Pirate"));
             return new SpaceUnit {
                 owner = RpgGameState.instance.wertuPlayer, // FIXME
                 pos = RpgGameState.instance.humanUnit.pos,
@@ -372,7 +372,7 @@ public class RandomEvent {
                     player = RpgGameState.instance.zythPlayer,
                     pilotName = "FIXME",
                 };
-                VesselFactory.Init(v, VesselDesign.Find("Zyth", "Hunter"));
+                VesselFactory.Init(v, VesselDesign.Find("Hunter"));
                 return new Result {
                     text = multilineText(
                         "The abandoned vessel was a Zyth trick!",
@@ -501,7 +501,7 @@ public class RandomEvent {
             "",
             "You can try doing a quick repair, but it would require some resources."
         );
-        e.condition = () => RpgGameState.instance.humanUnit.fleet[0].energySource != EnergySource.Find("None");
+        e.condition = () => RpgGameState.instance.humanUnit.fleet[0].energySourceName != "None";
         e.actions.Add(new Action {
             name = "Switch to the backup energy",
             apply = (RandomEventContext _) => {

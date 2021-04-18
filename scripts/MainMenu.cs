@@ -19,6 +19,7 @@ public class MainMenu : Node2D {
         WeaponDesign.InitLists();
         RandomEvent.InitLists();
         ArtifactDesign.InitLists();
+        VesselDesign.InitLists();
     }
     
     private void OnSettingsButtonPressed() {

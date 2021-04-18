@@ -63,26 +63,26 @@ public class Arena : Node2D {
 
     private VesselNode CreateVesselNode(Vessel v, Pilot pilot) {
         var artifacts = new List<IArtifact>();
-        foreach (ArtifactDesign a in v.artifacts) {
-            if (a != EmptyArtifact.Design) {
-                artifacts.Add(ArtifactFactory.New(a));
+        foreach (string a in v.artifacts) {
+            if (a != EmptyArtifact.Design.name) {
+                artifacts.Add(ArtifactFactory.New(ArtifactDesign.Find(a)));
             }
         }
 
-        var state = new VesselState(v.design, v.energySource);
+        var state = new VesselState(v.Design(), v.GetEnergySource());
         foreach (var a in artifacts) {
             a.Upgrade(state);
         }
 
-        var vesselNode = VesselNode.New(pilot, state, v.design.Texture());
+        var vesselNode = VesselNode.New(pilot, state, v.Design().Texture());
         vesselNode.artifacts = artifacts;
-        foreach (WeaponDesign w in v.weapons) {
-            vesselNode.weapons.Add(WeaponFactory.New(w, pilot));
+        foreach (string w in v.weapons) {
+            vesselNode.weapons.Add(WeaponFactory.New(WeaponDesign.Find(w), pilot));
         }
-        if (v.specialWeapon != null) {
-            vesselNode.specialWeapon = WeaponFactory.New(v.specialWeapon, pilot);
+        if (v.specialWeaponName != EmptyWeapon.Design.name) {
+            vesselNode.specialWeapon = WeaponFactory.New(v.SpecialWeapon(), pilot);
         }
-        vesselNode.shield = ShieldFactory.New(v.shield, pilot);
+        vesselNode.shield = ShieldFactory.New(v.Shield(), pilot);
 
         ApplyAllianceColor(vesselNode.GetNode<Sprite>("Sprite"), pilot.alliance);
 
@@ -335,13 +335,14 @@ public class Arena : Node2D {
                 vessel.hp = 0;
                 var roll = QRandom.FloatRange(0.8f, 1.2f);
                 var debris = (int)((float)p.Vessel.State.debris * roll);
-                if (vessel.design.affiliation == "Krigia") {
+                var design = vessel.Design();
+                if (design.affiliation == "Krigia") {
                     result.krigiaDebris += debris;
                     _gameState.metKrigia = true;
-                } else if (vessel.design.affiliation == "Wertu") {
+                } else if (design.affiliation == "Wertu") {
                     result.wertuDebris += debris;
                     _gameState.metWertu = true;
-                } else if (vessel.design.affiliation == "Zyth") {
+                } else if (design.affiliation == "Zyth") {
                     result.zythDebris += debris;
                     _gameState.metZyth = true;
                 } else {

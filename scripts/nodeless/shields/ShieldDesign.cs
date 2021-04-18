@@ -27,6 +27,12 @@ public class ShieldDesign : AbstractItem {
 
     public override ItemKind Kind() { return ItemKind.Shield; }
 
+    private static Dictionary<string, ShieldDesign> shieldByName;
+
+    public static ShieldDesign Find(string name) {
+        return shieldByName[name];
+    }
+
     public override string RenderHelp() {
         if (name == "Empty") {
             // A special case.
@@ -72,5 +78,9 @@ public class ShieldDesign : AbstractItem {
             PhaserShield.Design,
         };
         Array.Sort(list, (x, y) => x.sellingPrice.CompareTo(y.sellingPrice));
+        shieldByName = new Dictionary<string, ShieldDesign>();
+        foreach (var shield in list) {
+            shieldByName.Add(shield.name, shield);
+        }
     }
 }

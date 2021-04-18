@@ -25,7 +25,7 @@ public class ScavengerStarBaseNode : StarBaseNode {
 
         var vesselProduced = ProcessProduction();
         if (vesselProduced != null) {
-            VesselFactory.Init(vesselProduced, vesselProduced.design);
+            VesselFactory.Init(vesselProduced, vesselProduced.Design());
         }
 
         ProcessResources();
@@ -60,14 +60,14 @@ public class ScavengerStarBaseNode : StarBaseNode {
         }
 
         if (starBase.mineralsStock > 100 && starBase.powerStock > 50) {
-            starBase.productionQueue.Enqueue(VesselDesign.Find("Scavenger", "Marauder"));
+            starBase.productionQueue.Enqueue("Marauder");
             return;
         }
         var roll = QRandom.Float();
         if (roll < 0.6) {
-            starBase.productionQueue.Enqueue(VesselDesign.Find("Scavenger", "Raider"));
+            starBase.productionQueue.Enqueue("Raider");
         } else {
-            starBase.productionQueue.Enqueue(VesselDesign.Find("Scavenger", "Marauder"));
+            starBase.productionQueue.Enqueue("Marauder");
         }
     }
 

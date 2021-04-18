@@ -12,7 +12,7 @@ public static class ItemInfo {
         } else if (item is ShieldDesign shield) {
             return shield.name;
         } else if (item is Vessel vessel) {
-            return Name(vessel.design);
+            return Name(vessel.Design());
         } else if (item is VesselDesign vesselDesign) {
             return vesselDesign.affiliation + " " + vesselDesign.name;
         }
@@ -50,7 +50,7 @@ public static class ItemInfo {
         } else if (item is ShieldDesign shield) {
             return shield.sellingPrice;
         } else if (item is Vessel vessel) {
-            return SellingPrice(vessel.design);
+            return SellingPrice(vessel.Design());
         } else if (item is VesselDesign vesselDesign) {
             return vesselDesign.sellingPrice;
         }
@@ -64,7 +64,7 @@ public static class ItemInfo {
         } else if (item is ShieldDesign shield) {
             return ShieldMinStarBaseLevel(shield);
         } else if (item is Vessel vessel) {
-            return MinStarBaseLevel(vessel.design);
+            return MinStarBaseLevel(vessel.Design());
         } else if (item is VesselDesign vesselDesign) {
             return VesselMinStarBaseLevel(vesselDesign);
         }

@@ -72,10 +72,10 @@ public class ShipyardScreen : Node2D {
         {
             int i = 0;
             var productionQueue = GetNode<Panel>("ProductionQueue");
-            foreach (var vesselDesign in _starBase.productionQueue) {
+            foreach (var vesselDesignName in _starBase.productionQueue) {
                 var order = productionQueue.GetNode<Sprite>($"Order{i}");
                 var sprite = order.GetNode<Sprite>("Sprite");
-                sprite.Texture = ItemInfo.Texture(vesselDesign);
+                sprite.Texture = ItemInfo.Texture(VesselDesign.Find(vesselDesignName));
                 i++;
             }
         }
@@ -126,7 +126,7 @@ public class ShipyardScreen : Node2D {
         UpdateFleet();
         UpdateGarrison();
 
-        var ark = VesselFactory.NewVessel(_gameState.humanPlayer, VesselDesign.Find("Earthling", "Ark"));
+        var ark = VesselFactory.NewVessel(_gameState.humanPlayer, VesselDesign.Find("Ark"));
         ark.pilotName = PilotNames.UniqHumanName(_gameState.usedNames);
         VesselFactory.PadEquipment(ark);
         _gameState.humanUnit.fleet.Add(ark);
@@ -168,7 +168,7 @@ public class ShipyardScreen : Node2D {
             var productionQueue = GetNode<Panel>("ProductionQueue");
             var progressValue = 0;
             if (_starBase.productionQueue.Count != 0) {
-                var vesselDesign = _starBase.productionQueue.Peek();
+                var vesselDesign = VesselDesign.Find(_starBase.productionQueue.Peek());
                 progressValue = QMath.Percantage(_starBase.productionProgress, vesselDesign.productionTime);
             }
             productionQueue.GetNode<Label>("ProgressValue").Text = progressValue + "%";
@@ -230,7 +230,7 @@ public class ShipyardScreen : Node2D {
         if (starBase.productionQueue.Count == 0) {
             GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/production_started.wav"));
         }
-        starBase.productionQueue.Enqueue(_selectedMerchandise.item);
+        starBase.productionQueue.Enqueue(_selectedMerchandise.item.name);
 
         UpdateUI();
     }

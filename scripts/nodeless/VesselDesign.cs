@@ -55,13 +55,11 @@ public class VesselDesign: AbstractItem {
         return GD.Load<Texture>($"res://images/vessel/{affiliation}_{name}.png");
     }
 
-    public static VesselDesign Find(string affiliation, string name) {
-        foreach (var d in list) {
-            if (d.name == name && d.affiliation == affiliation) {
-                return d;
-            }
+    public static VesselDesign Find(string name) {
+        if (designByName.ContainsKey(name)) {
+            return designByName[name];
         }
-        throw new Exception($"can't find {name}/{affiliation} vessel design");
+        throw new Exception($"can't find {name} vessel design");
     }
 
     public override ItemKind Kind() { return ItemKind.VesselDesign; }
@@ -97,6 +95,15 @@ public class VesselDesign: AbstractItem {
             return "normal";
         }
         return "large";
+    }
+
+    private static Dictionary<string, VesselDesign> designByName;
+
+    public static void InitLists() {
+        designByName = new Dictionary<string, VesselDesign>();
+        foreach (var d in list) {
+            designByName.Add(d.name, d);
+        }
     }
 
     public static VesselDesign[] list = {

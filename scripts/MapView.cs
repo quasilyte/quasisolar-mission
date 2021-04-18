@@ -214,7 +214,7 @@ public class MapView : Node2D {
     private void ProcessStarBaseCasualties(StarBase starBase) {
         starBase.garrison = FindSurvivors(starBase.garrison);
         foreach (var v in starBase.garrison) {
-            v.energy = v.energySource.maxBackupEnergy;
+            v.energy = v.GetEnergySource().maxBackupEnergy;
         }
     }
 
@@ -565,9 +565,9 @@ public class MapView : Node2D {
         var box = unitMembers.GetNode<VBoxContainer>("Box");
 
         foreach (var v in _gameState.humanUnit.fleet) {
-            var hpPercentage = QMath.Percantage(v.hp, v.design.maxHp);
-            var energyPercentage = QMath.Percantage(v.energy, v.energySource.maxBackupEnergy);
-            var m = UnitMemberNode.New(v.pilotName, v.design.Texture(), hpPercentage, energyPercentage);
+            var hpPercentage = QMath.Percantage(v.hp, v.Design().maxHp);
+            var energyPercentage = QMath.Percantage(v.energy, v.GetEnergySource().maxBackupEnergy);
+            var m = UnitMemberNode.New(v.pilotName, v.Design().Texture(), hpPercentage, energyPercentage);
             _unitMembers.Add(m);
             box.AddChild(m);
         }
@@ -1019,8 +1019,8 @@ public class MapView : Node2D {
 
         for (int i = 0; i < _unitMembers.Count; i++) {
             var p = _gameState.humanUnit.fleet[i];
-            var hpPercentage = QMath.Percantage(p.hp, p.design.maxHp);
-            var energyPercentage = QMath.Percantage(p.energy, p.energySource.maxBackupEnergy);
+            var hpPercentage = QMath.Percantage(p.hp, p.Design().maxHp);
+            var energyPercentage = QMath.Percantage(p.energy, p.GetEnergySource().maxBackupEnergy);
             var unit = _unitMembers[i];
             unit.UpdateStatus(hpPercentage, energyPercentage);
         }
@@ -1101,7 +1101,7 @@ public class MapView : Node2D {
 
     private void RecoverFleetEnergy(List<Vessel> fleet) {
         foreach (var v in fleet) {
-            v.energy = v.energySource.maxBackupEnergy;
+            v.energy = v.GetEnergySource().maxBackupEnergy;
         }
     }
 
@@ -1456,7 +1456,7 @@ public class MapView : Node2D {
         // even if it's Ark.
         for (int i = 1; i < _gameState.humanUnit.fleet.Count; i++) {
             var v = _gameState.humanUnit.fleet[i];
-            if (v.design.name == "Ark") {
+            if (v.Design().name == "Ark") {
                 return i;
             }
         }
@@ -1557,7 +1557,7 @@ public class MapView : Node2D {
         var reinforcementsFleet = new List<Vessel>();
         var groupSize = QRandom.IntRange(2, 4);
         var keptInGarrison = alliedBase.garrison.FindAll(v => {
-            if (v.design.level <= 2) {
+            if (v.Design().level <= 2) {
                 return true;
             }
             if (reinforcementsFleet.Count == groupSize) {
@@ -1640,7 +1640,7 @@ public class MapView : Node2D {
         var taskForceFleet = new List<Vessel>();
         var groupSize = QRandom.IntRange(2, 4);
         var keptInGarrison = nearestStarBase.garrison.FindAll(v => {
-            if (v.design.level <= 2) {
+            if (v.Design().level <= 2) {
                 return true;
             }
             if (taskForceFleet.Count == groupSize) {
