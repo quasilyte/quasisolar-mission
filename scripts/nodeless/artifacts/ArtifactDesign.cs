@@ -14,6 +14,8 @@ public class ArtifactDesign : AbstractItem {
 
     public override ItemKind Kind() { return ItemKind.Artifact; }
 
+    public static Dictionary<string, ArtifactDesign> artifactByName;
+
     public override string RenderHelp() {
         if (name == "Empty") {
             // A special case.
@@ -38,12 +40,7 @@ public class ArtifactDesign : AbstractItem {
     }
 
     public static ArtifactDesign Find(string name) {
-        foreach (var d in list) {
-            if (d.name == name) {
-                return d;
-            }
-        }
-        throw new Exception($"can't find {name} artifact design");
+        return artifactByName[name];
     }
 
     public static void InitLists() {
@@ -61,5 +58,11 @@ public class ArtifactDesign : AbstractItem {
             ShieldProlongerArtifact.Design,
         };
         Array.Sort(list, (x, y) => x.sellingPrice.CompareTo(y.sellingPrice));
+
+        artifactByName = new Dictionary<string, ArtifactDesign>();
+        foreach (var a in list) {
+            artifactByName.Add(a.name, a);
+        }
+        artifactByName.Add("Empty", EmptyArtifact.Design);
     }
 }

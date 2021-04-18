@@ -149,5 +149,7 @@ public class WeaponDesign : AbstractItem {
         foreach (var w in specialList) {
             weaponByName.Add(w.name, w);
         }
+
+        weaponByName.Add("Empty", EmptyWeapon.Design);
     }
 }

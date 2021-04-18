@@ -82,5 +82,6 @@ public class ShieldDesign : AbstractItem {
         foreach (var shield in list) {
             shieldByName.Add(shield.name, shield);
         }
+        shieldByName.Add("Empty", EmptyShield.Design);
     }
 }
