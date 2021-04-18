@@ -220,7 +220,7 @@ public class RpgGameState {
 
     public int drones = 0;
     public int dronePrice;
-    public int dronwsOwned = 0;
+    public int dronesOwned = 0;
 
     public ulong seed;
 

@@ -851,7 +851,7 @@ public class MapView : Node2D {
     }
 
     private void OnDroneDestroyed(SpaceUnitNode unitNode) {
-        _gameState.dronwsOwned--;
+        _gameState.dronesOwned--;
         GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/interface/generic_notification.wav"));
         var notification = MapBadNotificationNode.New("Drone destroyed");
         AddChild(notification);

@@ -390,7 +390,7 @@ public class EquipmentShopScreen : Node2D {
     private void UpdateUI() {
         var starBase = _gameState.enteredBase;
 
-        _dronesPopup.GetNode<Label>("ControlLimitValue").Text = _gameState.dronwsOwned + "/" + RpgGameState.MaxDrones();
+        _dronesPopup.GetNode<Label>("ControlLimitValue").Text = _gameState.dronesOwned + "/" + RpgGameState.MaxDrones();
 
         GetNode<Label>("Status/CreditsValue").Text = _gameState.credits.ToString();
         GetNode<Label>("Status/FuelValue").Text = ((int)_gameState.fuel).ToString() + "/" + RpgGameState.MaxFuel().ToString();
@@ -442,7 +442,7 @@ public class EquipmentShopScreen : Node2D {
     }
 
     private bool CanBuyDrone() {
-        return _gameState.credits >= _gameState.dronePrice && _gameState.dronwsOwned < RpgGameState.MaxDrones();
+        return _gameState.credits >= _gameState.dronePrice && _gameState.dronesOwned < RpgGameState.MaxDrones();
     }
 
     private void PlayMoneySound() {
@@ -487,7 +487,7 @@ public class EquipmentShopScreen : Node2D {
             return;
         }
         _gameState.drones++;
-        _gameState.dronwsOwned++;
+        _gameState.dronesOwned++;
         _gameState.credits -= _gameState.dronePrice;
         PlayMoneySound();
         UpdateUI();
