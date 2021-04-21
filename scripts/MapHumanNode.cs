@@ -3,9 +3,9 @@ using System;
 
 public class MapHumanNode : Node2D {
     public SpaceUnitNode node;
-    public Player player;
 
     private RpgGameState _gameState;
+    private SpaceUnit _unit;
 
     private Label _destDistValueLabel;
 
@@ -21,6 +21,7 @@ public class MapHumanNode : Node2D {
 
     public override void _Ready() {
         _gameState = RpgGameState.instance;
+        _unit = _gameState.humanUnit.Get();
         _destDistValueLabel = GetNode<Label>("DestinationDistanceValue");
         node.Connect("PositionChanged", this, nameof(OnPositionChanged));
         node.Connect("DestinationReached", this, nameof(OnDestinationReached));
@@ -52,14 +53,14 @@ public class MapHumanNode : Node2D {
     }
 
     private void OnDestinationReached() {
-        _gameState.humanUnit.pos = node.GlobalPosition;
+        _unit.pos = node.GlobalPosition;
         _destDistValueLabel.Visible = false;
     }
 
     private void OnPositionChanged(float traveled) {
         GlobalPosition = node.GlobalPosition;
         _gameState.fuel -= traveled / 2;
-        _gameState.humanUnit.pos = node.GlobalPosition;
+        _unit.pos = node.GlobalPosition;
         var dest = node.GetDestination();
         if (dest == Vector2.Zero) {
             return;

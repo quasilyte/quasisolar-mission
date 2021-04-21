@@ -1,7 +1,13 @@
 using Godot;
 using System.Collections.Generic;
 
-public class SpaceUnit {
+public class SpaceUnit: AbstractPoolValue {
+    public struct Ref {
+        public int id;
+        public SpaceUnit Get() { return RpgGameState.instance.spaceUnits.Get(id); }
+    }
+    public Ref GetRef() { return new Ref{id = id}; }
+
     public enum Program {
         GenericBehavior,
         KrigiaPatrol,
@@ -11,19 +17,20 @@ public class SpaceUnit {
 
     public const int maxFleetSize = 4;
 
-    public Player owner;
+    public Faction owner;
     public Vector2 pos;
     public Vector2 waypoint = Vector2.Zero;
-    public List<Vessel> fleet = new List<Vessel>();
+    public List<Vessel.Ref> fleet = new List<Vessel.Ref>();
     public SpaceUnitCargo cargo = new SpaceUnitCargo();
 
     public int botSystemLeaveDelay = 0;
     public Program botProgram = Program.GenericBehavior;
+    public StarBase.Ref botOrigin;
 
     public int FleetCost() {
         var cost = 0;
         foreach (var v in fleet) {
-            cost += v.TotalCost();
+            cost += v.Get().TotalCost();
         }
         return cost;
     }
@@ -31,7 +38,7 @@ public class SpaceUnit {
     public int CargoCapacity() {
         int max = 0;
         foreach (var v in fleet) {
-            max += v.Design().cargoSpace;
+            max += v.Get().Design().cargoSpace;
         }
         return max;
     }

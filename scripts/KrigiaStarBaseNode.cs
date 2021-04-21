@@ -63,22 +63,21 @@ public class KrigiaStarBaseNode : StarBaseNode {
         }
 
         var destination = Vector2.Zero;
-        var destinationOptions = RpgGameState.starSystemConnections[starBase.System()];
+        var destinationOptions = RpgGameState.starSystemConnections[starBase.system.Get()];
         var destinationSystem = QRandom.Element(destinationOptions);
-        if (destinationSystem.pos.DistanceTo(starBase.System().pos) <= InfluenceRadius()) {
+        if (destinationSystem.pos.DistanceTo(starBase.system.Get().pos) <= InfluenceRadius()) {
             destination = destinationSystem.pos;
         }
         if (destination == Vector2.Zero) {
             return;
         }
 
-        var spaceUnit = new SpaceUnit {
-            owner = _gameState.krigiaPlayer,
-            pos = starBase.System().pos,
-            waypoint = destination,
-            botProgram = SpaceUnit.Program.KrigiaPatrol,
-        };
-        _gameState.starBaseBySpaceUnit[spaceUnit] = starBase;
+        var spaceUnit = _gameState.spaceUnits.New();
+        spaceUnit.owner = Faction.Krigia;
+        spaceUnit.pos = starBase.system.Get().pos;
+        spaceUnit.waypoint = destination;
+        spaceUnit.botProgram = SpaceUnit.Program.KrigiaPatrol;
+        spaceUnit.botOrigin = starBase.GetRef();
 
         var minGroupSize = 1;
         var maxGroupSize = 1;
@@ -90,7 +89,7 @@ public class KrigiaStarBaseNode : StarBaseNode {
         }
         var groupSize = QRandom.IntRange(minGroupSize, maxGroupSize);
         var keptInGarrison = starBase.garrison.FindAll(v => {
-            if (v.Design().level > 2) {
+            if (v.Get().Design().level > 2) {
                 return true;
             }
             if (spaceUnit.fleet.Count == groupSize) {
@@ -105,8 +104,7 @@ public class KrigiaStarBaseNode : StarBaseNode {
         }
         starBase.garrison = keptInGarrison;
 
-        _gameState.spaceUnits.Add(spaceUnit);
-        starBase.units.Add(spaceUnit);
+        starBase.units.Add(spaceUnit.GetRef());
 
         starBase.botPatrolDelay = QRandom.IntRange(100, 200);
 

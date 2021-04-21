@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class EquipmentShopScreen : Node2D {
     class Merchandise {
         public Sprite sprite;
-        public AbstractItem item;
+        public IItem item;
     }
 
     private bool _lockControls = false;
@@ -17,6 +17,10 @@ public class EquipmentShopScreen : Node2D {
     private Popup _sellEquipmentPopup;
 
     private RpgGameState _gameState;
+
+    private SpaceUnit _humanUnit;
+
+    private List<IItem> _shopSelection;
 
     private ItemSlotNode _sellItemSlot;
     private ItemSlotNode _sellItemFallbackSlot;
@@ -39,6 +43,9 @@ public class EquipmentShopScreen : Node2D {
 
     public override void _Ready() {
         _gameState = RpgGameState.instance;
+        _humanUnit = RpgGameState.instance.humanUnit.Get();
+
+        _shopSelection = RpgGameState.enteredBase.ShopSelection();
 
         SetupUI();
 
@@ -84,9 +91,9 @@ public class EquipmentShopScreen : Node2D {
             GetNode<Button>("Status/RefuelButton").Disabled = true;
         }
 
-        for (int i = 0; i < _gameState.humanUnit.fleet.Count; i++) {
-            var u = _gameState.humanUnit.fleet[i];
-            if (u == null) {
+        for (int i = 0; i < _humanUnit.fleet.Count; i++) {
+            var u = _humanUnit.fleet[i];
+            if (u.id == 0) {
                 break;
             }
             var panel = GetNode<Sprite>($"UnitMenu/Unit{i}");
@@ -94,7 +101,7 @@ public class EquipmentShopScreen : Node2D {
             button.RectSize = new Vector2(64, 64);
             button.Expand = true;
             button.StretchMode = TextureButton.StretchModeEnum.KeepCentered;
-            button.TextureNormal = u.Design().Texture();
+            button.TextureNormal = u.Get().Design().Texture();
             panel.AddChild(button);
             button.Connect("pressed", this, nameof(OnMemberSelected), new Godot.Collections.Array { i });
         }
@@ -172,7 +179,7 @@ public class EquipmentShopScreen : Node2D {
                 var storagePanel = GetNode<Sprite>($"Storage/Item{i}");
                 var itemSlot = ItemSlotNode.New(i, ItemKind.Storage);
                 itemSlot.SetAssignItemCallback((int index, DraggableItemNode itemNode) => {
-                    _gameState.storage[index] = itemNode != null ? itemNode.item : null;
+                    _gameState.PutItemToStorage(itemNode != null ? itemNode.item : null, index);
                     return true;
                 });
                 itemSlot.Reset(null, true);
@@ -180,7 +187,7 @@ public class EquipmentShopScreen : Node2D {
                 storagePanel.AddChild(itemSlot);
 
                 if (_gameState.storage[i] != null) {
-                    var itemNode = DraggableItemNode.New(itemSlot, _gameState.storage[i]);
+                    var itemNode = DraggableItemNode.New(itemSlot, _gameState.storage[i].ToItem());
                     itemSlot.ApplyItem(null, itemNode);
                     GetTree().CurrentScene.AddChild(itemNode);
                     itemNode.GlobalPosition = storagePanel.GlobalPosition;
@@ -208,14 +215,14 @@ public class EquipmentShopScreen : Node2D {
     private void SelectMember(int vesselIndex) {
         var panel = GetNode<Panel>("UnitMenu");
 
-        for (int i = 0; i < _gameState.humanUnit.fleet.Count; i++) {
+        for (int i = 0; i < _humanUnit.fleet.Count; i++) {
             GetNode<Sprite>($"UnitMenu/Unit{i}").Frame = 1;
         }
 
         var unitPanel = GetNode<Sprite>($"UnitMenu/Unit{vesselIndex}");
         unitPanel.Frame = 2;
 
-        var u = _gameState.humanUnit.fleet[vesselIndex];
+        var u = _humanUnit.fleet[vesselIndex].Get();
         _selectedVessel = u;
 
         panel.GetNode<Sprite>("VesselDesign/Sprite").Texture = u.Design().Texture();
@@ -318,9 +325,9 @@ public class EquipmentShopScreen : Node2D {
 
         int i = 0;
         category = category.Replace(" ", ""); // "Special Weapon" -> "SpecialWeapon"
-        for (int itemIndex = 0; itemIndex < RpgGameState.enteredBase.shopSelection.Count; itemIndex++) {
-            var item = RpgGameState.enteredBase.shopSelection[itemIndex];
-            if (item.Kind().ToString() != category) {
+        for (int itemIndex = 0; itemIndex < _shopSelection.Count; itemIndex++) {
+            var item = _shopSelection[itemIndex];
+            if (item.GetItemKind().ToString() != category) {
                 continue;
             }
             var shopPanel = _equipmentSlots[i];
@@ -338,12 +345,12 @@ public class EquipmentShopScreen : Node2D {
         if (_selectedMerchandise.sprite != null) {
             _selectedMerchandise.sprite.Frame = 1;
         }
-        var item = RpgGameState.enteredBase.shopSelection[itemIndex];
+        var item = _shopSelection[itemIndex];
         _selectedMerchandise.sprite = _equipmentSlots[merchIndex];
         _selectedMerchandise.item = item;
         _selectedMerchandise.sprite.Frame = 2;
 
-        GetNode<Label>("EquipmentInfo/InfoBoxMerchandise/Body").Text = item.RenderHelp();
+        GetNode<Label>("EquipmentInfo/InfoBoxMerchandise/Body").Text = ItemInfo.RenderHelp(item);
 
         UpdateUI();
     }
@@ -358,12 +365,12 @@ public class EquipmentShopScreen : Node2D {
         PlayMoneySound();
         for (int i = 0; i < _gameState.storage.Length; i++) {
             if (_gameState.storage[i] == null) {
-                _gameState.storage[i] = item;
+                _gameState.PutItemToStorage(item, i);
 
                 var storagePanel = GetNode<Sprite>($"Storage/Item{i}");
                 var itemSlot = storagePanel.GetNode<ItemSlotNode>("Slot");
                 itemSlot.Reset(null, true);
-                var itemNode = DraggableItemNode.New(itemSlot, _gameState.storage[i]);
+                var itemNode = DraggableItemNode.New(itemSlot, _gameState.storage[i].ToItem());
                 itemSlot.ApplyItem(null, itemNode);
                 GetTree().CurrentScene.AddChild(itemNode);
                 itemNode.GlobalPosition = storagePanel.GlobalPosition;
@@ -394,7 +401,7 @@ public class EquipmentShopScreen : Node2D {
 
         GetNode<Label>("Status/CreditsValue").Text = _gameState.credits.ToString();
         GetNode<Label>("Status/FuelValue").Text = ((int)_gameState.fuel).ToString() + "/" + RpgGameState.MaxFuel().ToString();
-        GetNode<Label>("Status/CargoValue").Text = _gameState.humanUnit.CargoSize() + "/" + _gameState.humanUnit.CargoCapacity();
+        GetNode<Label>("Status/CargoValue").Text = _humanUnit.CargoSize() + "/" + _humanUnit.CargoCapacity();
 
         GetNode<TextureProgress>("UnitMenu/HealthBar").Value = QMath.Percantage(_selectedVessel.hp, _selectedVessel.Design().maxHp);
 
@@ -407,15 +414,15 @@ public class EquipmentShopScreen : Node2D {
         _dronesPopup.GetNode<Label>("BuyDrone/Value").Text = _gameState.drones.ToString();
         _dronesPopup.GetNode<Button>("BuyDrone").Disabled = !CanBuyDrone();
 
-        _cargoPopup.GetNode<Label>("SellDebris/Value").Text = _gameState.humanUnit.DebrisCount().ToString();
+        _cargoPopup.GetNode<Label>("SellDebris/Value").Text = _humanUnit.DebrisCount().ToString();
         _cargoPopup.GetNode<Label>("SellDebris/Price").Text = RpgGameState.DebrisSellPrice().ToString();
-        _cargoPopup.GetNode<Label>("SellMinerals/Value").Text = _gameState.humanUnit.cargo.minerals.ToString();
+        _cargoPopup.GetNode<Label>("SellMinerals/Value").Text = _humanUnit.cargo.minerals.ToString();
         _cargoPopup.GetNode<Label>("SellMinerals/Price").Text = RpgGameState.MineralsSellPrice().ToString();
         _cargoPopup.GetNode<Label>("SellMinerals/Stock").Text = starBase.mineralsStock.ToString();
-        _cargoPopup.GetNode<Label>("SellOrganic/Value").Text = _gameState.humanUnit.cargo.organic.ToString();
+        _cargoPopup.GetNode<Label>("SellOrganic/Value").Text = _humanUnit.cargo.organic.ToString();
         _cargoPopup.GetNode<Label>("SellOrganic/Price").Text = RpgGameState.OrganicSellPrice().ToString();
         _cargoPopup.GetNode<Label>("SellOrganic/Stock").Text = starBase.organicStock.ToString();
-        _cargoPopup.GetNode<Label>("SellPower/Value").Text = _gameState.humanUnit.cargo.power.ToString();
+        _cargoPopup.GetNode<Label>("SellPower/Value").Text = _humanUnit.cargo.power.ToString();
         _cargoPopup.GetNode<Label>("SellPower/Price").Text = RpgGameState.PowerSellPrice().ToString();
         _cargoPopup.GetNode<Label>("SellPower/Stock").Text = starBase.powerStock.ToString();
 
@@ -499,9 +506,9 @@ public class EquipmentShopScreen : Node2D {
     }
 
     private void OnCargoSellDebrisButton() {
-        var cargo = _gameState.humanUnit.cargo;
+        var cargo = _humanUnit.cargo;
 
-        _gameState.credits += RpgGameState.DebrisSellPrice() * _gameState.humanUnit.DebrisCount();
+        _gameState.credits += RpgGameState.DebrisSellPrice() * _humanUnit.DebrisCount();
         _gameState.krigiaMaterial += cargo.krigiaDeris;
         _gameState.wertuMaterial += cargo.wertuDebris;
         _gameState.zythMaterial += cargo.zythDebris;
@@ -516,25 +523,25 @@ public class EquipmentShopScreen : Node2D {
     }
 
     private void OnCargoSellMineralsButton() {
-        _gameState.credits += RpgGameState.MineralsSellPrice() * _gameState.humanUnit.cargo.minerals;
-        RpgGameState.enteredBase.mineralsStock += _gameState.humanUnit.cargo.minerals;
-        _gameState.humanUnit.cargo.minerals = 0;
+        _gameState.credits += RpgGameState.MineralsSellPrice() * _humanUnit.cargo.minerals;
+        RpgGameState.enteredBase.mineralsStock += _humanUnit.cargo.minerals;
+        _humanUnit.cargo.minerals = 0;
         PlayMoneySound();
         UpdateUI();
     }
 
     private void OnCargoSellOrganicButton() {
-        _gameState.credits += RpgGameState.OrganicSellPrice() * _gameState.humanUnit.cargo.organic;
-        RpgGameState.enteredBase.organicStock += _gameState.humanUnit.cargo.organic;
-        _gameState.humanUnit.cargo.organic = 0;
+        _gameState.credits += RpgGameState.OrganicSellPrice() * _humanUnit.cargo.organic;
+        RpgGameState.enteredBase.organicStock += _humanUnit.cargo.organic;
+        _humanUnit.cargo.organic = 0;
         PlayMoneySound();
         UpdateUI();
     }
 
     private void OnCargoSellPowerButton() {
-        _gameState.credits += RpgGameState.PowerSellPrice() * _gameState.humanUnit.cargo.power;
-        RpgGameState.enteredBase.powerStock += _gameState.humanUnit.cargo.power;
-        _gameState.humanUnit.cargo.power = 0;
+        _gameState.credits += RpgGameState.PowerSellPrice() * _humanUnit.cargo.power;
+        RpgGameState.enteredBase.powerStock += _humanUnit.cargo.power;
+        _humanUnit.cargo.power = 0;
         PlayMoneySound();
         UpdateUI();
     }

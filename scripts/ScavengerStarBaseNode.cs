@@ -79,18 +79,16 @@ public class ScavengerStarBaseNode : StarBaseNode {
             return;
         }
 
-        var spaceUnit = new SpaceUnit {
-            owner = _gameState.scavengerPlayer,
-            pos = starBase.System().pos,
-        };
+        var spaceUnit = _gameState.spaceUnits.New();
+        spaceUnit.owner = Faction.Scavenger;
+        spaceUnit.pos = starBase.system.Get().pos;
 
         var groupSize = QRandom.IntRange(1, 2);
         for (int i = 0; i < groupSize; i++) {
             spaceUnit.fleet.Add(starBase.PopVessel());
         }
 
-        _gameState.spaceUnits.Add(spaceUnit);
-        starBase.units.Add(spaceUnit);
+        starBase.units.Add(spaceUnit.GetRef());
 
         var unitNode = ScavengerSpaceUnitNode.New(spaceUnit);
         EmitSignal(nameof(SpaceUnitCreated), new object[] { unitNode });

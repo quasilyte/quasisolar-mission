@@ -1,8 +1,13 @@
 using Godot;
 using System.Collections.Generic;
 
-public class StarSystem {
-    public int id;
+public class StarSystem: AbstractPoolValue {
+    public struct Ref {
+        public int id;
+        public StarSystem Get() { return RpgGameState.instance.starSystems.Get(id); }
+    }
+    public Ref GetRef() { return new Ref{id = id}; }
+
     public string name;
     public StarColor color;
     public Vector2 pos;
@@ -15,7 +20,7 @@ public class StarSystem {
 
     public List<ResourcePlanet> resourcePlanets = new List<ResourcePlanet>{};
 
-    public StarBase starBase;
+    public StarBase.Ref starBase;
 
     public string artifact;
     public int artifactRecoveryDelay;

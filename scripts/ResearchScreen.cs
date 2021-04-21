@@ -19,14 +19,6 @@ public class ResearchScreen : Node2D {
 
         _researchList = new List<Research>(Research.list);
 
-        foreach (var art in _gameState.artifactsRecovered) {
-            _researchList.Add(new Research{
-                name = art,
-                category = Research.Category.NewArtifact,
-                researchTime = 40,
-            });
-        }
-
         _researchList.Sort((x, y) => x.name.CompareTo(y.name));
 
         SetupUI();
@@ -52,6 +44,9 @@ public class ResearchScreen : Node2D {
                 continue;
             }
             if (r.material == Research.Material.Zyth && !_gameState.metZyth) {
+                continue;
+            }
+            if (r.category == Research.Category.NewArtifact && !_gameState.artifactsRecovered.Contains(r.name)) {
                 continue;
             }
 

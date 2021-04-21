@@ -130,7 +130,7 @@ public class Arena : Node2D {
             var vessel = ArenaSettings.combatants[i];
             var pilot = new Pilot{
                 name = vessel.pilotName,
-                alliance = vessel.player.Alliance,
+                alliance = (int)vessel.faction,
             };
             _pilots.Add(pilot);
             _pilotByVessel[vessel] = pilot;
@@ -283,9 +283,10 @@ public class Arena : Node2D {
 
     private void TriggerDefeat() {
         RpgGameState.transition = RpgGameState.MapTransition.UnitDestroyed;
-        _gameState.humanUnit.fleet = new List<Vessel>{_gameState.humanUnit.fleet[0]};
-        _gameState.humanUnit.fleet[0].hp = 0;
-        _gameState.humanUnit.fleet[0].energy = 0;
+        var unit = _gameState.humanUnit.Get();
+        unit.fleet = new List<Vessel.Ref>{unit.fleet[0]};
+        unit.fleet[0].Get().hp = 0;
+        unit.fleet[0].Get().energy = 0;
         ChangeSceneAfterDelay("MapView");
     }
 
@@ -315,7 +316,7 @@ public class Arena : Node2D {
             var vessel = _vesselByPilot[p];
             if (p.Active) {
                 var hpLoss = vessel.hp - p.Vessel.State.hp;
-                if (vessel.player == _gameState.humanPlayer) {
+                if (vessel.faction == Faction.Human) {
                     if (_gameState.skillsLearned.Contains("Repair II")) {
                         hpLoss *= 0.8f;
                     } else if (_gameState.skillsLearned.Contains("Repair I")) {
@@ -323,7 +324,7 @@ public class Arena : Node2D {
                     }
                 }
                 var energyLoss = vessel.energy - p.Vessel.State.backupEnergy;
-                if (vessel.player == _gameState.humanPlayer) {
+                if (vessel.faction == Faction.Human) {
                     if (_gameState.skillsLearned.Contains("Repair II")) {
                         energyLoss *= 0.75f;
                     }
@@ -348,7 +349,7 @@ public class Arena : Node2D {
                 } else {
                     result.genericDebris += debris;
                 }
-                if (p.alliance != _gameState.humanPlayer.Alliance) {
+                if (_flagshipPilot != null && p.alliance != _flagshipPilot.alliance) {
                     result.exp += p.Vessel.State.vesselLevel * 3;
                 }
             }
@@ -363,7 +364,8 @@ public class Arena : Node2D {
     }
 
     private void HandleVictory(List<Pilot> survivors, int alliance, BattleResult result) {
-        if (alliance != _gameState.humanPlayer.Alliance) {
+        // In campaign, alliance=0 is a human-allied side.
+        if (alliance != 0) {
             if (_flagshipPilot != null) {
                 TriggerDefeat();
                 return;

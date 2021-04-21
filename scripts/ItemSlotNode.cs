@@ -54,12 +54,12 @@ public class ItemSlotNode : Node2D {
             case ItemKind.Storage:
                 break; // OK
             case ItemKind.GarrisonVessel:
-                if (itemNode.item.Kind() != ItemKind.Vessel) {
+                if (itemNode.item.GetItemKind() != ItemKind.Vessel) {
                     return false;
                 }
                 break;
             case ItemKind.Shield:
-                if (itemNode.item.Kind() != ItemKind.Shield) {
+                if (itemNode.item.GetItemKind() != ItemKind.Shield) {
                     return false;
                 }
                 if (_vessel != null && _vessel.Design().maxShieldLevel < ((ShieldDesign)itemNode.item).level) {
@@ -67,7 +67,7 @@ public class ItemSlotNode : Node2D {
                 }
                 break;
             default:
-                if (_itemKind != itemNode.item.Kind()) {
+                if (_itemKind != itemNode.item.GetItemKind()) {
                     return false;
                 }
                 break;

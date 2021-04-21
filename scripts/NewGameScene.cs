@@ -190,7 +190,6 @@ public class NewGameScene : Node2D {
         gameStateInstance.InitStaticState(true);
         RpgGameState.instance = gameStateInstance;
 
-
         GetTree().ChangeScene("res://scenes/MapView.tscn");
     }
 
@@ -252,27 +251,6 @@ public class NewGameScene : Node2D {
 
             skills = skills,
             randomEvents = randomEvents,
-
-            humanPlayer = new Player {
-                PlayerName = GetNode<LineEdit>("PlayerName").Text,
-                Alliance = 1,
-            },
-            scavengerPlayer = new Player{
-                PlayerName = "Scavenger",
-                Alliance = 6,
-            },
-            krigiaPlayer = new Player {
-                PlayerName = "Krigia",
-                Alliance = 2,
-            },
-            wertuPlayer = new Player {
-                PlayerName = "Wertu",
-                Alliance = 4,
-            },
-            zythPlayer = new Player {
-                PlayerName = "Zyth",
-                Alliance = 3,
-            },
         };
 
         return config;
@@ -383,8 +361,8 @@ public class NewGameScene : Node2D {
         new VesselTemplate{design = VesselDesign.Find("Dominator"), roll = 0.85f},
     };
 
-    private void InitFleet(StarBase starBase, VesselTemplate[] templates, float budget) {
-        var fleet = new List<Vessel> { };
+    private void InitFleet(RpgGameState.Config config, StarBase starBase, VesselTemplate[] templates, float budget) {
+        var fleet = new List<Vessel.Ref> { };
         var cheapest = (float)templates[0].design.sellingPrice / 1000;
 
         while (budget >= cheapest) {
@@ -401,13 +379,12 @@ public class NewGameScene : Node2D {
                 if (budget < cost) {
                     continue;
                 }
-                var v = new Vessel {
-                    isBot = true,
-                    pilotName = $"{starBase.owner.PlayerName}", // FIXME
-                    player = starBase.owner,
-                };
+                var v = config.vessels.New();
+                v.isBot = true;
+                v.pilotName = starBase.owner.ToString(); // FIXME
+                v.faction = starBase.owner;
                 VesselFactory.Init(v, _template.design);
-                fleet.Add(v);
+                fleet.Add(v.GetRef());
                 budget -= cost;
                 break;
             }
@@ -418,43 +395,58 @@ public class NewGameScene : Node2D {
         GD.Print("fleet = " + fleet.Count);
     }
 
-    private void InitKrigiaFleet(StarBase starBase, float budget) {
-        InitFleet(starBase, _krigiaTemplates, budget);
+    private void InitKrigiaFleet(RpgGameState.Config config, StarBase starBase, float budget) {
+        InitFleet(config, starBase, _krigiaTemplates, budget);
     }
 
-    private void InitWertuFleet(StarBase starBase, float budget) {
-        InitFleet(starBase, _wertuTemplates, budget);
+    private void InitWertuFleet(RpgGameState.Config config, StarBase starBase, float budget) {
+        InitFleet(config, starBase, _wertuTemplates, budget);
     }
 
-    private void InitScavengerFleet(StarBase starBase, float budget) {
-        InitFleet(starBase, _scavengerTemplates, budget);
+    private void InitScavengerFleet(RpgGameState.Config config, StarBase starBase, float budget) {
+        InitFleet(config, starBase, _scavengerTemplates, budget);
     }
 
-    private void DeployBases(Player player, int numBases, Sector[] sectors, VesselTemplate[] templates) {
+    private StarBase NewStarBase(RpgGameState.Config config, Faction owner, int level) {
+        var starBase = config.starBases.New();
+        starBase.level = level;
+        starBase.owner = owner;
+        starBase.mineralsStock = 70 + QRandom.IntRange(0, 30);
+        starBase.organicStock = 10 + QRandom.IntRange(0, 50);
+        starBase.powerStock = QRandom.IntRange(0, 50);
+        return starBase;
+    }
+
+    private void DeployBases(RpgGameState.Config config, Faction faction, int numBases, Sector[] sectors, VesselTemplate[] templates) {
         while (numBases > 0) {
             var col = QRandom.IntRange(1, numMapCols - 1);
             var row = QRandom.IntRange(0, 1);
             var i = row * numMapCols + col;
             var sector = sectors[i];
             var j = QRandom.IntRange(0, sector.systems.Count - 1);
-            if (sector.systems[j].starBase == null) {
+            if (sector.systems[j].starBase.id == 0) {
                 var fleetRollBonus = (float)col * 20;
                 var fleetRoll = QRandom.FloatRange(40, 80) + fleetRollBonus;
                 var baseLevel = col + QRandom.IntRange(1, 2);
-                var starBase = new StarBase(sector.systems[j], player);
-                InitFleet(starBase, templates, fleetRoll);
-                sector.systems[j].starBase = starBase;
+                
+                var starBase = NewStarBase(config, faction, baseLevel);
+                InitFleet(config, starBase, templates, fleetRoll);
+                BindStarBase(starBase, sector.systems[j]);
                 numBases--;
             }
         }
     }
 
-    private StarSystem NewStarSystem(HashSet<string> starSystenNames, Vector2 pos) {
-        var sys = new StarSystem {
-            name = StarSystemNames.UniqStarSystemName(starSystenNames),
-            color = RandomStarSystemColor(),
-            pos = pos,
-        };
+    private void BindStarBase(StarBase starBase, StarSystem system) {
+        system.starBase = starBase.GetRef();
+        starBase.system = system.GetRef();
+    }
+
+    private StarSystem NewStarSystem(RpgGameState.Config config, HashSet<string> starSystenNames, Vector2 pos) {
+        var sys = config.starSystems.New();
+        sys.name = StarSystemNames.UniqStarSystemName(starSystenNames);
+        sys.color = RandomStarSystemColor();
+        sys.pos = pos;
 
         var planetsRollBonus = (float)OptionIntValue("PlanetResources") * 0.20f;
         var planetsBudget = QRandom.FloatRange(0, 0.6f) + planetsRollBonus;
@@ -500,7 +492,7 @@ public class NewGameScene : Node2D {
                 var middle = rect.Position + rect.Size / 2;
 
                 var color = RandomStarSystemColor();
-                sector.systems.Add(NewStarSystem(starSystenNames, RandomizedLocation(middle, 120)));
+                sector.systems.Add(NewStarSystem(config, starSystenNames, RandomizedLocation(middle, 120)));
 
                 var minSystems = 2;
                 var maxSystems = 4;
@@ -509,15 +501,17 @@ public class NewGameScene : Node2D {
                 }
                 var numSystems = QRandom.IntRange(minSystems, maxSystems);
                 for (int j = 0; j < numSystems; j++) {
-                    sector.systems.Add(NewStarSystem(starSystenNames, RandomStarSystemPosition(rect, sector)));
+                    sector.systems.Add(NewStarSystem(config, starSystenNames, RandomStarSystemPosition(rect, sector)));
                 }
             }
         }
 
+        var startingStarBase = NewStarBase(config, Faction.Human, 1);
+
         var startingSystem = sectors[startingSector].systems[0];
         startingSystem.name = "Quasisol";
         startingSystem.color = StarColor.Yellow;
-        startingSystem.starBase = new StarBase(startingSystem, config.humanPlayer);
+        BindStarBase(startingStarBase, startingSystem);
         startingSystem.resourcePlanets = new List<ResourcePlanet>{
             new ResourcePlanet(1, 0, 0),
         };
@@ -537,46 +531,50 @@ public class NewGameScene : Node2D {
         // First step: deploy using the predetermined rules.
         if (OptionValue("KrigiaPresence") != "minimal") {
             var sector = sectors[startingSector];
-            var starBase = new StarBase(sector.systems[1], config.krigiaPlayer, 2);
-            sector.systems[1].starBase = starBase;
-            InitKrigiaFleet(sector.systems[1].starBase, 25);
+            var starBase = NewStarBase(config, Faction.Krigia, 2);
+            BindStarBase(starBase, sector.systems[1]);
+            InitKrigiaFleet(config, starBase, 25);
             numKrigiaBases--;
         }
         {
             var secondSector = startingRow == 0 ? numMapCols : 0;
             var sector = sectors[secondSector];
             var roll = QRandom.FloatRange(35, 55);
-            sector.systems[0].starBase = new StarBase(sector.systems[0], config.krigiaPlayer, 3);
-            InitKrigiaFleet(sector.systems[0].starBase, roll);
-            sector.systems[1].starBase = new StarBase(sector.systems[1], config.scavengerPlayer, 2);
-            InitScavengerFleet(sector.systems[1].starBase, roll);
+
+            var base0 = NewStarBase(config, Faction.Krigia, 3);
+            BindStarBase(base0, sector.systems[0]);
+            InitKrigiaFleet(config, base0, roll);
+
+            var base1 = NewStarBase(config, Faction.Scavenger, 2);
+            BindStarBase(base1, sector.systems[1]);
+            InitScavengerFleet(config, base1, roll);
             numKrigiaBases--;
         }
 
         // Second step: fill everything else.
-        DeployBases(config.krigiaPlayer, numKrigiaBases, sectors, _krigiaTemplates);
-        DeployBases(config.wertuPlayer, numWertuBases, sectors, _wertuTemplates);
+        DeployBases(config, Faction.Krigia, numKrigiaBases, sectors, _krigiaTemplates);
+        DeployBases(config, Faction.Wertu, numWertuBases, sectors, _wertuTemplates);
 
-        foreach (var sector in sectors) {
-            foreach (var sys in sector.systems) {
-                var id = config.starSystems.Count;
-                if (sys == startingSystem) {
-                    config.startingSystemID = id;
-                }
-                if (sys.starBase != null && sys.starBase.owner == config.krigiaPlayer) {
-                    sys.starBase.botPatrolDelay = QRandom.IntRange(10, 60);
-                }
-                sys.id = id;
-                config.starSystems.Add(sys);
-            }
-        }
-        GD.Print($"generated {config.starSystems.Count} star systems");
+        config.startingSystemID = startingSystem.id;
+
+        // foreach (var sector in sectors) {
+        //     foreach (var sys in sector.systems) {
+        //         if (sys == startingSystem) {
+        //             config.startingSystemID = sys.id;
+        //         }
+        //         if (sys.starBase != null && sys.starBase.owner == config.krigiaPlayer) {
+        //             sys.starBase.botPatrolDelay = QRandom.IntRange(10, 60);
+        //         }
+        //     }
+        // }
+
+        GD.Print($"generated {config.starSystems.objects.Count} star systems");
 
         // var artifactsNeeded = 10;
         // var artifacts
         foreach (var art in ArtifactDesign.list) {
             while (true) {
-                var sys = QRandom.Element(config.starSystems);
+                var sys = QRandom.Element(config.starSystems.objects);
                 if (sys.artifact != null) {
                     continue;
                 }
@@ -590,42 +588,42 @@ public class NewGameScene : Node2D {
             }   
         }
 
-        var fleet = new List<Vessel>();
-        var humanVessel = new Vessel {
-            isGamepad = GameControls.preferGamepad,
-            player = config.humanPlayer,
-            pilotName = PilotNames.UniqHumanName(config.usedNames),
-            designName = OptionValue("FlagshipDesign"),
-            energySourceName = "Power Generator",
-            artifacts = new List<string>{
-                EmptyArtifact.Design.name,
-                EmptyArtifact.Design.name,
-                EmptyArtifact.Design.name,
-                EmptyArtifact.Design.name,
-                EmptyArtifact.Design.name,
-            },
-            weapons = new List<string>{
-                IonCannonWeapon.Design.name,
-                EmptyWeapon.Design.name,
-            },
-            specialWeaponName = EmptyWeapon.Design.name,
+        var fleet = new List<Vessel.Ref>();
+        var humanVessel = config.vessels.New();
+        humanVessel.isGamepad = GameControls.preferGamepad;
+        humanVessel.faction = Faction.Human;
+        humanVessel.pilotName = PilotNames.UniqHumanName(config.usedNames);
+        humanVessel.designName = OptionValue("FlagshipDesign");
+        humanVessel.energySourceName = "Power Generator";
+        humanVessel.artifacts = new List<string>{
+            EmptyArtifact.Design.name,
+            EmptyArtifact.Design.name,
+            EmptyArtifact.Design.name,
+            EmptyArtifact.Design.name,
+            EmptyArtifact.Design.name,
         };
+        humanVessel.weapons = new List<string>{
+            IonCannonWeapon.Design.name,
+            EmptyWeapon.Design.name,
+        };
+        humanVessel.specialWeaponName = EmptyWeapon.Design.name;
         VesselFactory.InitStats(humanVessel);
-        fleet.Add(humanVessel);
+        fleet.Add(humanVessel.GetRef());
 
         for (int i = 0; i < OptionIntValue("StartingFleet"); i++) {
-            var v = new Vessel {
-                isBot = true,
-                player = config.humanPlayer,
-                pilotName = PilotNames.UniqHumanName(config.usedNames),
-            };
+            var v = config.vessels.New();
+            v.isBot = true;
+            v.faction = Faction.Human;
+            v.pilotName = PilotNames.UniqHumanName(config.usedNames);
             VesselFactory.Init(v, "Earthling Scout");
-            fleet.Add(v);
+            fleet.Add(v.GetRef());
         }
 
-        config.humanUnit = new SpaceUnit();
-        config.humanUnit.owner = config.humanPlayer;
-        config.humanUnit.fleet = fleet;
-        config.humanUnit.pos = startingSystem.pos;
+        var unit = config.spaceUnits.New();
+        unit.owner = Faction.Human;
+        unit.fleet = fleet;
+        unit.pos = startingSystem.pos;
+
+        config.humanUnit = unit.GetRef();
     }
 }

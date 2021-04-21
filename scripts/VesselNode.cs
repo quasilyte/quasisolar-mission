@@ -264,7 +264,7 @@ public class VesselNode : Node2D {
         if (_destroyedAudioStream == null) {
             _destroyedAudioStream = GD.Load<AudioStream>("res://audio/vessel_destroyed.wav");
         }
-        var sfx = SoundEffectNode.New(_destroyedAudioStream, -7);
+        var sfx = SoundEffectNode.New(_destroyedAudioStream, -10);
         GetParent().AddChild(sfx);
         ClearWaypoints();
         var e = Explosion.New(0.5f);

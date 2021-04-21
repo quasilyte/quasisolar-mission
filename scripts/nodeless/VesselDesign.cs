@@ -8,7 +8,7 @@ using System.Collections.Generic;
 //
 // Max number of artifacts: 5.
 // Max number of weapons: 2.
-public class VesselDesign: AbstractItem {
+public class VesselDesign: IItem {
     public enum Size {
         Small,
         Normal,
@@ -62,9 +62,9 @@ public class VesselDesign: AbstractItem {
         throw new Exception($"can't find {name} vessel design");
     }
 
-    public override ItemKind Kind() { return ItemKind.VesselDesign; }
+    public ItemKind GetItemKind() { return ItemKind.VesselDesign; }
 
-    public override string RenderHelp() {
+    public string RenderHelp() {
         var parts = new List<string>();
         parts.Add(affiliation + " " + name + " (" + sellingPrice.ToString() + ")");
         parts.Add("");

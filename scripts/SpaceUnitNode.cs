@@ -40,7 +40,7 @@ public abstract class SpaceUnitNode : Node2D {
     public virtual void ProcessDay() {}
 
     public void UpdateColor() {
-        if (unit.owner == _gameState.humanPlayer) {
+        if (unit.owner == Faction.Human) {
             GetNode<Sprite>("Sprite").Frame = (int)MapNodeColor.Green;
             return;
         }

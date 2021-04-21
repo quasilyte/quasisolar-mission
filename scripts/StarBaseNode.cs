@@ -69,8 +69,8 @@ public class StarBaseNode : Node2D {
             }
             starBase.productionProgress = 0;
             starBase.productionQueue.Dequeue();
-            vessel = VesselFactory.NewVessel(starBase.owner, vesselDesign);
-            starBase.garrison.Add(vessel);
+            vessel = _gameState.NewVessel(starBase.owner, vesselDesign);
+            starBase.garrison.Add(vessel.GetRef());
         } else {
             starBase.productionProgress++;
         }

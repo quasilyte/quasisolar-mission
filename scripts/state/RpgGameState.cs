@@ -24,6 +24,11 @@ public class RpgGameState {
 
         public RandomNumberGenerator rng;
 
+        public ObjectPool<SpaceUnit> spaceUnits = new ObjectPool<SpaceUnit>();
+        public ObjectPool<StarSystem> starSystems = new ObjectPool<StarSystem>();
+        public ObjectPool<StarBase> starBases = new ObjectPool<StarBase>();
+        public ObjectPool<Vessel> vessels = new ObjectPool<Vessel>();
+
         public int dronePrice;
         public int repairPrice;
         public int fuelPrice;
@@ -43,21 +48,13 @@ public class RpgGameState {
 
         public HashSet<string> usedNames = new HashSet<string>();
 
-        public List<StarSystem> starSystems = new List<StarSystem>();
-
         public GameLimits limits;
 
-        public SpaceUnit humanUnit;
-
-        public Player humanPlayer;
-        public Player scavengerPlayer;
-        public Player krigiaPlayer;
-        public Player wertuPlayer;
-        public Player zythPlayer;
+        public SpaceUnit.Ref humanUnit;
     }
 
     public class GameLimits {
-        // How much resources can drone collect?
+        // How much resources can drone collect.
         // TODO: make it a per-drone stat?
         public int droneCapacity;
 
@@ -76,8 +73,8 @@ public class RpgGameState {
     }
 
     public class MapState {
-        public bool movementEnabled;
-        public UnitMode mode;
+        public bool movementEnabled = false;
+        public UnitMode mode = UnitMode.Idle;
     }
 
     public class KrigiaPlans {
@@ -95,18 +92,18 @@ public class RpgGameState {
         lastBattleResult = null;
 
         humanBases = new HashSet<StarBase>();
-        foreach (var sys in starSystems) {
-            if (sys.starBase == null) {
+        foreach (var sys in starSystems.objects) {
+            if (sys.starBase.id == 0) {
                 continue;
             }
-            if (sys.starBase.owner != humanPlayer) {
+            if (starBases.Get(sys.starBase.id).owner != Faction.Human) {
                 continue;
             }
-            humanBases.Add(sys.starBase);
+            humanBases.Add(starBases.Get(sys.starBase.id));
         }
 
         planetsWithMines = new HashSet<ResourcePlanet>();
-        foreach (var sys in starSystems) {
+        foreach (var sys in starSystems.objects) {
             foreach (var p in sys.resourcePlanets) {
                 if (p.hasMine) {
                     planetsWithMines.Add(p);
@@ -115,7 +112,7 @@ public class RpgGameState {
         }
 
         starSystemByPos = new Dictionary<Vector2, StarSystem>();
-        foreach (var sys in starSystems) {
+        foreach (var sys in starSystems.objects) {
             starSystemByPos[sys.pos] = sys;
         }
 
@@ -130,13 +127,13 @@ public class RpgGameState {
             list.Add(connected);
             return true;
         };
-        for (int i = 0; i < starSystems.Count; i++) {
-            var sys = starSystems[i];
-            for (int j = 0; j < starSystems.Count; j++) {
+        for (int i = 0; i < starSystems.objects.Count; i++) {
+            var sys = starSystems.objects[i];
+            for (int j = 0; j < starSystems.objects.Count; j++) {
                 if (i == j) {
                     continue;
                 }
-                var other = starSystems[j];
+                var other = starSystems.objects[j];
                 if (sys.pos.DistanceTo(other.pos) > 600) {
                     continue;
                 }
@@ -144,7 +141,7 @@ public class RpgGameState {
                 addToGraph(other, sys);
             }
         }
-        foreach (var sys in starSystems) {
+        foreach (var sys in starSystems.objects) {
             if (!graph.ContainsKey(sys)) {
                 throw new Exception("found a system that is not included into the graph");
             }
@@ -166,6 +163,9 @@ public class RpgGameState {
         o.exodusPrice = c.exodusPrice;
 
         o.starSystems = c.starSystems;
+        o.spaceUnits = c.spaceUnits;
+        o.starBases = c.starBases;
+        o.vessels = c.vessels;
 
         o.fuel = c.startingFuel;
         o.credits = c.startingCredits;
@@ -184,37 +184,15 @@ public class RpgGameState {
         o.randomEventsAvailable = c.randomEvents;
 
         o.skillsLearned = c.skills;
-
-        o.humanPlayer = c.humanPlayer;
-        o.scavengerPlayer = c.scavengerPlayer;
-        o.krigiaPlayer = c.krigiaPlayer;
-        o.wertuPlayer = c.wertuPlayer;
-        o.zythPlayer = c.zythPlayer;
-
-        o.starBaseBySpaceUnit = new Dictionary<SpaceUnit, StarBase>();
-        o.starSystemByStarBase = new Dictionary<StarBase, StarSystem>();
-        foreach (var sys in c.starSystems) {
-            if (sys.starBase != null) {
-                o.starSystemByStarBase.Add(sys.starBase, sys);
-                foreach (var u in sys.starBase.units) {
-                    o.starBaseBySpaceUnit.Add(u, sys.starBase);
-                }
-            }
-        }
         
         return o;
     }
 
+    public bool FactionsAtWar(Faction x, Faction y) {
+        return x != y; // TODO: implement a real system
+    }
+
     public KrigiaPlans krigiaPlans = new KrigiaPlans();
-
-    public Dictionary<SpaceUnit, StarBase> starBaseBySpaceUnit;
-    public Dictionary<StarBase, StarSystem> starSystemByStarBase;
-
-    public Player humanPlayer = null;
-    public Player scavengerPlayer = null;
-    public Player krigiaPlayer = null;
-    public Player wertuPlayer = null;
-    public Player zythPlayer = null;
 
     public int krigiaReputation = 0;
     public int wertuReputation = 0;
@@ -226,7 +204,7 @@ public class RpgGameState {
 
     public ulong seed;
 
-    public AbstractItem[] storage = new AbstractItem[14];
+    public ItemInfo[] storage = new ItemInfo[14];
 
     public int credits = 0;
 
@@ -264,21 +242,25 @@ public class RpgGameState {
 
     public HashSet<string> usedNames;
 
-    public HashSet<SpaceUnit> spaceUnits = new HashSet<SpaceUnit>{};
+    public ObjectPool<SpaceUnit> spaceUnits;
+
+    public ObjectPool<Vessel> vessels;
+
+    // starSystems is a list of all star systems existing in this session.
+    // starSystems[startingSystemID] is a starting star system.
+    public ObjectPool<StarSystem> starSystems;
+
+    public ObjectPool<StarBase> starBases;
 
     public HashSet<string> randomEventsAvailable;
     public int randomEventCooldown;
 
-    public SpaceUnit humanUnit;
-
-    // starSystems is a list of all star systems existing in this session.
-    // starSystems[startingSystemID] is a starting star system.
-    public List<StarSystem> starSystems;
+    public SpaceUnit.Ref humanUnit;
 
     public int startingSystemID;
 
     public static StarSystem StartingSystem() {
-        return instance.starSystems[instance.startingSystemID];
+        return instance.starSystems.objects[instance.startingSystemID];
     }
 
     public static double ResearchRate() {
@@ -347,10 +329,23 @@ public class RpgGameState {
     public static int OrganicSellPrice() { return 20; }
     public static int PowerSellPrice() { return 22; }
 
-    public static void PutItemToStorage(AbstractItem item) {
+    public Vessel NewVessel(Faction faction, VesselDesign design) {
+        var v = vessels.New();
+        v.isBot = true;
+        v.faction = faction;
+        v.designName = design.name;
+        v.hp = design.maxHp;
+        return v;
+    }
+
+    public void PutItemToStorage(IItem item, int index) {
+        instance.storage[index] = ItemInfo.Of(item);
+    }
+
+    public void PutItemToStorage(IItem item) {
         for (int i = 0; i < 14; i++) {
             if (instance.storage[i] == null) {
-                instance.storage[i] = item;
+                instance.storage[i] = ItemInfo.Of(item);
                 return;
             }
         }

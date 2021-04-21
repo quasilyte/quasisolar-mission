@@ -44,6 +44,14 @@ public class Research {
     }
 
     public static void InitLists() {
+        foreach (var artifact in ArtifactDesign.list) {
+            list.Add(new Research{
+                name = artifact.name,
+                category = Research.Category.NewArtifact,
+                researchTime = 40,
+            });
+        }
+
         researchByName = new Dictionary<string, Research>();
         foreach (var r in list) {
             researchByName.Add(r.name, r);

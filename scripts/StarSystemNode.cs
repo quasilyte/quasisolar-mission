@@ -45,7 +45,7 @@ public class StarSystemNode : Node2D {
         GetNode<Area2D>("Area2D").Connect("input_event", this, nameof(OnAreaInput));
 
         if (sys.intel != null) {
-            if (sys.starBase != null) {
+            if (sys.starBase.id != 0) {
                 _starBase.Visible = true;
                 SetStarBaseColor();
             }
@@ -64,7 +64,8 @@ public class StarSystemNode : Node2D {
     public void DestroyStarBase() {
         _starBase.QueueFree();
         _starBase = null;
-        sys.starBase = null;
+        sys.starBase.Get().active = false;
+        sys.starBase.id = 0;
 
         var explosion = Explosion.New();
         explosion.Position = Position;
@@ -73,9 +74,9 @@ public class StarSystemNode : Node2D {
         UpdateInfo();
     }
 
-    public void OnPlayerEnter(Player p) {
+    public void OnPlayerEnter(Faction faction) {
         if (sys.intel == null) {
-            OnFirstPlayerEnter(p);
+            OnFirstPlayerEnter(faction);
         }
         UpdateInfo();
         RenderKnownInfo();
@@ -91,15 +92,16 @@ public class StarSystemNode : Node2D {
         }
         sys.intel = new StarSystemIntel{
             hasArtifact = sys.artifact != null,
-            hasBase = sys.starBase != null,
+            hasBase = sys.starBase.id != 0,
             numResourcePlanets = numPlanets,
             numMines = numMines,
         };
-        if (sys.starBase != null) {
-            sys.intel.baseOwner = sys.starBase.owner;
-            sys.intel.garrisonSize = sys.starBase.garrison.Count;
-            sys.intel.baseLevel = sys.starBase.level;
-            sys.intel.baseHp = sys.starBase.hp;
+        if (sys.starBase.id != 0) {
+            var starBase = sys.starBase.Get();
+            sys.intel.baseOwner = starBase.owner;
+            sys.intel.garrisonSize = starBase.garrison.Count;
+            sys.intel.baseLevel = starBase.level;
+            sys.intel.baseHp = starBase.hp;
         }
     }
 
@@ -115,7 +117,7 @@ public class StarSystemNode : Node2D {
         var box = _infoBox.GetNode<VBoxContainer>("Box");
         var info = sys.intel;
 
-        var owner = info.hasBase ? info.baseOwner.PlayerName : "Neutral";
+        var owner = info.hasBase ? info.baseOwner.ToString() : "Neutral";
         var titleLabel = box.GetNode<Label>("Title");
         titleLabel.Text = owner + " System";
 
@@ -175,14 +177,14 @@ public class StarSystemNode : Node2D {
 
     private void SetStarBaseColor() {
         Func<MapNodeColor> baseColor = () => {
-            var owner = sys.starBase.owner;
-            if (owner == RpgGameState.instance.humanPlayer) {
+            var owner = sys.starBase.Get().owner;
+            if (owner == Faction.Human) {
                 return MapNodeColor.Green;
             }
-            if (owner == RpgGameState.instance.scavengerPlayer) {
+            if (owner == Faction.Scavenger) {
                 return MapNodeColor.Purple;
             }
-            if (owner == RpgGameState.instance.krigiaPlayer) {
+            if (owner == Faction.Krigia) {
                 return MapNodeColor.Red;
             }
             return MapNodeColor.Yellow;
@@ -191,11 +193,11 @@ public class StarSystemNode : Node2D {
         _starBase.SetColor(baseColor());
     }
 
-    private void OnFirstPlayerEnter(Player p) {
-        if (sys.starBase != null) {
+    private void OnFirstPlayerEnter(Faction faction) {
+        if (sys.starBase.id != 0) {
             _starBase.Visible = true;
             SetStarBaseColor();
-            if (sys.starBase.owner.Alliance != p.Alliance) {
+            if (RpgGameState.instance.FactionsAtWar(sys.starBase.Get().owner, faction)) {
                 GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/enemy_base_detected.wav"));
             }
         }
@@ -209,7 +211,11 @@ public class StarSystemNode : Node2D {
         if (RpgGameState.instance.day % 10 != 0) {
             return;
         }
-        if (sys.starBase == null || sys.starBase.owner != RpgGameState.instance.humanPlayer) {
+        if (sys.starBase.id == 0) {
+            return;
+        }
+        var starBase = sys.starBase.Get();
+        if (starBase.owner != Faction.Human) {
             return;
         }
         foreach (var p in sys.resourcePlanets) {
@@ -219,9 +225,9 @@ public class StarSystemNode : Node2D {
             RpgGameState.instance.credits += RpgGameState.MineralsSellPrice() * p.mineralsCollected;
             RpgGameState.instance.credits += RpgGameState.OrganicSellPrice() * p.organicCollected;
             RpgGameState.instance.credits += RpgGameState.PowerSellPrice() * p.powerCollected;
-            sys.starBase.mineralsStock += p.mineralsCollected;
-            sys.starBase.organicStock += p.organicCollected;
-            sys.starBase.powerStock += p.powerCollected;
+            starBase.mineralsStock += p.mineralsCollected;
+            starBase.organicStock += p.organicCollected;
+            starBase.powerStock += p.powerCollected;
             p.mineralsCollected = 0;
             p.organicCollected = 0;
             p.powerCollected = 0;

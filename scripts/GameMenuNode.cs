@@ -27,11 +27,11 @@ public class GameMenuNode : Node2D {
     }
 
     private void OnSaveGame() {
-        
+        GameStateSerializer.Encode(RpgGameState.instance);
     }
 
     private void OnLoadGame() {
-
+        GetTree().ChangeScene("res://scenes/LoadGameScreen.tscn");
     }
 
     private void OnMainMenu() {

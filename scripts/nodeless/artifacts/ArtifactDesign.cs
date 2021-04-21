@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System;
 
-public class ArtifactDesign : AbstractItem {
+public class ArtifactDesign : IItem {
     public string name = "";
     public string description = "";
     public string extraDescription = "";
@@ -12,11 +12,11 @@ public class ArtifactDesign : AbstractItem {
 
     public static ArtifactDesign[] list;
 
-    public override ItemKind Kind() { return ItemKind.Artifact; }
+    public ItemKind GetItemKind() { return ItemKind.Artifact; }
 
     public static Dictionary<string, ArtifactDesign> artifactByName;
 
-    public override string RenderHelp() {
+    public string RenderHelp() {
         if (name == "Empty") {
             // A special case.
             return "An empty artifact slot";

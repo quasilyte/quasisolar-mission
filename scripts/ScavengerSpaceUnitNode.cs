@@ -37,7 +37,7 @@ public class ScavengerSpaceUnitNode : SpaceUnitNode {
     // }
 
     private void UpdateVisibility() {
-        Visible = _canBeDetected && _gameState.humanUnit.pos.DistanceTo(GlobalPosition) <= RpgGameState.RadarRange();
+        Visible = _canBeDetected && _gameState.humanUnit.Get().pos.DistanceTo(GlobalPosition) <= RpgGameState.RadarRange();
     }
 
     public void PickNewWaypoint() {
@@ -63,7 +63,7 @@ public class ScavengerSpaceUnitNode : SpaceUnitNode {
         }
 
         if (_currentSystem != null) {
-            if (_currentSystem.starBase != null) {
+            if (_currentSystem.starBase.id != 0) {
                 ProcessStarBaseDay();
             } else {
                 MaybeCollectResources();
@@ -77,7 +77,7 @@ public class ScavengerSpaceUnitNode : SpaceUnitNode {
         _currentSystem = RpgGameState.starSystemByPos[unit.waypoint];
 
         var starBase = _currentSystem.starBase;
-        if (starBase == null || starBase.owner == _gameState.scavengerPlayer) {
+        if (starBase.id == 0 || starBase.Get().owner == Faction.Scavenger) {
             unit.botSystemLeaveDelay = QRandom.IntRange(8, 32);
             _canBeDetected = false;
             return;
@@ -85,7 +85,7 @@ public class ScavengerSpaceUnitNode : SpaceUnitNode {
     }
 
     private void MaybeCollectResources() {
-        if (_gameState.humanUnit.pos == unit.pos) {
+        if (_gameState.humanUnit.Get().pos == unit.pos) {
             return;
         }
 
@@ -140,9 +140,9 @@ public class ScavengerSpaceUnitNode : SpaceUnitNode {
 
     private void ProcessStarBaseDay() {
         var starBase = _currentSystem.starBase;
-        if (starBase.owner == _gameState.scavengerPlayer) {
+        if (starBase.Get().owner == Faction.Scavenger) {
             if (unit.CargoSize() != 0) {
-                OffloadResourcesTo(starBase);
+                OffloadResourcesTo(starBase.Get());
                 GD.Print("scavenger offloads resources");
             }
         }

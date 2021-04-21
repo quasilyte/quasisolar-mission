@@ -4,16 +4,6 @@ using System.Collections.Generic;
 
 // TODO: rename this class.
 public static class VesselFactory {
-    public static Vessel NewVessel(Player player, VesselDesign design) {
-        var v = new Vessel {
-            isBot = true,
-            player = player,
-            designName = design.name,
-        };
-        v.hp = design.maxHp;
-        return v;
-    }
-
     public static void PadEquipment(Vessel v) {
         v.energySourceName = "None";
         v.weapons = new List<string>{

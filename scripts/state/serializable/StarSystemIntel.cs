@@ -6,7 +6,7 @@ public class StarSystemIntel {
     public bool hasArtifact;
     public bool hasBase;
 
-    public Player baseOwner;
+    public Faction baseOwner;
     public int garrisonSize;
     public int baseLevel;
     public int baseHp;

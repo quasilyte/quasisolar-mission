@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System;
 
-public class ShieldDesign : AbstractItem {
+public class ShieldDesign : IItem {
     public static ShieldDesign[] list;
 
     public string name = "";
@@ -25,7 +25,7 @@ public class ShieldDesign : AbstractItem {
 
     public bool visualAuraRotates = false;
 
-    public override ItemKind Kind() { return ItemKind.Shield; }
+    public ItemKind GetItemKind() { return ItemKind.Shield; }
 
     private static Dictionary<string, ShieldDesign> shieldByName;
 
@@ -33,7 +33,7 @@ public class ShieldDesign : AbstractItem {
         return shieldByName[name];
     }
 
-    public override string RenderHelp() {
+    public string RenderHelp() {
         if (name == "Empty") {
             // A special case.
             return "An empty shield slot";

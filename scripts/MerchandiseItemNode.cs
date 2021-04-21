@@ -5,7 +5,7 @@ public class MerchandiseItemNode : Node2D {
     [Signal]
     public delegate void Clicked();
 
-    public AbstractItem item;
+    public IItem item;
 
     public override void _Ready() {
         var sprite = GetNode<Sprite>("Sprite");
@@ -13,7 +13,7 @@ public class MerchandiseItemNode : Node2D {
     }
 
     private static PackedScene _scene = null;
-    public static MerchandiseItemNode New(AbstractItem item) {
+    public static MerchandiseItemNode New(IItem item) {
         if (_scene == null) {
             _scene = GD.Load<PackedScene>("res://scenes/MerchandiseItemNode.tscn");
         }

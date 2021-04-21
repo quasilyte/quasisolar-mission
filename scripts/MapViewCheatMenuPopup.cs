@@ -90,17 +90,17 @@ public class MapViewCheatMenuPopup : PopupDialog {
                 Log($"Fuel value changed");
                 return;
             case "cheat.minerals":
-                _gameState.humanUnit.CargoAddMinerals(ParseInt(arg));
+                _gameState.humanUnit.Get().CargoAddMinerals(ParseInt(arg));
                 _command = new Command { kind = CommandKind.StatsChange };
                 Log($"Minerals cargo value changed");
                 return;
             case "cheat.organic":
-                _gameState.humanUnit.CargoAddOrganic(ParseInt(arg));
+                _gameState.humanUnit.Get().CargoAddOrganic(ParseInt(arg));
                 _command = new Command { kind = CommandKind.StatsChange };
                 Log($"Organic cargo value changed");
                 return;
             case "cheat.power":
-                _gameState.humanUnit.CargoAddPower(ParseInt(arg));
+                _gameState.humanUnit.Get().CargoAddPower(ParseInt(arg));
                 _command = new Command { kind = CommandKind.StatsChange };
                 Log($"Power cargo value changed");
                 return;
@@ -126,13 +126,13 @@ public class MapViewCheatMenuPopup : PopupDialog {
 
             case "cheat.base.level": {
                     StarSystem sys;
-                    if (!RpgGameState.starSystemByPos.TryGetValue(_gameState.humanUnit.pos, out sys)) {
+                    if (!RpgGameState.starSystemByPos.TryGetValue(_gameState.humanUnit.Get().pos, out sys)) {
                         throw new Exception("located outside of a system");
                     }
-                    if (sys.starBase == null) {
+                    if (sys.starBase.id == 0) {
                         throw new Exception("system has no star bases");
                     }
-                    sys.starBase.level = QMath.Clamp(sys.starBase.level + ParseInt(arg), 1, 5);
+                    sys.starBase.Get().level = QMath.Clamp(sys.starBase.Get().level + ParseInt(arg), 1, 5);
                     Log("Star base level changed");
                     _command = new Command { kind = CommandKind.CurrentSystemChange };
                     return;

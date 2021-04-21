@@ -1,8 +1,16 @@
 using System.Collections.Generic;
 using Godot;
 
-public class StarBase {
-    public Player owner;
+public class StarBase: AbstractPoolValue {
+    public struct Ref {
+        public int id;
+        public StarBase Get() { return RpgGameState.instance.starBases.Get(id); }
+    }
+    public Ref GetRef() { return new Ref{id = id}; }
+
+    public Faction owner;
+
+    public StarSystem.Ref system;
 
     // 0 - not discovered.
     // Non-zero value represents the day at which this base was discovered.
@@ -21,12 +29,10 @@ public class StarBase {
     public int productionProgress = 0;
     public Queue<string> productionQueue = new Queue<string>();
 
-    public List<Vessel> garrison = new List<Vessel>();
-
-    public List<AbstractItem> shopSelection = new List<AbstractItem> { };
+    public List<Vessel.Ref> garrison = new List<Vessel.Ref>();
 
     // For bots: base-controlled space units.
-    public HashSet<SpaceUnit> units = new HashSet<SpaceUnit>();
+    public HashSet<SpaceUnit.Ref> units = new HashSet<SpaceUnit.Ref>();
     public int botPatrolDelay = 0;
     public int botReinforcementsDelay = 0;
     public int botProductionDelay = 0;
@@ -34,27 +40,19 @@ public class StarBase {
     public const int maxGarrisonSize = 24;
     public const int maxBaseLevel = 5;
 
-    public StarSystem System() { return RpgGameState.instance.starSystemByStarBase[this]; }
+    public StarBase() {}
 
-    public StarBase(StarSystem sys, Player player, int level = 1) {
-        this.level = level;
-        owner = player;
-        mineralsStock = 70 + QRandom.IntRange(0, 30);
-        organicStock = 10 + QRandom.IntRange(0, 50);
-        powerStock = QRandom.IntRange(0, 50);
-    }
-
-    public Vessel PopVessel() {
+    public Vessel.Ref PopVessel() {
         if (garrison.Count > 0) {
             var vessel = garrison[garrison.Count - 1];
             garrison.RemoveAt(garrison.Count - 1);
             return vessel;
         }
-        return null;
+        return new Vessel.Ref{id = 0};
     }
 
-    public void UpdateShopSelection() {
-        shopSelection = new List<AbstractItem>();
+    public List<IItem> ShopSelection() {
+        var shopSelection = new List<IItem>();
 
         var technologiesResearched = RpgGameState.instance.technologiesResearched;
 
@@ -106,6 +104,8 @@ public class StarBase {
             }
             shopSelection.Add(art);
         }
+
+        return shopSelection;
     }
 
     public float LevelUpgradeCost() {
