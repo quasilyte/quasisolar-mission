@@ -31,6 +31,7 @@ public class GameMenuNode : Node2D {
 
     private void OnSaveGame() {
         RpgGameState.instance.CollectGarbage();
+
         GameStateSerializer.Encode(RpgGameState.instance);
     }
 

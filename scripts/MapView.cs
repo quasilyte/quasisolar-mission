@@ -1524,6 +1524,9 @@ public class MapView : Node2D {
             ArenaSettings.combatants.Add(v);
         }
 
+        if (!alliedFleet[0].isBot) {
+            alliedFleet[0].isGamepad = GameControls.preferGamepad;
+        }
         for (int i = 0; i < alliedFleet.Count; i++) {
             var pos = new Vector2(224, 288 + (i * 192));
             var v = alliedFleet[i];
