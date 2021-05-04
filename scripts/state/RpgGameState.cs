@@ -7,6 +7,7 @@ public class RpgGameState {
 
     public static RandomNumberGenerator rng;
 
+    public static List<StarSystem> starSystemList;
     public static Dictionary<StarSystem, List<StarSystem>> starSystemConnections;
     public static Dictionary<Vector2, StarSystem> starSystemByPos;
     public static HashSet<ResourcePlanet> planetsWithMines;
@@ -40,7 +41,7 @@ public class RpgGameState {
         public int startingCredits;
         public int randomEventCooldown;
 
-        public int startingSystemID;
+        public long startingSystemID;
 
         public HashSet<string> randomEvents;
 
@@ -91,8 +92,13 @@ public class RpgGameState {
         transition = newGame ? MapTransition.NewGame : MapTransition.LoadGame;
         lastBattleResult = null;
 
+        starSystemList = new List<StarSystem>();
+        foreach (var sys in starSystems.objects.Values) {
+            starSystemList.Add(sys);
+        }
+
         humanBases = new HashSet<StarBase>();
-        foreach (var sys in starSystems.objects) {
+        foreach (var sys in starSystemList) {
             if (sys.starBase.id == 0) {
                 continue;
             }
@@ -103,7 +109,7 @@ public class RpgGameState {
         }
 
         planetsWithMines = new HashSet<ResourcePlanet>();
-        foreach (var sys in starSystems.objects) {
+        foreach (var sys in starSystemList) {
             foreach (var p in sys.resourcePlanets) {
                 if (p.hasMine) {
                     planetsWithMines.Add(p);
@@ -112,7 +118,7 @@ public class RpgGameState {
         }
 
         starSystemByPos = new Dictionary<Vector2, StarSystem>();
-        foreach (var sys in starSystems.objects) {
+        foreach (var sys in starSystemList) {
             starSystemByPos[sys.pos] = sys;
         }
 
@@ -127,13 +133,14 @@ public class RpgGameState {
             list.Add(connected);
             return true;
         };
-        for (int i = 0; i < starSystems.objects.Count; i++) {
-            var sys = starSystems.objects[i];
-            for (int j = 0; j < starSystems.objects.Count; j++) {
+        
+        for (int i = 0; i < starSystemList.Count; i++) {
+            var sys = starSystemList[i];
+            for (int j = 0; j < starSystemList.Count; j++) {
                 if (i == j) {
                     continue;
                 }
-                var other = starSystems.objects[j];
+                var other = starSystemList[j];
                 if (sys.pos.DistanceTo(other.pos) > 600) {
                     continue;
                 }
@@ -141,7 +148,8 @@ public class RpgGameState {
                 addToGraph(other, sys);
             }
         }
-        foreach (var sys in starSystems.objects) {
+
+        foreach (var sys in starSystemList) {
             if (!graph.ContainsKey(sys)) {
                 throw new Exception("found a system that is not included into the graph");
             }
@@ -257,10 +265,16 @@ public class RpgGameState {
 
     public SpaceUnit.Ref humanUnit;
 
-    public int startingSystemID;
+    public long startingSystemID;
 
     public static StarSystem StartingSystem() {
         return instance.starSystems.objects[instance.startingSystemID];
+    }
+
+    public void CollectGarbage() {
+        instance.spaceUnits.RemoveInactive();
+        instance.vessels.RemoveInactive();
+        instance.starBases.RemoveInactive();
     }
 
     public static double ResearchRate() {

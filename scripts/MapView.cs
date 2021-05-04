@@ -48,7 +48,6 @@ public class MapView : Node2D {
     private PopupNode _krigiaTaskForcePopup;
 
     private HashSet<SpaceUnitNode> _spaceUnits = new HashSet<SpaceUnitNode>();
-    private List<StarBaseNode> _starBases = new List<StarBaseNode>();
 
     private List<UnitMemberNode> _unitMembers = new List<UnitMemberNode>();
 
@@ -96,9 +95,7 @@ public class MapView : Node2D {
             RpgGameState.enemyAttackerUnit = null;
             RpgGameState.garrisonStarBase = null;
         }
-        _gameState.spaceUnits.RemoveInactive();
-        _gameState.vessels.RemoveInactive();
-        _gameState.starBases.RemoveInactive();
+        _gameState.CollectGarbage();
 
         RenderMap();
 
@@ -209,7 +206,7 @@ public class MapView : Node2D {
         UpdateUI();
 
         _menuNode = GameMenuNode.New();
-        AddChild(_menuNode);
+        GetNode<CanvasLayer>("UI").AddChild(_menuNode);
         _menuNode.Connect("Closed", this, nameof(OnGameMenuClosed));
     }
 
@@ -220,7 +217,7 @@ public class MapView : Node2D {
                 result.Add(v);
                 continue;
             }
-            v.Get().active = false;
+            v.Get().deleted = true;
         }
         return result;
     }
@@ -235,7 +232,7 @@ public class MapView : Node2D {
     private void ProcessUnitCasualties(SpaceUnit unit) {
         unit.fleet = RemoveCasualties(unit.fleet);
         if (unit.fleet.Count == 0) {
-            unit.active = false;
+            unit.deleted = true;
         }
     }
 
@@ -631,6 +628,7 @@ public class MapView : Node2D {
         starBase.mineralsStock = 0;
         starBase.organicStock = 0;
         starBase.powerStock = 0;
+        starBase.system = _currentSystem.sys.GetRef();
         RpgGameState.humanBases.Add(starBase);
         _currentSystem.sys.starBase = starBase.GetRef();
 
@@ -914,7 +912,6 @@ public class MapView : Node2D {
 
         baseNode.Position = sys.pos;
         baseNode.Visible = false;
-        _starBases.Add(baseNode);
 
         return baseNode;
     }
@@ -922,12 +919,12 @@ public class MapView : Node2D {
     private void RenderMap() {
         StarSystemNode currentSystem = null;
 
-        foreach (StarSystem sys in _gameState.starSystems.objects) {
+        foreach (StarSystem sys in _gameState.starSystems.objects.Values) {
             StarBaseNode starBaseNode = null;
             if (sys.starBase.id != 0) {
                 // Sync star base units. They could be destroyed.
                 sys.starBase.Get().units.RemoveWhere((x) => {
-                    return !_gameState.spaceUnits.Contains(x.id) || !x.Get().active;
+                    return !_gameState.spaceUnits.Contains(x.id) || x.Get().deleted;
                 });
 
                 starBaseNode = NewStarBaseNode(sys);
@@ -960,7 +957,13 @@ public class MapView : Node2D {
 
         _currentSystem = currentSystem;
 
-        foreach (var u in _gameState.spaceUnits.objects) {
+        foreach (var u in _gameState.spaceUnits.objects.Values) {
+            if (u.deleted) {
+                throw new Exception("trying to add a deleted unit");
+            }
+            if (u.fleet.Count == 0) {
+                throw new Exception("trying to add a unit with empty fleet");
+            }
             if (u.owner == Faction.Scavenger) {
                 AddSpaceUnit(ScavengerSpaceUnitNode.New(u));
             } else if (u.owner == Faction.Krigia) {
@@ -1116,7 +1119,10 @@ public class MapView : Node2D {
     }
 
     private void UpdateDronesValue() {
-        GetNode<Label>("UI/DronesValue").Text = _gameState.drones.ToString();
+        var carrying = _gameState.drones;
+        var limit = RpgGameState.MaxDrones();
+        var text = $"{carrying} ({_gameState.dronesOwned}/{limit})";
+        GetNode<Label>("UI/DronesValue").Text = text;
     }
 
     private void RecoverFleetEnergy(List<Vessel.Ref> fleet) {
@@ -1231,7 +1237,7 @@ public class MapView : Node2D {
         } else if (research.category == Research.Category.NewSpecialWeapon) {
             text += "New special weapon is available for production.\n\n";
         } else if (research.category == Research.Category.NewVesselDesign) {
-            text += "New special vessel is available for production.\n\n";
+            text += "New vessel is available for production.\n\n";
         } else if (research.category == Research.Category.NewWeapon) {
             text += "New weapon is available for production.\n\n";
         } else if (research.category == Research.Category.Upgrade) {
@@ -1384,10 +1390,6 @@ public class MapView : Node2D {
     }
 
     private void ProcessStarSystems() {
-        foreach (var starBase in _starBases) {
-            starBase.ProcessDay();
-        }
-
         foreach (StarSystemNode starSystem in _starSystemNodes) {
             starSystem.sys.randomEventCooldown = QMath.ClampMin(starSystem.sys.randomEventCooldown - 1, 0);
             starSystem.ProcessDay();

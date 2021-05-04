@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class SpaceUnit: AbstractPoolValue {
     public struct Ref {
-        public int id;
+        public long id;
         public SpaceUnit Get() { return RpgGameState.instance.spaceUnits.Get(id); }
     }
     public Ref GetRef() { return new Ref{id = id}; }

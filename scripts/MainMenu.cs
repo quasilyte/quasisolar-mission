@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 
 public class MainMenu : Node2D {
-    public bool _needInit = true;
+    private static bool _needInit = true;
 
     public override void _Ready() {
         GetNode<BackgroundMusic>("/root/BackgroundMusic").PlayMenuMusic();
@@ -30,6 +30,7 @@ public class MainMenu : Node2D {
     }
     
     private void OnSettingsButtonPressed() {
+        SettingsScreen.fromMainMenu = true;
         GetTree().ChangeScene("res://scenes/SettingsScreen.tscn");
     }
 

@@ -128,10 +128,18 @@ public class Arena : Node2D {
         _pilots = new List<Pilot>();
         for (int i = 0; i < ArenaSettings.combatants.Count; i++) {
             var vessel = ArenaSettings.combatants[i];
-            var pilot = new Pilot{
-                name = vessel.pilotName,
-                alliance = (int)vessel.faction,
-            };
+            Pilot pilot;
+            if (ArenaSettings.isQuickBattle) {
+                pilot = new Pilot{
+                    name = vessel.pilotName,
+                    alliance = (int)vessel.faction,
+                };
+            } else {
+                pilot = new Pilot{
+                    name = vessel.pilotName,
+                    alliance = _gameState.FactionsAtWar(Faction.Human, vessel.faction) ? 1 : 0,
+                };
+            }
             _pilots.Add(pilot);
             _pilotByVessel[vessel] = pilot;
             _vesselByPilot[pilot] = vessel;

@@ -713,7 +713,7 @@ public class RandomEvent {
         // TODO: use systems connection graph.
 
         var nearbySystems = new List<StarSystem>();
-        foreach (var sys in RpgGameState.instance.starSystems.objects) {
+        foreach (var sys in RpgGameState.instance.starSystems.objects.Values) {
             if (sys.pos == RpgGameState.instance.humanUnit.Get().pos) {
                 continue;
             }

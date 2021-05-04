@@ -128,10 +128,7 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
             GD.Print("WARNING: can't board all the ships");
         }
         starBase.units.Remove(unit.GetRef());
-        unit.active = false;
-        foreach (var v in unit.fleet) {
-            v.Get().active = false;
-        }
+        unit.deleted = true;
         EmitSignal(nameof(Removed));
         QueueFree();
     }

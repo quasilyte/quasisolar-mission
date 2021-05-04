@@ -572,9 +572,13 @@ public class NewGameScene : Node2D {
 
         // var artifactsNeeded = 10;
         // var artifacts
+        var systems = new List<StarSystem>();
+        foreach (var sys in config.starSystems.objects.Values) {
+            systems.Add(sys);
+        }
         foreach (var art in ArtifactDesign.list) {
             while (true) {
-                var sys = QRandom.Element(config.starSystems.objects);
+                var sys = QRandom.Element(systems);
                 if (sys.artifact != null) {
                     continue;
                 }

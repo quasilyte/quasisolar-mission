@@ -1,4 +1,4 @@
 public abstract class AbstractPoolValue {
-    public int id;
-    public bool active;
+    public long id;
+    public bool deleted;
 }

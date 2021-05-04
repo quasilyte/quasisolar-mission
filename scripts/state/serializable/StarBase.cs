@@ -3,7 +3,7 @@ using Godot;
 
 public class StarBase: AbstractPoolValue {
     public struct Ref {
-        public int id;
+        public long id;
         public StarBase Get() { return RpgGameState.instance.starBases.Get(id); }
     }
     public Ref GetRef() { return new Ref{id = id}; }

@@ -2,6 +2,8 @@ using Godot;
 using System;
 
 public class SettingsScreen : Node2D {
+    public static bool fromMainMenu = true;
+
     public override void _Ready() {
         var controlMethod = GetNode<OptionButton>("ControlMethod");
         controlMethod.AddItem("Gamepad", 0);
@@ -25,6 +27,10 @@ public class SettingsScreen : Node2D {
             bgMusic.Stop();
         }
 
-        GetTree().ChangeScene("res://scenes/MainMenu.tscn");
+        if (fromMainMenu) {
+            GetTree().ChangeScene("res://scenes/MainMenu.tscn");
+        } else {
+            GetTree().ChangeScene("res://scenes/MapView.tscn");
+        }
     }
 }

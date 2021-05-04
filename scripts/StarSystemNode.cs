@@ -64,7 +64,7 @@ public class StarSystemNode : Node2D {
     public void DestroyStarBase() {
         _starBase.QueueFree();
         _starBase = null;
-        sys.starBase.Get().active = false;
+        sys.starBase.Get().deleted = true;
         sys.starBase.id = 0;
 
         var explosion = Explosion.New();
@@ -208,6 +208,10 @@ public class StarSystemNode : Node2D {
     }
 
     public void ProcessDay() {
+        if (_starBase != null) {
+            _starBase.ProcessDay();
+        }
+
         if (RpgGameState.instance.day % 10 != 0) {
             return;
         }

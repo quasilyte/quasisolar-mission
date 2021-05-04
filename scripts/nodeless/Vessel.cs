@@ -3,7 +3,7 @@ using Godot;
 
 public class Vessel: AbstractPoolValue, IItem {
     public struct Ref {
-        public int id;
+        public long id;
         public Vessel Get() { return RpgGameState.instance.vessels.Get(id); }
     }
     public Ref GetRef() { return new Ref{id = id}; }

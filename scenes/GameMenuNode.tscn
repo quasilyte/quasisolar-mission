@@ -44,7 +44,6 @@ margin_top = 160.0
 margin_right = 240.0
 margin_bottom = 192.0
 focus_mode = 2
-disabled = true
 text = "Settings"
 
 [node name="MainMenu" parent="PopupNode" instance=ExtResource( 2 )]

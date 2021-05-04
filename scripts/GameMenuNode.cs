@@ -18,8 +18,11 @@ public class GameMenuNode : Node2D {
         var popup = GetNode<PopupNode>("PopupNode");
         popup.GetNode<ButtonNode>("SaveGame").Connect("pressed", this, nameof(OnSaveGame));
         popup.GetNode<ButtonNode>("LoadGame").Connect("pressed", this, nameof(OnLoadGame));
+        popup.GetNode<ButtonNode>("Settings").Connect("pressed", this, nameof(OnSettings));
         popup.GetNode<ButtonNode>("CloseMenu").Connect("pressed", this, nameof(OnCloseMenu));
         popup.GetNode<ButtonNode>("MainMenu").Connect("pressed", this, nameof(OnMainMenu));
+
+        popup.GetNode<ButtonNode>("Settings").Disabled = GetTree().CurrentScene.Name != "MapView";
     }
 
     public void Open() {
@@ -27,11 +30,17 @@ public class GameMenuNode : Node2D {
     }
 
     private void OnSaveGame() {
+        RpgGameState.instance.CollectGarbage();
         GameStateSerializer.Encode(RpgGameState.instance);
     }
 
     private void OnLoadGame() {
         GetTree().ChangeScene("res://scenes/LoadGameScreen.tscn");
+    }
+
+    private void OnSettings() {
+        SettingsScreen.fromMainMenu = false;
+        GetTree().ChangeScene("res://scenes/SettingsScreen.tscn");
     }
 
     private void OnMainMenu() {

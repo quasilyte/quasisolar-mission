@@ -6,7 +6,7 @@ public class ItemInfo {
     public string itemName;
 
     public IItem ToItem() {
-        if (kind == ItemKind.Weapon) {
+        if (kind == ItemKind.Weapon || kind == ItemKind.SpecialWeapon) {
             return WeaponDesign.Find(itemName);
         }
         if (kind == ItemKind.EnergySource) {

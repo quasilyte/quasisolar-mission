@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class StarSystem: AbstractPoolValue {
     public struct Ref {
-        public int id;
+        public long id;
         public StarSystem Get() { return RpgGameState.instance.starSystems.Get(id); }
     }
     public Ref GetRef() { return new Ref{id = id}; }

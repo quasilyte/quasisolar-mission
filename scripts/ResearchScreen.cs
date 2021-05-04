@@ -107,6 +107,9 @@ public class ResearchScreen : Node2D {
         if (category == Research.Category.Fundamental) {
             return "fundamental";
         }
+        if (category == Research.Category.NewShield) {
+            return "new shield";
+        }
         throw new Exception("unexpected research category: " + category.ToString());
     }
 
