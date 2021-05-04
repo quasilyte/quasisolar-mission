@@ -72,13 +72,7 @@ public class KrigiaStarBaseNode : StarBaseNode {
             return;
         }
 
-        var spaceUnit = _gameState.spaceUnits.New();
-        spaceUnit.owner = Faction.Krigia;
-        spaceUnit.pos = starBase.system.Get().pos;
-        spaceUnit.waypoint = destination;
-        spaceUnit.botProgram = SpaceUnit.Program.KrigiaPatrol;
-        spaceUnit.botOrigin = starBase.GetRef();
-
+        var fleet = new List<Vessel.Ref>();
         var minGroupSize = 1;
         var maxGroupSize = 1;
         if (_gameState.day > 600) {
@@ -89,19 +83,28 @@ public class KrigiaStarBaseNode : StarBaseNode {
         }
         var groupSize = QRandom.IntRange(minGroupSize, maxGroupSize);
         var keptInGarrison = starBase.garrison.FindAll(v => {
-            if (v.Get().Design().level > 2) {
+            var maxVesselLevel = _gameState.day > 1000 ? 4 : 2;
+            if (v.Get().Design().level > maxVesselLevel) {
                 return true;
             }
-            if (spaceUnit.fleet.Count == groupSize) {
+            if (fleet.Count == groupSize) {
                 return true;
             }
-            spaceUnit.fleet.Add(v);
+            fleet.Add(v);
             return false;
         });
 
-        if (spaceUnit.fleet.Count == 0) {
+        if (fleet.Count == 0) {
             return;
         }
+
+        var spaceUnit = _gameState.spaceUnits.New();
+        spaceUnit.fleet = fleet;
+        spaceUnit.owner = Faction.Krigia;
+        spaceUnit.pos = starBase.system.Get().pos;
+        spaceUnit.waypoint = destination;
+        spaceUnit.botProgram = SpaceUnit.Program.KrigiaPatrol;
+        spaceUnit.botOrigin = starBase.GetRef();
         starBase.garrison = keptInGarrison;
 
         starBase.units.Add(spaceUnit.GetRef());
