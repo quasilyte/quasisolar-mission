@@ -110,6 +110,7 @@ public class QuickBattleMenu : Node2D {
             "Human 2 (Gamepad 2)",
             "Neutral Pirate",
             "Neutral Nomad",
+            "Neutral Avenger",
             "Zyth Hunter",
             "Earthling Scout",
             "Earthling Explorer",

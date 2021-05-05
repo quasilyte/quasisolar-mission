@@ -159,6 +159,28 @@ public class RandomEvent {
             }
         });
         e.actions.Add(new Action{
+            name = "Attack the avenger",
+            apply = (RandomEventContext ctx) => {
+                var avenger = RpgGameState.instance.NewVessel(Faction.Pirate, VesselDesign.Find("Avenger"));
+                VesselFactory.Init(avenger, VesselDesign.Find(avenger.designName));
+                var spaceUnit = newSpaceUnit(Faction.RandomEventHostile, avenger);
+
+                return new Result {
+                    text = multilineText(
+                        "You intervention surprised the pirate hunter.",
+                        "",
+                        "The pirates used the chance and warped away."
+                    ),
+                    effects = {
+                        new Effect{
+                            kind = EffectKind.EnterArena,
+                            value = spaceUnit,
+                        },
+                    },
+                };
+            }
+        });
+        e.actions.Add(new Action{
             name = "See what happens next",
             apply = (RandomEventContext _) => {
                 return new Result{

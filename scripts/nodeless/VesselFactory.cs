@@ -35,6 +35,8 @@ public static class VesselFactory {
             InitNeutralNomad(v);
         } else if (kind == "Neutral Weak Avenger") {
             InitNeutralAvenger(v, true);
+        } else if (kind == "Neutral Avenger") {
+            InitNeutralAvenger(v, false);
         } else if (kind == "Krigia Talons") {
             InitKrigiaTalons(v);
         } else if (kind == "Krigia Claws") {
@@ -160,9 +162,12 @@ public static class VesselFactory {
         v.designName = "Avenger";
         v.energySourceName = weak ? "Power Generator" : "Vortex Battery";
 
+        v.weapons.Add(TwinPhotonBurstCannonWeapon.Design.name);
         if (weak) {
-            v.weapons.Add(TwinPhotonBurstCannonWeapon.Design.name);
             v.shieldName = HeatScreenShield.Design.name;
+        } else {
+            v.weapons.Add(ShieldBreakerWeapon.Design.name);
+            v.shieldName = ReflectorShield.Design.name;
         }
     }
 
