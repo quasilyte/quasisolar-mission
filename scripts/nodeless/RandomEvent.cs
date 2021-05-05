@@ -86,6 +86,19 @@ public class RandomEvent {
         return string.Join("\n", lines);
     }
 
+    private static SpaceUnit newSpaceUnit(Faction faction, params Vessel[] fleet) {
+        var fleetList = new List<Vessel.Ref>();
+        foreach (var v in fleet) {
+            fleetList.Add(v.GetRef());
+        }
+
+        var spaceUnit = RpgGameState.instance.spaceUnits.New();
+        spaceUnit.owner = faction;
+        spaceUnit.pos = RpgGameState.instance.humanUnit.Get().pos;
+        spaceUnit.fleet = fleetList;
+        return spaceUnit;
+    }
+
     private static RandomEvent newPurpleSystemVisitor() {
         var e = new RandomEvent { };
         e.title = "Purple System Visitor";
@@ -109,10 +122,7 @@ public class RandomEvent {
                 v.faction = Faction.RandomEventHostile;
                 v.pilotName = "FIXME";
                 VesselFactory.Init(v, VesselDesign.Find("Visitor"));
-                var spaceUnit = RpgGameState.instance.spaceUnits.New();
-                spaceUnit.owner = Faction.RandomEventHostile;
-                spaceUnit.pos = RpgGameState.instance.humanUnit.Get().pos;
-                spaceUnit.fleet = new List<Vessel.Ref>{v.GetRef()};
+                var spaceUnit = newSpaceUnit(Faction.RandomEventHostile, v);
                 spaceUnit.cargo.power = (int)(ctx.roll * 50);
                 if (RpgGameState.instance.skillsLearned.Contains("Luck")) {
                     spaceUnit.cargo.power *= 3;
@@ -215,10 +225,7 @@ public class RandomEvent {
                 liner.faction = Faction.Wertu;
                 liner.pilotName = "FIXME";
                 VesselFactory.Init(liner, VesselDesign.Find("Transporter"));
-                var spaceUnit = RpgGameState.instance.spaceUnits.New();
-                spaceUnit.owner = Faction.Wertu;
-                spaceUnit.pos = RpgGameState.instance.humanUnit.Get().pos;
-                spaceUnit.fleet = new List<Vessel.Ref>{liner.GetRef()};
+                var spaceUnit = newSpaceUnit(Faction.RandomEventHostile, liner);
                 if (ctx.roll < 0.4) {
                     spaceUnit.cargo.organic = (int)((ctx.roll + 0.6f) * 150);
                 }
@@ -273,11 +280,7 @@ public class RandomEvent {
             v2.pilotName = "FIXME";
             VesselFactory.Init(v2, VesselDesign.Find("Pirate"));
 
-            var spaceUnit = RpgGameState.instance.spaceUnits.New();
-            spaceUnit.owner = Faction.Pirate;
-            spaceUnit.pos = RpgGameState.instance.humanUnit.Get().pos;
-            spaceUnit.fleet = new List<Vessel.Ref>{v1.GetRef(), v2.GetRef()};
-            return spaceUnit;
+            return newSpaceUnit(Faction.RandomEventHostile, v1, v2);
         };
 
         var e = new RandomEvent { };
@@ -428,7 +431,7 @@ public class RandomEvent {
                     effects = {
                         new Effect{
                             kind = EffectKind.EnterArena,
-                            value = new List<Vessel>{v},
+                            value = newSpaceUnit(Faction.RandomEventHostile, v),
                         },
                     },
                 };
