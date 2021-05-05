@@ -411,6 +411,23 @@ When player fleet meets the raid unit inside one system, a special "Scavengers" 
 Depending on the player fleet power, they may be inclined to attack or not.
 Player can always choose to engage them in combat even if they don't want to attack.
 
+## Bosses
+
+Although we cover **battles** in a different document, bosses will be described here.
+
+### The purple system visitor
+
+Difficulty: easy.
+
+Notable rewards: **crystal cannon** weapon blueprint.
+
+A battle station that can only move by using its warp device.
+
+Tactics: although it has artifacts that make **ion cannons** less effective, a combined fire from several
+**ion cannons** with one or more **disruptors** can make it suffer from the energy hunger.
+
+Since it can't move around normally, it's an easy target for most weapons.
+
 ## Battles
 
 ![image](https://user-images.githubusercontent.com/6286655/112731615-5c5e4a80-8f49-11eb-8c1f-ca38a423ff3c.png)
