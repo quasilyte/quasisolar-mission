@@ -159,8 +159,10 @@ public class Arena : Node2D {
             vesselNode.AddToGroup("affectedByEnvHazard");
             var centerPos = new Vector2(GetTree().Root.Size.x / 2, GetTree().Root.Size.y / 2);
             vesselNode.GlobalPosition = combatant.spawnPos;
-            vesselNode.Rotation = centerPos.AngleToPoint(vesselNode.GlobalPosition);
-            
+            if (!combatant.Design().fullArc) {
+                vesselNode.Rotation = centerPos.AngleToPoint(vesselNode.GlobalPosition);
+            }
+
             if (combatant.isBot) {
                 AddBotCombatant(pilot);
             } else {
