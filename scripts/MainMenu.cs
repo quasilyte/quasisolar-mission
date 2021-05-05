@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 
 public class MainMenu : Node2D {
+    private static bool _needInit = true;
+
     public override void _Ready() {
         GetNode<BackgroundMusic>("/root/BackgroundMusic").PlayMenuMusic();
 
@@ -13,17 +15,22 @@ public class MainMenu : Node2D {
 
         QuickBattleState.Reset();
 
-        GameControls.InitInputMap();
-        
-        ShieldDesign.InitLists();
-        WeaponDesign.InitLists();
-        RandomEvent.InitLists();
-        ArtifactDesign.InitLists();
-        VesselDesign.InitLists();
-        Research.InitLists();
+        if (_needInit) {
+            _needInit = false;
+
+            GameControls.InitInputMap();
+
+            ShieldDesign.InitLists();
+            WeaponDesign.InitLists();
+            RandomEvent.InitLists();
+            ArtifactDesign.InitLists();
+            VesselDesign.InitLists();
+            Research.InitLists();
+        }
     }
     
     private void OnSettingsButtonPressed() {
+        SettingsScreen.fromMainMenu = true;
         GetTree().ChangeScene("res://scenes/SettingsScreen.tscn");
     }
 

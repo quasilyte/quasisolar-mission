@@ -12,6 +12,7 @@ public class MapView : Node2D {
     private GameMenuNode _menuNode;
 
     private RpgGameState _gameState;
+    private SpaceUnit _humanUnit;
 
     private float _dayCounter = 0;
 
@@ -20,7 +21,8 @@ public class MapView : Node2D {
     private StarSystemNode _currentSystem;
     private StarSystemNode _dstSystem;
 
-    private List<StarSystemNode> _starSystems = new List<StarSystemNode>();
+    private List<StarSystemNode> _starSystemNodes = new List<StarSystemNode>();
+    private Dictionary<StarSystem, StarSystemNode> _starSystemNodeByStarSystem = new Dictionary<StarSystem, StarSystemNode>();
 
     private TextureButton _movementToggle;
 
@@ -46,7 +48,6 @@ public class MapView : Node2D {
     private PopupNode _krigiaTaskForcePopup;
 
     private HashSet<SpaceUnitNode> _spaceUnits = new HashSet<SpaceUnitNode>();
-    private List<StarBaseNode> _starBases = new List<StarBaseNode>();
 
     private List<UnitMemberNode> _unitMembers = new List<UnitMemberNode>();
 
@@ -76,15 +77,16 @@ public class MapView : Node2D {
 
     public override void _Ready() {
         _gameState = RpgGameState.instance;
+        _humanUnit = _gameState.humanUnit.Get();
         QRandom.SetRandomNumberGenerator(RpgGameState.rng);
         GetNode<BackgroundMusic>("/root/BackgroundMusic").PlayMapMusic();
 
         if (RpgGameState.transition == RpgGameState.MapTransition.EnemyBaseAttackRepelled) {
-            ProcessUnitCasualties(_gameState.humanUnit);
+            ProcessUnitCasualties(_humanUnit);
             ProcessStarBaseCasualties(RpgGameState.garrisonStarBase);
             RpgGameState.garrisonStarBase = null;
         } else if (RpgGameState.transition == RpgGameState.MapTransition.EnemyUnitDestroyed) {
-            ProcessUnitCasualties(_gameState.humanUnit);
+            ProcessUnitCasualties(_humanUnit);
             ProcessUnitCasualties(RpgGameState.enemyAttackerUnit);
             RpgGameState.enemyAttackerUnit = null;
         } else if (RpgGameState.transition == RpgGameState.MapTransition.BaseAttackSimulation) {
@@ -93,6 +95,7 @@ public class MapView : Node2D {
             RpgGameState.enemyAttackerUnit = null;
             RpgGameState.garrisonStarBase = null;
         }
+        _gameState.CollectGarbage();
 
         RenderMap();
 
@@ -183,7 +186,7 @@ public class MapView : Node2D {
         _camera = GetNode<Camera2D>("Camera");
         _camera.LimitLeft = 0;
         _camera.LimitRight = (int)MAP_WIDTH;
-        _camera.Position = new Vector2(_gameState.humanUnit.pos.x, GetViewport().Size.y / 2);
+        _camera.Position = new Vector2(_humanUnit.pos.x, GetViewport().Size.y / 2);
         _cameraSpeed = new Vector2(256, 0);
 
         if (RpgGameState.transition == RpgGameState.MapTransition.EnemyBaseAttackRepelled) {
@@ -198,33 +201,38 @@ public class MapView : Node2D {
         }
 
         if (_currentSystem != null) {
-            _currentSystem.OnPlayerEnter(_gameState.humanPlayer);
+            _currentSystem.OnPlayerEnter(Faction.Human);
         }
         UpdateUI();
 
         _menuNode = GameMenuNode.New();
-        AddChild(_menuNode);
+        GetNode<CanvasLayer>("UI").AddChild(_menuNode);
         _menuNode.Connect("Closed", this, nameof(OnGameMenuClosed));
     }
 
-    private List<Vessel> FindSurvivors(List<Vessel> fleet) {
-        return fleet.FindAll(v => v.hp > 0);
+    private List<Vessel.Ref> RemoveCasualties(List<Vessel.Ref> fleet) {
+        var result = new List<Vessel.Ref>();
+        foreach (var v in fleet) {
+            if (v.Get().hp > 0) {
+                result.Add(v);
+                continue;
+            }
+            v.Get().deleted = true;
+        }
+        return result;
     }
 
     private void ProcessStarBaseCasualties(StarBase starBase) {
-        starBase.garrison = FindSurvivors(starBase.garrison);
+        starBase.garrison = RemoveCasualties(starBase.garrison);
         foreach (var v in starBase.garrison) {
-            v.energy = v.GetEnergySource().maxBackupEnergy;
+            v.Get().energy = v.Get().GetEnergySource().maxBackupEnergy;
         }
     }
 
     private void ProcessUnitCasualties(SpaceUnit unit) {
-        unit.fleet = FindSurvivors(unit.fleet);
+        unit.fleet = RemoveCasualties(unit.fleet);
         if (unit.fleet.Count == 0) {
-            if (_gameState.starBaseBySpaceUnit.ContainsKey(unit)) {
-                _gameState.starBaseBySpaceUnit[unit].units.Remove(unit);
-            }
-            _gameState.spaceUnits.Remove(unit);
+            unit.deleted = true;
         }
     }
 
@@ -234,22 +242,22 @@ public class MapView : Node2D {
 
         // TODO: allow units selection?
         var system = RpgGameState.starSystemByPos[u.unit.pos];
-        var starBase = system.starBase;
+        var starBase = system.starBase.Get();
         var numDefenders = Math.Min(starBase.garrison.Count, 4);
         var defenders = new List<Vessel>();
         for (int i = 0; i < numDefenders; i++) {
-            defenders.Add(starBase.garrison[i]);
+            defenders.Add(starBase.garrison[i].Get());
         }
         RpgGameState.garrisonStarBase = starBase;
 
-        SetArenaSettings(system, u.unit.fleet, defenders);
+        SetArenaSettings(system, ConvertVesselList(u.unit.fleet), defenders);
         GetTree().ChangeScene("res://scenes/ArenaScreen.tscn");
     }
 
     private void OnFightEventUnit() {
         var u = _eventUnit;
         RpgGameState.enemyAttackerUnit = u.unit;
-        SetArenaSettings(_currentSystem.sys, u.unit.fleet, _gameState.humanUnit.fleet);
+        SetArenaSettings(_currentSystem.sys, ConvertVesselList(u.unit.fleet), ConvertVesselList(_humanUnit.fleet));
         GetTree().ChangeScene("res://scenes/ArenaScreen.tscn");
     }
 
@@ -289,8 +297,8 @@ public class MapView : Node2D {
         _gameState.fuel -= RetreatFuelCost();
         UpdateUI();
 
-        if (_currentSystem.sys.starBase != null) {
-            TaskForceAttacksHumanBase(_currentSystem.sys.starBase, _eventUnit);
+        if (_currentSystem.sys.starBase.id != 0) {
+            TaskForceAttacksHumanBase(_currentSystem.sys.starBase.Get(), _eventUnit);
         }
     }
 
@@ -309,7 +317,7 @@ public class MapView : Node2D {
             // TODO: create notification.
             StopMovement();
             RpgGameState.humanBases.Remove(starBase);
-            _starSystems[starBase.System().id].DestroyStarBase();
+            _starSystemNodeByStarSystem[starBase.system.Get()].DestroyStarBase();
             GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/base_eradicated.wav"));
         }
     }
@@ -334,32 +342,32 @@ public class MapView : Node2D {
         }
 
         if (result.genericDebris != 0) {
-            _gameState.humanUnit.CargoAddDebris(result.genericDebris, Research.Material.None);
+            _humanUnit.CargoAddDebris(result.genericDebris, Research.Material.None);
             lines.Add($"+{result.genericDebris} debris");
         }
         if (result.krigiaDebris != 0) {
-            _gameState.humanUnit.CargoAddDebris(result.krigiaDebris, Research.Material.Krigia);
+            _humanUnit.CargoAddDebris(result.krigiaDebris, Research.Material.Krigia);
             lines.Add($"+{result.krigiaDebris} Krigia debris");
         }
         if (result.wertuDebris != 0) {
-            _gameState.humanUnit.CargoAddDebris(result.wertuDebris, Research.Material.Wertu);
+            _humanUnit.CargoAddDebris(result.wertuDebris, Research.Material.Wertu);
             lines.Add($"+{result.wertuDebris} Wertu debris");
         }
         if (result.zythDebris != 0) {
-            _gameState.humanUnit.CargoAddDebris(result.zythDebris, Research.Material.Zyth);
+            _humanUnit.CargoAddDebris(result.zythDebris, Research.Material.Zyth);
             lines.Add($"+{result.zythDebris} Zyth debris");
         }
 
         if (result.minerals != 0) {
-            _gameState.humanUnit.CargoAddMinerals(result.minerals);
+            _humanUnit.CargoAddMinerals(result.minerals);
             lines.Add($"+{result.minerals} mineral resouce");
         }
         if (result.organic != 0) {
-            _gameState.humanUnit.CargoAddOrganic(result.organic);
+            _humanUnit.CargoAddOrganic(result.organic);
             lines.Add($"+{result.organic} organic resource");
         }
         if (result.power != 0) {
-            _gameState.humanUnit.CargoAddPower(result.power);
+            _humanUnit.CargoAddPower(result.power);
             lines.Add($"+{result.power} power resource");
         }
 
@@ -399,7 +407,7 @@ public class MapView : Node2D {
                 return;
 
             case CheatCommandKind.CurrentSystemChange:
-                _currentSystem.OnPlayerEnter(_gameState.humanPlayer);
+                _currentSystem.OnPlayerEnter(Faction.Human);
                 UpdateUI();
                 return;
 
@@ -495,24 +503,24 @@ public class MapView : Node2D {
                 _gameState.credits += (int)effect.value;
                 return;
             case RandomEvent.EffectKind.AddMinerals:
-                _gameState.humanUnit.CargoAddMinerals((int)effect.value);
+                _humanUnit.CargoAddMinerals((int)effect.value);
                 return;
             case RandomEvent.EffectKind.AddOrganic:
-                _gameState.humanUnit.CargoAddOrganic((int)effect.value);
+                _humanUnit.CargoAddOrganic((int)effect.value);
                 return;
             case RandomEvent.EffectKind.AddPower:
-                _gameState.humanUnit.CargoAddPower((int)effect.value);
+                _humanUnit.CargoAddPower((int)effect.value);
                 return;
             case RandomEvent.EffectKind.AddFlagshipBackupEnergy:
-                _gameState.humanUnit.fleet[0].AddEnergy((float)effect.value);
+                _humanUnit.fleet[0].Get().AddEnergy((float)effect.value);
                 return;
             case RandomEvent.EffectKind.AddWertuReputation:
                 _gameState.wertuReputation += (int)effect.value;
                 return;
             case RandomEvent.EffectKind.SpendAnyVesselBackupEnergy:
-                foreach (var v in _gameState.humanUnit.fleet) {
-                    if (v.energy >= (int)effect.value) {
-                        v.energy -= (int)effect.value;
+                foreach (var v in _humanUnit.fleet) {
+                    if (v.Get().energy >= (int)effect.value) {
+                        v.Get().energy -= (int)effect.value;
                         break;
                     }
                 }
@@ -522,7 +530,8 @@ public class MapView : Node2D {
                 return;
             case RandomEvent.EffectKind.AddFleetBackupEnergyPercentage: {
                     var randRange = (Vector2)effect.value;
-                    foreach (var v in _gameState.humanUnit.fleet) {
+                    foreach (var handle in _humanUnit.fleet) {
+                        var v = handle.Get();
                         var roll = QRandom.FloatRange(randRange.x, randRange.y);
                         v.energy = QMath.ClampMin(v.energy - v.energy * roll, 0);
                     }
@@ -530,7 +539,8 @@ public class MapView : Node2D {
                 }
             case RandomEvent.EffectKind.DamageFleetPercentage: {
                     var randRange = (Vector2)effect.value;
-                    foreach (var v in _gameState.humanUnit.fleet) {
+                    foreach (var handle in _humanUnit.fleet) {
+                        var v = handle.Get();
                         if (v.hp < 2) {
                             continue;
                         }
@@ -541,9 +551,9 @@ public class MapView : Node2D {
                 }
             case RandomEvent.EffectKind.TeleportToSystem:
                 var targetSys = (StarSystem)effect.value;
-                _gameState.humanUnit.pos = targetSys.pos;
-                _human.GlobalPosition = _gameState.humanUnit.pos;
-                _human.node.GlobalPosition = _gameState.humanUnit.pos;
+                _humanUnit.pos = targetSys.pos;
+                _human.GlobalPosition = _humanUnit.pos;
+                _human.node.GlobalPosition = _humanUnit.pos;
                 EnterSystem(targetSys);
                 return;
             case RandomEvent.EffectKind.ApplySlow:
@@ -553,7 +563,7 @@ public class MapView : Node2D {
             case RandomEvent.EffectKind.EnterArena: {
                     var unit = (SpaceUnit)effect.value;
                     RpgGameState.enemyAttackerUnit = unit;
-                    SetArenaSettings(_currentSystem.sys, unit.fleet, _gameState.humanUnit.fleet);
+                    SetArenaSettings(_currentSystem.sys, ConvertVesselList(unit.fleet), ConvertVesselList(_humanUnit.fleet));
                     _randomEventResolutionPostEffect = effect.kind;
                     return;
                 }
@@ -564,7 +574,8 @@ public class MapView : Node2D {
         var unitMembers = GetNode<Label>("UI/UnitMembers");
         var box = unitMembers.GetNode<VBoxContainer>("Box");
 
-        foreach (var v in _gameState.humanUnit.fleet) {
+        foreach (var handle in _humanUnit.fleet) {
+            var v = handle.Get();
             var hpPercentage = QMath.Percantage(v.hp, v.Design().maxHp);
             var energyPercentage = QMath.Percantage(v.energy, v.GetEnergySource().maxBackupEnergy);
             var m = UnitMemberNode.New(v.pilotName, v.Design().Texture(), hpPercentage, energyPercentage);
@@ -588,16 +599,16 @@ public class MapView : Node2D {
     }
 
     private void OnConvertPower() {
-        if (_gameState.humanUnit.cargo.power < 5) {
+        if (_humanUnit.cargo.power < 5) {
             return;
         }
-        _gameState.humanUnit.cargo.power -= 5;
+        _humanUnit.cargo.power -= 5;
         _gameState.fuel += 20;
         UpdateUI();
     }
 
     private bool CanBuildStarBase() {
-        return _currentSystem != null && _currentSystem.sys.starBase == null;
+        return _currentSystem != null && _currentSystem.sys.starBase.id == 0;
     }
 
     private void OnBuildNewBase() {
@@ -606,17 +617,20 @@ public class MapView : Node2D {
             return;
         }
 
-        _gameState.humanUnit.fleet.RemoveAt(arkIndex);
+        _humanUnit.fleet.RemoveAt(arkIndex);
         _unitMembers[arkIndex].QueueFree();
         _unitMembers.RemoveAt(arkIndex);
         ReorderUnitMembers();
 
-        var starBase = new StarBase(_currentSystem.sys, _gameState.humanPlayer);
+        var starBase = _gameState.starBases.New();
+        starBase.owner = Faction.Human;
+        starBase.level = 1;
         starBase.mineralsStock = 0;
         starBase.organicStock = 0;
         starBase.powerStock = 0;
+        starBase.system = _currentSystem.sys.GetRef();
         RpgGameState.humanBases.Add(starBase);
-        _currentSystem.sys.starBase = starBase;
+        _currentSystem.sys.starBase = starBase.GetRef();
 
         var starBaseNode = NewStarBaseNode(_currentSystem.sys);
         AddChild(starBaseNode);
@@ -633,8 +647,8 @@ public class MapView : Node2D {
     }
 
     private void OnEnterBaseButton() {
-        _currentSystem.sys.starBase.UpdateShopSelection();
-        RpgGameState.enteredBase = _currentSystem.sys.starBase;
+        var starBase = _currentSystem.sys.starBase.Get();
+        RpgGameState.enteredBase = starBase;
         GetTree().ChangeScene("res://scenes/StarBaseScreen.tscn");
     }
 
@@ -670,42 +684,42 @@ public class MapView : Node2D {
     }
 
     private void OnMiningLoadMinerals() {
-        var freeSpace = _gameState.humanUnit.CargoFree();
+        var freeSpace = _humanUnit.CargoFree();
         foreach (var p in _currentSystem.sys.resourcePlanets) {
             if (!p.hasMine) {
                 continue;
             }
             var loadAmount = freeSpace > p.mineralsCollected ? p.mineralsCollected : freeSpace;
             p.mineralsCollected -= loadAmount;
-            _gameState.humanUnit.cargo.minerals += loadAmount;
+            _humanUnit.cargo.minerals += loadAmount;
             freeSpace -= loadAmount;
         }
         UpdateUI();
     }
 
     private void OnMiningLoadOrganic() {
-        var freeSpace = _gameState.humanUnit.CargoFree();
+        var freeSpace = _humanUnit.CargoFree();
         foreach (var p in _currentSystem.sys.resourcePlanets) {
             if (!p.hasMine) {
                 continue;
             }
             var loadAmount = freeSpace > p.organicCollected ? p.organicCollected : freeSpace;
             p.organicCollected -= loadAmount;
-            _gameState.humanUnit.cargo.organic += loadAmount;
+            _humanUnit.cargo.organic += loadAmount;
             freeSpace -= loadAmount;
         }
         UpdateUI();
     }
 
     private void OnMiningLoadPower() {
-        var freeSpace = _gameState.humanUnit.CargoFree();
+        var freeSpace = _humanUnit.CargoFree();
         foreach (var p in _currentSystem.sys.resourcePlanets) {
             if (!p.hasMine) {
                 continue;
             }
             var loadAmount = freeSpace > p.powerCollected ? p.powerCollected : freeSpace;
             p.powerCollected -= loadAmount;
-            _gameState.humanUnit.cargo.power += loadAmount;
+            _humanUnit.cargo.power += loadAmount;
             freeSpace -= loadAmount;
         }
         UpdateUI();
@@ -777,6 +791,7 @@ public class MapView : Node2D {
 
     private void OpenGameMenu() {
         _lockControls = true;
+        StopMovement();
         _menuNode.Open();
     }
 
@@ -831,17 +846,17 @@ public class MapView : Node2D {
     }
 
     private void OnSpaceUnitAttackStarBase(SpaceUnitNode unitNode) {
-        if (unitNode.unit.owner != _gameState.krigiaPlayer) {
+        if (unitNode.unit.owner != Faction.Krigia) {
             // Other race task forces are not implemented yet.
-            throw new Exception("unexpected star base attack from " + unitNode.unit.owner.PlayerName);
+            throw new Exception("unexpected star base attack from " + unitNode.unit.owner.ToString());
         }
 
-        if (unitNode.unit.pos == _gameState.humanUnit.pos) {
+        if (unitNode.unit.pos == _humanUnit.pos) {
             TriggerKrigiaTaskForceEvent(unitNode);
             return;
         }
         var sys = RpgGameState.starSystemByPos[unitNode.unit.pos];
-        TaskForceAttacksHumanBase(sys.starBase, unitNode);
+        TaskForceAttacksHumanBase(sys.starBase.Get(), unitNode);
     }
 
     private void OnSpaceUnitRemoved(SpaceUnitNode unitNode) {
@@ -882,21 +897,21 @@ public class MapView : Node2D {
     private StarBaseNode NewStarBaseNode(StarSystem sys) {
         StarBaseNode baseNode;
 
-        if (sys.starBase.owner == _gameState.humanPlayer) {
-            baseNode = HumanStarBaseNode.New(sys.starBase);
-        } else if (sys.starBase.owner == _gameState.scavengerPlayer) {
-            baseNode = ScavengerStarBaseNode.New(sys.starBase);
+        var starBase = sys.starBase.Get();
+        if (starBase.owner == Faction.Human) {
+            baseNode = HumanStarBaseNode.New(starBase);
+        } else if (starBase.owner == Faction.Scavenger) {
+            baseNode = ScavengerStarBaseNode.New(starBase);
             baseNode.Connect("SpaceUnitCreated", this, nameof(OnSpaceUnitCreated));
-        } else if (sys.starBase.owner == _gameState.krigiaPlayer) {
-            baseNode = KrigiaStarBaseNode.New(sys.starBase);
+        } else if (starBase.owner == Faction.Krigia) {
+            baseNode = KrigiaStarBaseNode.New(starBase);
             baseNode.Connect("SpaceUnitCreated", this, nameof(OnSpaceUnitCreated));
         } else {
-            baseNode = StarBaseNode.New(sys.starBase);
+            baseNode = StarBaseNode.New(starBase);
         }
 
         baseNode.Position = sys.pos;
         baseNode.Visible = false;
-        _starBases.Add(baseNode);
 
         return baseNode;
     }
@@ -904,63 +919,71 @@ public class MapView : Node2D {
     private void RenderMap() {
         StarSystemNode currentSystem = null;
 
-        foreach (StarSystem sys in _gameState.starSystems) {
+        foreach (StarSystem sys in _gameState.starSystems.objects.Values) {
             StarBaseNode starBaseNode = null;
-            if (sys.starBase != null) {
+            if (sys.starBase.id != 0) {
                 // Sync star base units. They could be destroyed.
-                sys.starBase.units.RemoveWhere((x) => !_gameState.spaceUnits.Contains(x));
+                sys.starBase.Get().units.RemoveWhere((x) => {
+                    return !_gameState.spaceUnits.Contains(x.id) || x.Get().deleted;
+                });
 
                 starBaseNode = NewStarBaseNode(sys);
                 AddChild(starBaseNode);
             }
             var systemNode = StarSystemNode.New(sys, starBaseNode);
-            _starSystems.Add(systemNode);
+            _starSystemNodes.Add(systemNode);
+            _starSystemNodeByStarSystem[sys] = systemNode;
             {
                 var args = new Godot.Collections.Array { systemNode };
                 systemNode.Connect("Clicked", this, nameof(OnStarClicked), args);
             }
             AddChild(systemNode);
-            if (sys.pos == _gameState.humanUnit.pos) {
+            if (sys.pos == _humanUnit.pos) {
                 currentSystem = systemNode;
             }
         }
 
-        var playerUnit = SpaceUnitNode.New(_gameState.humanUnit);
+        var playerUnit = SpaceUnitNode.New(_humanUnit);
         playerUnit.Connect("DestinationReached", this, nameof(OnDestinationReached));
         playerUnit.speed = CalculateFleetSpeed();
         AddChild(playerUnit);
         if (playerUnit.unit.waypoint != Vector2.Zero) {
-            _dstSystem = _starSystems[RpgGameState.starSystemByPos[playerUnit.unit.waypoint].id];
+            _dstSystem = _starSystemNodeByStarSystem[RpgGameState.starSystemByPos[playerUnit.unit.waypoint]];
         }
         _human = MapHumanNode.New(playerUnit);
-        _human.player = _gameState.humanPlayer;
-        _human.GlobalPosition = _gameState.humanUnit.pos;
-        playerUnit.GlobalPosition = _gameState.humanUnit.pos;
+        _human.GlobalPosition = _humanUnit.pos;
+        playerUnit.GlobalPosition = _humanUnit.pos;
         AddChild(_human);
 
         _currentSystem = currentSystem;
 
-        foreach (var u in _gameState.spaceUnits) {
-            SpaceUnitNode node;
-            if (u.owner == _gameState.scavengerPlayer) {
-                node = ScavengerSpaceUnitNode.New(u);
-            } else if (u.owner == _gameState.krigiaPlayer) {
-                node = KrigiaSpaceUnitNode.New(u);
-            } else {
-                throw new Exception("unexpected unit owner: " + u.owner.PlayerName);
+        foreach (var u in _gameState.spaceUnits.objects.Values) {
+            if (u.deleted) {
+                throw new Exception("trying to add a deleted unit");
             }
-            AddSpaceUnit(node);
+            if (u.fleet.Count == 0) {
+                throw new Exception("trying to add a unit with empty fleet");
+            }
+            if (u.owner == Faction.Scavenger) {
+                AddSpaceUnit(ScavengerSpaceUnitNode.New(u));
+            } else if (u.owner == Faction.Krigia) {
+                AddSpaceUnit(KrigiaSpaceUnitNode.New(u));
+            } else if (u.owner == Faction.Human) {
+                // Handled above.
+            } else {
+                throw new Exception("unexpected unit owner: " + u.owner.ToString());
+            }
         }
     }
 
     private void EnterSystem(StarSystem sys) {
         _gameState.travelSlowPoints = 0;
-        _currentSystem = _starSystems[sys.id];
+        _currentSystem = _starSystemNodeByStarSystem[sys];
         _dstSystem = null;
-        _currentSystem.OnPlayerEnter(_human.player);
-        if (sys.starBase != null) {
-            if (sys.starBase.owner == _human.player) {
-                RecoverFleetEnergy(_gameState.humanUnit.fleet);
+        _currentSystem.OnPlayerEnter(Faction.Human);
+        if (sys.starBase.id != 0) {
+            if (sys.starBase.Get().owner == Faction.Human) {
+                RecoverFleetEnergy(_humanUnit.fleet);
             }
         }
 
@@ -1014,11 +1037,11 @@ public class MapView : Node2D {
         var mining = GetNode<TextureButton>("UI/MiningButton");
         mining.Disabled = true;
 
-        _starSystemMenu.GetNode<ButtonNode>("ConvertPower").Disabled = _gameState.humanUnit.cargo.power < 5;
+        _starSystemMenu.GetNode<ButtonNode>("ConvertPower").Disabled = _humanUnit.cargo.power < 5;
         _starSystemMenu.GetNode<ButtonNode>("BuildNewBase").Disabled = ArkVesselIndex() == -1 || !CanBuildStarBase();
 
         for (int i = 0; i < _unitMembers.Count; i++) {
-            var p = _gameState.humanUnit.fleet[i];
+            var p = _humanUnit.fleet[i].Get();
             var hpPercentage = QMath.Percantage(p.hp, p.Design().maxHp);
             var energyPercentage = QMath.Percantage(p.energy, p.GetEnergySource().maxBackupEnergy);
             var unit = _unitMembers[i];
@@ -1037,11 +1060,11 @@ public class MapView : Node2D {
         UpdateDronesValue();
         if (_currentSystem != null) {
             GetNode<Label>("UI/LocationValue").Text = _currentSystem.sys.name;
-            if (_currentSystem.sys.starBase != null && _currentSystem.sys.starBase.owner == _human.player) {
+            if (_currentSystem.sys.starBase.id != 0 && _currentSystem.sys.starBase.Get().owner == Faction.Human) {
                 enterBase.Disabled = false;
             }
             // Can mine only in own or neutral systems.
-            if (_currentSystem.sys.starBase == null || _currentSystem.sys.starBase.owner == _human.player) {
+            if (_currentSystem.sys.starBase.id == 0 || _currentSystem.sys.starBase.Get().owner == Faction.Human) {
                 mining.Disabled = false;
             }
 
@@ -1074,8 +1097,8 @@ public class MapView : Node2D {
     }
 
     private void UpdateCargoValue() {
-        int max = _gameState.humanUnit.CargoCapacity();
-        var current = _gameState.humanUnit.CargoSize();
+        int max = _humanUnit.CargoCapacity();
+        var current = _humanUnit.CargoSize();
         GetNode<Label>("UI/CargoValue").Text = $"{current}/{max}";
     }
 
@@ -1096,11 +1119,15 @@ public class MapView : Node2D {
     }
 
     private void UpdateDronesValue() {
-        GetNode<Label>("UI/DronesValue").Text = _gameState.drones.ToString();
+        var carrying = _gameState.drones;
+        var limit = RpgGameState.MaxDrones();
+        var text = $"{carrying} ({_gameState.dronesOwned}/{limit})";
+        GetNode<Label>("UI/DronesValue").Text = text;
     }
 
-    private void RecoverFleetEnergy(List<Vessel> fleet) {
-        foreach (var v in fleet) {
+    private void RecoverFleetEnergy(List<Vessel.Ref> fleet) {
+        foreach (var handle in fleet) {
+            var v = handle.Get();
             v.energy = v.GetEnergySource().maxBackupEnergy;
         }
     }
@@ -1190,7 +1217,7 @@ public class MapView : Node2D {
 
         if (research.category == Research.Category.NewArtifact) {
             var artifact = ArtifactDesign.Find(research.name);
-            RpgGameState.PutItemToStorage(artifact);
+            _gameState.PutItemToStorage(artifact);
         }
 
         _gameState.researchProgress = 0;
@@ -1210,7 +1237,7 @@ public class MapView : Node2D {
         } else if (research.category == Research.Category.NewSpecialWeapon) {
             text += "New special weapon is available for production.\n\n";
         } else if (research.category == Research.Category.NewVesselDesign) {
-            text += "New special vessel is available for production.\n\n";
+            text += "New vessel is available for production.\n\n";
         } else if (research.category == Research.Category.NewWeapon) {
             text += "New weapon is available for production.\n\n";
         } else if (research.category == Research.Category.Upgrade) {
@@ -1239,9 +1266,9 @@ public class MapView : Node2D {
         ProcessUnitMode();
 
         var starBase = _currentSystem.sys.starBase;
-        if (starBase != null) {
-            if (starBase.owner == _human.player) {
-                RecoverFleetEnergy(_gameState.humanUnit.fleet);
+        if (starBase.id != 0) {
+            if (starBase.Get().owner == Faction.Human) {
+                RecoverFleetEnergy(_humanUnit.fleet);
             }
         }
 
@@ -1256,19 +1283,19 @@ public class MapView : Node2D {
             }
         }
 
-        if (starBase != null) {
-            if (starBase.owner.Alliance != _human.player.Alliance) {
+        if (starBase.id != 0) {
+            if (_gameState.FactionsAtWar(starBase.Get().owner, Faction.Human)) {
                 RollFleetAttack();
             }
         }
     }
 
     private bool RollUnitAttack(SpaceUnitNode u) {
-        if (u.unit.owner == _gameState.scavengerPlayer) {
+        if (u.unit.owner == Faction.Scavenger) {
             TriggerScavengersEvent(u);
             return true;
         }
-        if (u.unit.owner == _gameState.krigiaPlayer) {
+        if (u.unit.owner == Faction.Krigia) {
             if (u.unit.botProgram == SpaceUnit.Program.KrigiaPatrol) {
                 TriggerKrigiaPatrolEvent(u);
             }
@@ -1283,7 +1310,7 @@ public class MapView : Node2D {
             return false;
         }
         var scavengersForce = u.unit.FleetCost();
-        var humanForce = _gameState.humanUnit.FleetCost();
+        var humanForce = _humanUnit.FleetCost();
         return scavengersForce * 2 > humanForce;
     }
 
@@ -1354,12 +1381,16 @@ public class MapView : Node2D {
         }
     }
 
-    private void ProcessStarSystems() {
-        foreach (var starBase in _starBases) {
-            starBase.ProcessDay();
+    private List<Vessel> ConvertVesselList(List<Vessel.Ref> list) {
+        var result = new List<Vessel>();
+        foreach (var v in list) {
+            result.Add(v.Get());
         }
+        return result;
+    }
 
-        foreach (StarSystemNode starSystem in _starSystems) {
+    private void ProcessStarSystems() {
+        foreach (StarSystemNode starSystem in _starSystemNodes) {
             starSystem.sys.randomEventCooldown = QMath.ClampMin(starSystem.sys.randomEventCooldown - 1, 0);
             starSystem.ProcessDay();
         }
@@ -1374,13 +1405,13 @@ public class MapView : Node2D {
     }
 
     private void ProcessUnitMode() {
-        var starBase = _currentSystem.sys.starBase;
-
         if (_gameState.mapState.mode == UnitMode.Idle) {
             var toAdd = _gameState.technologiesResearched.Contains("Recycling") ? 2 : 1;
             _gameState.fuel = QMath.ClampMax(_gameState.fuel + toAdd, RpgGameState.MaxFuel());
             return;
         }
+
+        var starBaseRef = _currentSystem.sys.starBase;
 
         if (_gameState.mapState.mode == UnitMode.Attack) {
             if (_gameState.fuel < 1) {
@@ -1388,10 +1419,11 @@ public class MapView : Node2D {
                 StopMovement();
                 return;
             }
-            if (starBase.owner.Alliance == _gameState.humanPlayer.Alliance) {
+            if (starBaseRef.id == 0) {
                 return;
             }
-            if (starBase == null) {
+            var starBase = starBaseRef.Get();
+            if (!_gameState.FactionsAtWar(starBase.owner, Faction.Human)) {
                 return;
             }
             
@@ -1399,7 +1431,7 @@ public class MapView : Node2D {
             if (starBase.garrison.Count != 0 && !_gameState.skillsLearned.Contains("Siege Mastery")) {
                 return;
             }
-            var damage = _gameState.humanUnit.fleet.Count;
+            var damage = _humanUnit.fleet.Count;
             if (_gameState.skillsLearned.Contains("Siege Mastery")) {
                 damage *= 2;
             }
@@ -1422,7 +1454,7 @@ public class MapView : Node2D {
             if (_currentSystem.sys.artifact == null) {
                 return;
             }
-            if (starBase != null && starBase.owner.Alliance != _human.player.Alliance) {
+            if (starBaseRef.id != 0 && _gameState.FactionsAtWar(starBaseRef.Get().owner, Faction.Human)) {
                 _currentSystem.sys.artifactRecoveryDelay -= 1;
             } else {
                 _currentSystem.sys.artifactRecoveryDelay -= 2;
@@ -1454,8 +1486,8 @@ public class MapView : Node2D {
     private int ArkVesselIndex() {
         // Start from 1, since flagship can't be used to build a base;
         // even if it's Ark.
-        for (int i = 1; i < _gameState.humanUnit.fleet.Count; i++) {
-            var v = _gameState.humanUnit.fleet[i];
+        for (int i = 1; i < _humanUnit.fleet.Count; i++) {
+            var v = _humanUnit.fleet[i].Get();
             if (v.Design().name == "Ark") {
                 return i;
             }
@@ -1492,6 +1524,9 @@ public class MapView : Node2D {
             ArenaSettings.combatants.Add(v);
         }
 
+        if (!alliedFleet[0].isBot) {
+            alliedFleet[0].isGamepad = GameControls.preferGamepad;
+        }
         for (int i = 0; i < alliedFleet.Count; i++) {
             var pos = new Vector2(224, 288 + (i * 192));
             var v = alliedFleet[i];
@@ -1501,7 +1536,7 @@ public class MapView : Node2D {
     }
 
     private void RollFleetAttack() {
-        var starBase = _currentSystem.sys.starBase;
+        var starBase = _currentSystem.sys.starBase.Get();
 
         if (starBase.garrison.Count == 0) {
             return;
@@ -1517,17 +1552,17 @@ public class MapView : Node2D {
         var numDefenders = Math.Min(starBase.garrison.Count, 4);
         var defenders = new List<Vessel>();
         for (int i = 0; i < numDefenders; i++) {
-            defenders.Add(starBase.garrison[i]);
+            defenders.Add(starBase.garrison[i].Get());
         }
         RpgGameState.garrisonStarBase = starBase;
 
-        SetArenaSettings(_currentSystem.sys, defenders, _gameState.humanUnit.fleet);
+        SetArenaSettings(_currentSystem.sys, defenders, ConvertVesselList(_humanUnit.fleet));
 
         GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/unit_under_attack.wav"));
         StopMovement();
         _lockControls = true;
         var pluralSuffix = numDefenders == 1 ? "" : "s";
-        _fleetAttackPopup.GetNode<Label>("Attackers").Text = $"Attackers: {numDefenders} {starBase.owner.PlayerName} ship" + pluralSuffix;
+        _fleetAttackPopup.GetNode<Label>("Attackers").Text = $"Attackers: {numDefenders} {starBase.owner.ToString()} ship" + pluralSuffix;
         _fleetAttackPopup.GetNode<Button>("RetreatButton").Disabled = _gameState.fuel < RetreatFuelCost();
         _fleetAttackPopup.PopupCentered();
     }
@@ -1538,26 +1573,26 @@ public class MapView : Node2D {
         }
         starBase.botReinforcementsDelay = QRandom.IntRange(100, 200);
 
-        var connectedSystems = RpgGameState.starSystemConnections[starBase.System()];
+        var connectedSystems = RpgGameState.starSystemConnections[starBase.system.Get()];
         StarBase alliedBase = null;
         foreach (var sys in connectedSystems) {
-            if (sys.starBase == null || sys.starBase.owner != starBase.owner) {
+            if (sys.starBase.id == 0 || sys.starBase.Get().owner != starBase.owner) {
                 continue;
             }
-            if (sys.starBase.garrison.Count <= starBase.garrison.Count) {
+            if (sys.starBase.Get().garrison.Count <= starBase.garrison.Count) {
                 continue;
             }
-            alliedBase = sys.starBase;
+            alliedBase = sys.starBase.Get();
             break;
         }
         if (alliedBase == null) {
             return;
         }
 
-        var reinforcementsFleet = new List<Vessel>();
+        var reinforcementsFleet = new List<Vessel.Ref>();
         var groupSize = QRandom.IntRange(2, 4);
         var keptInGarrison = alliedBase.garrison.FindAll(v => {
-            if (v.Design().level <= 2) {
+            if (v.Get().Design().level <= 2) {
                 return true;
             }
             if (reinforcementsFleet.Count == groupSize) {
@@ -1573,16 +1608,15 @@ public class MapView : Node2D {
 
         alliedBase.garrison = keptInGarrison;
 
-        var spaceUnit = new SpaceUnit {
-            owner = _gameState.krigiaPlayer,
-            pos = alliedBase.System().pos,
-            waypoint = starBase.System().pos,
-            botProgram = SpaceUnit.Program.KrigiaReinforcements,
-            fleet = reinforcementsFleet,
-        };
-        _gameState.starBaseBySpaceUnit[spaceUnit] = alliedBase;
-        _gameState.spaceUnits.Add(spaceUnit);
-        alliedBase.units.Add(spaceUnit);
+        var spaceUnit = _gameState.spaceUnits.New();
+        spaceUnit.owner = Faction.Krigia;
+        spaceUnit.pos = alliedBase.system.Get().pos;
+        spaceUnit.waypoint = starBase.system.Get().pos;
+        spaceUnit.botProgram = SpaceUnit.Program.KrigiaReinforcements;
+        spaceUnit.botOrigin = alliedBase.GetRef();
+        spaceUnit.fleet = reinforcementsFleet;
+
+        alliedBase.units.Add(spaceUnit.GetRef());
 
         var unitNode = KrigiaSpaceUnitNode.New(spaceUnit);
         AddSpaceUnit(unitNode);
@@ -1622,25 +1656,29 @@ public class MapView : Node2D {
         var targetBase = QRandom.Element(potentialTargets);
 
         StarBase nearestStarBase = null;
-        var connectedSystems = RpgGameState.starSystemConnections[targetBase.System()];
+        var connectedSystems = RpgGameState.starSystemConnections[targetBase.system.Get()];
         foreach (var sys in connectedSystems) {
-            if (sys.starBase == null || sys.starBase.owner != _gameState.krigiaPlayer) {
+            if (sys.starBase.id == 0) {
+                continue;
+            }
+            var starBase = sys.starBase.Get();
+            if (starBase.owner != Faction.Krigia) {
                 continue;
             }
             if (nearestStarBase == null) {
-                nearestStarBase = sys.starBase;
-            } else if (sys.pos.DistanceTo(targetBase.System().pos) < nearestStarBase.System().pos.DistanceTo(targetBase.System().pos)) {
-                nearestStarBase = sys.starBase;
+                nearestStarBase = starBase;
+            } else if (sys.pos.DistanceTo(targetBase.system.Get().pos) < nearestStarBase.system.Get().pos.DistanceTo(targetBase.system.Get().pos)) {
+                nearestStarBase = starBase;
             }
         }
         if (nearestStarBase == null) {
             return; // Target system is out of reach
         }
 
-        var taskForceFleet = new List<Vessel>();
+        var taskForceFleet = new List<Vessel.Ref>();
         var groupSize = QRandom.IntRange(2, 4);
         var keptInGarrison = nearestStarBase.garrison.FindAll(v => {
-            if (v.Design().level <= 2) {
+            if (v.Get().Design().level <= 2) {
                 return true;
             }
             if (taskForceFleet.Count == groupSize) {
@@ -1659,16 +1697,15 @@ public class MapView : Node2D {
 
         nearestStarBase.garrison = keptInGarrison;
 
-        var spaceUnit = new SpaceUnit {
-            owner = _gameState.krigiaPlayer,
-            pos = nearestStarBase.System().pos,
-            waypoint = targetBase.System().pos,
-            botProgram = SpaceUnit.Program.KrigiaTaskForce,
-            fleet = taskForceFleet,
-        };
-        _gameState.starBaseBySpaceUnit[spaceUnit] = nearestStarBase;
-        _gameState.spaceUnits.Add(spaceUnit);
-        nearestStarBase.units.Add(spaceUnit);
+        var spaceUnit = _gameState.spaceUnits.New();
+        spaceUnit.owner = Faction.Krigia;
+        spaceUnit.pos = nearestStarBase.system.Get().pos;
+        spaceUnit.waypoint = targetBase.system.Get().pos;
+        spaceUnit.botProgram = SpaceUnit.Program.KrigiaTaskForce;
+        spaceUnit.botOrigin = nearestStarBase.GetRef();
+        spaceUnit.fleet = taskForceFleet;
+
+        nearestStarBase.units.Add(spaceUnit.GetRef());
         _gameState.krigiaPlans.taskForceDelay = QRandom.IntRange(200, 300);
 
         var unitNode = KrigiaSpaceUnitNode.New(spaceUnit);

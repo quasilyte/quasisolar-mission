@@ -8,7 +8,7 @@ using System.Collections.Generic;
 //
 // Max number of artifacts: 5.
 // Max number of weapons: 2.
-public class VesselDesign: AbstractItem {
+public class VesselDesign: IItem {
     public enum Size {
         Small,
         Normal,
@@ -44,6 +44,7 @@ public class VesselDesign: AbstractItem {
 
     // Slots.
     public bool specialSlot;
+    public bool sentinelSlot;
     public int weaponSlots;
     public int artifactSlots;
 
@@ -62,9 +63,9 @@ public class VesselDesign: AbstractItem {
         throw new Exception($"can't find {name} vessel design");
     }
 
-    public override ItemKind Kind() { return ItemKind.VesselDesign; }
+    public ItemKind GetItemKind() { return ItemKind.VesselDesign; }
 
-    public override string RenderHelp() {
+    public string RenderHelp() {
         var parts = new List<string>();
         parts.Add(affiliation + " " + name + " (" + sellingPrice.ToString() + ")");
         parts.Add("");
@@ -126,6 +127,7 @@ public class VesselDesign: AbstractItem {
             acceleration = 2.4f,
             rotationSpeed = 2.0f,
 
+            sentinelSlot = false,
             specialSlot = false,
             weaponSlots = 1,
             artifactSlots = 1,
@@ -151,6 +153,7 @@ public class VesselDesign: AbstractItem {
             acceleration = 2.2f,
             rotationSpeed = 2,
 
+            sentinelSlot = true,
             specialSlot = true,
             weaponSlots = 1,
             artifactSlots = 3,
@@ -176,6 +179,7 @@ public class VesselDesign: AbstractItem {
             acceleration = 1.5f,
             rotationSpeed = 1.3f,
 
+            sentinelSlot = false,
             specialSlot = false,
             weaponSlots = 1,
             artifactSlots = 3,
@@ -201,6 +205,7 @@ public class VesselDesign: AbstractItem {
             acceleration = 2.0f,
             rotationSpeed = 1.8f,
 
+            sentinelSlot = false,
             specialSlot = false,
             weaponSlots = 2,
             artifactSlots = 3,
@@ -226,9 +231,36 @@ public class VesselDesign: AbstractItem {
             acceleration = 3.5f,
             rotationSpeed = 2.2f,
 
+            sentinelSlot = false,
             specialSlot = true,
             weaponSlots = 2,
             artifactSlots = 3,
+
+            cargoSpace = 70,
+            size = Size.Normal,
+        },
+
+        new VesselDesign{
+            level = 5,
+            name = "Gladiator",
+            affiliation = "Earthling",
+            description = "Alien-design inspired battle ship",
+            sellingPrice = 14500,
+            debris = 100,
+            productionTime = 85,
+            availability = ProductionAvailability.ResearchRequired,
+
+            maxHp = 270,
+            maxShieldLevel = 3,
+
+            maxSpeed = 90,
+            acceleration = 2.6f,
+            rotationSpeed = 2.5f,
+
+            sentinelSlot = true,
+            specialSlot = true,
+            weaponSlots = 1,
+            artifactSlots = 4,
 
             cargoSpace = 70,
             size = Size.Normal,
@@ -251,6 +283,7 @@ public class VesselDesign: AbstractItem {
             acceleration = 1.4f,
             rotationSpeed = 1.2f,
 
+            sentinelSlot = true,
             specialSlot = true,
             weaponSlots = 0,
             artifactSlots = 1,
@@ -277,6 +310,7 @@ public class VesselDesign: AbstractItem {
             acceleration = 4,
             rotationSpeed = 2,
 
+            sentinelSlot = false,
             specialSlot = false,
             weaponSlots = 1,
             artifactSlots = 1,
@@ -301,6 +335,7 @@ public class VesselDesign: AbstractItem {
             acceleration = 3,
             rotationSpeed = 2.5f,
 
+            sentinelSlot = true,
             specialSlot = true,
             weaponSlots = 1,
             artifactSlots = 1,
@@ -327,6 +362,7 @@ public class VesselDesign: AbstractItem {
             acceleration = 3.7f,
             rotationSpeed = 2.8f,
 
+            sentinelSlot = false,
             specialSlot = false,
             weaponSlots = 1,
             artifactSlots = 0,
@@ -351,6 +387,7 @@ public class VesselDesign: AbstractItem {
             acceleration = 2.7f,
             rotationSpeed = 2.2f,
 
+            sentinelSlot = false,
             specialSlot = false,
             weaponSlots = 2,
             artifactSlots = 1,
@@ -375,6 +412,7 @@ public class VesselDesign: AbstractItem {
             acceleration = 3.2f,
             rotationSpeed = 2.7f,
 
+            sentinelSlot = true,
             specialSlot = true,
             weaponSlots = 2,
             artifactSlots = 2,
@@ -399,6 +437,7 @@ public class VesselDesign: AbstractItem {
             acceleration = 2.7f,
             rotationSpeed = 1.9f,
 
+            sentinelSlot = true,
             specialSlot = true,
             weaponSlots = 2,
             artifactSlots = 4,
@@ -423,6 +462,7 @@ public class VesselDesign: AbstractItem {
             acceleration = 7.0f,
             rotationSpeed = 2.5f,
 
+            sentinelSlot = true,
             specialSlot = true,
             weaponSlots = 2,
             artifactSlots = 5,
@@ -447,6 +487,7 @@ public class VesselDesign: AbstractItem {
             acceleration = 2.5f,
             rotationSpeed = 1.6f,
 
+            sentinelSlot = true,
             specialSlot = true,
             weaponSlots = 2,
             artifactSlots = 5,
@@ -473,6 +514,7 @@ public class VesselDesign: AbstractItem {
             acceleration = 2.3f,
             rotationSpeed = 1.2f,
 
+            sentinelSlot = false,
             specialSlot = false,
             weaponSlots = 1,
             artifactSlots = 2,
@@ -497,6 +539,7 @@ public class VesselDesign: AbstractItem {
             acceleration = 1.2f,
             rotationSpeed = 1,
 
+            sentinelSlot = false,
             specialSlot = false,
             weaponSlots = 1,
             artifactSlots = 4,
@@ -521,6 +564,7 @@ public class VesselDesign: AbstractItem {
             acceleration = 2.7f,
             rotationSpeed = 1.8f,
 
+            sentinelSlot = false,
             specialSlot = true,
             weaponSlots = 2,
             artifactSlots = 3,
@@ -545,6 +589,7 @@ public class VesselDesign: AbstractItem {
             acceleration = 3.5f,
             rotationSpeed = 2.5f,
 
+            sentinelSlot = true,
             specialSlot = true,
             weaponSlots = 2,
             artifactSlots = 4,
@@ -569,6 +614,7 @@ public class VesselDesign: AbstractItem {
             acceleration = 2.5f,
             rotationSpeed = 1.5f,
 
+            sentinelSlot = true,
             specialSlot = false,
             weaponSlots = 2,
             artifactSlots = 5,
@@ -595,6 +641,7 @@ public class VesselDesign: AbstractItem {
             acceleration = 4.5f,
             rotationSpeed = 2.5f,
 
+            sentinelSlot = false,
             specialSlot = true,
             weaponSlots = 1,
             artifactSlots = 4,
@@ -621,6 +668,7 @@ public class VesselDesign: AbstractItem {
             acceleration = 2,
             rotationSpeed = 1.6f,
 
+            sentinelSlot = false,
             specialSlot = false,
             weaponSlots = 2,
             artifactSlots = 2,
@@ -645,6 +693,7 @@ public class VesselDesign: AbstractItem {
             acceleration = 2.5f,
             rotationSpeed = 2.0f,
 
+            sentinelSlot = true,
             specialSlot = false,
             weaponSlots = 2,
             artifactSlots = 4,
@@ -669,6 +718,7 @@ public class VesselDesign: AbstractItem {
             acceleration = 2.9f,
             rotationSpeed = 2.9f,
 
+            sentinelSlot = false,
             specialSlot = true,
             weaponSlots = 2,
             artifactSlots = 5,
@@ -693,6 +743,7 @@ public class VesselDesign: AbstractItem {
             acceleration = 3.2f,
             rotationSpeed = 2.3f,
 
+            sentinelSlot = true,
             specialSlot = true,
             weaponSlots = 2,
             artifactSlots = 5,
@@ -719,6 +770,7 @@ public class VesselDesign: AbstractItem {
             acceleration = 2.5f,
             rotationSpeed = 3.0f,
 
+            sentinelSlot = false,
             specialSlot = true,
             weaponSlots = 2,
             artifactSlots = 4,

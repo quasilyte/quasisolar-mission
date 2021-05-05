@@ -57,10 +57,10 @@ public class ShipyardScreen : Node2D {
         for (int i = 0; i < _fleetSlots.Length; i++) {
             var panel = GetNode<Sprite>($"ActiveFleet/Vessel{i}");
             panel.GetNode<Label>("Name").Text = "";
-            if (_gameState.humanUnit.fleet.Count <= i) {
+            if (_gameState.humanUnit.Get().fleet.Count <= i) {
                 continue;
             }
-            var vessel = _gameState.humanUnit.fleet[i];
+            var vessel = _gameState.humanUnit.Get().fleet[i].Get();
             panel.GetNode<Label>("Name").Text = vessel.pilotName;
             var slot = panel.GetNode<ItemSlotNode>("Slot");
             var itemNode = DraggableItemNode.New(slot, vessel);
@@ -120,16 +120,16 @@ public class ShipyardScreen : Node2D {
             return;
         }
 
-        var system = RpgGameState.enteredBase.System();
-        system.starBase = null;
+        var system = RpgGameState.enteredBase.system.Get();
+        system.starBase.id = 0;
 
         UpdateFleet();
         UpdateGarrison();
 
-        var ark = VesselFactory.NewVessel(_gameState.humanPlayer, VesselDesign.Find("Ark"));
+        var ark = _gameState.NewVessel(Faction.Human, VesselDesign.Find("Ark"));
         ark.pilotName = PilotNames.UniqHumanName(_gameState.usedNames);
         VesselFactory.PadEquipment(ark);
-        _gameState.humanUnit.fleet.Add(ark);
+        _gameState.humanUnit.Get().fleet.Add(ark.GetRef());
 
         GetTree().ChangeScene("res://scenes/MapView.tscn");
     }
@@ -205,7 +205,7 @@ public class ShipyardScreen : Node2D {
                 storagePanel.AddChild(itemSlot);
 
                 if (_starBase.garrison.Count > i) {
-                    var itemNode = DraggableItemNode.New(itemSlot, _starBase.garrison[i]);
+                    var itemNode = DraggableItemNode.New(itemSlot, _starBase.garrison[i].Get());
                     itemSlot.ApplyItem(null, itemNode);
                     GetTree().CurrentScene.AddChild(itemNode);
                     itemNode.GlobalPosition = storagePanel.GlobalPosition;
@@ -285,18 +285,18 @@ public class ShipyardScreen : Node2D {
 
     public void UpdateFleet() {
         var list = VesselArrayToList(_fleetSlots);
-        list[0].isBot = false;
-        list[0].isGamepad = GameControls.preferGamepad;
-        _gameState.humanUnit.fleet = list;
+        list[0].Get().isBot = false;
+        list[0].Get().isGamepad = GameControls.preferGamepad;
+        _gameState.humanUnit.Get().fleet = list;
     }
 
-    private List<Vessel> VesselArrayToList(Vessel[] arr) {
-        var fleetList = new List<Vessel>();
+    private List<Vessel.Ref> VesselArrayToList(Vessel[] arr) {
+        var fleetList = new List<Vessel.Ref>();
         for (int i = 0; i < arr.Length; i++) {
             if (arr[i] != null) {
                 var vessel = arr[i];
                 vessel.isBot = true;
-                fleetList.Add(vessel);
+                fleetList.Add(vessel.GetRef());
             }
         }
         return fleetList;

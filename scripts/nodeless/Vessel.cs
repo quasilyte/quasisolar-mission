@@ -1,8 +1,14 @@
 using System.Collections.Generic;
 using Godot;
 
-public class Vessel: AbstractItem {
-    public Player player;
+public class Vessel: AbstractPoolValue, IItem {
+    public struct Ref {
+        public long id;
+        public Vessel Get() { return RpgGameState.instance.vessels.Get(id); }
+    }
+    public Ref GetRef() { return new Ref{id = id}; }
+
+    public Faction faction;
 
     public bool isBot;
 
@@ -23,7 +29,7 @@ public class Vessel: AbstractItem {
     public float hp;
     public float energy;
 
-    public override ItemKind Kind() { return ItemKind.Vessel; }
+    public ItemKind GetItemKind() { return ItemKind.Vessel; }
 
     public void AddEnergy(float amount) {
         energy = QMath.Clamp(energy + amount, 0, GetEnergySource().maxBackupEnergy);
@@ -38,10 +44,6 @@ public class Vessel: AbstractItem {
     public ShieldDesign Shield() { return ShieldDesign.Find(shieldName); }
 
     // public ArtifactDesign Artifact(int i) { return ArtifactDesign.Find(artifacts[i]); }
-
-    public override string RenderHelp() {
-        return "TODO!";
-    }
 
     public int TotalCost() {
         int cost = 0;

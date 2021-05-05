@@ -147,8 +147,8 @@ public class RandomEvent {
         e.actions.Add(new Action{
             name = "Transfer the energy",
             condition = () => {
-                foreach (var v in RpgGameState.instance.humanUnit.fleet) {
-                    if (v.energy > 40) {
+                foreach (var v in RpgGameState.instance.humanUnit.Get().fleet) {
+                    if (v.Get().energy > 40) {
                         return true;
                     }
                 }
@@ -161,17 +161,15 @@ public class RandomEvent {
         e.actions.Add(new Action{
             name = "Attack the transport",
             apply = (RandomEventContext ctx) => {
-                var liner = new Vessel {
-                    isBot = true,
-                    player = RpgGameState.instance.wertuPlayer,
-                    pilotName = "FIXME",
-                };
+                var liner = RpgGameState.instance.vessels.New();
+                liner.isBot = true;
+                liner.faction = Faction.Wertu;
+                liner.pilotName = "FIXME";
                 VesselFactory.Init(liner, VesselDesign.Find("Transporter"));
-                var spaceUnit = new SpaceUnit {
-                    owner = RpgGameState.instance.wertuPlayer,
-                    pos = RpgGameState.instance.humanUnit.pos,
-                    fleet = new List<Vessel>{liner},
-                };
+                var spaceUnit = RpgGameState.instance.spaceUnits.New();
+                spaceUnit.owner = Faction.Wertu;
+                spaceUnit.pos = RpgGameState.instance.humanUnit.Get().pos;
+                spaceUnit.fleet = new List<Vessel.Ref>{liner.GetRef()};
                 if (ctx.roll < 0.4) {
                     spaceUnit.cargo.organic = (int)((ctx.roll + 0.6f) * 150);
                 }
@@ -214,23 +212,23 @@ public class RandomEvent {
 
     private static RandomEvent newPiratesAttack() {
         Func<SpaceUnit> createPirates = () => {
-            var v1 = new Vessel {
-                isBot = true,
-                player = RpgGameState.instance.wertuPlayer, // FIXME
-                pilotName = "FIXME",
-            };
+            var v1 = RpgGameState.instance.vessels.New();
+            v1.isBot = true;
+            v1.faction = Faction.Pirate;
+            v1.pilotName = "FIXME";
             VesselFactory.Init(v1, VesselDesign.Find("Pirate"));
-            var v2 = new Vessel {
-                isBot = true,
-                player = RpgGameState.instance.wertuPlayer, // FIXME
-                pilotName = "FIXME",
-            };
+
+            var v2 = RpgGameState.instance.vessels.New();
+            v2.isBot = true;
+            v2.faction = Faction.Pirate;
+            v2.pilotName = "FIXME";
             VesselFactory.Init(v2, VesselDesign.Find("Pirate"));
-            return new SpaceUnit {
-                owner = RpgGameState.instance.wertuPlayer, // FIXME
-                pos = RpgGameState.instance.humanUnit.pos,
-                fleet = new List<Vessel>{v1, v2},
-            };
+
+            var spaceUnit = RpgGameState.instance.spaceUnits.New();
+            spaceUnit.owner = Faction.Pirate;
+            spaceUnit.pos = RpgGameState.instance.humanUnit.Get().pos;
+            spaceUnit.fleet = new List<Vessel.Ref>{v1.GetRef(), v2.GetRef()};
+            return spaceUnit;
         };
 
         var e = new RandomEvent { };
@@ -246,17 +244,17 @@ public class RandomEvent {
             "We either pay, or fight our way out of it."
         );
         e.condition = () => {
-            return RpgGameState.instance.day > 150 && RpgGameState.instance.humanUnit.FleetCost() < 17500;
+            return RpgGameState.instance.day > 150 && RpgGameState.instance.humanUnit.Get().FleetCost() < 17500;
         };
         e.actions.Add(new Action{
             name = "Give all resources",
             apply = (RandomEventContext _) => {
-                var resources = RpgGameState.instance.humanUnit.cargo.minerals + 
-                    RpgGameState.instance.humanUnit.cargo.organic +
-                    RpgGameState.instance.humanUnit.cargo.power;
+                var resources = RpgGameState.instance.humanUnit.Get().cargo.minerals + 
+                    RpgGameState.instance.humanUnit.Get().cargo.organic +
+                    RpgGameState.instance.humanUnit.Get().cargo.power;
                 if (resources > 25) {
-                    RpgGameState.instance.humanUnit.cargo.organic = 0;
-                    RpgGameState.instance.humanUnit.cargo.power = 0;
+                    RpgGameState.instance.humanUnit.Get().cargo.organic = 0;
+                    RpgGameState.instance.humanUnit.Get().cargo.power = 0;
                     return new Result{
                         text = multilineText(
                             "Pirates look happy with their payment.",
@@ -265,15 +263,15 @@ public class RandomEvent {
                         effects = {
                             new Effect{
                                 kind = EffectKind.AddCredits,
-                                value = -RpgGameState.instance.humanUnit.cargo.minerals,
+                                value = -RpgGameState.instance.humanUnit.Get().cargo.minerals,
                             },
                             new Effect{
                                 kind = EffectKind.AddOrganic,
-                                value = -RpgGameState.instance.humanUnit.cargo.organic,
+                                value = -RpgGameState.instance.humanUnit.Get().cargo.organic,
                             },
                             new Effect{
                                 kind = EffectKind.AddOrganic,
-                                value = -RpgGameState.instance.humanUnit.cargo.power,
+                                value = -RpgGameState.instance.humanUnit.Get().cargo.power,
                             },
                         },
                     };
@@ -367,11 +365,10 @@ public class RandomEvent {
                         },
                     };
                 }
-                var v = new Vessel {
-                    isBot = true,
-                    player = RpgGameState.instance.zythPlayer,
-                    pilotName = "FIXME",
-                };
+                var v = RpgGameState.instance.vessels.New();
+                v.isBot = true;
+                v.faction = Faction.Zyth;
+                v.pilotName = "FIXME";
                 VesselFactory.Init(v, VesselDesign.Find("Hunter"));
                 return new Result {
                     text = multilineText(
@@ -410,7 +407,7 @@ public class RandomEvent {
             "",
             "It should be a relatively safe and fast transition."
         );
-        e.condition = () => RpgGameState.instance.humanUnit.pos != RpgGameState.StartingSystem().pos;
+        e.condition = () => RpgGameState.instance.humanUnit.Get().pos != RpgGameState.StartingSystem().pos;
         e.actions.Add(new Action {
             name = "Enter the portal",
             apply = (RandomEventContext _) => {
@@ -501,7 +498,7 @@ public class RandomEvent {
             "",
             "You can try doing a quick repair, but it would require some resources."
         );
-        e.condition = () => RpgGameState.instance.humanUnit.fleet[0].energySourceName != "None";
+        e.condition = () => RpgGameState.instance.humanUnit.Get().fleet[0].Get().energySourceName != "None";
         e.actions.Add(new Action {
             name = "Switch to the backup energy",
             apply = (RandomEventContext _) => {
@@ -518,7 +515,7 @@ public class RandomEvent {
         });
         e.actions.Add(new Action {
             name = "Switch to power resource supply",
-            condition = () => RpgGameState.instance.humanUnit.cargo.power >= 3,
+            condition = () => RpgGameState.instance.humanUnit.Get().cargo.power >= 3,
             apply = (RandomEventContext _) => {
                 return new Result {
                     text = multilineText(
@@ -538,11 +535,11 @@ public class RandomEvent {
             name = "Repair the battery",
             condition = () => {
                 if (RpgGameState.instance.skillsLearned.Contains("Repair II")) {
-                    return RpgGameState.instance.humanUnit.cargo.minerals >= 1;
+                    return RpgGameState.instance.humanUnit.Get().cargo.minerals >= 1;
                 } else if (RpgGameState.instance.skillsLearned.Contains("Repair I")) {
-                    return RpgGameState.instance.humanUnit.cargo.minerals >= 5;
+                    return RpgGameState.instance.humanUnit.Get().cargo.minerals >= 5;
                 }
-                return RpgGameState.instance.humanUnit.cargo.minerals >= 10;
+                return RpgGameState.instance.humanUnit.Get().cargo.minerals >= 10;
             },
             apply = (RandomEventContext _) => {
                 if (RpgGameState.instance.skillsLearned.Contains("Repair II")) {
@@ -713,12 +710,14 @@ public class RandomEvent {
     }
 
     private static StarSystem PeekNearbySystem(float roll) {
+        // TODO: use systems connection graph.
+
         var nearbySystems = new List<StarSystem>();
-        foreach (var sys in RpgGameState.instance.starSystems) {
-            if (sys.pos == RpgGameState.instance.humanUnit.pos) {
+        foreach (var sys in RpgGameState.instance.starSystems.objects.Values) {
+            if (sys.pos == RpgGameState.instance.humanUnit.Get().pos) {
                 continue;
             }
-            if (sys.pos.DistanceTo(RpgGameState.instance.humanUnit.pos) < 400) {
+            if (sys.pos.DistanceTo(RpgGameState.instance.humanUnit.Get().pos) < 400) {
                 nearbySystems.Add(sys);
             }
         }

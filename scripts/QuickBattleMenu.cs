@@ -115,6 +115,7 @@ public class QuickBattleMenu : Node2D {
             "Earthling Fighter",
             "Earthling Interceptor",
             "Earthling Ark",
+            "Earthling Gladiator",
             "Scavenger Raider",
             "Scavenger Marauder",
             "Krigia Talons",
@@ -451,10 +452,7 @@ public class QuickBattleMenu : Node2D {
             var v = new Vessel {
                 isBot = !slot.kind.StartsWith("Human"),
                 spawnPos = playerSpawnSpots[i],
-                player = new Player {
-                    Alliance = slot.alliance,
-                    PlayerName = $"Player{i}/{slot.kind}",
-                },
+                faction = (Faction)(slot.alliance - 1),
             };
             if (slot.kind == "Human 1 (Gamepad 1)") {
                 v.isGamepad = true;
