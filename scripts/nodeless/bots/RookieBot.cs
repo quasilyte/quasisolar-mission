@@ -391,11 +391,12 @@ class RookieBot : AbstractBot {
             cursor = QMath.RandomizedLocation(TargetPosition(), 24 * design.botHintScatter);
         }
         var closeRange = TargetDistance() < 150;
+        var lowOnEnergy = _vessel.State.backupEnergy < (_vessel.State.maxBackupEnergy * 0.33);
 
         var effectiveRange = design.botHintRange != 0 ? design.botHintRange : design.range;
 
         if (TargetDistance() <= effectiveRange && w.CanFire(_vessel.State, cursor)) {
-            if (!CanShootForFree(design.energyCost) && !closeRange) {
+            if (lowOnEnergy && !CanShootForFree(design.energyCost) && !closeRange) {
                 // Do not waste energy for shooting at the
                 // targets that are way too far.
                 return Vector2.Zero;
