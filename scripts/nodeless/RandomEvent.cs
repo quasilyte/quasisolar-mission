@@ -102,6 +102,78 @@ public class RandomEvent {
         return spaceUnit;
     }
 
+    private static RandomEvent newTheAvenger() {
+        var e = new RandomEvent { };
+        e.title = "The Avenger";
+        e.expReward = 8;
+        e.luckScore = 9;
+        e.trigger = TriggerKind.OnSystemEntered;
+        e.condition = () => {
+            if (RpgGameState.instance.day <= 300) {
+                return false;
+            }
+            return RpgGameState.instance.humanUnit.Get().fleet.Count < SpaceUnit.maxFleetSize;
+        };
+        e.text = multilineText(
+            "A single mean-looking vessel is about to engage a squad of pirates.",
+            "",
+            "Will you participate or will you see how the events unfold?"
+        );
+        e.actions.Add(new Action{
+            name = "Attack pirates too",
+            apply = (RandomEventContext ctx) => {
+                var v1 = RpgGameState.instance.NewVessel(Faction.Pirate, VesselDesign.Find("Pirate"));
+                VesselFactory.Init(v1, VesselDesign.Find(v1.designName));
+                var v2 = RpgGameState.instance.NewVessel(Faction.Pirate, VesselDesign.Find("Pirate"));
+                VesselFactory.Init(v2, VesselDesign.Find(v2.designName));
+                var v3 = RpgGameState.instance.NewVessel(Faction.Pirate, VesselDesign.Find("Pirate"));
+                VesselFactory.Init(v3, VesselDesign.Find(v3.designName));
+                var v4 = RpgGameState.instance.NewVessel(Faction.Pirate, VesselDesign.Find("Pirate"));
+                VesselFactory.Init(v4, VesselDesign.Find(v4.designName));
+                var spaceUnit = newSpaceUnit(Faction.RandomEventHostile, v1, v2, v3, v4);
+                if (RpgGameState.instance.skillsLearned.Contains("Luck")) {
+                    spaceUnit.cargo.minerals = (int)(ctx.roll * 60);
+                }
+
+                var avenger = RpgGameState.instance.NewVessel(Faction.Human, VesselDesign.Find("Avenger"));
+                avenger.pilotName = PilotNames.UniqHumanName(RpgGameState.instance.usedNames);
+                VesselFactory.Init(avenger, "Neutral Weak Avenger");
+
+                return new Result {
+                    text = multilineText(
+                        $"The Avenger vessel captain, {avenger.pilotName}, promises to join your group after you deal with pirates.",
+                        "",
+                        "Side by side, you start the attack."
+                    ),
+                    effects = {
+                        new Effect{
+                            kind = EffectKind.AddVesselToFleet,
+                            value = avenger,
+                        },
+                        new Effect{
+                            kind = EffectKind.EnterArena,
+                            value = spaceUnit,
+                        },
+                    },
+                };
+            }
+        });
+        e.actions.Add(new Action{
+            name = "See what happens next",
+            apply = (RandomEventContext _) => {
+                return new Result{
+                    text = multilineText(
+                        "After almost an hour pirates manage to destroy the attacker.",
+                        "Soon after that, they jump out of the system in a hurry.",
+                        "",
+                        "You'll probably never learn what this whole situation was about."
+                    ),
+                };
+            }
+        });
+        return e;
+    }
+
     private static RandomEvent newSpaceNomads() {
         var nomadDesign = VesselDesign.Find("Nomad");
         Func<int> vesselPrice = () => {
@@ -111,8 +183,6 @@ public class RandomEvent {
             }
             return price;
         };
-
-        // var blueprintPrice = (int)(vesselPrice * 1.2);
 
         var e = new RandomEvent { };
         e.title = "Space Nomads";
@@ -393,17 +463,11 @@ public class RandomEvent {
 
     private static RandomEvent newPiratesAttack() {
         Func<SpaceUnit> createPirates = () => {
-            var v1 = RpgGameState.instance.vessels.New();
-            v1.isBot = true;
-            v1.faction = Faction.Pirate;
-            v1.pilotName = "FIXME";
-            VesselFactory.Init(v1, VesselDesign.Find("Pirate"));
+            var v1 = RpgGameState.instance.NewVessel(Faction.Pirate, VesselDesign.Find("Pirate"));
+            VesselFactory.Init(v1, VesselDesign.Find(v1.designName));
 
-            var v2 = RpgGameState.instance.vessels.New();
-            v2.isBot = true;
-            v2.faction = Faction.Pirate;
-            v2.pilotName = "FIXME";
-            VesselFactory.Init(v2, VesselDesign.Find("Pirate"));
+            var v2 = RpgGameState.instance.NewVessel(Faction.Pirate, VesselDesign.Find("Pirate"));
+            VesselFactory.Init(v2, VesselDesign.Find(v2.designName));
 
             return newSpaceUnit(Faction.RandomEventHostile, v1, v2);
         };
@@ -870,6 +934,7 @@ public class RandomEvent {
             newPiratesAttack(),
             newTroubledLiner(),
             newSpaceNomads(),
+            newTheAvenger(),
 
             newPurpleSystemVisitor(),
         };

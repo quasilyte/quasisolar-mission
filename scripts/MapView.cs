@@ -374,7 +374,7 @@ public class MapView : Node2D {
             lines.Add($"+{result.power} power resource");
         }
 
-        if (result.technology != "") {
+        if (!string.IsNullOrEmpty(result.technology)) {
             _gameState.technologiesResearched.Add(result.technology);
             lines.Add($"{result.technology} unlocked");
         }
