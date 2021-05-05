@@ -11,20 +11,45 @@ The problem is, the player starts with a weak fleet and with one star base. A ga
 and there are a lot of dangers out there. One can't simply fly through it and find all artifacts
 without any troubles.
 
-In order to win, the player should:
-
-* Build a powerful fleet
-* Create new star bases
-* Forge alliances with other races
-* Collect distant planet resources
-* Win in dozens of great space battles
-
 Losing conditions:
 
 * All Earthling bases are destroyed
 * Flagship is destroyed
 * N artifacts are not collected before the day X
 * The final hostile armada is not defeated
+
+## Gameplay variety
+
+Global map (strategy/tactics):
+
+* Research new technologies
+* Build star bases in the right spots
+* Keep some garrison inside the frontline bases
+* Place mining drones wisely
+* Distribute the resources among the bases
+* Plan your flagship movement carefully
+
+Random events:
+
+* Simple 1-screen encounters
+* (todo) Multi-screen text quests
+
+Diplomacy:
+
+* (todo) Some of your actions affect the faction relation modifier
+* (todo) You can communicate with other races
+
+Arcade battles:
+
+* Control the flagship
+* (todo) Choose allied vessels behavior mode
+* (todo) Choose what vessels will participate in battle
+* (todo) Fight boss battles
+
+Exploration:
+
+* Find and recover the artifacts along the world map
+* Gain experience and learn new skills
 
 ## The Game Phases
 
