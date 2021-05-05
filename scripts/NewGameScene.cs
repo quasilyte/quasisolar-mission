@@ -436,7 +436,7 @@ public class NewGameScene : Node2D {
             var i = row * numMapCols + col;
             var sector = sectors[i];
             var j = QRandom.IntRange(0, sector.systems.Count - 1);
-            if (sector.systems[j].starBase.id == 0) {
+            if (sector.systems[j].starBase.id == 0 && sector.systems[j].color != StarColor.Purple) {
                 var fleetRollBonus = (float)col * 20;
                 var fleetRoll = QRandom.FloatRange(40, 80) + fleetRollBonus;
                 var baseLevel = col + QRandom.IntRange(1, 2);
@@ -606,7 +606,7 @@ public class NewGameScene : Node2D {
         foreach (var art in ArtifactDesign.list) {
             while (true) {
                 var sys = QRandom.Element(systems);
-                if (sys.artifact != null) {
+                if (sys.artifact != null || sys.color == StarColor.Purple) {
                     continue;
                 }
                 if (sys == startingSystem) {

@@ -86,6 +86,55 @@ public class RandomEvent {
         return string.Join("\n", lines);
     }
 
+    private static RandomEvent newPurpleSystemVisitor() {
+        var e = new RandomEvent { };
+        e.title = "Purple System Visitor";
+        e.expReward = 20;
+        e.luckScore = 1;
+        e.trigger = TriggerKind.OnSystemEntered;
+        e.condition = () => false;
+        e.text = multilineText(
+            "You entered a region of space that isn't exactly a normal star system, but rather an anomaly. There are no planets here.",
+            "",
+            "Few minutes later, you hear the board systems going crazy.",
+            "Something is moving towards your fleet, but with a very unusual pattern.",
+            "",
+            "It looks like a battle station of unknown design."
+        );
+        e.actions.Add(new Action {
+            name = "Prepare for the worst",
+            apply = (RandomEventContext ctx) => {
+                var v = RpgGameState.instance.vessels.New();
+                v.isBot = true;
+                v.faction = Faction.RandomEventHostile;
+                v.pilotName = "FIXME";
+                VesselFactory.Init(v, VesselDesign.Find("Visitor"));
+                var spaceUnit = RpgGameState.instance.spaceUnits.New();
+                spaceUnit.owner = Faction.RandomEventHostile;
+                spaceUnit.pos = RpgGameState.instance.humanUnit.Get().pos;
+                spaceUnit.fleet = new List<Vessel.Ref>{v.GetRef()};
+                spaceUnit.cargo.power = (int)(ctx.roll * 50);
+                if (RpgGameState.instance.skillsLearned.Contains("Luck")) {
+                    spaceUnit.cargo.power *= 3;
+                }
+                return new Result {
+                    text = multilineText(
+                        "This thing doesn't respond to your communication attempts.",
+                        "",
+                        "As this platform closes the distance by every minute, you try to calculate your chances."
+                    ),
+                    effects = {
+                        new Effect{
+                            kind = EffectKind.EnterArena,
+                            value = spaceUnit,
+                        },
+                    },
+                };
+            },
+        });
+        return e;
+    }
+
     private static RandomEvent newTroubledLiner() {
         Func<float, string, bool, Result> rewardForHelping = (float roll, string headline, bool spendEnergy) => {
             var text = headline + "\n\n";
@@ -692,6 +741,8 @@ public class RandomEvent {
             newAbandonedVessel(),
             newPiratesAttack(),
             newTroubledLiner(),
+
+            newPurpleSystemVisitor(),
         };
         onSystemEnteredList = new List<RandomEvent>();
         onSystemPatrolingList = new List<RandomEvent>();

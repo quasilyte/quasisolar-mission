@@ -89,8 +89,13 @@ public class Arena : Node2D {
         return vesselNode;
     }
 
-    private void AddBotCombatant(Pilot pilot) {
-        var bot = new RookieBot(pilot.Vessel);
+    private void AddBotCombatant(Vessel combatant, Pilot pilot) {
+        AbstractBot bot = null;
+        if (combatant.designName == "Visitor") {
+            bot = new VisitorBot(pilot.Vessel);
+        } else {
+            bot = new GenericBot(pilot.Vessel);
+        }
         var computer = ComputerNode.New(bot, pilot);
         computer.Connect("Defeated", this, nameof(OnBotDefeated));
         AddChild(computer);
@@ -164,7 +169,7 @@ public class Arena : Node2D {
             }
 
             if (combatant.isBot) {
-                AddBotCombatant(pilot);
+                AddBotCombatant(combatant, pilot);
             } else {
                 var v = viewports[combatant.deviceId];
                 v.used = true;
@@ -361,6 +366,9 @@ public class Arena : Node2D {
                 }
                 if (_flagshipPilot != null && p.alliance != _flagshipPilot.alliance) {
                     result.exp += p.Vessel.State.vesselLevel * 3;
+                    if (vessel.designName == "Visitor") {
+                        result.technology = "Crystal Cannon";
+                    }
                 }
             }
         }
