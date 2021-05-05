@@ -304,10 +304,12 @@ public class RpgGameState {
 
     public static int MaxDrones() {
         var value = 5;
-        if (instance.skillsLearned.Contains("Drone Control II")) {
+        if (instance.skillsLearned.Contains("Drone Control III")) {
             value = 15;
+        } else if (instance.skillsLearned.Contains("Drone Control II")) {
+            value = 11;
         } else if (instance.skillsLearned.Contains("Drone Control I")) {
-            value = 10;
+            value = 8;
         }
         return value;
     }

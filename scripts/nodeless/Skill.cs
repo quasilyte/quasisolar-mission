@@ -22,14 +22,21 @@ public class Skill {
         new Skill{
             name = "Drone Control I",
             expCost = 50,
-            effect = "can own up to 10 drones",
+            effect = "can own up to 8 drones",
         },
 
         new Skill{
             name = "Drone Control II",
-            expCost = 60,
-            effect = "can own up to 15 drones",
+            expCost = 80,
+            effect = "can own up to 11 drones",
             requires = "Drone Control I",
+        },
+
+        new Skill{
+            name = "Drone Control III",
+            expCost = 110,
+            effect = "can own up to 15 drones",
+            requires = "Drone Control II",
         },
 
         new Skill{
@@ -46,14 +53,14 @@ public class Skill {
 
         new Skill{
             name = "Navigation II",
-            expCost = 50,
+            expCost = 60,
             requires = "Navigation I",
             effect = "25% faster map travel speed",
         },
 
         new Skill{
             name = "Navigation III",
-            expCost = 75,
+            expCost = 100,
             requires = "Navigation II",
             effect = "30% faster map travel speed",
         },
@@ -91,7 +98,7 @@ public class Skill {
 
         new Skill{
             name = "Repair II",
-            expCost = 60,
+            expCost = 65,
             requires = "Repair I",
             effect = "after a battle, recover 20% of damage taken",
             effect2 = "after a battle, recover 25% of energy used",
@@ -100,7 +107,7 @@ public class Skill {
         new Skill{
             name = "Escape Tactics",
             expCost = 45,
-            effect = "retreating is costs 2 times less fuel units"
+            effect = "retreating costs 2 times less fuel units"
         },
 
         new Skill{
