@@ -417,7 +417,7 @@ Although we cover **battles** in a different document, bosses will be described 
 
 ### The purple system visitor
 
-Difficulty: easy.
+Difficulty: normal.
 
 Notable rewards: **crystal cannon** weapon blueprint.
 
