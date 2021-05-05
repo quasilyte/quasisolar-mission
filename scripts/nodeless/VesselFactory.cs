@@ -31,6 +31,8 @@ public static class VesselFactory {
     public static void Init(Vessel v, string kind) {
         if (kind == "Neutral Pirate") {
             InitNeutralPirate(v);
+        } else if (kind == "Neutral Nomad") {
+            InitNeutralNomad(v);
         } else if (kind == "Krigia Talons") {
             InitKrigiaTalons(v);
         } else if (kind == "Krigia Claws") {
@@ -124,6 +126,31 @@ public static class VesselFactory {
             v.shieldName = ReflectorShield.Design.name;
         } else if (shieldRoll < 0.75) {
             v.shieldName = LaserPerimeterShield.Design.name;
+        }
+    }
+
+    private static void InitNeutralNomad(Vessel v) {
+        v.designName = "Nomad";
+        v.energySourceName = "Vortex Battery";
+
+        // 60% - photon burst
+        // 40% - zap
+        float weaponRoll = QRandom.Float();
+        if (weaponRoll < 0.6) {
+            v.weapons.Add(PhotonBurstCannonWeapon.Design.name);
+        } else {
+            v.weapons.Add(ZapWeapon.Design.name);
+        }
+
+        v.weapons.Add(CutterWeapon.Design.name);
+
+        var shieldRoll = QRandom.Float();
+        if (shieldRoll < 0.25) {
+            v.shieldName = DispersionFieldShield.Design.name;
+        } else if (shieldRoll < 0.5) {
+            v.shieldName = ReflectorShield.Design.name;
+        } else {
+            v.shieldName = LatticeShield.Design.name;
         }
     }
 

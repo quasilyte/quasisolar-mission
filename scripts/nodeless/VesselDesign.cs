@@ -85,6 +85,7 @@ public class VesselDesign: IItem {
         parts.Add("Rotation speed: " + rotationSpeed);
         parts.Add("Weapon slots: " + weaponSlots.ToString());
         parts.Add("Special weapon slots: " + (specialSlot ? "1" : "0"));
+        parts.Add("Sentinel slot: " + (sentinelSlot ? "yes" : "no"));
         parts.Add("Artifact slots: " + artifactSlots.ToString());
         parts.Add("Cargo space: " + cargoSpace.ToString());
         parts.Add("Size: " + sizeText());
@@ -688,6 +689,7 @@ public class VesselDesign: IItem {
             sellingPrice = 12700,
             debris = 160,
             productionTime = 65,
+            availability = ProductionAvailability.ResearchRequired,
 
             maxHp = 180,
             maxShieldLevel = 2,
@@ -713,6 +715,7 @@ public class VesselDesign: IItem {
             sellingPrice = 16500,
             debris = 200,
             productionTime = 75,
+            availability = ProductionAvailability.ResearchRequired,
 
             maxHp = 235,
             maxShieldLevel = 1,

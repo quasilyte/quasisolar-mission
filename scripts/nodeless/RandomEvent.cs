@@ -48,6 +48,8 @@ public class RandomEvent {
         AddFuel,
         AddFlagshipBackupEnergy,
         AddFleetBackupEnergyPercentage,
+        AddVesselToFleet,
+        AddTechnology,
         AddWertuReputation,
         SpendAnyVesselBackupEnergy,
         ApplySlow,
@@ -68,6 +70,7 @@ public class RandomEvent {
 
     public class Action {
         public string name;
+        public Func<string> hint = () => "";
         public Func<bool> condition = () => true;
         public Func<RandomEventContext, Result> apply = (RandomEventContext _) => null;
     }
@@ -97,6 +100,128 @@ public class RandomEvent {
         spaceUnit.pos = RpgGameState.instance.humanUnit.Get().pos;
         spaceUnit.fleet = fleetList;
         return spaceUnit;
+    }
+
+    private static RandomEvent newSpaceNomads() {
+        var nomadDesign = VesselDesign.Find("Nomad");
+        Func<int> vesselPrice = () => {
+            var price = (int)(nomadDesign.sellingPrice * 0.7);
+            if (RpgGameState.instance.skillsLearned.Contains("Diplomacy")) {
+                price = (int)(price * 0.8);
+            }
+            return price;
+        };
+
+        // var blueprintPrice = (int)(vesselPrice * 1.2);
+
+        var e = new RandomEvent { };
+        e.title = "Space Nomads";
+        e.expReward = 3;
+        e.luckScore = 8;
+        e.trigger = TriggerKind.OnSystemEntered;
+        e.condition = () => {
+            if (RpgGameState.instance.credits < nomadDesign.sellingPrice) {
+                return false;
+            }
+            return RpgGameState.instance.humanUnit.Get().fleet.Count < SpaceUnit.maxFleetSize;
+        };
+        e.text = multilineText(
+            "A group of space nomads crosses this system.",
+            "",
+            "They broadcast a message that says that they're willing to sell one of their Nomad class vessels."
+        );
+        e.extraText = (RandomEventContext _) => {
+            if (RpgGameState.instance.skillsLearned.Contains("Diplomacy")) {
+                return "Your diplomacy skill earned you a 20% discount.";
+            }
+            return "";
+        };
+        e.actions.Add(new Action {
+            name = "Buy a vessel",
+            hint = () => "(" + vesselPrice() + " credits)",
+            condition = () => RpgGameState.instance.credits >= vesselPrice(),
+            apply = (RandomEventContext _) => {
+                var v = RpgGameState.instance.NewVessel(Faction.Human, nomadDesign);
+                v.pilotName = PilotNames.UniqHumanName(RpgGameState.instance.usedNames);
+                VesselFactory.PadEquipment(v);
+            
+                return new Result{
+                    text = multilineText(
+                        "A new vessel is piloted to your fleet by a grumpy Zyth thug.",
+                        "You transfer some of your crew members to it and make it ready to go."
+                    ),
+                    effects = {
+                        new Effect{
+                            kind = EffectKind.AddCredits,
+                            value = -vesselPrice(),
+                        },
+                        new Effect{
+                            kind = EffectKind.AddVesselToFleet,
+                            value = v,
+                        },
+                    },
+                };
+            }
+        });
+        e.actions.Add(new Action {
+            name = "Buy blueprints",
+            hint = () => "(" + (int)(vesselPrice() * 1.2) + " credits)",
+            condition = () => RpgGameState.instance.credits >= (int)(vesselPrice() * 1.2),
+            apply = (RandomEventContext _) => {
+                return new Result{
+                    text = multilineText(
+                        "Instead of getting just one vessel, now you can produce as much Nomad vessels as you please.",
+                        "",
+                        "As long as you have enough resources, that is."
+                    ),
+                    effects = {
+                        new Effect{
+                            kind = EffectKind.AddCredits,
+                            value = -(int)(vesselPrice() * 1.2),
+                        },
+                        new Effect{
+                            kind = EffectKind.AddTechnology,
+                            value = "Nomad",
+                        },
+                    },
+                };
+            }
+        });
+        e.actions.Add(new Action{
+            name = "Attack the group",
+            apply = (RandomEventContext ctx) => {
+                var v1 = RpgGameState.instance.NewVessel(Faction.RandomEventHostile, nomadDesign);
+                VesselFactory.Init(v1, nomadDesign);
+                var v2 = RpgGameState.instance.NewVessel(Faction.RandomEventHostile, nomadDesign);
+                VesselFactory.Init(v2, nomadDesign);
+                var v3 = RpgGameState.instance.NewVessel(Faction.RandomEventHostile, nomadDesign);
+                VesselFactory.Init(v3, nomadDesign);
+
+                var spaceUnit = newSpaceUnit(Faction.RandomEventHostile, v1, v2, v3);
+                spaceUnit.cargo.minerals = (int)(ctx.roll * 70);
+                if (RpgGameState.instance.skillsLearned.Contains("Luck")) {
+                    spaceUnit.cargo.minerals *= 3;
+                }
+                return new Result {
+                    text = "You decided to attack the nomads group.",
+                    effects = {
+                        new Effect{
+                            kind = EffectKind.EnterArena,
+                            value = spaceUnit,
+                        },
+                    },
+                };
+            }
+        });
+        e.actions.Add(new Action{
+            name = "Don't contact them",
+            apply = (RandomEventContext _) => {
+                return new Result{
+                    text = "You have other plans for your credits.",
+                };
+            }
+        });
+        return e;
     }
 
     private static RandomEvent newPurpleSystemVisitor() {
@@ -314,7 +439,7 @@ public class RandomEvent {
                         ),
                         effects = {
                             new Effect{
-                                kind = EffectKind.AddCredits,
+                                kind = EffectKind.AddMinerals,
                                 value = -RpgGameState.instance.humanUnit.Get().cargo.minerals,
                             },
                             new Effect{
@@ -744,6 +869,7 @@ public class RandomEvent {
             newAbandonedVessel(),
             newPiratesAttack(),
             newTroubledLiner(),
+            newSpaceNomads(),
 
             newPurpleSystemVisitor(),
         };

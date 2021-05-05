@@ -22,10 +22,10 @@ public class MainMenu : Node2D {
 
             ShieldDesign.InitLists();
             WeaponDesign.InitLists();
-            RandomEvent.InitLists();
-            ArtifactDesign.InitLists();
             VesselDesign.InitLists();
+            ArtifactDesign.InitLists();
             Research.InitLists();
+            RandomEvent.InitLists();
         }
     }
     

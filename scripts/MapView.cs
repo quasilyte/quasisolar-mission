@@ -461,7 +461,13 @@ public class MapView : Node2D {
                 var a = _randomEvent.actions[i];
                 button.Disabled = !a.condition();
                 button.Visible = true;
-                button.Text = a.name;
+
+                var buttonText = a.name;
+                var hint = a.hint();
+                if (hint != "") {
+                    buttonText += " " + hint;
+                }
+                button.Text = buttonText;
             } else {
                 button.Disabled = true;
                 button.Visible = false;
@@ -507,6 +513,16 @@ public class MapView : Node2D {
 
     private void ExecuteEffect(RandomEvent.Effect effect) {
         switch (effect.kind) {
+            case RandomEvent.EffectKind.AddTechnology:
+                _gameState.technologiesResearched.Add((string)effect.value);
+                return;
+
+            case RandomEvent.EffectKind.AddVesselToFleet:
+                AddUnitMember((Vessel)effect.value);
+                ReorderUnitMembers();
+                _gameState.humanUnit.Get().fleet.Add(((Vessel)effect.value).GetRef());
+                return;
+
             case RandomEvent.EffectKind.AddCredits:
                 _gameState.credits += (int)effect.value;
                 return;
@@ -579,19 +595,21 @@ public class MapView : Node2D {
     }
 
     private void AddUnitMembers() {
+        foreach (var handle in _humanUnit.fleet) {
+            AddUnitMember(handle.Get());
+        }
+        ReorderUnitMembers();
+    }
+
+    private void AddUnitMember(Vessel v) {
         var unitMembers = GetNode<Label>("UI/UnitMembers");
         var box = unitMembers.GetNode<VBoxContainer>("Box");
 
-        foreach (var handle in _humanUnit.fleet) {
-            var v = handle.Get();
-            var hpPercentage = QMath.Percantage(v.hp, v.Design().maxHp);
-            var energyPercentage = QMath.Percantage(v.energy, v.GetEnergySource().maxBackupEnergy);
-            var m = UnitMemberNode.New(v.pilotName, v.Design().Texture(), hpPercentage, energyPercentage);
-            _unitMembers.Add(m);
-            box.AddChild(m);
-        }
-
-        ReorderUnitMembers();
+        var hpPercentage = QMath.Percantage(v.hp, v.Design().maxHp);
+        var energyPercentage = QMath.Percantage(v.energy, v.GetEnergySource().maxBackupEnergy);
+        var m = UnitMemberNode.New(v.pilotName, v.Design().Texture(), hpPercentage, energyPercentage);
+        _unitMembers.Add(m);
+        box.AddChild(m);
     }
 
     private void ReorderUnitMembers() {
