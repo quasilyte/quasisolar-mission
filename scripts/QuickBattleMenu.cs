@@ -115,6 +115,7 @@ public class QuickBattleMenu : Node2D {
             "Earthling Fighter",
             "Earthling Interceptor",
             "Earthling Ark",
+            "Earthling Gladiator",
             "Scavenger Raider",
             "Scavenger Marauder",
             "Krigia Talons",

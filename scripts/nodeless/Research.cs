@@ -138,6 +138,16 @@ public class Research {
         },
 
         new Research{
+            name = "Gladiator",
+            category = Category.NewVesselDesign,
+            researchTime = 160,
+            dependencies = {
+                "Interceptor",
+                "Alien Tech Lab",
+            },
+        },
+
+        new Research{
             name = "Ark Exodus",
             researchTime = 35,
             dependencies = {"Ark"},

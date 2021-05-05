@@ -55,6 +55,8 @@ public static class VesselFactory {
             InitEarthlingInterceptor(v);
         } else if (kind == "Earthling Ark") {
             InitEarthlingArk(v);
+        } else if (kind == "Earthling Gladiator") {
+            InitEarthlingGladiator(v);
         } else if (kind == "Wertu Probe") {
             InitWertuProbe(v);
         } else if (kind == "Wertu Transporter") {
@@ -295,6 +297,38 @@ public static class VesselFactory {
         v.energySourceName = "Power Generator";
 
         v.specialWeaponName = ReaperCannonWeapon.Design.name;
+    }
+
+    private static void InitEarthlingGladiator(Vessel v) {
+        v.designName = "Gladiator";
+        v.energySourceName = "Vortex Battery";
+
+        float weaponRoll = QRandom.Float();
+        // 50% - pulse laser
+        // 50% - zap
+        if (weaponRoll < 0.5) {
+            v.weapons.Add(PulseLaserWeapon.Design.name);
+        } else {
+            v.weapons.Add(ZapWeapon.Design.name);
+        }
+
+        // 60% - reaper cannon
+        // 40% - disruptor
+        float weaponRoll2 = QRandom.Float();
+        if (weaponRoll2 < 0.6) {
+            v.weapons.Add(ReaperCannonWeapon.Design.name);
+        } else {
+            v.weapons.Add(DisruptorWeapon.Design.name);
+        }
+
+        // 50% - laser perimeter
+        // 30% - dispersion shield
+        var shieldRoll = QRandom.Float();
+        if (shieldRoll < 0.5) {
+            v.shieldName = LaserPerimeterShield.Design.name;
+        } else if (shieldRoll < 0.8) {
+            v.shieldName = DispersionFieldShield.Design.name;
+        }
     }
 
     private static void InitKrigiaTalons(Vessel v) {
