@@ -159,7 +159,7 @@ public class VesselNode : Node2D {
         var showContrail = false;
         var moving = false;
         var contrailLength = 0.2f;
-        if (_currentWaypoint != null) {
+        if (_currentWaypoint != null && State.maxSpeed != 0) {
             var engineRotationSpeed = State.insidePurpleNebula ? State.rotationSpeed - 0.5f : State.rotationSpeed;
             var rotationSpeed = State.rotationCrippledTime != 0 ? 0.5f : engineRotationSpeed;
             rotationSpeed = Math.Max(rotationSpeed, 0.5f);

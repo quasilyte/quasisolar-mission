@@ -214,9 +214,20 @@ public class NewGameScene : Node2D {
     }
 
     private StarColor RandomStarSystemColor() {
-        var colorValues = Enum.GetValues(typeof(StarColor));
-        var colorRoll = QRandom.IntRange(0, colorValues.Length - 1);
-        return (StarColor)colorValues.GetValue(colorRoll);
+        var colorRoll = QRandom.IntRange(0, 5);
+        if (colorRoll == 0) {
+            return StarColor.Blue;
+        } else if (colorRoll == 1) {
+            return StarColor.Green;
+        } else if (colorRoll == 2) {
+            return StarColor.Yellow;
+        } else if (colorRoll == 3) {
+            return StarColor.Orange;
+        } else if (colorRoll == 4) {
+            return StarColor.Red;
+        } else {
+            return StarColor.White;
+        }
     }
 
     private RpgGameState.Config NewGameConfig(ulong gameSeed) {
@@ -263,7 +274,7 @@ public class NewGameScene : Node2D {
         return new Vector2(x, y);
     }
 
-    private Vector2 RandomStarSystemPosition(Rect2 rect, Sector sector) {
+    private Vector2 RandomStarSystemPosition(Sector sector) {
         var attempts = 0;
         var result = Vector2.Zero;
         while (true) {
@@ -271,7 +282,7 @@ public class NewGameScene : Node2D {
             var dist = QRandom.FloatRange(175, 500);
             var toBeConnected = QRandom.Element(sector.systems);
             var candidate = RandomizedLocation(toBeConnected.pos, dist);
-            if (!rect.HasPoint(candidate)) {
+            if (!sector.rect.HasPoint(candidate)) {
                 continue;
             }
             var retry = false;
@@ -326,6 +337,7 @@ public class NewGameScene : Node2D {
 
     class Sector {
         public List<StarSystem> systems = new List<StarSystem>();
+        public Rect2 rect;
 
         public int NumArtifacts() {
             var n = 0;
@@ -487,9 +499,9 @@ public class NewGameScene : Node2D {
             for (int col = 0; col < numMapCols; col++) {
                 var i = row * numMapCols + col;
                 var sector = new Sector();
+                sector.rect = new Rect2(new Vector2(col * 685 + 550, row * 450 + 150), 650, 400);
                 sectors[i] = sector;
-                var rect = new Rect2(new Vector2(col * 685 + 550, row * 450 + 150), 650, 400);
-                var middle = rect.Position + rect.Size / 2;
+                var middle = sector.rect.Position + sector.rect.Size / 2;
 
                 var color = RandomStarSystemColor();
                 sector.systems.Add(NewStarSystem(config, starSystenNames, RandomizedLocation(middle, 120)));
@@ -501,9 +513,24 @@ public class NewGameScene : Node2D {
                 }
                 var numSystems = QRandom.IntRange(minSystems, maxSystems);
                 for (int j = 0; j < numSystems; j++) {
-                    sector.systems.Add(NewStarSystem(config, starSystenNames, RandomStarSystemPosition(rect, sector)));
+                    sector.systems.Add(NewStarSystem(config, starSystenNames, RandomStarSystemPosition(sector)));
                 }
             }
+        }
+
+        {
+            var anomalySystemCol = QRandom.IntRange(0, numMapCols-1);
+            var anomalySystemRow = QRandom.IntRange(0, numMapRows-1);
+            var anomalySystemIndex = anomalySystemRow * numMapCols + anomalySystemCol;
+            var anomalySystem = config.starSystems.New();
+
+            var sector = sectors[anomalySystemIndex];
+
+            anomalySystem.name = "Eth";
+            anomalySystem.color = StarColor.Purple;
+            anomalySystem.pos = RandomStarSystemPosition(sector);
+
+            sector.systems.Add(anomalySystem);
         }
 
         var startingStarBase = NewStarBase(config, Faction.Human, 1);

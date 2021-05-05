@@ -9,7 +9,7 @@ public class CrystalCannonWeapon : IWeapon {
         sellingPrice = 4000,
         technologiesNeeded = {"Crystal Cannon"},
         cooldown = 1.5f,
-        energyCost = 16,
+        energyCost = 10,
         range = 320,
         damage = 15,
         damageKind = DamageKind.Kinetic,

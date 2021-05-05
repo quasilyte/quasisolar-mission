@@ -71,6 +71,8 @@ public static class VesselFactory {
             InitZythHunter(v);
         } else if (kind == "Unique Spectre") {
             InitUniqueSpectre(v);
+        } else if (kind == "Unique Visitor") {
+            InitUniqueVisitor(v);
         } else if (kind == "Scavenger Raider") {
             InitScavengerRaider(v);
         } else if (kind == "Scavenger Marauder") {
@@ -690,5 +692,20 @@ public static class VesselFactory {
         v.specialWeaponName = TorpedoLauncherWeapon.Design.name;
 
         v.shieldName = PhaserShield.Design.name;
+    }
+
+    private static void InitUniqueVisitor(Vessel v) {
+        v.designName = "Visitor";
+        v.energySourceName = "Graviton Generator";
+
+        v.weapons.Add(CrystalCannonWeapon.Design.name);
+        v.weapons.Add(PointDefenseLaserWeapon.Design.name);
+        v.specialWeaponName = WarpDeviceWeapon.Design.name;
+
+        v.shieldName = LaserPerimeterShield.Design.name;
+
+        v.artifacts.Add(ShieldProlongerArtifact.Design.name);
+        v.artifacts.Add(ShivaRechargerArtifact.Design.name);
+        v.artifacts.Add(MagneticNegatorArtifact.Design.name);
     }
 }

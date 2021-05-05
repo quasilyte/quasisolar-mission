@@ -52,6 +52,9 @@ public class VesselDesign: IItem {
     public int cargoSpace;
     public Size size;
 
+    // Special properties.
+    public bool fullArc = false;
+
     public Texture Texture() {
         return GD.Load<Texture>($"res://images/vessel/{affiliation}_{name}.png");
     }
@@ -777,6 +780,33 @@ public class VesselDesign: IItem {
 
             cargoSpace = 100,
             size = Size.Normal,
+        },
+
+        new VesselDesign{
+            level = 8,
+            name = "Visitor",
+            affiliation = "Unique",
+            description = "TODO",
+            sellingPrice = 35000,
+            debris = 400,
+            productionTime = 500,
+
+            maxHp = 780,
+            maxShieldLevel = 3,
+
+            maxSpeed = 0,
+            acceleration = 0,
+            rotationSpeed = 0,
+
+            sentinelSlot = true,
+            specialSlot = true,
+            weaponSlots = 2,
+            artifactSlots = 3,
+
+            cargoSpace = 0,
+            size = Size.Large,
+
+            fullArc = true,
         },
     };
 }

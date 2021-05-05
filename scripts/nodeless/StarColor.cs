@@ -5,4 +5,5 @@ public enum StarColor {
     Orange,
     Red,
     White,
+    Purple,
 }
