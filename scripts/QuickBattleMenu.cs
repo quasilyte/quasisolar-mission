@@ -130,6 +130,7 @@ public class QuickBattleMenu : Node2D {
             "Wertu Angel",
             "Wertu Dominator",
             "Unique Spectre",
+            "Unique Visitor",
         };
 
         _specialWeaponOption = GetNode<OptionButton>("SpecialWeaponSelect");

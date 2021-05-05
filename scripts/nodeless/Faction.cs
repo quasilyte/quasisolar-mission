@@ -8,6 +8,7 @@ public enum Faction {
     Quick6,
 
     Neutral,
+    RandomEventHostile,
     Pirate,
 
     Human,

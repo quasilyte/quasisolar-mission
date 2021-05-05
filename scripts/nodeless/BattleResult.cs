@@ -11,4 +11,6 @@ public class BattleResult {
     public int power;
 
     public int fuel;
+
+    public string technology;
 }

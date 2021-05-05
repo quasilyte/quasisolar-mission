@@ -19,6 +19,7 @@ public class VesselNode : Node2D {
     private bool _hasImpulseDevourer = false;
 
     private bool _phasing = false;
+    private bool _destroyed = false;
 
     private Texture _texture;
 
@@ -159,7 +160,7 @@ public class VesselNode : Node2D {
         var showContrail = false;
         var moving = false;
         var contrailLength = 0.2f;
-        if (_currentWaypoint != null) {
+        if (_currentWaypoint != null && State.maxSpeed != 0) {
             var engineRotationSpeed = State.insidePurpleNebula ? State.rotationSpeed - 0.5f : State.rotationSpeed;
             var rotationSpeed = State.rotationCrippledTime != 0 ? 0.5f : engineRotationSpeed;
             rotationSpeed = Math.Max(rotationSpeed, 0.5f);
@@ -260,6 +261,7 @@ public class VesselNode : Node2D {
     }
 
     private void Destroy() {
+        _destroyed = true;
         EmitSignal(nameof(Destroyed));
         if (_destroyedAudioStream == null) {
             _destroyedAudioStream = GD.Load<AudioStream>("res://audio/vessel_destroyed.wav");
@@ -279,6 +281,10 @@ public class VesselNode : Node2D {
     }
 
     public void ApplyDamage(float amount, DamageKind kind) {
+        if (_destroyed) {
+            return;
+        }
+
         if (amount > 0) {
             var reducedAmount = QMath.ClampMin(shield.ReduceDamage(amount, kind), 1);
             var damageReduced = reducedAmount != amount;

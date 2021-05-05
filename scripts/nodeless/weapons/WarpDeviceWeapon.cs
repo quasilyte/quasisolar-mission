@@ -10,7 +10,7 @@ public class WarpDeviceWeapon : IWeapon {
         sellingPrice = 6200,
         technologiesNeeded = {"Warp Device"},
         cooldown = 0.75f,
-        energyCost = 25.0f,
+        energyCost = 20.0f,
         range = 400.0f,
         damageKind = DamageKind.None,
         isSpecial = true,

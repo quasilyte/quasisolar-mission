@@ -95,6 +95,9 @@ public class MapView : Node2D {
             RpgGameState.enemyAttackerUnit = null;
             RpgGameState.garrisonStarBase = null;
         }
+        if (RpgGameState.enemyAttackerUnit != null && RpgGameState.enemyAttackerUnit.owner == Faction.RandomEventHostile) {
+            RpgGameState.enemyAttackerUnit.deleted = true;
+        }
         _gameState.CollectGarbage();
 
         RenderMap();
@@ -369,6 +372,11 @@ public class MapView : Node2D {
         if (result.power != 0) {
             _humanUnit.CargoAddPower(result.power);
             lines.Add($"+{result.power} power resource");
+        }
+
+        if (result.technology != "") {
+            _gameState.technologiesResearched.Add(result.technology);
+            lines.Add($"{result.technology} unlocked");
         }
 
         var offsetY = 36 * (lines.Count - 1);
@@ -987,7 +995,14 @@ public class MapView : Node2D {
             }
         }
 
-        if (_gameState.randomEventCooldown == 0 && sys.randomEventCooldown == 0) {
+        if (sys.color == StarColor.Purple) {
+            var e = RandomEvent.eventByTitle["Purple System Visitor"];
+            if (_gameState.randomEventsAvailable.Contains(e.title)) {
+                _randomEvent = e;
+                _gameState.randomEventsAvailable.Remove(_randomEvent.title);
+                OpenRandomEvent();
+            }
+        } else if (_gameState.randomEventCooldown == 0 && sys.randomEventCooldown == 0) {
             var roll = QRandom.Float();
             if (roll < 0.5) {
                 MaybeTriggerEnterSystemEvent(sys);
