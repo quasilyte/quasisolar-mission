@@ -9,6 +9,7 @@ public static class QuickBattleState {
         public EnergySource energySource;
         public WeaponDesign[] weapons;
         public WeaponDesign specialWeapon;
+        public SentinelDesign sentinel;
         public ArtifactDesign[] artifacts;
         public ShieldDesign shield;
 
@@ -17,6 +18,7 @@ public static class QuickBattleState {
             energySource = EnergySource.Find("Power Generator");
             specialWeapon = EmptyWeapon.Design;
             shield = IonCurtainShield.Design;
+            sentinel = SentinelDesign.Find("Ion Fighter");
 
             weapons = new WeaponDesign[]{
                 IonCannonWeapon.Design,

@@ -8,6 +8,7 @@ public enum ItemKind {
 
     Weapon,
     SpecialWeapon,
+    Sentinel,
     Shield,
     EnergySource,
     Artifact,

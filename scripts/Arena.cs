@@ -114,9 +114,6 @@ public class Arena : Node2D {
             human.Connect("Defeated", this, nameof(OnHumanDefeated));
         }
 
-        var sentinel = AttackSentinelNode.New(human.pilot.Vessel, SentinelDesign.list[0]);
-        AddChild(sentinel);
-
         var waypointLine = (WaypointLineNode)GD.Load<PackedScene>("res://scenes/WaypointLineNode.tscn").Instance();
         waypointLine.ClearPoints();
         waypointLine.camera = v.camera;
@@ -157,7 +154,8 @@ public class Arena : Node2D {
             var combatant = ArenaSettings.combatants[i];
             
             var vesselNode = CreateVesselNode(combatant, pilot);
-            vesselNode.State.hp = combatant.hp;
+            vesselNode.State.initialHp = combatant.hp;
+            vesselNode.State.hp = vesselNode.State.initialHp;
             vesselNode.State.backupEnergy = combatant.energy;
             pilot.Vessel = vesselNode;
             AddChild(vesselNode);
@@ -166,6 +164,21 @@ public class Arena : Node2D {
             vesselNode.GlobalPosition = combatant.spawnPos;
             if (!combatant.Design().fullArc) {
                 vesselNode.Rotation = centerPos.AngleToPoint(vesselNode.GlobalPosition);
+            }
+
+            if (combatant.sentinelName != "Empty") {
+                SentinelNode sentinel = null;
+                var sentinelDesign = SentinelDesign.Find(combatant.sentinelName);
+                if (sentinelDesign.kind == SentinelDesign.Kind.Attack) {
+                    sentinel = AttackSentinelNode.New(pilot.Vessel, sentinelDesign);
+                } else if (sentinelDesign.name == "Point-Defense Guard") {
+                    sentinel = PointDefenseGuardNode.New(pilot.Vessel, sentinelDesign);
+                } else if (sentinelDesign.name == "Restructuring Guard") {
+                    sentinel = RestructuringGuardNode.New(pilot.Vessel, sentinelDesign);
+                } else {
+                    throw new Exception("unexpected sentinel design: " + sentinelDesign.name);
+                }
+                AddChild(sentinel);
             }
 
             if (combatant.isBot) {

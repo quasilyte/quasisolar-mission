@@ -232,6 +232,29 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="SentinelSelect" type="OptionButton" parent="."]
+margin_left = 1104.0
+margin_top = 816.0
+margin_right = 1360.0
+margin_bottom = 880.0
+theme = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="SentinelSelect"]
+margin_left = 16.0
+margin_top = -64.0
+margin_right = 250.0
+margin_bottom = -28.0
+custom_fonts/font = ExtResource( 4 )
+text = "Sentinel"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="ShieldSelect" type="OptionButton" parent="."]
 margin_left = 96.0
 margin_top = 656.0

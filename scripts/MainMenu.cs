@@ -13,8 +13,6 @@ public class MainMenu : Node2D {
         GetNode<Button>("SettingsButton").Connect("pressed", this, nameof(OnSettingsButtonPressed));
         GetNode<Button>("ExitButton").Connect("pressed", this, nameof(OnExitButtonPressed));
 
-        QuickBattleState.Reset();
-
         if (_needInit) {
             _needInit = false;
 
@@ -24,9 +22,12 @@ public class MainMenu : Node2D {
             WeaponDesign.InitLists();
             VesselDesign.InitLists();
             ArtifactDesign.InitLists();
+            SentinelDesign.InitLists();
             Research.InitLists();
             RandomEvent.InitLists();
         }
+
+        QuickBattleState.Reset();
     }
     
     private void OnSettingsButtonPressed() {

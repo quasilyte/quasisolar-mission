@@ -18,6 +18,9 @@ public class ItemInfo {
         if (kind == ItemKind.Shield) {
             return ShieldDesign.Find(itemName);
         }
+        if (kind == ItemKind.Sentinel) {
+            return SentinelDesign.Find(itemName);
+        }
         if (kind == ItemKind.VesselDesign) {
             return VesselDesign.Find(itemName);
         }
@@ -43,6 +46,8 @@ public class ItemInfo {
             return artifact.RenderHelp();
         } else if (item is ShieldDesign shield) {
             return shield.RenderHelp();
+        } else if (item is SentinelDesign sentinel) {
+            return sentinel.RenderHelp();
         } else if (item is Vessel vessel) {
             return RenderHelp(vessel.Design());
         } else if (item is VesselDesign vesselDesign) {
@@ -60,6 +65,8 @@ public class ItemInfo {
             return artifact.name;
         } else if (item is ShieldDesign shield) {
             return shield.name;
+        } else if (item is SentinelDesign sentinel) {
+            return sentinel.name;
         } else if (item is Vessel vessel) {
             return Name(vessel.Design());
         } else if (item is VesselDesign vesselDesign) {
@@ -98,6 +105,8 @@ public class ItemInfo {
             return artifact.sellingPrice;
         } else if (item is ShieldDesign shield) {
             return shield.sellingPrice;
+        } else if (item is SentinelDesign sentinel) {
+            return sentinel.sellingPrice;
         } else if (item is Vessel vessel) {
             return SellingPrice(vessel.Design());
         } else if (item is VesselDesign vesselDesign) {

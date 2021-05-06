@@ -38,6 +38,7 @@ public class EquipmentShopScreen : Node2D {
         "Special Weapon",
         "Energy Source",
         "Shield",
+        "Sentinel",
         "Artifact",
     };
 
@@ -160,6 +161,17 @@ public class EquipmentShopScreen : Node2D {
             shieldPanel.AddChild(shieldSlot);
         }
 
+        {
+            var sentinelPanel = panel.GetNode<Sprite>("Sentinel");
+            var sentinelSlot = ItemSlotNode.New(0, ItemKind.Sentinel);
+            sentinelSlot.SetAssignItemCallback((int index, DraggableItemNode itemNode) => {
+                _selectedVessel.sentinelName = itemNode != null ? ((SentinelDesign)itemNode.item).name : "Empty";
+                return true;
+            });
+            sentinelSlot.Name = "Slot";
+            sentinelPanel.AddChild(sentinelSlot);
+        }
+
         for (int i = 0; i < 5; i++) {
             var artifactPanel = panel.GetNode<Sprite>($"Artifact{i}");
             var artifactSlot = ItemSlotNode.New(i, ItemKind.Artifact);
@@ -250,6 +262,19 @@ public class EquipmentShopScreen : Node2D {
                 shieldSlot.ApplyItem(null, itemNode);
                 GetTree().CurrentScene.AddChild(itemNode);
                 itemNode.GlobalPosition = shieldPanel.GlobalPosition;
+            }
+        }
+
+        {
+            var sentinelPanel = panel.GetNode<Sprite>("Sentinel");
+            var sentinelSlot = sentinelPanel.GetNode<ItemSlotNode>("Slot");
+            sentinelPanel.Frame = u.Design().sentinelSlot ? 1 : 0;
+            sentinelSlot.Reset(u, u.Design().sentinelSlot);
+            if (u.Design().sentinelSlot && u.sentinelName != "Empty") {
+                var itemNode = DraggableItemNode.New(sentinelSlot, u.Sentinel());
+                sentinelSlot.ApplyItem(null, itemNode);
+                GetTree().CurrentScene.AddChild(itemNode);
+                itemNode.GlobalPosition = sentinelPanel.GlobalPosition;
             }
         }
 

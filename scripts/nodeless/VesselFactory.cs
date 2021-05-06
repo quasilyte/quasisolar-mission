@@ -17,6 +17,7 @@ public static class VesselFactory {
             EmptyArtifact.Design.name,
             EmptyArtifact.Design.name,
         };
+        v.sentinelName = "Empty";
     }
 
     public static void InitStats(Vessel v) {
@@ -29,6 +30,8 @@ public static class VesselFactory {
     }
 
     public static void Init(Vessel v, string kind) {
+        v.sentinelName = "Empty";
+
         if (kind == "Neutral Pirate") {
             InitNeutralPirate(v);
         } else if (kind == "Neutral Nomad") {
@@ -225,6 +228,15 @@ public static class VesselFactory {
         var shieldRoll = QRandom.Float();
         if (shieldRoll < 0.5) {
             v.shieldName = IonCurtainShield.Design.name;
+        }
+
+        // 40% - ion fighter
+        // 20% - point-defense guard
+        var sentinelRoll = QRandom.Float();
+        if (sentinelRoll < 0.4) {
+            v.sentinelName = "Ion Fighter";
+        } else if (sentinelRoll < 0.6) {
+            v.sentinelName = "Point-Defense Guard";
         }
     }
 

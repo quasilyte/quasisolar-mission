@@ -10,7 +10,7 @@ public class RestructuringRayWeapon : IWeapon {
         sellingPrice = 6500,
         technologiesNeeded = {"Restructuring Ray"},
         cooldown = 5.0f,
-        energyCost = 29.0f,
+        energyCost = 12.0f,
         damage = -0.15f,
         damageKind = DamageKind.None,
         range = 250.0f,

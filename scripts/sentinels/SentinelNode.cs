@@ -1,12 +1,14 @@
 using Godot;
 using System;
 
-public class SentinelNode : Node2D {
+public abstract class SentinelNode : Node2D {
     public Pilot pilot;
 
     protected VesselNode _vessel;
     protected SentinelDesign _design;
     protected Sprite _sprite;
+
+    protected float _attackCooldown = 0;
 
     private float _hp;
 
@@ -29,6 +31,8 @@ public class SentinelNode : Node2D {
         area.Connect("area_entered", this, nameof(OnCollision));
         
         _sprite = GetNode<Sprite>("Pivot/Sprite");
+        
+        GetNode<Node2D>("Pivot").Rotation = QRandom.FloatRange(-3, 3);
     }
 
     public override void _Process(float delta) {
@@ -41,9 +45,17 @@ public class SentinelNode : Node2D {
             return;
         }
 
+        ProcessFrame(delta);
+
+        _attackCooldown = QMath.ClampMin(_attackCooldown - delta, 0);
+
         GlobalPosition = _vessel.GlobalPosition;
         GetNode<Node2D>("Pivot").Rotation += 1 * delta;
         _sprite.GlobalRotation = 0;
+
+        if (_attackCooldown == 0) {
+            ProcessAttack();
+        }
     }
 
     private void OnCollision(Area2D other) {
@@ -104,4 +116,8 @@ public class SentinelNode : Node2D {
         e.GlobalPosition = _sprite.GlobalPosition;
         QueueFree();
     }
+    
+    protected abstract void ProcessAttack();
+
+    protected virtual void ProcessFrame(float delta) {}
 }

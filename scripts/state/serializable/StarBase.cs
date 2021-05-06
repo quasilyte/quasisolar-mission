@@ -105,6 +105,17 @@ public class StarBase: AbstractPoolValue {
             shopSelection.Add(art);
         }
 
+        foreach (var sentinel in SentinelDesign.list) {
+            if (sentinel.name == "Empty") {
+                continue;
+            }
+            if (sentinel.researchRequired && !technologiesResearched.Contains(sentinel.name)) {
+                continue;
+            }
+
+            shopSelection.Add(sentinel);
+        }
+
         return shopSelection;
     }
 

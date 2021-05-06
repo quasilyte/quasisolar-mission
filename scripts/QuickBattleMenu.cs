@@ -16,6 +16,7 @@ public class QuickBattleMenu : Node2D {
     private OptionButton[] _artifactOptions;
     private OptionButton[] _playerOptions;
     private OptionButton _specialWeaponOption;
+    private OptionButton _sentinelOption;
     private OptionButton _shieldOption;
     private OptionButton _hazardOption;
 
@@ -28,6 +29,7 @@ public class QuickBattleMenu : Node2D {
     private List<ArenaSettings.EnvDanger> _hazardSelection = new List<ArenaSettings.EnvDanger>();
     private List<ShieldDesign> _shieldSelection = new List<ShieldDesign>();
     private List<WeaponDesign> _weaponSelection = new List<WeaponDesign>();
+    private List<SentinelDesign> _sentinelSelection = new List<SentinelDesign>();
     private List<WeaponDesign> _specialWeaponSelection = new List<WeaponDesign>();
     private List<ArtifactDesign> _artifactSelection = new List<ArtifactDesign>();
     private string[] _gameSpeedSelection;
@@ -39,6 +41,7 @@ public class QuickBattleMenu : Node2D {
         vesselPreview.Texture = GD.Load<Texture>($"res://images/vessel/{d.affiliation}_{d.name}.png");
 
         GetNode<OptionButton>("SpecialWeaponSelect").Disabled = !d.specialSlot;
+        GetNode<OptionButton>("SentinelSelect").Disabled = !d.sentinelSlot;
         var weaponsLeft = d.weaponSlots;
         for (int i = 0; i < _weaponOptions.Length; i++) {
             _weaponOptions[i].node.Disabled = weaponsLeft <= 0;
@@ -64,7 +67,8 @@ public class QuickBattleMenu : Node2D {
                 o.node.Select(idOf(settings.weapons[i]));
                 i++;
             }
-        }
+        
+        _sentinelOption.Select(_sentinelSelection.IndexOf(settings.sentinel));}
         _shieldOption.Select(_shieldSelection.IndexOf(settings.shield));
         _specialWeaponOption.Select(_specialWeaponSelection.IndexOf(settings.specialWeapon));
         {
@@ -136,6 +140,7 @@ public class QuickBattleMenu : Node2D {
         };
 
         _specialWeaponOption = GetNode<OptionButton>("SpecialWeaponSelect");
+        _sentinelOption = GetNode<OptionButton>("SentinelSelect");
 
         _playerOptions = new OptionButton[6];
         for (int i = 0; i < _playerOptions.Length; i++) {
@@ -206,6 +211,10 @@ public class QuickBattleMenu : Node2D {
             _specialWeaponSelection.Add(w);
         }
 
+        foreach (var s in SentinelDesign.list) {
+            _sentinelSelection.Add(s);
+        }
+
         {
             int id = 0;
             foreach (WeaponDesign w in _weaponSelection) {
@@ -220,6 +229,9 @@ public class QuickBattleMenu : Node2D {
         }
         for (int i = 0; i < _shieldSelection.Count; i++) {
             _shieldOption.AddItem(_shieldSelection[i].name, i);
+        }
+        for (int i = 0; i < _sentinelSelection.Count; i++) {
+            _sentinelOption.AddItem(_sentinelSelection[i].name, i);
         }
         {
             int id = 0;
@@ -240,6 +252,8 @@ public class QuickBattleMenu : Node2D {
         }
         _specialWeaponOption.Connect("item_selected", this, nameof(OnSpecialWeaponSelected));
         _specialWeaponOption.Connect("mouse_entered", this, nameof(OnSpecialWeaponHover));
+        _sentinelOption.Connect("item_selected", this, nameof(OnSentinelSelected));
+        _sentinelOption.Connect("mouse_entered", this, nameof(OnSentinelHover));
         _shieldOption.Connect("item_selected", this, nameof(OnShieldSelected));
         _shieldOption.Connect("mouse_entered", this, nameof(OnShieldHover));
         for (int i = 0; i < _weaponOptions.Length; i++) {
@@ -309,6 +323,10 @@ public class QuickBattleMenu : Node2D {
 
     private void OnSpecialWeaponHover() {
         _helpText.Text = _specialWeaponSelection[_specialWeaponOption.Selected].RenderHelp();
+    }
+
+    private void OnSentinelHover() {
+        _helpText.Text = _sentinelSelection[_sentinelOption.Selected].RenderHelp();
     }
 
     private void OnShieldHover() {
@@ -400,6 +418,12 @@ public class QuickBattleMenu : Node2D {
         OnSpecialWeaponHover();
     }
 
+    private void OnSentinelSelected(int itemId) {
+        PlayerSettings().sentinel = _sentinelSelection[itemId];
+        UpdateTotalCost();
+        OnSentinelHover();
+    }
+
     private void OnWeaponSelected(int itemId, int slotIndex) {
         PlayerSettings().weapons[slotIndex] = _weaponSelection[itemId];
         UpdateTotalCost();
@@ -488,6 +512,7 @@ public class QuickBattleMenu : Node2D {
         var artifacts = settings.artifacts;
         var weapons = settings.weapons;
         var specialWeapon = settings.specialWeapon;
+        var sentinel = settings.sentinel;
         var shield = settings.shield;
 
         var design = v.Design();
@@ -524,6 +549,11 @@ public class QuickBattleMenu : Node2D {
             v.specialWeaponName = specialWeapon.name;
         } else {
             v.specialWeaponName = EmptyWeapon.Design.name;
+        }
+        if (design.sentinelSlot) {
+            v.sentinelName = sentinel.name;
+        } else {
+            v.sentinelName = "Empty";
         }
     }
 }

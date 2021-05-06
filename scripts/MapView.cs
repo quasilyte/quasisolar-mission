@@ -1273,6 +1273,8 @@ public class MapView : Node2D {
             text += "New vessel is available for production.\n\n";
         } else if (research.category == Research.Category.NewWeapon) {
             text += "New weapon is available for production.\n\n";
+        } else if (research.category == Research.Category.NewSentinel) {
+            text += "New sentinel is available for production.\n\n";
         } else if (research.category == Research.Category.Upgrade) {
             text += "Upgrade is now active.\n\n";
         }

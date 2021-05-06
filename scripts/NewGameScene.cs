@@ -637,6 +637,7 @@ public class NewGameScene : Node2D {
             IonCannonWeapon.Design.name,
             EmptyWeapon.Design.name,
         };
+        humanVessel.sentinelName = "Ion Fighter";
         humanVessel.specialWeaponName = EmptyWeapon.Design.name;
         VesselFactory.InitStats(humanVessel);
         fleet.Add(humanVessel.GetRef());

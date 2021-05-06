@@ -18,6 +18,7 @@ public class Research {
         NewShield,
         NewArtifact,
         NewVesselDesign,
+        NewSentinel,
     }
 
     public string name;
@@ -151,6 +152,31 @@ public class Research {
             name = "Ark Exodus",
             researchTime = 35,
             dependencies = {"Ark"},
+        },
+
+        // Sentinel tech.
+
+        new Research{
+            name = "Point-Defense Guard",
+            category = Category.NewSentinel,
+            researchTime = 60,
+            dependencies = {"Point-Defense Laser"},
+        },
+
+        new Research{
+            name = "Photon Fighter",
+            material = Material.Wertu,
+            category = Category.NewSentinel,
+            researchTime = 25,
+            dependencies = {"Photon Burst Cannon"},
+        },
+
+        new Research{
+            name = "Restructuring Guard",
+            material = Material.Wertu,
+            category = Category.NewSentinel,
+            researchTime = 90,
+            dependencies = {"Restructuring Ray"},
         },
 
         // Shield tech.

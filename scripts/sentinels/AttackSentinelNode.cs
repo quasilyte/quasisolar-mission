@@ -2,8 +2,6 @@ using Godot;
 using System;
 
 public class AttackSentinelNode : SentinelNode {
-    private float _attackCooldown = 0;
-
     private static PackedScene _scene = null;
     public static new AttackSentinelNode New(VesselNode vessel, SentinelDesign design) {
         if (_scene == null) {
@@ -16,29 +14,12 @@ public class AttackSentinelNode : SentinelNode {
         return o;
     }
 
-    public override void _Ready() {
-        base._Ready();
-    }
-
-    public override void _Process(float delta) {
-        base._Process(delta);
-        if (_vessel == null) { // Vessel was destroyed
-            return;
-        }
-
-        if (_attackCooldown == 0) {
-            MaybeAttackEnemy();
-        }
-
-        _attackCooldown = QMath.ClampMin(_attackCooldown - delta, 0);
-    }
-
-    private void MaybeAttackEnemy() {
-        var enemy = QMath.NearestEnemy(_vessel.Position, pilot);
+    protected override void ProcessAttack() {
+        var enemy = QMath.NearestEnemy(_sprite.GlobalPosition, pilot);
         if (enemy == null) {
             return;
         }
-        if (enemy.Vessel.Position.DistanceTo(_vessel.Position) >= _design.weapon.range) {
+        if (enemy.Vessel.Position.DistanceTo(_sprite.GlobalPosition) >= _design.weapon.range) {
             return;
         }
 
@@ -48,8 +29,10 @@ public class AttackSentinelNode : SentinelNode {
         var target = QMath.RandomizedLocation(enemy.Vessel.Position, 8);
         projectile.Rotation = (target - _sprite.GlobalPosition).Normalized().Angle();
 
-        var sfx = SoundEffectNode.New(GD.Load<AudioStream>("res://audio/weapon/Photon_Burst_Cannon.wav"), -4);
-        GetParent().AddChild(sfx);
+        if (_design.weapon == PhotonBurstCannonWeapon.Design) {
+            var sfx = SoundEffectNode.New(GD.Load<AudioStream>("res://audio/weapon/Photon_Burst_Cannon.wav"), -4);
+            GetParent().AddChild(sfx);
+        }
 
         _attackCooldown = _design.attackCooldown;
     }

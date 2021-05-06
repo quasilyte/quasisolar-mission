@@ -13,6 +13,7 @@ public class VesselState {
     public float acceleration;
     public float rotationSpeed;
 
+    public float initialHp;
     public float hp;
     public float energy;
     public float backupEnergy;

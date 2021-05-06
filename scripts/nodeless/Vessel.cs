@@ -23,6 +23,7 @@ public class Vessel: AbstractPoolValue, IItem {
     public List<string> weapons = new List<string>();
     public string specialWeaponName = EmptyWeapon.Design.name;
     public string shieldName = EmptyShield.Design.name;
+    public string sentinelName = "Empty";
 
     public Vector2 spawnPos; // TODO: get rid of it?
 
@@ -42,6 +43,8 @@ public class Vessel: AbstractPoolValue, IItem {
     public VesselDesign Design() { return VesselDesign.Find(designName); }
 
     public ShieldDesign Shield() { return ShieldDesign.Find(shieldName); }
+
+    public SentinelDesign Sentinel() { return SentinelDesign.Find(sentinelName); }
 
     // public ArtifactDesign Artifact(int i) { return ArtifactDesign.Find(artifacts[i]); }
 

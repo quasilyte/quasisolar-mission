@@ -92,6 +92,9 @@ public class ResearchScreen : Node2D {
         if (category == Research.Category.NewVesselDesign) {
             return "new vessel design";
         }
+        if (category == Research.Category.NewSentinel) {
+            return "new sentinel";
+        }
         if (category == Research.Category.NewWeapon) {
             return "new weapon";
         }
