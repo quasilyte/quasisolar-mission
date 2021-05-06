@@ -43,7 +43,7 @@ Arcade battles:
 
 * Control the flagship
 * (todo) Choose allied vessels behavior mode
-* (todo) Choose what vessels will participate in battle
+* (todo) Choose which vessels will participate in battle
 * (todo) Fight boss battles
 
 Exploration:
@@ -353,6 +353,8 @@ Ways to get equipment:
 Note that you don't normally get equipment from battles; all you get is sellable (and researchable) debris.
 
 ## Upgrades System
+
+This is terribly outdated! See the [sources](https://github.com/quasilyte/quasisolar-mission/blob/master/scripts/nodeless/Skill.cs) to get a better picture.
 
 | Skill | Expr | Effect |
 |---|---|---|
