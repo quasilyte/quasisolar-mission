@@ -266,7 +266,7 @@ public class VesselDesign: IItem {
             weaponSlots = 1,
             artifactSlots = 4,
 
-            cargoSpace = 70,
+            cargoSpace = 110,
             size = Size.Normal,
         },
 
