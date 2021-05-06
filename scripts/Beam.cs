@@ -38,15 +38,6 @@ public class Beam : Node2D {
     }
 
     public override void _Draw() {
-        if (weapon == RestructuringRayWeapon.Design) {
-            var from = _from;
-            while (from.DistanceTo(_to) > 20) {
-                var next = from.MoveToward(_to, 10);
-                DrawLine(from, next, _color, _width);
-                from = next.MoveToward(_to, 10);
-            }
-        } else {
-            DrawLine(_from, _to, _color, _width);
-        }
+        DrawLine(_from, _to, _color, _width);
     }
 }

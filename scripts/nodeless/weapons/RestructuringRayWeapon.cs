@@ -23,7 +23,8 @@ public class RestructuringRayWeapon : IWeapon {
     private float _cooldown;
     private Pilot _owner;
 
-    private const int MAX_BURST = 40;
+    private RestructuringLine _line;
+    private const int MAX_BURST = 10;
     private int _burst = 0;
     private float _burstCooldown = 0;
     private VesselNode _target = null;
@@ -44,30 +45,23 @@ public class RestructuringRayWeapon : IWeapon {
     }
 
     public void Process(VesselState state, float delta) {
-        _cooldown -= delta;
-        if (_cooldown < 0) {
-            _cooldown = 0;
-        }
-        _burstCooldown -= delta;
-        if (_burstCooldown < 0) {
-            _burstCooldown = 0;
-        }
+        _cooldown = QMath.ClampMin(_cooldown - delta, 0);
+        _burstCooldown = QMath.ClampMin(_burstCooldown - delta, 0);
         if (_burst > 0 && _burstCooldown == 0) {
             _burst--;
-            _burstCooldown += 0.05f;
+            if (_burst == 0) {
+                _line.StartFading();
+            }
+            _burstCooldown += 0.2f;
 
             if (!Godot.Object.IsInstanceValid(_target) || _target.Position.DistanceTo(_owner.Vessel.Position) > Design.range) {
                 _target = null;
                 _burst = 0;
+                _line.StartFading();
                 return;
             }
 
-            var color = Color.Color8(0, 255, 100);
-            var begin = _owner.Vessel.Position.MoveToward(_target.Position, 2 * (float)(MAX_BURST - _burst));
-            var beam = Beam.New(begin, _target.Position, color, 2);
-            beam.weapon = Design;
-            beam.target = _target;
-            _owner.Vessel.GetParent().AddChild(beam);
+            _target.State.hp += 0.6f;
         }
     }
 
@@ -78,5 +72,8 @@ public class RestructuringRayWeapon : IWeapon {
         _burst = MAX_BURST;
         var sfx = SoundEffectNode.New(GD.Load<AudioStream>("res://audio/weapon/Restructuring_Ray.wav"));
         _owner.Vessel.GetParent().AddChild(sfx);
+
+        _line = RestructuringLine.New(_owner.Vessel, _target);
+        _owner.Vessel.GetParent().AddChild(_line);
     }
 }

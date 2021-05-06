@@ -4,9 +4,11 @@ using System;
 public class RestructuringGuardNode : SentinelNode {
     // FIXME: too much code is copied from the RestructuringRawWeapon.
 
-    private const int MAX_BURST = 40;
+    private const int MAX_BURST = 10;
     private int _burst = 0;
     private float _burstCooldown = 0;
+
+    private RestructuringLine _line;
 
     private static PackedScene _scene = null;
     public static new RestructuringGuardNode New(VesselNode vessel, SentinelDesign design) {
@@ -31,21 +33,22 @@ public class RestructuringGuardNode : SentinelNode {
         GetParent().AddChild(sfx);
     }
 
-    protected override void ProcessFrame(float delta) {
-        _burstCooldown -= delta;
-        if (_burstCooldown < 0) {
-            _burstCooldown = 0;
+    protected override void OnDestroy() {
+        if (_line != null && IsInstanceValid(_line)) {
+            _burst = 0;
+            _line.StartFading();
         }
+    }
+
+    protected override void ProcessFrame(float delta) {
+        _burstCooldown = QMath.ClampMin(_burstCooldown - delta, 0);
         if (_burst > 0 && _burstCooldown == 0) {
             _burst--;
-            _burstCooldown += 0.05f;
-
-            var color = Color.Color8(0, 255, 100);
-            var begin = _sprite.GlobalPosition.MoveToward(_vessel.Position, 2 * (float)(MAX_BURST - _burst));
-            var beam = Beam.New(begin, _vessel.Position, color, 2);
-            beam.weapon = _design.weapon;
-            beam.target = _vessel;
-            GetParent().AddChild(beam);
+            if (_burst == 0) {
+                _line.StartFading();
+            }
+            _vessel.State.hp += 0.6f;
+            _burstCooldown += 0.2f;
         }
     }
 
@@ -58,6 +61,9 @@ public class RestructuringGuardNode : SentinelNode {
         _burst = MAX_BURST;
         var sfx = SoundEffectNode.New(GD.Load<AudioStream>("res://audio/weapon/Restructuring_Ray.wav"));
         GetParent().AddChild(sfx);
+
+        _line = RestructuringLine.New(_sprite, _vessel);
+        GetParent().AddChild(_line);
 
         _attackCooldown = _design.attackCooldown;
     }

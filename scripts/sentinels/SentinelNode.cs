@@ -111,11 +111,15 @@ public abstract class SentinelNode : Node2D {
             GetParent().AddChild(sfx);
         }
 
+        OnDestroy();
+
         var e = Explosion.New(0.5f);
         GetParent().AddChild(e);
         e.GlobalPosition = _sprite.GlobalPosition;
         QueueFree();
     }
+
+    protected virtual void OnDestroy() {}
     
     protected abstract void ProcessAttack();
 
