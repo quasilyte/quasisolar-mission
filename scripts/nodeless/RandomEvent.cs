@@ -51,6 +51,7 @@ public class RandomEvent {
         AddVesselToFleet,
         AddTechnology,
         AddWertuReputation,
+        AddKrigiaReputation,
         SpendAnyVesselBackupEnergy,
         ApplySlow,
         DamageFleetPercentage,
@@ -104,6 +105,70 @@ public class RandomEvent {
         spaceUnit.pos = RpgGameState.instance.humanUnit.Get().pos;
         spaceUnit.fleet = fleetList;
         return spaceUnit;
+    }
+
+    private static RandomEvent newLoneKrigiaScout() {
+        var e = new RandomEvent { };
+        e.title = "Lone Krigia Scout";
+        e.expReward = 2;
+        e.luckScore = 5;
+        e.trigger = TriggerKind.OnSystemEntered;
+        e.text = multilineText(
+            "You locate a single Talons class Krigia vessel.",
+            "It could be a patrol unit remainings that tries to leave this system.",
+            "",
+            "As it doesn't possess any threat, it's up to you whether you want to attack it."
+        );
+        e.actions.Add(new Action{
+            name = "Attack the scout",
+            apply = (RandomEventContext ctx) => {
+                var v = RpgGameState.instance.NewVessel(Faction.Pirate, VesselDesign.Find("Talons"));
+                VesselFactory.Init(v, VesselDesign.Find(v.designName));
+                var spaceUnit = newSpaceUnit(Faction.RandomEventHostile, v);
+                spaceUnit.cargo.minerals = (int)(ctx.roll * 20);
+                spaceUnit.cargo.power = (int)(ctx.roll * 15);
+                if (RpgGameState.instance.skillsLearned.Contains("Luck")) {
+                    spaceUnit.cargo.minerals *= 2;
+                    spaceUnit.cargo.power *= 2;
+                }
+
+                return new Result {
+                    text = multilineText(
+                        "It looks like they accept your challenge.",
+                        "You should prepare for the battle too."
+                    ),
+                    effects = {
+                        new Effect{
+                            kind = EffectKind.AddKrigiaReputation,
+                            value = -1,
+                        },
+                        new Effect{
+                            kind = EffectKind.EnterArena,
+                            value = spaceUnit,
+                        },
+                    },
+                };
+            }
+        });
+        e.actions.Add(new Action{
+            name = "Let it be",
+            apply = (RandomEventContext _) => {
+                return new Result{
+                    text = multilineText(
+                        "The scout charges its engine and jumps away.",
+                        "",
+                        "Will it come back with a fleet?"
+                    ),
+                    effects = {
+                        new Effect{
+                            kind = EffectKind.AddKrigiaReputation,
+                            value = +1,
+                        },
+                    },
+                };
+            }
+        });
+        return e;
     }
 
     private static RandomEvent newFuelTrader() {
@@ -1025,6 +1090,7 @@ public class RandomEvent {
             newSpaceNomads(),
             newTheAvenger(),
             newFuelTrader(),
+            newLoneKrigiaScout(),
 
             newPurpleSystemVisitor(),
         };

@@ -541,6 +541,9 @@ public class MapView : Node2D {
             case RandomEvent.EffectKind.AddWertuReputation:
                 _gameState.wertuReputation += (int)effect.value;
                 return;
+            case RandomEvent.EffectKind.AddKrigiaReputation:
+                _gameState.krigiaReputation += (int)effect.value;
+                return;
             case RandomEvent.EffectKind.SpendAnyVesselBackupEnergy:
                 foreach (var v in _humanUnit.fleet) {
                     if (v.Get().energy >= (int)effect.value) {
