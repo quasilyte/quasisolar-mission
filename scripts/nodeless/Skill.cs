@@ -78,7 +78,7 @@ public class Skill {
         // },
 
         new Skill{
-            name = "Diplomacy",
+            name = "Speaking",
             expCost = 65,
             effect = "better deals in negotiations",
         },

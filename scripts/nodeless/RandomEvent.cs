@@ -89,6 +89,10 @@ public class RandomEvent {
         return string.Join("\n", lines);
     }
 
+    private static bool HasSpeaking() {
+        return RpgGameState.instance.skillsLearned.Contains("Speaking");
+    }
+
     private static SpaceUnit newSpaceUnit(Faction faction, params Vessel[] fleet) {
         var fleetList = new List<Vessel.Ref>();
         foreach (var v in fleet) {
@@ -100,6 +104,73 @@ public class RandomEvent {
         spaceUnit.pos = RpgGameState.instance.humanUnit.Get().pos;
         spaceUnit.fleet = fleetList;
         return spaceUnit;
+    }
+
+    private static RandomEvent newFuelTrader() {
+        var e = new RandomEvent { };
+        e.title = "Fuel Trader";
+        e.expReward = 2;
+        e.luckScore = 8;
+        e.trigger = TriggerKind.OnSystemEntered;
+        e.condition = () => {
+            var cargo = RpgGameState.instance.humanUnit.Get().cargo;
+            return cargo.minerals >= 50 || cargo.organic >= 50;
+        };
+        e.text = multilineText(
+            "An ancient-looking ship claims to be a travelling refueling station.",
+            "",
+            "They don't seem to be interested in credits though."
+        );
+        e.extraText = (RandomEventContext _) => HasSpeaking() ? "(Speaking) The exchange rate is 2 times more in your favor." : "";
+        e.actions.Add(new Action {
+            name = "Full refueling",
+            hint = () => HasSpeaking() ? "(25 organic)" : "(50 organic)",
+            condition = () => RpgGameState.instance.humanUnit.Get().cargo.organic >= (HasSpeaking() ? 25 : 50),
+            apply = (RandomEventContext ctx) => {
+                return new Result {
+                    text = "The deal is made. Resources are exchanged for the fuel.",
+                    effects = {
+                        new Effect{
+                            kind = EffectKind.AddFuel,
+                            value = 9999,
+                        },
+                        new Effect{
+                            kind = EffectKind.AddOrganic,
+                            value = -(HasSpeaking() ? 25 : 50),
+                        },
+                    },
+                };
+            },
+        });
+        e.actions.Add(new Action {
+            name = "Buy 300 fuel units",
+            hint = () => HasSpeaking() ? "(25 minerals)" : "(50 minerals)",
+            condition = () => RpgGameState.instance.humanUnit.Get().cargo.minerals >= (HasSpeaking() ? 25 : 50),
+            apply = (RandomEventContext ctx) => {
+                return new Result {
+                    text = "The deal is made. Resources are exchanged for the fuel.",
+                    effects = {
+                        new Effect{
+                            kind = EffectKind.AddFuel,
+                            value = 300,
+                        },
+                        new Effect{
+                            kind = EffectKind.AddMinerals,
+                            value = -(HasSpeaking() ? 25 : 50),
+                        },
+                    },
+                };
+            },
+        });
+        e.actions.Add(new Action{
+            name = "No deal",
+            apply = (RandomEventContext _) => {
+                return new Result{
+                    text = "You have better plans for these resources.",
+                };
+            }
+        });
+        return e;
     }
 
     private static RandomEvent newTheAvenger() {
@@ -198,9 +269,10 @@ public class RandomEvent {
 
     private static RandomEvent newSpaceNomads() {
         var nomadDesign = VesselDesign.Find("Nomad");
+
         Func<int> vesselPrice = () => {
             var price = (int)(nomadDesign.sellingPrice * 0.7);
-            if (RpgGameState.instance.skillsLearned.Contains("Diplomacy")) {
+            if (HasSpeaking()) {
                 price = (int)(price * 0.8);
             }
             return price;
@@ -222,12 +294,7 @@ public class RandomEvent {
             "",
             "They broadcast a message that says that they're willing to sell one of their Nomad class vessels."
         );
-        e.extraText = (RandomEventContext _) => {
-            if (RpgGameState.instance.skillsLearned.Contains("Diplomacy")) {
-                return "Your diplomacy skill earned you a 20% discount.";
-            }
-            return "";
-        };
+        e.extraText = (RandomEventContext _) => HasSpeaking() ? "(Speaking) Your speaking skills earned you a 20% discount." : "";
         e.actions.Add(new Action {
             name = "Buy a vessel",
             hint = () => "(" + vesselPrice() + " credits)",
@@ -957,6 +1024,7 @@ public class RandomEvent {
             newTroubledLiner(),
             newSpaceNomads(),
             newTheAvenger(),
+            newFuelTrader(),
 
             newPurpleSystemVisitor(),
         };
