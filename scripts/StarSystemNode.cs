@@ -222,6 +222,10 @@ public class StarSystemNode : Node2D {
         if (starBase.owner != Faction.Human) {
             return;
         }
+        if (starBase.level != 5) {
+            return;
+        }
+
         foreach (var p in sys.resourcePlanets) {
             if (!p.hasMine) {
                 continue;
