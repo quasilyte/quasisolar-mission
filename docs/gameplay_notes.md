@@ -354,6 +354,8 @@ Note that you don't normally get equipment from battles; all you get is sellable
 
 ## Upgrades System
 
+This is terribly outdated! See the [sources](https://github.com/quasilyte/quasisolar-mission/blob/master/scripts/nodeless/Skill.cs) to get a better picture.
+
 | Skill | Expr | Effect |
 |---|---|---|
 | Mechanic I | 150 | When winning in battle, all ships recover 10% of the damage taken during that battle. |
