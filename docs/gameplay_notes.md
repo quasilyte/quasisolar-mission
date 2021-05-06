@@ -43,7 +43,7 @@ Arcade battles:
 
 * Control the flagship
 * (todo) Choose allied vessels behavior mode
-* (todo) Choose what vessels will participate in battle
+* (todo) Choose which vessels will participate in battle
 * (todo) Fight boss battles
 
 Exploration:
