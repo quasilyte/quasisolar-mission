@@ -1219,6 +1219,10 @@ public class MapView : Node2D {
         }
 
         ProcessKrigiaActions();
+
+        if (_gameState.day == _gameState.missionDeadline) {
+            SpawnKrigiaFinalAttack(new Vector2(512, 224), RpgGameState.StartingSystem().pos);
+        }
     }
 
     private void ProcessResearch() {
@@ -1734,6 +1738,28 @@ public class MapView : Node2D {
         spaceUnit.fleet = reinforcementsFleet;
 
         alliedBase.units.Add(spaceUnit.GetRef());
+
+        var unitNode = KrigiaSpaceUnitNode.New(spaceUnit);
+        AddSpaceUnit(unitNode);
+    }
+
+    private void SpawnKrigiaFinalAttack(Vector2 pos, Vector2 firstWaypoint) {
+        var notification = MapBadNotificationNode.New("Krigia Flagship Arrives");
+        AddChild(notification);
+        notification.GlobalPosition = pos;
+
+        var spaceUnit = _gameState.spaceUnits.New();
+        spaceUnit.owner = Faction.Krigia;
+        spaceUnit.pos = pos;
+        spaceUnit.waypoint = firstWaypoint;
+        spaceUnit.botProgram = SpaceUnit.Program.KrigiaFinalAttack;
+
+        spaceUnit.fleet = new List<Vessel.Ref>{
+            VesselFactory.NewVessel(Faction.Krigia, "Ashes").GetRef(),
+            VesselFactory.NewVessel(Faction.Krigia, "Horns").GetRef(),
+            VesselFactory.NewVessel(Faction.Krigia, "Horns").GetRef(),
+            VesselFactory.NewVessel(Faction.Krigia, "Horns").GetRef(),
+        };
 
         var unitNode = KrigiaSpaceUnitNode.New(spaceUnit);
         AddSpaceUnit(unitNode);

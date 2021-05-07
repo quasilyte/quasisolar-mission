@@ -36,6 +36,8 @@ public class RpgGameState {
         public int fuelPrice;
         public int exodusPrice;
 
+        public int missionDeadline;
+
         public float travelSpeed;
 
         public int startingFuel;
@@ -194,6 +196,8 @@ public class RpgGameState {
         o.randomEventsAvailable = c.randomEvents;
 
         o.skillsLearned = c.skills;
+
+        o.missionDeadline = c.missionDeadline;
         
         return o;
     }
@@ -232,6 +236,7 @@ public class RpgGameState {
     public float fuel = 0;
 
     public int day = 1;
+    public int missionDeadline;
 
     public int travelSlowPoints = 0;
     public float travelSpeed;

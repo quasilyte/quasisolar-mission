@@ -95,13 +95,6 @@ public class RandomEvent {
         return RpgGameState.instance.skillsLearned.Contains("Speaking");
     }
 
-    private static Vessel NewVessel(Faction faction, string designName) {
-        var design = VesselDesign.Find(designName);
-        var vessel = RpgGameState.instance.NewVessel(faction, design);
-        VesselFactory.Init(vessel, design);
-        return vessel;
-    }
-
     private static SpaceUnit NewSpaceUnit(Faction faction, params Vessel[] fleet) {
         var fleetList = new List<Vessel.Ref>();
         foreach (var v in fleet) {
@@ -117,23 +110,23 @@ public class RandomEvent {
 
     private static RandomEvent newSkirmish() {
         Func<Faction, SpaceUnit> createWertuUnit = (Faction faction) => {
-            var v1 = NewVessel(Faction.Wertu, "Dominator");
+            var v1 = VesselFactory.NewVessel(Faction.Wertu, "Dominator");
             v1.spawnPos = new Vector2(1100, 200);
-            var v2 = NewVessel(Faction.Wertu, "Guardian");
+            var v2 = VesselFactory.NewVessel(Faction.Wertu, "Guardian");
             v2.spawnPos = new Vector2(1220, 140);
-            var v3 = NewVessel(Faction.Wertu, "Angel");
+            var v3 = VesselFactory.NewVessel(Faction.Wertu, "Angel");
             v3.spawnPos = new Vector2(1050, 160);
             return NewSpaceUnit(faction, v1, v2, v3);
         };
 
         Func<SpaceUnit> createKrigiaUnit = () => {
-            var v1 = NewVessel(Faction.Krigia, "Horns");
+            var v1 = VesselFactory.NewVessel(Faction.Krigia, "Horns");
             v1.spawnPos = new Vector2(1150, 800);
-            var v2 = NewVessel(Faction.Krigia, "Tusks");
+            var v2 = VesselFactory.NewVessel(Faction.Krigia, "Tusks");
             v2.spawnPos = new Vector2(1250, 900);
-            var v3 = NewVessel(Faction.Krigia, "Claws");
+            var v3 = VesselFactory.NewVessel(Faction.Krigia, "Claws");
             v3.spawnPos = new Vector2(1320, 850);
-            var v4 = NewVessel(Faction.Krigia, "Claws");
+            var v4 = VesselFactory.NewVessel(Faction.Krigia, "Claws");
             v4.spawnPos = new Vector2(1100, 820);
             return NewSpaceUnit(Faction.RandomEventHostile, v1, v2, v3, v4);
         };
@@ -200,8 +193,8 @@ public class RandomEvent {
         e.actions.Add(new Action{
             name = "Wait for the one side to win",
             apply = (RandomEventContext ctx) => {
-                var v1 = NewVessel(Faction.Krigia, "Claws");
-                var v2 = NewVessel(Faction.Krigia, "Claws");
+                var v1 = VesselFactory.NewVessel(Faction.Krigia, "Claws");
+                var v2 = VesselFactory.NewVessel(Faction.Krigia, "Claws");
                 return new Result{
                     text = multilineText(
                         "Krigia got an upper hand and destroyed all opposing forces.",
@@ -248,7 +241,7 @@ public class RandomEvent {
         e.actions.Add(new Action{
             name = "Attack the scout",
             apply = (RandomEventContext ctx) => {
-                var v = NewVessel(Faction.Krigia, "Talons");
+                var v = VesselFactory.NewVessel(Faction.Krigia, "Talons");
                 var spaceUnit = NewSpaceUnit(Faction.RandomEventHostile, v);
                 spaceUnit.cargo.minerals = (int)(ctx.roll * 20);
                 spaceUnit.cargo.power = (int)(ctx.roll * 15);
@@ -383,10 +376,10 @@ public class RandomEvent {
         e.actions.Add(new Action{
             name = "Attack pirates too",
             apply = (RandomEventContext ctx) => {
-                var v1 = NewVessel(Faction.Pirate, "Pirate");
-                var v2 = NewVessel(Faction.Pirate, "Pirate");
-                var v3 = NewVessel(Faction.Pirate, "Pirate");
-                var v4 = NewVessel(Faction.Pirate, "Pirate");
+                var v1 = VesselFactory.NewVessel(Faction.Pirate, "Pirate");
+                var v2 = VesselFactory.NewVessel(Faction.Pirate, "Pirate");
+                var v3 = VesselFactory.NewVessel(Faction.Pirate, "Pirate");
+                var v4 = VesselFactory.NewVessel(Faction.Pirate, "Pirate");
                 var spaceUnit = NewSpaceUnit(Faction.RandomEventHostile, v1, v2, v3, v4);
                 if (RpgGameState.instance.skillsLearned.Contains("Luck")) {
                     spaceUnit.cargo.minerals = (int)(ctx.roll * 60);
@@ -418,7 +411,7 @@ public class RandomEvent {
         e.actions.Add(new Action{
             name = "Attack the avenger",
             apply = (RandomEventContext ctx) => {
-                var avenger = NewVessel(Faction.Neutral, "Avenger");
+                var avenger = VesselFactory.NewVessel(Faction.Neutral, "Avenger");
                 var spaceUnit = NewSpaceUnit(Faction.RandomEventHostile, avenger);
                 return new Result {
                     text = multilineText(
@@ -533,9 +526,9 @@ public class RandomEvent {
         e.actions.Add(new Action{
             name = "Attack the group",
             apply = (RandomEventContext ctx) => {
-                var v1 = NewVessel(Faction.Neutral, "Nomad");
-                var v2 = NewVessel(Faction.Neutral, "Nomad");
-                var v3 = NewVessel(Faction.Neutral, "Nomad");
+                var v1 = VesselFactory.NewVessel(Faction.Neutral, "Nomad");
+                var v2 = VesselFactory.NewVessel(Faction.Neutral, "Nomad");
+                var v3 = VesselFactory.NewVessel(Faction.Neutral, "Nomad");
                 var spaceUnit = NewSpaceUnit(Faction.RandomEventHostile, v1, v2, v3);
                 spaceUnit.cargo.minerals = (int)(ctx.roll * 70);
                 if (RpgGameState.instance.skillsLearned.Contains("Luck")) {
@@ -581,7 +574,7 @@ public class RandomEvent {
         e.actions.Add(new Action {
             name = "Prepare for the worst",
             apply = (RandomEventContext ctx) => {
-                var v = NewVessel(Faction.Neutral, "Visitor");
+                var v = VesselFactory.NewVessel(Faction.Neutral, "Visitor");
                 var spaceUnit = NewSpaceUnit(Faction.RandomEventHostile, v);
                 spaceUnit.cargo.power = (int)(ctx.roll * 50);
                 if (RpgGameState.instance.skillsLearned.Contains("Luck")) {
@@ -728,8 +721,8 @@ public class RandomEvent {
 
     private static RandomEvent newPiratesAttack() {
         Func<SpaceUnit> createPirates = () => {
-            var v1 = NewVessel(Faction.Pirate, "Pirate");
-            var v2 = NewVessel(Faction.Pirate, "Pirate");
+            var v1 = VesselFactory.NewVessel(Faction.Pirate, "Pirate");
+            var v2 = VesselFactory.NewVessel(Faction.Pirate, "Pirate");
             return NewSpaceUnit(Faction.RandomEventHostile, v1, v2);
         };
 

@@ -122,6 +122,7 @@ public class ShipyardScreen : Node2D {
 
         var system = RpgGameState.enteredBase.system.Get();
         system.starBase.id = 0;
+        RpgGameState.humanBases.Remove(_starBase);
 
         UpdateFleet();
         UpdateGarrison();

@@ -24,6 +24,9 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
         case SpaceUnit.Program.KrigiaReinforcements:
             o.speed = 25;
             break;
+        case SpaceUnit.Program.KrigiaFinalAttack:
+            o.speed = 30;
+            break;
         default:
             throw new Exception("unexpected Krigia space unit program: " + unit.botProgram.ToString());
         }
@@ -60,9 +63,40 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
         case SpaceUnit.Program.KrigiaTaskForce:
             TaskForceProcessDay();
             break;
+        case SpaceUnit.Program.KrigiaFinalAttack:
+            FinalAttackProcessDay();
+            break;
         }
 
         unit.botSystemLeaveDelay = QMath.ClampMin(unit.botSystemLeaveDelay - 1, 0);
+    }
+
+    private StarBase FindClosestHumanBase() {
+        StarBase closest = null;
+        foreach (var starBase in RpgGameState.humanBases) {
+            if (closest == null) {
+                closest = starBase;
+                continue;
+            }
+            if (starBase.system.Get().pos.DistanceTo(unit.pos) < closest.system.Get().pos.DistanceTo(unit.pos)) {
+                closest = starBase;
+            }
+        }
+        return closest;
+    }
+
+    private void FinalAttackProcessDay() {
+        // When base is destroyed, find another one.
+        if (_currentSystem.starBase.id == 0) {
+            var nextTarget = FindClosestHumanBase();
+            if (nextTarget != null) {
+                unit.waypoint = nextTarget.system.Get().pos;
+                _currentSystem = null;
+            }
+            return;
+        }
+
+        EmitSignal(nameof(AttackStarBase));
     }
 
     private void TaskForceProcessDay() {
@@ -111,6 +145,9 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
         case SpaceUnit.Program.KrigiaReinforcements:
             ReinforcementsDestinationReached();
             break;
+        case SpaceUnit.Program.KrigiaFinalAttack:
+            FinalAttackDestinationReached();
+            break;
         }
     }
 
@@ -142,6 +179,10 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
             _currentSystem = null;
             _canBeDetected = true;
         }
+    }
+
+    private void FinalAttackDestinationReached() {
+        _currentSystem = RpgGameState.starSystemByPos[unit.waypoint];
     }
 
     private void TaskForceDestinationReached() {

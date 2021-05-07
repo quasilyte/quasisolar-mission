@@ -29,6 +29,13 @@ public static class VesselFactory {
         Init(v, design.affiliation + " " + design.name);
     }
 
+    public static Vessel NewVessel(Faction faction, string designName) {
+        var design = VesselDesign.Find(designName);
+        var vessel = RpgGameState.instance.NewVessel(faction, design);
+        Init(vessel, design);
+        return vessel;
+    }
+
     public static void Init(Vessel v, string kind) {
         v.sentinelName = "Empty";
 

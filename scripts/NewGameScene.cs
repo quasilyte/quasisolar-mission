@@ -92,10 +92,10 @@ public class NewGameScene : Node2D {
         {
             "MissionDeadline",
             new Option[]{
-                new Option{text = "8000 days", score = -20},
-                new Option{text = "4000 days", score = 0, selected = true},
-                new Option{text = "2000 days", score = 10},
-                new Option{text = "1000 days", score = 30},
+                new Option{text = "8000 days", value = "8000", score = -20},
+                new Option{text = "4000 days", value = "4000", score = 0, selected = true},
+                new Option{text = "3000 days", value = "3000", score = 10},
+                new Option{text = "2500 days", value = "2500", score = 30},
             }
         },
 
@@ -262,6 +262,8 @@ public class NewGameScene : Node2D {
 
             skills = skills,
             randomEvents = randomEvents,
+
+            missionDeadline = OptionIntValue("MissionDeadline"),
         };
 
         return config;
