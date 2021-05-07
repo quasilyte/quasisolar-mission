@@ -1,4 +1,4 @@
-All events are happening in an alternative reality.
+All events are happening in an alternative universe.
 
 We still have a Human race that comes from the planet Earth ("Earthlings"),
 but the homeworld is called "Quasisolar system" instead of "Solar system".
