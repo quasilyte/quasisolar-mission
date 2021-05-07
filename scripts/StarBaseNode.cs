@@ -28,6 +28,12 @@ public class StarBaseNode : Node2D {
     }
 
     public virtual void ProcessDay() {
+        foreach (var vref in starBase.garrison) {
+            var v = vref.Get();
+            v.hp = QMath.ClampMax(v.hp + 5, v.Design().maxHp);
+            v.energy = v.GetEnergySource().maxBackupEnergy;
+        }
+
         starBase.botPatrolDelay = QMath.ClampMin(starBase.botPatrolDelay - 1, 0);
         starBase.botReinforcementsDelay = QMath.ClampMin(starBase.botReinforcementsDelay - 1, 0);
 
