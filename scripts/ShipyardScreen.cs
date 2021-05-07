@@ -120,6 +120,8 @@ public class ShipyardScreen : Node2D {
             return;
         }
 
+        _gameState.credits -= _gameState.exodusPrice;
+
         var system = RpgGameState.enteredBase.system.Get();
         system.starBase.id = 0;
         RpgGameState.humanBases.Remove(_starBase);
