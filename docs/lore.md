@@ -26,7 +26,7 @@ with local sentient beings.
 They might look noble, but the results of their activity
 is a vast expansion of their own territories.
 
-Some races, like Zyth, tried to keep them away from their borders, but
+Some races (Zyth, for instance) tried to keep them away from their borders, but
 Wertu technologies and the fleet size were superior.
 
 Humans made a first extraterrestrial life contact in this year.
