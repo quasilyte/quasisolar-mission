@@ -10,7 +10,7 @@ public abstract class SpaceUnitNode : Node2D {
     public float speed;
 
     [Signal]
-    public delegate void BaseDetected();
+    public delegate void SearchForStarBase();
 
     [Signal]
     public delegate void DroneDestroyed();

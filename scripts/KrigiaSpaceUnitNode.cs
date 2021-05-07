@@ -205,6 +205,10 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
         }
 
         var starBase = _currentSystem.starBase.Get();
+        if (starBase.id == 0) {
+            return;
+        }
+
         if (_currentSystem == unit.botOrigin.Get().system.Get()) {
             EnterBase(starBase);
             return;
@@ -213,8 +217,7 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
         if (starBase.owner == Faction.Human) {
             if (_gameState.humanUnit.Get().pos != _currentSystem.pos) {
                 if (starBase.discoveredByKrigia == 0) {
-                    starBase.discoveredByKrigia = _gameState.day;
-                    EmitSignal(nameof(BaseDetected));
+                    EmitSignal(nameof(SearchForStarBase));
                 }
             }
         }

@@ -42,21 +42,21 @@ public class Arena : Node2D {
     private float _envHazardTick = 0;
 
     private void ApplyAllianceColor(Node2D n, int alliance) {
-        // 1 normal (bright)
-        // 2 red
-        // 3 green
-        // 4 blue
-        // 5 dark
-        // 6 yellow
-        if (alliance == 2) {
+        // 0 normal (bright)
+        // 1 red
+        // 2 green
+        // 3 blue
+        // 4 dark
+        // 5 yellow
+        if (alliance == 1) {
             n.Modulate = Color.Color8(255, 170, 170);
-        } else if (alliance == 3) {
+        } else if (alliance == 2) {
             n.Modulate = Color.Color8(170, 255, 170);
-        } else if (alliance == 4) {
+        } else if (alliance == 3) {
             n.Modulate = Color.Color8(170, 190, 240);
-        } else if (alliance == 5) {
+        } else if (alliance == 4) {
             n.Modulate = Color.Color8(130, 130, 130);
-        } else if (alliance == 6) {
+        } else if (alliance == 5) {
             n.Modulate = Color.Color8(255, 230, 70);
         }
     }

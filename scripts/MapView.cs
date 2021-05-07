@@ -37,6 +37,7 @@ public class MapView : Node2D {
     private PopupNode _randomEventResolvedPopup;
     private PopupNode _battleResult;
     private PopupNode _researchCompletedPopup;
+    private PopupNode _patrolReachesBasePopup;
     private MapViewCheatMenuPopup _cheatsPopup;
 
     private RandomEvent.EffectKind _randomEventResolutionPostEffect;
@@ -97,6 +98,9 @@ public class MapView : Node2D {
         } else if (RpgGameState.transition == RpgGameState.MapTransition.BaseAttackSimulation) {
             ProcessStarBaseCasualties(RpgGameState.garrisonStarBase);
             ProcessUnitCasualties(RpgGameState.arenaUnit1);
+            if (RpgGameState.arenaUnit1.owner == Faction.Krigia && !RpgGameState.arenaUnit1.deleted) {
+                MarkStarBaseAsDiscovered(RpgGameState.garrisonStarBase);
+            }
         }
         if (RpgGameState.arenaUnit1 != null && IsRandomEventFaction(RpgGameState.arenaUnit1.owner)) {
             RpgGameState.arenaUnit1.deleted = true;
@@ -141,6 +145,10 @@ public class MapView : Node2D {
         GetNode<TextureButton>("UI/MiningButton").Connect("pressed", this, nameof(OnMiningButton));
         GetNode<TextureButton>("UI/ActionMenuButton").Connect("pressed", this, nameof(OnActionMenuButton));
         GetNode<TextureButton>("UI/ResearchButton").Connect("pressed", this, nameof(OnResearchButton));
+
+        _patrolReachesBasePopup = GetNode<PopupNode>("UI/PatrolReachesBasePopup");
+        _patrolReachesBasePopup.GetNode<ButtonNode>("AttackButton").Connect("pressed", this, nameof(OnPatrolReachesBaseAttackButton));
+        _patrolReachesBasePopup.GetNode<ButtonNode>("IgnoreButton").Connect("pressed", this, nameof(OnPatrolReachesBaseIgnoreButton));
 
         _researchCompletedPopup = GetNode<PopupNode>("UI/ResearchCompletedPopup");
         _researchCompletedPopup.GetNode<ButtonNode>("DoneButton").Connect("pressed", this, nameof(OnResearchCompleteDoneButton));
@@ -302,6 +310,9 @@ public class MapView : Node2D {
     private void OnKrigiaPatrolLeaveButton() {
         _lockControls = false;
         _krigiaPatrolPopup.Hide();
+
+        MarkStarBaseAsDiscovered(_currentSystem.sys.starBase.Get());
+
         _gameState.fuel -= RetreatFuelCost();
         UpdateUI();
     }
@@ -918,11 +929,25 @@ public class MapView : Node2D {
         notification.GlobalPosition = unitNode.GlobalPosition;
     }
 
-    private void OnBaseDetected(SpaceUnitNode unitNode) {
+    private void MarkStarBaseAsDiscovered(StarBase starBase) {
+        if (starBase.discoveredByKrigia != 0) {
+            return;
+        }
+        starBase.discoveredByKrigia = _gameState.day;
         GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/interface/generic_notification.wav"));
         var notification = MapBadNotificationNode.New("Base detected");
         AddChild(notification);
-        notification.GlobalPosition = unitNode.GlobalPosition;
+        notification.GlobalPosition = starBase.system.Get().pos;
+    }
+
+    private void OnSearchForStarBase(SpaceUnitNode unitNode) {
+        var sys = RpgGameState.starSystemByPos[unitNode.unit.pos];
+        var starBase = sys.starBase.Get();
+        if (starBase.garrison.Count == 0) {
+            MarkStarBaseAsDiscovered(starBase);
+        } else {
+            TriggerPatrolReachesBaseEvent(unitNode);
+        }
     }
 
     private void AddSpaceUnit(SpaceUnitNode unitNode) {
@@ -930,7 +955,7 @@ public class MapView : Node2D {
         unitNode.Connect("AttackStarBase", this, nameof(OnSpaceUnitAttackStarBase), args);
         unitNode.Connect("Removed", this, nameof(OnSpaceUnitRemoved), args);
         unitNode.Connect("DroneDestroyed", this, nameof(OnDroneDestroyed), args);
-        unitNode.Connect("BaseDetected", this, nameof(OnBaseDetected), args);
+        unitNode.Connect("SearchForStarBase", this, nameof(OnSearchForStarBase), args);
 
         AddChild(unitNode);
         // unitNode.GlobalPosition = unitNode.unit.pos;
@@ -1257,6 +1282,34 @@ public class MapView : Node2D {
         }
     }
 
+    private void OnPatrolReachesBaseAttackButton() {
+        var u = _eventUnit;
+        RpgGameState.arenaUnit1 = u.unit;
+
+        // TODO: allow units selection?
+        // FIXME: code is duplicated from OnStarBaseAttackPlayButton().
+        var system = RpgGameState.starSystemByPos[u.unit.pos];
+        var starBase = system.starBase.Get();
+        var numDefenders = Math.Min(starBase.garrison.Count, 4);
+        var defenders = new List<Vessel>();
+        for (int i = 0; i < numDefenders; i++) {
+            defenders.Add(starBase.garrison[i].Get());
+        }
+        RpgGameState.garrisonStarBase = starBase;
+
+        SetArenaSettings(system, ConvertVesselList(u.unit.fleet), defenders);
+        GetTree().ChangeScene("res://scenes/ArenaScreen.tscn");
+    }
+
+    private void OnPatrolReachesBaseIgnoreButton() {
+        _lockControls = false;
+        _patrolReachesBasePopup.Hide();
+
+        var system = RpgGameState.starSystemByPos[_eventUnit.unit.pos];
+        var starBase = system.starBase.Get();
+        MarkStarBaseAsDiscovered(starBase);
+    }
+
     private void OnResearchCompleteDoneButton() {
         _lockControls = false;
         _researchCompletedPopup.Hide();
@@ -1390,6 +1443,14 @@ public class MapView : Node2D {
         _lockControls = true;
         _eventUnit = u;
         _starBaseAttackPopup.PopupCentered();
+    }
+
+    private void TriggerPatrolReachesBaseEvent(SpaceUnitNode u) {
+        GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/interface/random_event.wav"));
+        StopMovement();
+        _lockControls = true;
+        _eventUnit = u;
+        _patrolReachesBasePopup.PopupCentered();
     }
 
     private void TriggerKrigiaTaskForceEvent(SpaceUnitNode u) {

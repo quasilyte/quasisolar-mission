@@ -1299,3 +1299,57 @@ autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="PatrolReachesBasePopup" parent="UI" instance=ExtResource( 18 )]
+margin_left = 1264.0
+margin_top = 208.0
+margin_right = 1712.0
+margin_bottom = 512.0
+
+[node name="Title" type="Label" parent="UI/PatrolReachesBasePopup"]
+margin_right = 448.0
+margin_bottom = 32.0
+text = "Enemy patrol is on sight!"
+align = 1
+valign = 1
+
+[node name="Panel" type="Panel" parent="UI/PatrolReachesBasePopup"]
+margin_left = 16.0
+margin_top = 32.0
+margin_right = 432.0
+margin_bottom = 240.0
+custom_styles/panel = ExtResource( 20 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="UI/PatrolReachesBasePopup/Panel"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 400.0
+margin_bottom = 192.0
+text = "If we do nothing, this base will be discovered.
+
+If the garrison can defeat the patrol unit, the base will remain undetected."
+align = 1
+valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AttackButton" parent="UI/PatrolReachesBasePopup" instance=ExtResource( 19 )]
+margin_left = 16.0
+margin_top = 256.0
+margin_right = 208.0
+margin_bottom = 288.0
+focus_mode = 2
+text = "Attack"
+
+[node name="IgnoreButton" parent="UI/PatrolReachesBasePopup" instance=ExtResource( 19 )]
+margin_left = 240.0
+margin_top = 256.0
+margin_right = 432.0
+margin_bottom = 288.0
+focus_mode = 2
+text = "Stay Put"
