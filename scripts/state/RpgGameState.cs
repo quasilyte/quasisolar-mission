@@ -14,7 +14,8 @@ public class RpgGameState {
     public static HashSet<StarBase> humanBases;
 
     public static int enemyBaseNumAttackers = 0;
-    public static SpaceUnit enemyAttackerUnit;
+    public static SpaceUnit arenaUnit1;
+    public static SpaceUnit arenaUnit2;
     public static StarBase garrisonStarBase = null;
     public static StarBase enteredBase = null;
     public static MapTransition transition = MapTransition.NewGame;
@@ -86,7 +87,8 @@ public class RpgGameState {
 
     public void InitStaticState(bool newGame) {
         enemyBaseNumAttackers = 0;
-        enemyAttackerUnit = null;
+        arenaUnit1 = null;
+        arenaUnit2 = null;
         garrisonStarBase = null;
         enteredBase = null;
         transition = newGame ? MapTransition.NewGame : MapTransition.LoadGame;
@@ -197,7 +199,12 @@ public class RpgGameState {
     }
 
     public bool FactionsAtWar(Faction x, Faction y) {
-        return x != y; // TODO: implement a real system
+        // TODO: implement a real system
+
+        if (x == Faction.Human && y == Faction.RandomEventAlly) {
+            return false;
+        }
+        return x != y;
     }
 
     public KrigiaPlans krigiaPlans = new KrigiaPlans();

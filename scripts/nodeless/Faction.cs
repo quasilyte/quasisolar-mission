@@ -1,5 +1,5 @@
 public enum Faction {
-    // For quick battles
+    // For quick battles.
     Quick1,
     Quick2,
     Quick3,
@@ -7,8 +7,12 @@ public enum Faction {
     Quick5,
     Quick6,
 
-    Neutral,
+    // For random events.
     RandomEventHostile,
+    RandomEventHostile2,
+    RandomEventAlly,
+
+    Neutral,
     Pirate,
 
     Human,

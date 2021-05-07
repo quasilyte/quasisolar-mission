@@ -139,7 +139,7 @@ public class Arena : Node2D {
             } else {
                 pilot = new Pilot{
                     name = vessel.pilotName,
-                    alliance = _gameState.FactionsAtWar(Faction.Human, vessel.faction) ? 1 : 0,
+                    alliance = ArenaSettings.alliances[vessel],
                 };
             }
             _pilots.Add(pilot);
@@ -362,21 +362,7 @@ public class Arena : Node2D {
                 survivors.Add(p);
             } else {
                 vessel.hp = 0;
-                var roll = QRandom.FloatRange(0.8f, 1.2f);
-                var debris = (int)((float)p.Vessel.State.debris * roll);
-                var design = vessel.Design();
-                if (design.affiliation == "Krigia") {
-                    result.krigiaDebris += debris;
-                    _gameState.metKrigia = true;
-                } else if (design.affiliation == "Wertu") {
-                    result.wertuDebris += debris;
-                    _gameState.metWertu = true;
-                } else if (design.affiliation == "Zyth") {
-                    result.zythDebris += debris;
-                    _gameState.metZyth = true;
-                } else {
-                    result.genericDebris += debris;
-                }
+                CollectVesselDebris(vessel, p, result);
                 if (_flagshipPilot != null && p.alliance != _flagshipPilot.alliance) {
                     result.exp += p.Vessel.State.vesselLevel * 3;
                     if (vessel.designName == "Visitor") {
@@ -406,17 +392,10 @@ public class Arena : Node2D {
             return;
         }
 
-        if (RpgGameState.enemyAttackerUnit != null) {
-            var unit = RpgGameState.enemyAttackerUnit;
-            if (_gameState.skillsLearned.Contains("Salvaging")) {
-                // Collect 80% of cargo instead of 50%.
-                result.minerals += QMath.IntAdjust(unit.cargo.minerals, 0.8);
-                result.organic += QMath.IntAdjust(unit.cargo.organic, 0.8);
-                result.power += QMath.IntAdjust(unit.cargo.power, 0.8);
-            } else {
-                result.minerals += unit.cargo.minerals / 2;
-                result.organic += unit.cargo.organic / 2;
-                result.power += unit.cargo.power / 2;
+        if (RpgGameState.arenaUnit1 != null) {
+            CollectUnitCargo(RpgGameState.arenaUnit1, result);
+            if (RpgGameState.arenaUnit2 != null) {
+                CollectUnitCargo(RpgGameState.arenaUnit2, result);
             }
 
             if (_flagshipPilot == null) {
@@ -445,6 +424,46 @@ public class Arena : Node2D {
         }
 
         ChangeSceneAfterDelay("MapView");
+    }
+
+    private void CollectVesselDebris(Vessel vessel, Pilot p, BattleResult result) {
+        // Can only collect allied vessel debris that belong to the human player.
+        if (p.alliance == 0 && vessel.faction != Faction.Human) {
+            return;
+        }
+
+        var roll = QRandom.FloatRange(0.8f, 1.2f);
+        var debris = (int)((float)p.Vessel.State.debris * roll);
+        var design = vessel.Design();
+        if (design.affiliation == "Krigia") {
+            result.krigiaDebris += debris;
+            _gameState.metKrigia = true;
+        } else if (design.affiliation == "Wertu") {
+            result.wertuDebris += debris;
+            _gameState.metWertu = true;
+        } else if (design.affiliation == "Zyth") {
+            result.zythDebris += debris;
+            _gameState.metZyth = true;
+        } else {
+            result.genericDebris += debris;
+        }
+    }
+
+    private void CollectUnitCargo(SpaceUnit unit, BattleResult result) {
+        if (!RpgGameState.instance.FactionsAtWar(Faction.Human, unit.owner)) {
+            return;
+        }
+
+        if (_gameState.skillsLearned.Contains("Salvaging")) {
+            // Collect 80% of cargo instead of 50%.
+            result.minerals += QMath.IntAdjust(unit.cargo.minerals, 0.8);
+            result.organic += QMath.IntAdjust(unit.cargo.organic, 0.8);
+            result.power += QMath.IntAdjust(unit.cargo.power, 0.8);
+        } else {
+            result.minerals += unit.cargo.minerals / 2;
+            result.organic += unit.cargo.organic / 2;
+            result.power += unit.cargo.power / 2;
+        }
     }
 
     private void ChangeScene(string name) {

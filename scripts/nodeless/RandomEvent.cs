@@ -62,6 +62,7 @@ public class RandomEvent {
     public class Effect {
         public EffectKind kind;
         public object value;
+        public object value2 = null; // When one value is not enough.
     }
 
     public class Result {
@@ -105,6 +106,142 @@ public class RandomEvent {
         spaceUnit.pos = RpgGameState.instance.humanUnit.Get().pos;
         spaceUnit.fleet = fleetList;
         return spaceUnit;
+    }
+
+    private static RandomEvent newSkirmish() {
+        Func<Faction, SpaceUnit> createWertuUnit = (Faction faction) => {
+            var v1 = RpgGameState.instance.NewVessel(Faction.Wertu, VesselDesign.Find("Dominator"));
+            v1.spawnPos = new Vector2(1100, 200);
+            VesselFactory.Init(v1, VesselDesign.Find(v1.designName));
+
+            var v2 = RpgGameState.instance.NewVessel(Faction.Wertu, VesselDesign.Find("Guardian"));
+            v2.spawnPos = new Vector2(1220, 140);
+            VesselFactory.Init(v2, VesselDesign.Find(v2.designName));
+
+            var v3 = RpgGameState.instance.NewVessel(Faction.Wertu, VesselDesign.Find("Angel"));
+            v3.spawnPos = new Vector2(1050, 160);
+            VesselFactory.Init(v3, VesselDesign.Find(v3.designName));
+
+            return newSpaceUnit(faction, v1, v2, v3);
+        };
+
+        Func<SpaceUnit> createKrigiaUnit = () => {
+            var v1 = RpgGameState.instance.NewVessel(Faction.Krigia, VesselDesign.Find("Horns"));
+            v1.spawnPos = new Vector2(1150, 800);
+            VesselFactory.Init(v1, VesselDesign.Find(v1.designName));
+
+            var v2 = RpgGameState.instance.NewVessel(Faction.Krigia, VesselDesign.Find("Tusks"));
+            v2.spawnPos = new Vector2(1250, 900);
+            VesselFactory.Init(v2, VesselDesign.Find(v2.designName));
+
+            var v3 = RpgGameState.instance.NewVessel(Faction.Krigia, VesselDesign.Find("Claws"));
+            v3.spawnPos = new Vector2(1320, 850);
+            VesselFactory.Init(v3, VesselDesign.Find(v3.designName));
+
+            var v4 = RpgGameState.instance.NewVessel(Faction.Krigia, VesselDesign.Find("Claws"));
+            v4.spawnPos = new Vector2(1100, 820);
+            VesselFactory.Init(v4, VesselDesign.Find(v4.designName));
+
+            return newSpaceUnit(Faction.RandomEventHostile, v1, v2, v3, v4);
+        };
+
+        var e = new RandomEvent { };
+        e.title = "Skirmish";
+        e.expReward = 5;
+        e.luckScore = 5;
+        e.trigger = TriggerKind.OnSystemEntered;
+        e.text = multilineText(
+            "Two fleets are joined in the battle dance in this system.",
+            "",
+            "You can join the Wertu side and help them defeat the Krigia forces. Or you could side with no one and collect more valuable debris...",
+            "",
+            "(Krigia unit will attack you even if you'll try to help them.)"
+        );
+        e.condition = () => RpgGameState.instance.day >= 400;
+        e.actions.Add(new Action{
+            name = "Join the Wertu side",
+            apply = (RandomEventContext ctx) => {
+                return new Result{
+                    text = multilineText(
+                        "Your fleet enters the fray.",
+                        "",
+                        "Help Wertu to win in this battle."
+                    ),
+                    effects = {
+                        new Effect{
+                            kind = EffectKind.AddWertuReputation,
+                            value = +3,
+                        },
+                        new Effect{
+                            kind = EffectKind.EnterArena,
+                            value = createWertuUnit(Faction.RandomEventAlly),
+                            value2 = createKrigiaUnit(),
+                        },
+                    },
+                };
+            }
+        });
+        e.actions.Add(new Action{
+            name = "Attack everyone",
+            apply = (RandomEventContext ctx) => {
+                return new Result{
+                    text = multilineText(
+                        "Your fleet enters the fray.",
+                        "",
+                        "Destroy all alien vessels to claim the victory."
+                    ),
+                    effects = {
+                        new Effect{
+                            kind = EffectKind.AddWertuReputation,
+                            value = -1,
+                        },
+                        new Effect{
+                            kind = EffectKind.EnterArena,
+                            value = createWertuUnit(Faction.RandomEventHostile2),
+                            value2 = createKrigiaUnit(),
+                        },
+                    },
+                };
+            }
+        });
+        e.actions.Add(new Action{
+            name = "Wait for the one side to win",
+            apply = (RandomEventContext ctx) => {
+                var v1 = RpgGameState.instance.NewVessel(Faction.Krigia, VesselDesign.Find("Claws"));
+                VesselFactory.Init(v1, VesselDesign.Find(v1.designName));
+
+                var v2 = RpgGameState.instance.NewVessel(Faction.Krigia, VesselDesign.Find("Claws"));
+                VesselFactory.Init(v2, VesselDesign.Find(v2.designName));
+
+                return new Result{
+                    text = multilineText(
+                        "Krigia got an upper hand and destroyed all opposing forces.",
+                        "Although greatly damaged, that surviving fleet turns towards your direction.",
+                        "",
+                        "Prepare for battle!"
+                    ),
+                    effects = {
+                        new Effect{
+                            kind = EffectKind.EnterArena,
+                            value = newSpaceUnit(Faction.RandomEventHostile, v1, v2),
+                        },
+                    },
+                };
+            }
+        });
+        e.actions.Add(new Action{
+            name = "Keep out of it",
+            apply = (RandomEventContext ctx) => {
+                return new Result{
+                    text = multilineText(
+                        "This is too dangerous.",
+                        "",
+                        "Your fleet successfully avoided the confrontation."
+                    ),
+                };
+            }
+        });
+        return e;
     }
 
     private static RandomEvent newLoneKrigiaScout() {
@@ -1091,6 +1228,7 @@ public class RandomEvent {
             newTheAvenger(),
             newFuelTrader(),
             newLoneKrigiaScout(),
+            newSkirmish(),
 
             newPurpleSystemVisitor(),
         };

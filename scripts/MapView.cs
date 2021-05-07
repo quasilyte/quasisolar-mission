@@ -75,6 +75,12 @@ public class MapView : Node2D {
         SetUnitMode(newMode);
     }
 
+    private bool IsRandomEventFaction(Faction faction) {
+        return faction == Faction.RandomEventHostile ||
+            faction == Faction.RandomEventHostile2 ||
+            faction == Faction.RandomEventAlly;
+    }
+
     public override void _Ready() {
         _gameState = RpgGameState.instance;
         _humanUnit = _gameState.humanUnit.Get();
@@ -84,20 +90,23 @@ public class MapView : Node2D {
         if (RpgGameState.transition == RpgGameState.MapTransition.EnemyBaseAttackRepelled) {
             ProcessUnitCasualties(_humanUnit);
             ProcessStarBaseCasualties(RpgGameState.garrisonStarBase);
-            RpgGameState.garrisonStarBase = null;
         } else if (RpgGameState.transition == RpgGameState.MapTransition.EnemyUnitDestroyed) {
             ProcessUnitCasualties(_humanUnit);
-            ProcessUnitCasualties(RpgGameState.enemyAttackerUnit);
-            RpgGameState.enemyAttackerUnit = null;
+            ProcessUnitCasualties(RpgGameState.arenaUnit1);
+            ProcessUnitCasualties(RpgGameState.arenaUnit2);
         } else if (RpgGameState.transition == RpgGameState.MapTransition.BaseAttackSimulation) {
             ProcessStarBaseCasualties(RpgGameState.garrisonStarBase);
-            ProcessUnitCasualties(RpgGameState.enemyAttackerUnit);
-            RpgGameState.enemyAttackerUnit = null;
-            RpgGameState.garrisonStarBase = null;
+            ProcessUnitCasualties(RpgGameState.arenaUnit1);
         }
-        if (RpgGameState.enemyAttackerUnit != null && RpgGameState.enemyAttackerUnit.owner == Faction.RandomEventHostile) {
-            RpgGameState.enemyAttackerUnit.deleted = true;
+        if (RpgGameState.arenaUnit1 != null && IsRandomEventFaction(RpgGameState.arenaUnit1.owner)) {
+            RpgGameState.arenaUnit1.deleted = true;
         }
+        if (RpgGameState.arenaUnit2 != null && IsRandomEventFaction(RpgGameState.arenaUnit1.owner)) {
+            RpgGameState.arenaUnit2.deleted = true;
+        }
+        RpgGameState.garrisonStarBase = null;
+        RpgGameState.arenaUnit1 = null;
+        RpgGameState.arenaUnit2 = null;
         _gameState.CollectGarbage();
 
         RenderMap();
@@ -233,6 +242,9 @@ public class MapView : Node2D {
     }
 
     private void ProcessUnitCasualties(SpaceUnit unit) {
+        if (unit == null) {
+            return;
+        }
         unit.fleet = RemoveCasualties(unit.fleet);
         if (unit.fleet.Count == 0) {
             unit.deleted = true;
@@ -241,7 +253,7 @@ public class MapView : Node2D {
 
     private void OnStarBaseAttackPlayButton() {
         var u = _eventUnit;
-        RpgGameState.enemyAttackerUnit = u.unit;
+        RpgGameState.arenaUnit1 = u.unit;
 
         // TODO: allow units selection?
         var system = RpgGameState.starSystemByPos[u.unit.pos];
@@ -259,7 +271,7 @@ public class MapView : Node2D {
 
     private void OnFightEventUnit() {
         var u = _eventUnit;
-        RpgGameState.enemyAttackerUnit = u.unit;
+        RpgGameState.arenaUnit1 = u.unit;
         SetArenaSettings(_currentSystem.sys, ConvertVesselList(u.unit.fleet), ConvertVesselList(_humanUnit.fleet));
         GetTree().ChangeScene("res://scenes/ArenaScreen.tscn");
     }
@@ -589,8 +601,14 @@ public class MapView : Node2D {
 
             case RandomEvent.EffectKind.EnterArena: {
                     var unit = (SpaceUnit)effect.value;
-                    RpgGameState.enemyAttackerUnit = unit;
-                    SetArenaSettings(_currentSystem.sys, ConvertVesselList(unit.fleet), ConvertVesselList(_humanUnit.fleet));
+                    RpgGameState.arenaUnit1 = unit;
+                    if (effect.value2 != null) {
+                        RpgGameState.arenaUnit2 = (SpaceUnit)effect.value2;
+                        SetStagedArenaSettings(_currentSystem.sys, unit, RpgGameState.arenaUnit2, _humanUnit);
+                    } else {
+                        // A normal battle.
+                        SetArenaSettings(_currentSystem.sys, ConvertVesselList(unit.fleet), ConvertVesselList(_humanUnit.fleet));
+                    }
                     _randomEventResolutionPostEffect = effect.kind;
                     return;
                 }
@@ -1533,9 +1551,25 @@ public class MapView : Node2D {
         return -1;
     }
 
-    private void SetArenaSettings(StarSystem location, List<Vessel> enemyFleet, List<Vessel> alliedFleet) {
+    private Dictionary<Vessel, Vector2> DefaultSpawnMap(List<Vessel> enemyFleet, List<Vessel> alliedFleet) {
+        var m = new Dictionary<Vessel, Vector2>();
+
+        for (int i = 0; i < enemyFleet.Count; i++) {
+            var v = enemyFleet[i];
+            m[v] = QMath.RandomizedLocation(new Vector2(1568, 288 + (i * 192)), 40);
+        }
+        for (int i = 0; i < alliedFleet.Count; i++) {
+            var v = alliedFleet[i];
+            m[v] = QMath.RandomizedLocation(new Vector2(224, 288 + (i * 192)), 40);
+        }
+
+        return m;
+    }
+
+    private void SetArenaSettings(StarSystem location, List<Vessel> vessels, Dictionary<Vessel, Vector2> spawnMap, Dictionary<Vessel, int> alliances) {
         ArenaSettings.Reset();
         ArenaSettings.isQuickBattle = false;
+        ArenaSettings.alliances = alliances;
 
         // TODO: respect the game settings here.
         ArenaSettings.numAsteroids = QRandom.IntRange(0, 3);
@@ -1555,22 +1589,67 @@ public class MapView : Node2D {
         }
         ArenaSettings.starColor = location.color;
 
-        for (int i = 0; i < enemyFleet.Count; i++) {
-            var pos = new Vector2(1568, 288 + (i * 192));
-            var v = enemyFleet[i];
-            v.spawnPos = QMath.RandomizedLocation(pos, 40);
+        foreach (var v in vessels) {
+            v.spawnPos = spawnMap[v];
             ArenaSettings.combatants.Add(v);
+            if (!v.isBot) {
+                v.isGamepad = GameControls.preferGamepad;
+            }
+        }
+    }
+
+    private void SetArenaSettings(StarSystem location, List<Vessel> enemyFleet, List<Vessel> alliedFleet) {
+        var spawnMap = DefaultSpawnMap(enemyFleet, alliedFleet);
+        var vessels = new List<Vessel>();
+        vessels.AddRange(enemyFleet);
+        vessels.AddRange(alliedFleet);
+        var alliances = new Dictionary<Vessel, int>();
+        foreach (var v in vessels) {
+            alliances[v] = _gameState.FactionsAtWar(Faction.Human, v.faction) ? 1 : 0;
+        }
+        SetArenaSettings(location, vessels, spawnMap, alliances);
+    }
+
+    private void SetStagedArenaSettings(StarSystem location, SpaceUnit bot1, SpaceUnit bot2, SpaceUnit human) {
+        Func<Faction, int> factionToAlliance = (Faction f) => {
+            if (f == Faction.RandomEventAlly) {
+                return 0;
+            }
+            if (f == Faction.RandomEventHostile) {
+                return 1;
+            }
+            return 2;
+        };
+        var alliances = new Dictionary<Vessel, int>();
+        foreach (var vref in human.fleet) {
+            alliances[vref.Get()] = 0;
+        }
+        foreach (var vref in bot1.fleet) {
+            alliances[vref.Get()] = factionToAlliance(bot1.owner);
+        }
+        foreach (var vref in bot2.fleet) {
+            alliances[vref.Get()] = factionToAlliance(bot2.owner);
         }
 
-        if (!alliedFleet[0].isBot) {
-            alliedFleet[0].isGamepad = GameControls.preferGamepad;
+        var spawnMap = new Dictionary<Vessel, Vector2>();
+        var vessels = new List<Vessel>();
+        for (int i = 0; i < human.fleet.Count; i++) {
+            var v = human.fleet[i].Get();
+            spawnMap[v] = QMath.RandomizedLocation(new Vector2(224, 288 + (i * 192)), 40);
+            vessels.Add(v);
         }
-        for (int i = 0; i < alliedFleet.Count; i++) {
-            var pos = new Vector2(224, 288 + (i * 192));
-            var v = alliedFleet[i];
-            v.spawnPos = QMath.RandomizedLocation(pos, 40);
-            ArenaSettings.combatants.Add(v);
+        foreach (var vref in bot1.fleet) {
+            var v = vref.Get();
+            spawnMap[v] = v.spawnPos;
+            vessels.Add(v);
         }
+        foreach (var vref in bot2.fleet) {
+            var v = vref.Get();
+            spawnMap[v] = v.spawnPos;
+            vessels.Add(v);
+        }
+
+        SetArenaSettings(location, vessels, spawnMap, alliances);
     }
 
     private void RollFleetAttack() {

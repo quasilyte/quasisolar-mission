@@ -29,10 +29,14 @@ public class ArenaSettings {
 
     public static List<Vessel> combatants;
 
+    // Used only for the campaign mode.
+    public static Dictionary<Vessel, int> alliances;
+
     public static void Reset() {
         isQuickBattle = false;
 
         combatants = new List<Vessel>();
+        alliances = new Dictionary<Vessel, int>();
         
         speed = BattleSpeed.Normal;
         numAsteroids = 1;
