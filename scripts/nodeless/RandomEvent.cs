@@ -91,6 +91,10 @@ public class RandomEvent {
         return string.Join("\n", lines);
     }
 
+    private static bool AtStartingSystem() {
+        return RpgGameState.instance.humanUnit.Get().pos == RpgGameState.StartingSystem().pos;
+    }
+
     private static bool HasSpeaking() {
         return RpgGameState.instance.skillsLearned.Contains("Speaking");
     }
@@ -143,7 +147,9 @@ public class RandomEvent {
             "",
             "(Krigia unit will attack you even if you'll try to help them.)"
         );
-        // e.condition = () => RpgGameState.instance.day >= 400;
+        e.condition = () => {
+            return RpgGameState.instance.day >= 600 && !AtStartingSystem();
+        };
         e.actions.Add(new Action{
             name = "Join the Wertu side",
             apply = (RandomEventContext ctx) => {
@@ -902,7 +908,7 @@ public class RandomEvent {
             "",
             "It should be a relatively safe and fast transition."
         );
-        e.condition = () => RpgGameState.instance.humanUnit.Get().pos != RpgGameState.StartingSystem().pos;
+        e.condition = () => !AtStartingSystem();
         e.actions.Add(new Action {
             name = "Enter the portal",
             apply = (RandomEventContext _) => {
