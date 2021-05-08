@@ -90,6 +90,7 @@ Special weapons:
 Special weapons:
 
 * **Shockwave Caster**
+* **Swarm Spawner**
 
 ## Weapons
 
@@ -109,6 +110,7 @@ Special weapons:
 | Scythe | Krigia |
 | Hellfire | Zyth |
 | Shockwave Caster | Vespion |
+| Swarm Spawner | Vespion |
 
 ### Level 2 weapons
 
