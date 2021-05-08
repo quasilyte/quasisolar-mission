@@ -223,6 +223,10 @@ public class Arena : Node2D {
         rng.Randomize();
         QRandom.SetRandomNumberGenerator(rng);
 
+        if (QRandom.Bool()) {
+            GetNode<Sprite>("Background").Texture = GD.Load<Texture>("res://images/bg/battle_bg2.jpg");
+        }
+
         GetNode<BackgroundMusic>("/root/BackgroundMusic").PlayBattleMusic();
 
         if (ArenaSettings.speed != ArenaSettings.BattleSpeed.Normal) {
