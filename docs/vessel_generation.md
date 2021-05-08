@@ -4,6 +4,7 @@
 * Krigia
 * Wertu
 * Zyth
+* Vespion
 * Scavengers (not bound to a race)
 
 ## Technologies by fraction
@@ -84,6 +85,12 @@ Special weapons:
 * **Harpoon**
 * Disruptor
 
+### Vespion
+
+Special weapons:
+
+* **Shockwave Caster**
+
 ## Weapons
 
 ### Level 1 weapons
@@ -101,6 +108,7 @@ Special weapons:
 | Rocket Launcher | Earthlings, Krigia |
 | Scythe | Krigia |
 | Hellfire | Zyth |
+| Shockwave Caster | Vespion |
 
 ### Level 2 weapons
 
