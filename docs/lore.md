@@ -131,3 +131,55 @@ We predict that it will enter this part of the space in few years.
 Some parts that are not explained above, but probably should have been:
 
 * Who are "scavengers"?
+
+# Races info
+
+## Vespion
+
+A carnivorous, xenophobic race that has hard times communicating with other
+sentient races that may resemble them their preys.
+
+During the Wertu invasion, they attacked their fleets, protecting their own
+territories and avoiding their attempts to form any kind of agreement. Due to
+their unwillingness to cooperate, Wertu cornered the Vespion fleet and restricted
+their freedom by force.
+
+When the Krigia showed up, Wertu grip on them got weaker and they continued to
+explore the nearby space regions.
+
+Somewhere around the year of 2059 they got contacted by Wertu with an alliance
+offer to join forces against the common enemy. Vespion declined the offer.
+
+Krigia saw Vespion as insignificant side and never granted them any "promise of
+keeping their systems". So they suffered from the Krigia fire as much as anyone else
+involved in the conflict.
+
+It's known that for the moment when the game starts, they only control one
+star system that is not even their homeworld (which was already obliterated by Krigia).
+
+In the in-game events, there is a quest line that can make Vespion an alied race.
+
+### Alliance with Vespion
+
+A first step would be to find their last holding star system before it gets destroyed.
+
+It can be found by luck or by information coming from a "Vespion Distress Call" event
+that would reveal the star system location.
+
+Upon entering a star system, there is a scripted encounter where player can help
+the Vespion fleet to destroy the Krigia attackers.
+
+If succeeded, the diplomatic screen with Vespion will become available.
+With a set of right phrases player can convince Vespion to form
+an alliance with Earthlings.
+
+Note that this is only possible because they see a non-carbon life forms,
+they would probably never reach this level of communication with humans.
+
+If we imagine a star map as a 4x2 sector grid, their system appears somewhere
+in the middle (where `x` means that it's a location candidate):
+
+```
+[ ][x][x][ ]
+[ ][x][x][ ]
+```
