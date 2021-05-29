@@ -10,7 +10,6 @@ public class EquipmentShopScreen : Node2D {
 
     private bool _lockControls = false;
 
-    private Popup _refuelPopup;
     private Popup _repairPopup;
     private Popup _cargoPopup;
     private Popup _dronesPopup;
@@ -68,12 +67,6 @@ public class EquipmentShopScreen : Node2D {
         _sellEquipmentPopup.GetNode<Button>("Confirm").Connect("pressed", this, nameof(OnSellEquipmentConfirmButton));
         _sellEquipmentPopup.GetNode<Button>("Cancel").Connect("pressed", this, nameof(OnSellEquipmentCancelButton));
 
-        _refuelPopup = GetNode<Popup>("RefuelPopup");
-        _refuelPopup.GetNode<Button>("BuyFull").Connect("pressed", this, nameof(OnBuyFullFuelButton));
-        _refuelPopup.GetNode<Button>("BuyMinor").Connect("pressed", this, nameof(OnBuyMinorFuelButton));
-        _refuelPopup.GetNode<Button>("Done").Connect("pressed", this, nameof(OnRefuelDoneButton));
-        _refuelPopup.GetNode<Label>("BuyMinor/Label").Text = (_gameState.fuelPrice * 50).ToString() + " cr";
-
         _repairPopup = GetNode<Popup>("RepairPopup");
         _repairPopup.GetNode<Button>("RepairFull").Connect("pressed", this, nameof(OnFullRepairButton));
         _repairPopup.GetNode<Button>("RepairMinor").Connect("pressed", this, nameof(OnMinorRepairButton));
@@ -89,10 +82,6 @@ public class EquipmentShopScreen : Node2D {
         _dronesPopup = GetNode<Popup>("DronesPopup");
         _dronesPopup.GetNode<Button>("Done").Connect("pressed", this, nameof(OnDronesDoneButton));
         _dronesPopup.GetNode<Button>("BuyDrone").Connect("pressed", this, nameof(OnDronesBuyButton));
-
-        if (_gameState.fuel == RpgGameState.MaxFuel()) {
-            GetNode<Button>("Status/RefuelButton").Disabled = true;
-        }
 
         for (int i = 0; i < _humanUnit.fleet.Count; i++) {
             var u = _humanUnit.fleet[i];
@@ -434,9 +423,7 @@ public class EquipmentShopScreen : Node2D {
 
         GetNode<Button>("UnitMenu/RepairButton").Disabled = _selectedVessel.hp == _selectedVessel.Design().maxHp;
 
-        var missingFuel = (int)(RpgGameState.MaxFuel() - _gameState.fuel);
-        _refuelPopup.GetNode<Button>("BuyMinor").Disabled = _gameState.fuel + 50 > RpgGameState.MaxFuel();
-        _refuelPopup.GetNode<Label>("BuyFull/Label").Text = (_gameState.fuelPrice * missingFuel).ToString() + " cr";
+        GetNode<Button>("Status/RefuelButton").Disabled = _gameState.fuel == RpgGameState.MaxFuel();
 
         _dronesPopup.GetNode<Label>("BuyDrone/Value").Text = _gameState.drones.ToString();
         _dronesPopup.GetNode<Button>("BuyDrone").Disabled = !CanBuyDrone();
@@ -665,41 +652,22 @@ public class EquipmentShopScreen : Node2D {
         UpdateUI();
     }
 
-    private void OnRefuelDoneButton() {
-        _refuelPopup.Hide();
-        _lockControls = false;
-    }
-
     private void OnRefuelButton() {
         if (_lockControls) {
             return;
         }
 
-        _lockControls = true;
-        _refuelPopup.PopupCentered();
-    }
-
-    private void OnBuyFullFuelButton() {
         var missingFuel = (int)(RpgGameState.MaxFuel() - _gameState.fuel);
-        var price = _gameState.fuelPrice * missingFuel;
+        var toBuy = QMath.ClampMax(missingFuel, 50);
+        var price = _gameState.fuelPrice * toBuy;
         if (_gameState.credits < price) {
             return;
         }
-        _gameState.fuel = RpgGameState.MaxFuel();
-        _gameState.credits -= price;
-        PlayMoneySound();
-        UpdateUI();
-
-        _refuelPopup.Hide();
-        _lockControls = false;
-    }
-
-    private void OnBuyMinorFuelButton() {
-        var price = _gameState.fuelPrice * 50;
-        if (_gameState.credits < price) {
-            return;
+        if (toBuy == missingFuel) {
+            _gameState.fuel = RpgGameState.MaxFuel();
+        } else {
+            _gameState.fuel += toBuy;
         }
-        _gameState.fuel += 50;
         _gameState.credits -= price;
         PlayMoneySound();
         UpdateUI();
