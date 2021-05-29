@@ -53,6 +53,7 @@ public class EquipmentShopScreen : Node2D {
         GetNode<Button>("Status/RefuelButton").Connect("pressed", this, nameof(OnRefuelButton));
         GetNode<Button>("Status/RepairAllButton").Connect("pressed", this, nameof(OnRepairAllButton));
         GetNode<Button>("Status/CargoButton").Connect("pressed", this, nameof(OnCargoButton));
+        GetNode<Button>("Status/SellAllButton").Connect("pressed", this, nameof(OnSellAllButton));
         GetNode<Button>("Status/DronesButton").Connect("pressed", this, nameof(OnDronesButton));
 
         GetNode<Button>("UnitMenu/RepairButton").Connect("pressed", this, nameof(OnRepairButton));
@@ -519,7 +520,7 @@ public class EquipmentShopScreen : Node2D {
         _lockControls = false;
     }
 
-    private void OnCargoSellDebrisButton() {
+    private void SellDebris() {
         var cargo = _humanUnit.cargo;
 
         _gameState.credits += RpgGameState.DebrisSellPrice() * _humanUnit.DebrisCount();
@@ -531,31 +532,55 @@ public class EquipmentShopScreen : Node2D {
         cargo.krigiaDeris = 0;
         cargo.wertuDebris = 0;
         cargo.zythDebris = 0;
+    }
 
+    private void SellMinerals() {
+        _gameState.credits += RpgGameState.MineralsSellPrice() * _humanUnit.cargo.minerals;
+        RpgGameState.enteredBase.mineralsStock += _humanUnit.cargo.minerals;
+        _humanUnit.cargo.minerals = 0;
+    }
+
+    private void SellOrganic() {
+        _gameState.credits += RpgGameState.OrganicSellPrice() * _humanUnit.cargo.organic;
+        RpgGameState.enteredBase.organicStock += _humanUnit.cargo.organic;
+        _humanUnit.cargo.organic = 0;
+    }
+
+    private void SellPower() {
+        _gameState.credits += RpgGameState.PowerSellPrice() * _humanUnit.cargo.power;
+        RpgGameState.enteredBase.powerStock += _humanUnit.cargo.power;
+        _humanUnit.cargo.power = 0;
+    }
+
+    private void OnCargoSellDebrisButton() {
+        SellDebris();
         PlayMoneySound();
         UpdateUI();
     }
 
     private void OnCargoSellMineralsButton() {
-        _gameState.credits += RpgGameState.MineralsSellPrice() * _humanUnit.cargo.minerals;
-        RpgGameState.enteredBase.mineralsStock += _humanUnit.cargo.minerals;
-        _humanUnit.cargo.minerals = 0;
+        SellMinerals();
         PlayMoneySound();
         UpdateUI();
     }
 
     private void OnCargoSellOrganicButton() {
-        _gameState.credits += RpgGameState.OrganicSellPrice() * _humanUnit.cargo.organic;
-        RpgGameState.enteredBase.organicStock += _humanUnit.cargo.organic;
-        _humanUnit.cargo.organic = 0;
+        SellOrganic();
         PlayMoneySound();
         UpdateUI();
     }
 
     private void OnCargoSellPowerButton() {
-        _gameState.credits += RpgGameState.PowerSellPrice() * _humanUnit.cargo.power;
-        RpgGameState.enteredBase.powerStock += _humanUnit.cargo.power;
-        _humanUnit.cargo.power = 0;
+        SellPower();
+        PlayMoneySound();
+        UpdateUI();
+    }
+
+    private void OnSellAllButton() {
+        SellDebris();
+        SellMinerals();
+        SellOrganic();
+        SellPower();
         PlayMoneySound();
         UpdateUI();
     }

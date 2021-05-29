@@ -159,11 +159,22 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="DronesButton" type="Button" parent="Status"]
+[node name="SellAllButton" type="Button" parent="Status"]
 margin_left = 448.0
 margin_top = 64.0
 margin_right = 576.0
 margin_bottom = 96.0
+theme = ExtResource( 1 )
+text = "Sell All"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DronesButton" type="Button" parent="Status"]
+margin_left = 304.0
+margin_top = 112.0
+margin_right = 432.0
+margin_bottom = 144.0
 focus_mode = 0
 theme = ExtResource( 1 )
 text = "Drones"
