@@ -207,38 +207,79 @@ public class StarSystemNode : Node2D {
         }
     }
 
-    public void ProcessDay() {
-        if (_starBase != null) {
-            _starBase.ProcessDay();
+    private void CollectResources() {
+        if (RpgGameState.instance.day % 10 == 0 && sys.starBase.Get().level == 5) {
+            AutoCollectResources();
+            return;
+        }
+        if (RpgGameState.instance.day % 30 == 0) {
+            GarrisonCollectResources();
+            return;
+        }
+    }
+
+    private void GarrisonCollectResources() {
+        var starBase = sys.starBase.Get();
+
+        if (starBase.garrison.Count == 0) {
+            return;
         }
 
-        if (RpgGameState.instance.day % 10 != 0) {
-            return;
+        Vessel v = null;
+        foreach (var x in starBase.garrison) {
+            if (v == null || v.Design().cargoSpace < x.Get().Design().cargoSpace) {
+                v = x.Get();
+            }
         }
-        if (sys.starBase.id == 0) {
-            return;
-        }
+
+        TransferResources(v.Design().cargoSpace);
+    }
+
+    private void TransferResources(int limit) {
         var starBase = sys.starBase.Get();
-        if (starBase.owner != Faction.Human) {
-            return;
-        }
-        if (starBase.level != 5) {
-            return;
-        }
+
+        Func<int, int, int> collect = (int price, int amount) => {
+            int collectAmount = QMath.ClampMax(amount, limit);
+            limit -= collectAmount;
+            RpgGameState.instance.credits += price * collectAmount;
+            return collectAmount;
+        };
 
         foreach (var p in sys.resourcePlanets) {
             if (!p.hasMine) {
                 continue;
             }
-            RpgGameState.instance.credits += RpgGameState.MineralsSellPrice() * p.mineralsCollected;
-            RpgGameState.instance.credits += RpgGameState.OrganicSellPrice() * p.organicCollected;
-            RpgGameState.instance.credits += RpgGameState.PowerSellPrice() * p.powerCollected;
-            starBase.mineralsStock += p.mineralsCollected;
-            starBase.organicStock += p.organicCollected;
-            starBase.powerStock += p.powerCollected;
-            p.mineralsCollected = 0;
-            p.organicCollected = 0;
-            p.powerCollected = 0;
+
+            int mineralsCollected = collect(RpgGameState.MineralsSellPrice(), p.mineralsCollected);
+            starBase.mineralsStock += mineralsCollected;
+            p.mineralsCollected -= mineralsCollected;
+
+            int organicCollected = collect(RpgGameState.OrganicSellPrice(), p.organicCollected);
+            starBase.organicStock += organicCollected;
+            p.organicCollected -= organicCollected;
+
+            int powerCollected = collect(RpgGameState.PowerSellPrice(), p.powerCollected);
+            starBase.powerStock += powerCollected;
+            p.powerCollected -= powerCollected;
+        }
+    }
+
+    private void AutoCollectResources() {
+        TransferResources(500000);
+    }
+
+    public void ProcessDay() {
+        if (_starBase != null) {
+            _starBase.ProcessDay();
+        }
+
+        if (sys.starBase.id == 0) {
+            return;
+        }
+
+        var starBase = sys.starBase.Get();
+        if (starBase.owner == Faction.Human) {
+            CollectResources();
         }
     }
 }
