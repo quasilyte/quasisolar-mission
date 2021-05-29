@@ -368,6 +368,9 @@ public class VesselNode : Node2D {
                 GetParent().AddChild(sfx);
             } else if (design == ShieldBreakerWeapon.Design) {
                 shield.Deactivate();
+            } else if (design == ShockwaveCasterWeapon.Design) {
+                var p = (Projectile)projectile;
+                State.velocity += p.Transform.x * 50;
             }
 
             return;

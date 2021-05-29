@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://scripts/SwarmNode.cs" type="Script" id=2]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 8, 8 )
+
+[sub_resource type="Curve" id=2]
+_data = [ Vector2( 0.298561, 0.920918 ), 0.0, 0.0, 0, 0, Vector2( 0.848921, 0.461735 ), 0.0, 0.0, 0, 0 ]
+
+[node name="SwarmNode" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource( 1 )
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+amount = 20
+lifetime = 0.5
+spread = 180.0
+gravity = Vector2( 0, 0 )
+initial_velocity = 60.0
+initial_velocity_random = 0.5
+orbit_velocity = 1.0
+orbit_velocity_random = 0.2
+scale_amount = 3.0
+scale_amount_random = 0.5
+scale_amount_curve = SubResource( 2 )
+color = Color( 0.533333, 0.196078, 0.666667, 1 )

@@ -24,6 +24,7 @@ class GenericBot : AbstractBot {
                 w is DisruptorWeapon ||
                 w is PhotonBeamWeapon ||
                 w is DiskThrowerWeapon ||
+                w is SwarmSpawnerWeapon ||
                 w is ReaperCannonWeapon;
         };
 
@@ -357,7 +358,7 @@ class GenericBot : AbstractBot {
             return;
         }
 
-        if (design == MortarWeapon.Design || design == ReaperCannonWeapon.Design || design == HarpoonWeapon.Design || design == DisruptorWeapon.Design) {
+        if (design == MortarWeapon.Design || design == ReaperCannonWeapon.Design || design == HarpoonWeapon.Design || design == DisruptorWeapon.Design || design == ShockwaveCasterWeapon.Design || design == SwarmSpawnerWeapon.Design) {
             var targetCursor = CalculateFireTarget(_vessel.specialWeapon);
             if (targetCursor != Vector2.Zero) {
                 FireSpecial(targetCursor);

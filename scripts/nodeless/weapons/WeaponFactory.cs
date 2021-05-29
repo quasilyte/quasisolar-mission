@@ -97,6 +97,12 @@ public static class WeaponFactory {
         if (w == DisruptorWeapon.Design) {
             return new DisruptorWeapon(p);
         }
+        if (w == ShockwaveCasterWeapon.Design) {
+            return new ShockwaveCasterWeapon(p);
+        }
+        if (w == SwarmSpawnerWeapon.Design) {
+            return new SwarmSpawnerWeapon(p);
+        }
 
         if (w == null) {
             throw new Exception("null WeaponDesign argument");    

@@ -15,6 +15,7 @@ public class Projectile : Node2D, IProjectile {
     private static Texture _scytheTexture;
     private static Texture _photonBurstTexture;
     private static Texture _needleGunTexture;
+    private static Texture _shockwaveCasterTexture;
     private static Texture _spreadGunTexture;
     private static Texture _reaperCannonTexture;
     private static Texture _hellfireTexture;
@@ -26,6 +27,7 @@ public class Projectile : Node2D, IProjectile {
     private static AudioStream _stingerAudioStream;
     private static AudioStream _needleGunAudioStream;
     private static AudioStream _needleImpactAudioStream;
+    private static AudioStream _shockwaveCasterAudioStream;
     private static AudioStream _reaperCannonAudioStream;
 
     private Pilot _firedBy;
@@ -68,6 +70,8 @@ public class Projectile : Node2D, IProjectile {
             InitCrystalShard();
         } else if (_weapon == AssaultLaserWeapon.Design) {
             InitAssaultLaser();
+        } else if (_weapon == ShockwaveCasterWeapon.Design) {
+            InitShockwaveCaster();
         }
 
         _sprite = GetNode<Sprite>("Sprite");
@@ -135,6 +139,19 @@ public class Projectile : Node2D, IProjectile {
             _assaultLaserTexture = GD.Load<Texture>("res://images/ammo/Assault_Laser.png");
         }
         _texture = _assaultLaserTexture;
+    }
+
+    private void InitShockwaveCaster() {
+        _hp = ShockwaveCasterWeapon.Design.range;
+        if (_shockwaveCasterTexture == null) {
+            _shockwaveCasterTexture = GD.Load<Texture>("res://images/ammo/Shockwave_Caster.png");
+        }
+        if (_shockwaveCasterAudioStream == null) {
+            _shockwaveCasterAudioStream = GD.Load<AudioStream>("res://audio/weapon/Shockwave_Caster.wav");
+        }
+        _volumeAdjust = -3;
+        _texture = _shockwaveCasterTexture;
+        _audioStream = _shockwaveCasterAudioStream;
     }
 
     private void InitNeedleGun() {
@@ -239,6 +256,13 @@ public class Projectile : Node2D, IProjectile {
             explosion.Position = Position;
             GetParent().AddChild(explosion);
             var sfx = SoundEffectNode.New(GD.Load<AudioStream>("res://audio/rocket_impact.wav"));
+            GetParent().AddChild(sfx);
+        } else if (_weapon == ShockwaveCasterWeapon.Design) { 
+            QueueFree();
+            var explosion = ShockwaveCasterExplosion.New();
+            explosion.Position = Position;
+            GetParent().AddChild(explosion);
+            var sfx = SoundEffectNode.New(GD.Load<AudioStream>("res://audio/weapon/Shockwave_Caster_Impact.wav"), -6);
             GetParent().AddChild(sfx);
         } else {
             QueueFree();
