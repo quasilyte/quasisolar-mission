@@ -52,9 +52,11 @@ public class EquipmentShopScreen : Node2D {
 
         GetNode<Button>("Status/LeaveButton").Connect("pressed", this, nameof(OnLeavePressed));
         GetNode<Button>("Status/RefuelButton").Connect("pressed", this, nameof(OnRefuelButton));
-        GetNode<Button>("Status/RepairButton").Connect("pressed", this, nameof(OnRepairButton));
+        GetNode<Button>("Status/RepairAllButton").Connect("pressed", this, nameof(OnRepairAllButton));
         GetNode<Button>("Status/CargoButton").Connect("pressed", this, nameof(OnCargoButton));
         GetNode<Button>("Status/DronesButton").Connect("pressed", this, nameof(OnDronesButton));
+
+        GetNode<Button>("UnitMenu/RepairButton").Connect("pressed", this, nameof(OnRepairButton));
 
         _shopCategorySelect = GetNode<OptionButton>("EquipmentShop/CategorySelect");
         for (int i = 0; i < _equipmentCategories.Length; i++) {
@@ -430,7 +432,7 @@ public class EquipmentShopScreen : Node2D {
 
         GetNode<TextureProgress>("UnitMenu/HealthBar").Value = QMath.Percantage(_selectedVessel.hp, _selectedVessel.Design().maxHp);
 
-        GetNode<Button>("Status/RepairButton").Disabled = _selectedVessel.hp == _selectedVessel.Design().maxHp;
+        GetNode<Button>("UnitMenu/RepairButton").Disabled = _selectedVessel.hp == _selectedVessel.Design().maxHp;
 
         var missingFuel = (int)(RpgGameState.MaxFuel() - _gameState.fuel);
         _refuelPopup.GetNode<Button>("BuyMinor").Disabled = _gameState.fuel + 50 > RpgGameState.MaxFuel();
@@ -588,6 +590,38 @@ public class EquipmentShopScreen : Node2D {
     private void OnRepairCancelButton() {
         _repairPopup.Hide();
         _lockControls = false;
+    }
+
+    private void OnRepairAllButton() {
+        if (_lockControls) {
+            return;
+        }
+
+        var repairedSome = false;
+
+        foreach (var x in _gameState.humanUnit.Get().fleet) {
+            var v = x.Get();
+            var missingHp = (int)(v.Design().maxHp - v.hp);
+            if (missingHp == 0) {
+                continue;
+            }
+            var repairAmount = QMath.ClampMax(missingHp, _gameState.credits / _gameState.repairPrice);
+            if (repairAmount == 0) {
+                continue;
+            }
+            repairedSome = true;
+            if (repairAmount == missingHp) {
+                v.hp = v.Design().maxHp;
+            } else {
+                v.hp += repairAmount;
+            }
+            _gameState.credits -= repairAmount * _gameState.repairPrice;
+        }
+
+        if (repairedSome) {
+            GetParent().AddChild(SoundEffectNode.New(GD.Load<AudioStream>("res://audio/interface/repair.wav")));
+            UpdateUI();
+        }
     }
 
     private void OnRepairButton() {
