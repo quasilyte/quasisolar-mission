@@ -514,7 +514,7 @@ public class VesselDesign: IItem {
             maxHp = 135,
             maxShieldLevel = 1,
 
-            maxSpeed = 115,
+            maxSpeed = 120,
             acceleration = 2.3f,
             rotationSpeed = 1.2f,
 
@@ -652,6 +652,114 @@ public class VesselDesign: IItem {
 
             cargoSpace = 80,
             size = Size.Normal,
+        },
+
+        // Vespion designs.
+        // - Low hp.
+        // - Low firepower.
+        // + Cheap, fast to produce.
+        // + High rotation speed.
+        // + High cargo capacity.
+        // + Many artifact slots.
+
+        new VesselDesign{
+            level = 1,
+            name = "Larva",
+            affiliation = "Vespion",
+            description = "TODO",
+            sellingPrice = 1000,
+            debris = 20,
+            productionTime = 5,
+
+            maxHp = 75,
+            maxShieldLevel = 1,
+
+            maxSpeed = 100,
+            acceleration = 2.5f,
+            rotationSpeed = 4,
+
+            sentinelSlot = true,
+            specialSlot = true,
+            weaponSlots = 0,
+            artifactSlots = 1,
+
+            cargoSpace = 90,
+            size = Size.Small,
+        },
+
+        new VesselDesign{
+            level = 2,
+            name = "Wasp",
+            affiliation = "Vespion",
+            description = "TODO",
+            sellingPrice = 2400,
+            debris = 35,
+            productionTime = 10,
+
+            maxHp = 105,
+            maxShieldLevel = 1,
+
+            maxSpeed = 105,
+            acceleration = 2.7f,
+            rotationSpeed = 3.75f,
+
+            sentinelSlot = true,
+            specialSlot = true,
+            weaponSlots = 0,
+            artifactSlots = 4,
+
+            cargoSpace = 160,
+            size = Size.Small,
+        },
+
+        new VesselDesign{
+            level = 4,
+            name = "Hornet",
+            affiliation = "Vespion",
+            description = "TODO",
+            sellingPrice = 7000,
+            debris = 60,
+            productionTime = 30,
+
+            maxHp = 145,
+            maxShieldLevel = 2,
+
+            maxSpeed = 110,
+            acceleration = 3,
+            rotationSpeed = 4,
+
+            sentinelSlot = false,
+            specialSlot = true,
+            weaponSlots = 1,
+            artifactSlots = 4,
+
+            cargoSpace = 195,
+            size = Size.Normal,
+        },
+
+        new VesselDesign{
+            level = 6,
+            name = "Queen",
+            affiliation = "Vespion",
+            description = "TODO",
+            sellingPrice = 16000,
+            debris = 105,
+            productionTime = 90,
+
+            maxHp = 290,
+            maxShieldLevel = 3,
+
+            maxSpeed = 95,
+            acceleration = 3.2f,
+            rotationSpeed = 4,
+
+            sentinelSlot = true,
+            specialSlot = true,
+            weaponSlots = 1,
+            artifactSlots = 5,
+
+            cargoSpace = 275,
+            size = Size.Large,
         },
 
         // Neutral designs.

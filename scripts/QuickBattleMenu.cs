@@ -122,6 +122,8 @@ public class QuickBattleMenu : Node2D {
             "Earthling Interceptor",
             "Earthling Ark",
             "Earthling Gladiator",
+            "Vespion Larva",
+            "Vespion Wasp",
             "Scavenger Raider",
             "Scavenger Marauder",
             "Krigia Talons",
@@ -534,7 +536,11 @@ public class QuickBattleMenu : Node2D {
             v.shieldName = shield.name;
         }
 
-        v.weapons.Add(weapons[0].name);
+        if (design.weaponSlots >= 1) {
+            v.weapons.Add(weapons[0].name);
+        } else {
+            v.weapons.Add(EmptyWeapon.Design.name);
+        }
         if (design.weaponSlots >= 2) {
             v.weapons.Add(weapons[1].name);
         } else {

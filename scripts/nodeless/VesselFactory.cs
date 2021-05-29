@@ -85,6 +85,10 @@ public static class VesselFactory {
             InitWertuDominator(v);
         } else if (kind == "Zyth Hunter") {
             InitZythHunter(v);
+        } else if (kind == "Vespion Larva") {
+            InitVespionLarva(v);
+        } else if (kind == "Vespion Wasp") {
+            InitVespionWasp(v);
         } else if (kind == "Unique Spectre") {
             InitUniqueSpectre(v);
         } else if (kind == "Unique Visitor") {
@@ -742,6 +746,56 @@ public static class VesselFactory {
         if (shieldRoll < 0.4) {
             v.shieldName = IonCurtainShield.Design.name;
         } else if (shieldRoll < 0.6) {
+            v.shieldName = HeatScreenShield.Design.name;
+        }
+    }
+
+    private static void InitVespionLarva(Vessel v) {
+        v.designName = "Larva";
+        v.energySourceName = "Power Generator";
+
+        // 60% - shockwave caster
+        // 40% - swarm spawner
+        var weaponRoll = QRandom.Float();
+        if (weaponRoll < 0.6) {
+            v.specialWeaponName = ShockwaveCasterWeapon.Design.name;
+        } else {
+            v.specialWeaponName = SwarmSpawnerWeapon.Design.name;
+        }
+
+        var sentinelRoll = QRandom.Float();
+        if (sentinelRoll < 0.4) {
+            v.sentinelName = "Point-Defense Guard";
+        }
+
+        // 60% - heat shield
+        var shieldRoll = QRandom.Float();
+        if (shieldRoll < 0.6) {
+            v.shieldName = HeatScreenShield.Design.name;
+        }
+    }
+
+    private static void InitVespionWasp(Vessel v) {
+        v.designName = "Wasp";
+        v.energySourceName = "Advanced Power Generator";
+
+        // 60% - swarm spawner
+        // 40% - shockwave caster
+        var weaponRoll = QRandom.Float();
+        if (weaponRoll < 0.6) {
+            v.specialWeaponName = SwarmSpawnerWeapon.Design.name;
+        } else {
+            v.specialWeaponName = ShockwaveCasterWeapon.Design.name;
+        }
+
+        var sentinelRoll = QRandom.Float();
+        if (sentinelRoll < 0.5) {
+            v.sentinelName = "Point-Defense Guard";
+        }
+
+        // 70% - heat shield
+        var shieldRoll = QRandom.Float();
+        if (shieldRoll < 0.7) {
             v.shieldName = HeatScreenShield.Design.name;
         }
     }
