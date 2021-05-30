@@ -797,9 +797,9 @@ public class MapView : Node2D {
     }
 
     private void OnMiningLoadAll() {
-        MiningLoadMinerals();
-        MiningLoadOrganic();
         MiningLoadPower();
+        MiningLoadOrganic();
+        MiningLoadMinerals();
         UpdateUI();
     }
 
