@@ -198,6 +198,7 @@ public class MapView : Node2D {
         _miningPopup.GetNode<Button>("LoadMinerals").Connect("pressed", this, nameof(OnMiningLoadMinerals));
         _miningPopup.GetNode<Button>("LoadOrganic").Connect("pressed", this, nameof(OnMiningLoadOrganic));
         _miningPopup.GetNode<Button>("LoadPower").Connect("pressed", this, nameof(OnMiningLoadPower));
+        _miningPopup.GetNode<Button>("LoadAll").Connect("pressed", this, nameof(OnMiningLoadAll));
         for (int i = 0; i < 3; i++) {
             var args = new Godot.Collections.Array { i };
             _miningPopup.GetNode<Button>($"Planet{i}/SendRecall").Connect("pressed", this, nameof(OnMiningSendRecallButton), args);
@@ -741,7 +742,7 @@ public class MapView : Node2D {
         _miningPopup.Hide();
     }
 
-    private void OnMiningLoadMinerals() {
+    private void MiningLoadMinerals() {
         var freeSpace = _humanUnit.CargoFree();
         foreach (var p in _currentSystem.sys.resourcePlanets) {
             if (!p.hasMine) {
@@ -752,10 +753,9 @@ public class MapView : Node2D {
             _humanUnit.cargo.minerals += loadAmount;
             freeSpace -= loadAmount;
         }
-        UpdateUI();
     }
 
-    private void OnMiningLoadOrganic() {
+    private void MiningLoadOrganic() {
         var freeSpace = _humanUnit.CargoFree();
         foreach (var p in _currentSystem.sys.resourcePlanets) {
             if (!p.hasMine) {
@@ -766,10 +766,9 @@ public class MapView : Node2D {
             _humanUnit.cargo.organic += loadAmount;
             freeSpace -= loadAmount;
         }
-        UpdateUI();
     }
 
-    private void OnMiningLoadPower() {
+    private void MiningLoadPower() {
         var freeSpace = _humanUnit.CargoFree();
         foreach (var p in _currentSystem.sys.resourcePlanets) {
             if (!p.hasMine) {
@@ -780,6 +779,27 @@ public class MapView : Node2D {
             _humanUnit.cargo.power += loadAmount;
             freeSpace -= loadAmount;
         }
+    }
+
+    private void OnMiningLoadMinerals() {
+        MiningLoadMinerals();
+        UpdateUI();
+    }
+
+    private void OnMiningLoadOrganic() {
+        MiningLoadOrganic();
+        UpdateUI();
+    }
+
+    private void OnMiningLoadPower() {
+        MiningLoadPower();
+        UpdateUI();
+    }
+
+    private void OnMiningLoadAll() {
+        MiningLoadMinerals();
+        MiningLoadOrganic();
+        MiningLoadPower();
         UpdateUI();
     }
 
