@@ -3,6 +3,11 @@ using System;
 using System.Collections.Generic;
 
 class GenericBot : AbstractBot {
+    private IWeapon _antiAsteroid = null;
+    private int _antiAsteroidIndex = 0;
+    private Asteroid _targetedAsteroid = null;
+    private float _asteroidDamageDelivered = 0;
+
     private IWeapon _pointDefense = null;
     private int _pointDefenseIndex = 0;
 
@@ -30,6 +35,15 @@ class GenericBot : AbstractBot {
 
         for (int i = 0; i < vessel.weapons.Count; i++) {
             var w = vessel.weapons[i];
+
+            int aaRating = AntiAsteroidRating(w);
+            if (aaRating != 0) {
+                if (_antiAsteroid == null || aaRating > AntiAsteroidRating(_antiAsteroid)) {
+                    _antiAsteroid = w;
+                    _antiAsteroidIndex = i;
+                }
+            }
+
             if (w is PointDefenseLaserWeapon pointDefense) {
                 _pointDefense = pointDefense;
                 _pointDefenseIndex = i;
@@ -272,6 +286,45 @@ class GenericBot : AbstractBot {
         if (_vessel.specialWeapon.GetDesign() == RestructuringRayWeapon.Design) {
             MaybeHealAlly();
         }
+
+        if (_antiAsteroid != null) {
+            MaybeAttackAsteroid(events);
+        }
+    }
+
+    private void MaybeAttackAsteroid(BotEvents events) {
+        if (!IsInstanceValid(_targetedAsteroid)) {
+            _targetedAsteroid = null;
+        }
+        if (_targetedAsteroid != null) {
+            if (_vessel.Position.DistanceTo(_targetedAsteroid.Position) > 150) {
+                _targetedAsteroid = null;
+            }
+            if (_asteroidDamageDelivered >= Asteroid.MAX_HP) {
+                _targetedAsteroid = null;
+            }
+        }
+
+        if (_targetedAsteroid != null && _attackCooldown == 0) {
+            var cursor = _targetedAsteroid.Position;
+            var attackRoll = QRandom.Float();
+            if (attackRoll < 0.2 && _antiAsteroid.CanFire(_vessel.State, cursor)) {
+                Fire(_antiAsteroidIndex, cursor);
+                _asteroidDamageDelivered += _antiAsteroid.GetDesign().damage;
+            }
+            return;
+        }
+
+        foreach (Area2D other in events.midRangeCollisions) {
+            if (!IsInstanceValid(other)) {
+                continue;
+            }
+            if (other.GetParent() is Asteroid asteroid) {
+                _targetedAsteroid = asteroid;
+                _asteroidDamageDelivered = 0;
+                break;
+            }
+        }
     }
 
     private void MaybeHealAlly() {
@@ -374,6 +427,12 @@ class GenericBot : AbstractBot {
         }
     }
 
+    private Vector2 CalculateSnipeShot(IWeapon w, Vector2 targetPos, Vector2 targetVelocity) {
+        var dist = targetPos.DistanceTo(_vessel.Position);
+        var predictedPos = targetPos + _currentTarget.Vessel.State.velocity * (dist / w.GetDesign().projectileSpeed);
+        return predictedPos;
+    }
+
     private Vector2 CalculateFireTarget(IWeapon w) {
         var design = w.GetDesign();
 
@@ -384,9 +443,7 @@ class GenericBot : AbstractBot {
         Vector2 cursor;
         var snipeRoll = design.botHintSnipe == 0 ? 100 : QRandom.Float();
         if (snipeRoll <= design.botHintSnipe) {
-            var targetPos = TargetPosition();
-            var dist = targetPos.DistanceTo(_vessel.Position);
-            var predictedPos = targetPos + _currentTarget.Vessel.State.velocity * (dist / design.projectileSpeed);
+            var predictedPos = CalculateSnipeShot(w, TargetPosition(), _currentTarget.Vessel.State.velocity);
             cursor = QMath.RandomizedLocation(predictedPos, 16 * design.botHintScatter);
         } else {
             cursor = QMath.RandomizedLocation(TargetPosition(), 24 * design.botHintScatter);
@@ -466,5 +523,18 @@ class GenericBot : AbstractBot {
 
     private bool CanShootForFree(float energy) {
         return _vessel.State.energy >= energy;
+    }
+
+    private int AntiAsteroidRating(IWeapon w) {
+        if (w is ScytheWeapon || w is GreatScytheWeapon || w is StingerWeapon) {
+            return 1;
+        }
+        if (w is IonCannonWeapon || w is CutterWeapon) {
+            return 2;
+        }
+        if (w is NeedleGunWeapon || w is PhotonBurstCannonWeapon || w is TwinPhotonBurstCannonWeapon || w is PulseLaserWeapon || w is AssaultLaserWeapon) {
+            return 3;
+        }
+        return 0;
     }
 }

@@ -2,7 +2,9 @@ using Godot;
 using System;
 
 public class Asteroid : Node2D {
-    private float _hp = 10.0f;
+    public const float MAX_HP = 10;
+
+    private float _hp = MAX_HP;
     private float _speed = 40.0f;
     private Vector2 _velocity;
 

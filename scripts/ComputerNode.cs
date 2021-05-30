@@ -39,7 +39,19 @@ public class ComputerNode : Node2D {
         closeRangeArea.Name = "CloseRangeAura";
         pilot.Vessel.AddChild(closeRangeArea);
 
+        var midRangeArea = new Area2D();
+        {
+            var collisionShape = new CollisionShape2D();
+            var shape = new CircleShape2D();
+            shape.Radius = 120;
+            collisionShape.Shape = shape;
+            midRangeArea.AddChild(collisionShape);
+        }
+        closeRangeArea.Name = "MidRangeAura";
+        pilot.Vessel.AddChild(midRangeArea);
+
         closeRangeArea.Connect("area_entered", this, nameof(OnCloseRangeAreaEntered));
+        midRangeArea.Connect("area_entered", this, nameof(OnMidRangeAreaEntered));
     }
 
     private void OnTargetedByZap() {
@@ -48,6 +60,10 @@ public class ComputerNode : Node2D {
 
     private void OnCloseRangeAreaEntered(Area2D other) {
         _botEvents.closeRangeCollisions.Add(other);
+    }
+
+    private void OnMidRangeAreaEntered(Area2D other) {
+        _botEvents.midRangeCollisions.Add(other);
     }
 
     private void OnVesselDestroyed() {
@@ -61,6 +77,9 @@ public class ComputerNode : Node2D {
         
         if (_botEvents.closeRangeCollisions.Count != 0) {
             _botEvents.closeRangeCollisions.Clear();
+        }
+        if (_botEvents.midRangeCollisions.Count != 0) {
+            _botEvents.midRangeCollisions.Clear();
         }
         _botEvents.targetedByZap = false;
     }
