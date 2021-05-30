@@ -54,21 +54,6 @@ public class ShipyardScreen : Node2D {
             ItemInfo.BuyingPrice(_selectedMerchandise.item) > _gameState.credits ||
             _starBase.productionQueue.Count >= 4;
 
-        for (int i = 0; i < _fleetSlots.Length; i++) {
-            var panel = GetNode<Sprite>($"ActiveFleet/Vessel{i}");
-            panel.GetNode<Label>("Name").Text = "";
-            if (_gameState.humanUnit.Get().fleet.Count <= i) {
-                continue;
-            }
-            var vessel = _gameState.humanUnit.Get().fleet[i].Get();
-            panel.GetNode<Label>("Name").Text = vessel.pilotName;
-            var slot = panel.GetNode<ItemSlotNode>("Slot");
-            var itemNode = DraggableItemNode.New(slot, vessel);
-            slot.ApplyItem(null, itemNode);
-            GetTree().CurrentScene.AddChild(itemNode);
-            itemNode.GlobalPosition = panel.GlobalPosition;
-        }
-
         {
             int i = 0;
             var productionQueue = GetNode<Panel>("ProductionQueue");
@@ -213,7 +198,24 @@ public class ShipyardScreen : Node2D {
                     GetTree().CurrentScene.AddChild(itemNode);
                     itemNode.GlobalPosition = storagePanel.GlobalPosition;
                 }
+
+                itemSlot.Connect("ItemApplied", this, nameof(OnShipApplied));
             }
+        }
+
+        for (int i = 0; i < _fleetSlots.Length; i++) {
+            var panel = GetNode<Sprite>($"ActiveFleet/Vessel{i}");
+            panel.GetNode<Label>("Name").Text = "";
+            if (_gameState.humanUnit.Get().fleet.Count <= i) {
+                continue;
+            }
+            var vessel = _gameState.humanUnit.Get().fleet[i].Get();
+            panel.GetNode<Label>("Name").Text = vessel.pilotName;
+            var slot = panel.GetNode<ItemSlotNode>("Slot");
+            var itemNode = DraggableItemNode.New(slot, vessel);
+            slot.ApplyItem(null, itemNode);
+            GetTree().CurrentScene.AddChild(itemNode);
+            itemNode.GlobalPosition = panel.GlobalPosition;
         }
     }
 
@@ -258,7 +260,9 @@ public class ShipyardScreen : Node2D {
             if (fromSlot.GetParent().HasNode("Name")) {
                 fromSlot.GetParent().GetNode<Label>("Name").Text = "";
             }
-            dragged.GetSlotNode().GetParent().GetNode<Label>("Name").Text = vessel.pilotName;
+            if (dragged.GetSlotNode().GetParent().HasNode("Name")) {
+                dragged.GetSlotNode().GetParent().GetNode<Label>("Name").Text = vessel.pilotName;
+            }
         }
 
         // _sellItemFallbackSlot = fromSlot;
