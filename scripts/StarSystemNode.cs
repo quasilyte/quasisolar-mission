@@ -208,10 +208,6 @@ public class StarSystemNode : Node2D {
     }
 
     private void CollectResources() {
-        if (RpgGameState.instance.day % 10 == 0 && sys.starBase.Get().level == 5) {
-            AutoCollectResources();
-            return;
-        }
         if (RpgGameState.instance.day % 30 == 0) {
             GarrisonCollectResources();
             return;
@@ -262,10 +258,6 @@ public class StarSystemNode : Node2D {
             starBase.powerStock += powerCollected;
             p.powerCollected -= powerCollected;
         }
-    }
-
-    private void AutoCollectResources() {
-        TransferResources(500000);
     }
 
     public void ProcessDay() {
