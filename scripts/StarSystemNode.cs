@@ -75,6 +75,7 @@ public class StarSystemNode : Node2D {
     }
 
     public void OnPlayerEnter(Faction faction) {
+        sys.visitsNum++;
         if (sys.intel == null) {
             OnFirstPlayerEnter(faction);
         }

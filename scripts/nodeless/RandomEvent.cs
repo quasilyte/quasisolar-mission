@@ -95,6 +95,10 @@ public class RandomEvent {
         return RpgGameState.instance.humanUnit.Get().pos == RpgGameState.StartingSystem().pos;
     }
 
+    private static bool IsFirstSystemVisit() {
+        return RpgGameState.starSystemByPos[RpgGameState.instance.humanUnit.Get().pos].visitsNum == 1;
+    }
+
     private static bool HasSpeaking() {
         return RpgGameState.instance.skillsLearned.Contains("Speaking");
     }
@@ -110,6 +114,56 @@ public class RandomEvent {
         spaceUnit.pos = RpgGameState.instance.humanUnit.Get().pos;
         spaceUnit.fleet = fleetList;
         return spaceUnit;
+    }
+
+    private static RandomEvent newEarthlingScout() {
+        var e = new RandomEvent { };
+        e.title = "Earthling Scout";
+        e.expReward = 3;
+        e.luckScore = 10;
+        e.trigger = TriggerKind.OnSystemEntered;
+        e.condition = () => {
+            return RpgGameState.instance.humanUnit.Get().fleet.Count < SpaceUnit.maxFleetSize &&
+                   IsFirstSystemVisit();
+        };
+        e.text = multilineText(
+            "An automated Earthling scout drifts across this system.",
+            "",
+            "It's probably a war relict forgotten by everyone."
+        );
+        e.actions.Add(new Action{
+            name = "Capture the vessel",
+            apply = (RandomEventContext ctx) => {
+                var scout = RpgGameState.instance.NewVessel(Faction.Human, VesselDesign.Find("Scout"));
+                scout.pilotName = PilotNames.UniqHumanName(RpgGameState.instance.usedNames);
+                VesselFactory.Init(scout, "Earthling Scout");
+                scout.hp = 10;
+                scout.energy = 0;
+
+                return new Result {
+                    text = multilineText(
+                        "You captured the scout vessel.",
+                        "",
+                        "Its hull is heavily damaged while the batteries are completely dried out."
+                    ),
+                    effects = {
+                        new Effect{
+                            kind = EffectKind.AddVesselToFleet,
+                            value = scout,
+                        },
+                    },
+                };
+            }
+        });
+        e.actions.Add(new Action{
+            name = "Ignore the scout",
+            apply = (RandomEventContext _) => {
+                return new Result{
+                    text = "Today you give a zero fox about the unidentified scout vessels.",
+                };
+            }
+        });
+        return e;
     }
 
     private static RandomEvent newSkirmish() {
@@ -1198,6 +1252,7 @@ public class RandomEvent {
             newFuelTrader(),
             newLoneKrigiaScout(),
             newSkirmish(),
+            newEarthlingScout(),
 
             newPurpleSystemVisitor(),
         };

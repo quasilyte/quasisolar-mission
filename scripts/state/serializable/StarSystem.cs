@@ -18,6 +18,8 @@ public class StarSystem: AbstractPoolValue {
     // Non-null intelligence records the latest known information about the system.
     public StarSystemIntel intel = null;
 
+    public int visitsNum = 0;
+
     public List<ResourcePlanet> resourcePlanets = new List<ResourcePlanet>{};
 
     public StarBase.Ref starBase;
