@@ -1609,7 +1609,7 @@ public class MapView : Node2D {
                 var notification = MapNotificationNode.New("Artifact recovered");
                 _currentSystem.AddChild(notification);
 
-                _gameState.credits += 2000;
+                _gameState.credits += 3000;
 
                 GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/artifact_recovered.wav"));
 
