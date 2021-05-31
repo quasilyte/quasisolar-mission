@@ -78,16 +78,19 @@ public class StarBase: AbstractPoolValue {
         // 5 = 80%
         float levelMultiplier = 1.2f - (level * 0.1f);
 
-        // 0   = 130%
-        // 50  = 125%
-        // 100 = 120%
-        // 150 = 115%
-        // 200 = 110%
-        // 250 = 105%
-        // 300 = 100%
-        // 350 = 95%
-        // 400 = 90%
-        float shortageMultiplier = QMath.ClampMin(1.3f - 0.05f * (currentAmount / 50), 0.9f);
+        // 0   = 140%
+        // 50  = 135%
+        // 100 = 130%
+        // 150 = 125%
+        // 200 = 120%
+        // 250 = 115%
+        // 300 = 110%
+        // 350 = 105%
+        // 400 = 100%
+        // 450 = 95%
+        // 500 = 90%
+        // 550 = 85%
+        float shortageMultiplier = QMath.ClampMin(1.4f - 0.05f * (currentAmount / 50), 0.85f);
 
         // Every 300 days the general price goes down.
         // 0-300     = 105%
