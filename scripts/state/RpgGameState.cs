@@ -352,11 +352,6 @@ public class RpgGameState {
         return value;
     }
 
-    public static int DebrisSellPrice() { return 12; }
-    public static int MineralsSellPrice() { return 14; }
-    public static int OrganicSellPrice() { return 20; }
-    public static int PowerSellPrice() { return 22; }
-
     public Vessel NewVessel(Faction faction, VesselDesign design) {
         var v = vessels.New();
         v.isBot = true;

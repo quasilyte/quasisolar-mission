@@ -250,15 +250,15 @@ public class StarSystemNode : Node2D {
                 continue;
             }
 
-            int mineralsCollected = collect(RpgGameState.MineralsSellPrice(), p.mineralsCollected);
+            int mineralsCollected = collect(starBase.MineralsSellPrice().value, p.mineralsCollected);
             starBase.mineralsStock += mineralsCollected;
             p.mineralsCollected -= mineralsCollected;
 
-            int organicCollected = collect(RpgGameState.OrganicSellPrice(), p.organicCollected);
+            int organicCollected = collect(starBase.OrganicSellPrice().value, p.organicCollected);
             starBase.organicStock += organicCollected;
             p.organicCollected -= organicCollected;
 
-            int powerCollected = collect(RpgGameState.PowerSellPrice(), p.powerCollected);
+            int powerCollected = collect(starBase.PowerSellPrice().value, p.powerCollected);
             starBase.powerStock += powerCollected;
             p.powerCollected -= powerCollected;
         }

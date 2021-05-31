@@ -429,16 +429,20 @@ public class EquipmentShopScreen : Node2D {
         _dronesPopup.GetNode<Label>("BuyDrone/Value").Text = _gameState.drones.ToString();
         _dronesPopup.GetNode<Button>("BuyDrone").Disabled = !CanBuyDrone();
 
+        Func<StarBase.PriceInfo, string> formatPrice = (StarBase.PriceInfo info) => {
+            return info.value + " (" + (int)(100 * info.multiplier) + "%)";
+        };
+
         _cargoPopup.GetNode<Label>("SellDebris/Value").Text = _humanUnit.DebrisCount().ToString();
-        _cargoPopup.GetNode<Label>("SellDebris/Price").Text = RpgGameState.DebrisSellPrice().ToString();
+        _cargoPopup.GetNode<Label>("SellDebris/Price").Text = formatPrice(starBase.DebrisSellPrice());
         _cargoPopup.GetNode<Label>("SellMinerals/Value").Text = _humanUnit.cargo.minerals.ToString();
-        _cargoPopup.GetNode<Label>("SellMinerals/Price").Text = RpgGameState.MineralsSellPrice().ToString();
+        _cargoPopup.GetNode<Label>("SellMinerals/Price").Text = formatPrice(starBase.MineralsSellPrice());
         _cargoPopup.GetNode<Label>("SellMinerals/Stock").Text = starBase.mineralsStock.ToString();
         _cargoPopup.GetNode<Label>("SellOrganic/Value").Text = _humanUnit.cargo.organic.ToString();
-        _cargoPopup.GetNode<Label>("SellOrganic/Price").Text = RpgGameState.OrganicSellPrice().ToString();
+        _cargoPopup.GetNode<Label>("SellOrganic/Price").Text = formatPrice(starBase.OrganicSellPrice());
         _cargoPopup.GetNode<Label>("SellOrganic/Stock").Text = starBase.organicStock.ToString();
         _cargoPopup.GetNode<Label>("SellPower/Value").Text = _humanUnit.cargo.power.ToString();
-        _cargoPopup.GetNode<Label>("SellPower/Price").Text = RpgGameState.PowerSellPrice().ToString();
+        _cargoPopup.GetNode<Label>("SellPower/Price").Text = formatPrice(starBase.PowerSellPrice());
         _cargoPopup.GetNode<Label>("SellPower/Stock").Text = starBase.powerStock.ToString();
 
         GetNode<Button>("EquipmentShop/Buy").Disabled = _selectedMerchandise.sprite == null ||
@@ -523,7 +527,7 @@ public class EquipmentShopScreen : Node2D {
     private void SellDebris() {
         var cargo = _humanUnit.cargo;
 
-        _gameState.credits += RpgGameState.DebrisSellPrice() * _humanUnit.DebrisCount();
+        _gameState.credits += RpgGameState.enteredBase.DebrisSellPrice().value * _humanUnit.DebrisCount();
         _gameState.krigiaMaterial += cargo.krigiaDeris;
         _gameState.wertuMaterial += cargo.wertuDebris;
         _gameState.zythMaterial += cargo.zythDebris;
@@ -535,19 +539,19 @@ public class EquipmentShopScreen : Node2D {
     }
 
     private void SellMinerals() {
-        _gameState.credits += RpgGameState.MineralsSellPrice() * _humanUnit.cargo.minerals;
+        _gameState.credits += RpgGameState.enteredBase.MineralsSellPrice().value * _humanUnit.cargo.minerals;
         RpgGameState.enteredBase.mineralsStock += _humanUnit.cargo.minerals;
         _humanUnit.cargo.minerals = 0;
     }
 
     private void SellOrganic() {
-        _gameState.credits += RpgGameState.OrganicSellPrice() * _humanUnit.cargo.organic;
+        _gameState.credits += RpgGameState.enteredBase.OrganicSellPrice().value * _humanUnit.cargo.organic;
         RpgGameState.enteredBase.organicStock += _humanUnit.cargo.organic;
         _humanUnit.cargo.organic = 0;
     }
 
     private void SellPower() {
-        _gameState.credits += RpgGameState.PowerSellPrice() * _humanUnit.cargo.power;
+        _gameState.credits += RpgGameState.enteredBase.PowerSellPrice().value * _humanUnit.cargo.power;
         RpgGameState.enteredBase.powerStock += _humanUnit.cargo.power;
         _humanUnit.cargo.power = 0;
     }
