@@ -588,6 +588,18 @@ public class MapView : Node2D {
                     }
                     return;
                 }
+
+            case RandomEvent.EffectKind.AddKrigiaMaterial:
+                _gameState.krigiaMaterial += (int)effect.value;
+                return;
+
+            case RandomEvent.EffectKind.DamageFlagshipPercentage: {
+                var randRange = (Vector2)effect.value;
+                var flagship = _humanUnit.fleet[0].Get();
+                flagship.hp -= flagship.hp * QRandom.FloatRange(randRange.x, randRange.y);
+                return;
+            }
+
             case RandomEvent.EffectKind.DamageFleetPercentage: {
                     var randRange = (Vector2)effect.value;
                     foreach (var handle in _humanUnit.fleet) {

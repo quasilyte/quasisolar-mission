@@ -55,6 +55,8 @@ public class RandomEvent {
         SpendAnyVesselBackupEnergy,
         ApplySlow,
         DamageFleetPercentage,
+        DamageFlagshipPercentage,
+        AddKrigiaMaterial,
         TeleportToSystem,
         EnterArena,
     }
@@ -95,6 +97,10 @@ public class RandomEvent {
         return RpgGameState.instance.humanUnit.Get().pos == RpgGameState.StartingSystem().pos;
     }
 
+    private static bool SystemHasStarBase() {
+        return RpgGameState.starSystemByPos[RpgGameState.instance.humanUnit.Get().pos].starBase.id != 0;
+    }
+
     private static bool IsFirstSystemVisit() {
         return RpgGameState.starSystemByPos[RpgGameState.instance.humanUnit.Get().pos].visitsNum == 1;
     }
@@ -114,6 +120,55 @@ public class RandomEvent {
         spaceUnit.pos = RpgGameState.instance.humanUnit.Get().pos;
         spaceUnit.fleet = fleetList;
         return spaceUnit;
+    }
+
+    private static RandomEvent newDevastatedHomeworld() {
+        var e = new RandomEvent { };
+        e.title = "Devastated Homeworld";
+        e.expReward = 5;
+        e.luckScore = 6;
+        e.trigger = TriggerKind.OnSystemEntered;
+        e.condition = () => IsFirstSystemVisit() && !SystemHasStarBase();
+        e.text = multilineText(
+            "As you were performing a common planet scanning routine, you found the traces of the civilization that met its demise.",
+            "",
+            "No signs of life, all cities are in ruins, there is no one to tell the stories here.",
+            "",
+            "The climate on this planet is very rough, so it's dangerous to explore it. But you might find something exciting in there..."
+        );
+        e.actions.Add(new Action{
+            name = "Search the planet",
+            apply = (RandomEventContext ctx) => {
+                return new Result {
+                    text = multilineText(
+                        "Your flagship took a lot of damage, but it was worth it.",
+                        "",
+                        "Now you have a proof that this race was destroyed by Krigia. They left a lot of traces all over this planet.",
+                        "",
+                        "You've collected 150 Krigia material for the research purposes."
+                    ),
+                    effects = {
+                        new Effect{
+                            kind = EffectKind.DamageFlagshipPercentage,
+                            value = new Vector2(0.5f, 0.8f),
+                        },
+                        new Effect{
+                            kind = EffectKind.AddKrigiaMaterial,
+                            value = 150,
+                        },
+                    },
+                };
+            }
+        });
+        e.actions.Add(new Action{
+            name = "Ignore this planet",
+            apply = (RandomEventContext _) => {
+                return new Result{
+                    text = "You decided to avoid the wrath of this planets' weather.",
+                };
+            }
+        });
+        return e;
     }
 
     private static RandomEvent newEarthlingScout() {
@@ -1253,6 +1308,7 @@ public class RandomEvent {
             newLoneKrigiaScout(),
             newSkirmish(),
             newEarthlingScout(),
+            newDevastatedHomeworld(),
 
             newPurpleSystemVisitor(),
         };
