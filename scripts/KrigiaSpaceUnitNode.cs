@@ -99,12 +99,16 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
         EmitSignal(nameof(AttackStarBase));
     }
 
+    private void ReturnToTheBase() {
+        unit.waypoint = unit.botOrigin.Get().system.Get().pos;
+        _currentSystem = null;
+        _canBeDetected = true;
+    }
+
     private void TaskForceProcessDay() {
         // Base is destroyed. Can return home.
         if (_currentSystem.starBase.id == 0) {
-            unit.waypoint = unit.botOrigin.Get().system.Get().pos;
-            _currentSystem = null;
-            _canBeDetected = true;
+            ReturnToTheBase();
             return;
         }
 
@@ -113,9 +117,7 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
 
     private void PatrolProcessDay() {
         if (unit.botSystemLeaveDelay == 0) {
-            unit.waypoint = unit.botOrigin.Get().system.Get().pos;
-            _currentSystem = null;
-            _canBeDetected = true;
+            ReturnToTheBase();
             return;
         }
 
@@ -175,9 +177,7 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
         if (_currentSystem.starBase.id != 0 && _currentSystem.starBase.Get().owner == Faction.Krigia) {
             EnterBase(_currentSystem.starBase.Get());
         } else {
-            unit.waypoint = unit.botOrigin.Get().system.Get().pos;
-            _currentSystem = null;
-            _canBeDetected = true;
+            ReturnToTheBase();
         }
     }
 
