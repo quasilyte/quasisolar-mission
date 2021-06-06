@@ -161,7 +161,7 @@ A carnivorous, xenophobic race that has hard times communicating with other
 sentient races that may resemble them their preys.
 
 During the Wertu invasion, they attacked their fleets, protecting their own
-territories and avoiding their attempts to form any kind of agreement. Due to
+territories. They avoided their attempts to form any kind of agreement. Due to
 their unwillingness to cooperate, Wertu cornered the Vespion fleet and restricted
 their freedom by force.
 
