@@ -3,6 +3,8 @@ All events are happening in an alternative universe.
 We still have a Human race that comes from the planet Earth ("Earthlings"),
 but the homeworld is called "Quasisolar system" instead of "Solar system".
 
+> Note! "Map" snapshots do not show all alien races; only ones that are more or less introduced into the game.
+
 # Events preceding the beginning of the game
 
 ## Year 2050
@@ -15,6 +17,8 @@ Other races that are native to this part of the galaxy mostly visit their
 neighbor systems, they're too far away from the Quasisolar system to learn about
 the Earthlings existence (or they don't care enough to introduce themself to
 a race that doesn't ever leave its own homeworld).
+
+![image](https://user-images.githubusercontent.com/6286655/120939753-23e5a480-c722-11eb-8c62-1ffb7bcbbafc.png)
 
 ## Year 2052
 
@@ -29,10 +33,12 @@ is a vast expansion of their own territories.
 Some races (Zyth, for instance) tried to keep them away from their borders, but
 Wertu technologies and the fleet size were superior.
 
-Humans made a first extraterrestrial life contact in this year.
+Humans made a first extraterrestrial life contact during this year.
 Wertu were impressed by the AI research progress humans made.
 
 In a year or two, Wertu was the faction that controlled most of the star systems.
+
+![image](https://user-images.githubusercontent.com/6286655/120939790-614a3200-c722-11eb-8aaf-810b322d5c51.png)
 
 ## Year 2055
 
@@ -42,6 +48,8 @@ Krigia was different from Wertu, although their goals were almost identical.
 They took star systems by a crude force, eradicating entire races in the process.
 
 There was only one thing that slowed their expansion down: Wertu.
+
+![image](https://user-images.githubusercontent.com/6286655/120939862-bf771500-c722-11eb-89d8-f6e1a2846b7b.png)
 
 ## Year 2058
 
@@ -54,7 +62,9 @@ supply them with AI-controlled vessels.
 It was a great offer, but there was a catch. As it turned out, humans can't
 survive the jump between two star systems.
 
-People started to work on a solution that would help to overcome this limitation.
+People started to work on a solution that would help them to overcome this limitation.
+
+![image](https://user-images.githubusercontent.com/6286655/120939896-f0efe080-c722-11eb-9be7-c173828745e4.png)
 
 ## Year 2060
 
@@ -68,7 +78,9 @@ Since this war caused a lot of devastations, all races eventually accepted these
 conditions; even the Earthlings.
 
 The worst news for humans was, of course, whey could never leave the Quasisolar
-system now.
+system now: they never controlled any other star systems apart from it.
+
+![image](https://user-images.githubusercontent.com/6286655/120939928-1e3c8e80-c723-11eb-822b-f8acebcb37be.png)
 
 ## Year 2061
 
@@ -78,11 +90,14 @@ This was a third year of the special project humans started after they got
 the inter-system jumps technology.
 
 Instead of sending the humans, we would send fully automated vessels.
-The flagship would contain a prototype, one-of-the-kind supercomputer
-that would control these automated vessels.
 
-With this strategy, we could reach for the other star systems without
-Wertu supervision.
+The flagship would contain a prototype, one-of-the-kind supercomputer
+that would control these automated vessels. It was designed to have a perfect human
+behavior replica, so it can represent the human race far away from our reach.
+
+With this strategy, humans gained an ability to visit other star systems Wertu supervision.
+
+![image](https://user-images.githubusercontent.com/6286655/120939944-3a403000-c723-11eb-938e-e47846ee2262.png)
 
 ## Year 2062
 
@@ -95,6 +110,7 @@ flying from one star system to another. They could build new star bases,
 form new alliances and defeat the invaders.
 
 People of Earth decided to violate the Krigia agreement and leave the system.
+
 This is where you join the game.
 
 ## The player
