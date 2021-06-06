@@ -110,6 +110,11 @@ Your choices affect how the other races would perceive the human race.
 As long as humans can't leave the Quasisolar system, they can't have any
 real chances in standing their ground in the long run.
 
+As a consequence of this, if the player loses Quasisolar system star base,
+humans are considered to be extinct. It doesn't result in a game over, but it
+will be reported in the end-game credits. All star bases created by the player
+are automated, controlled by machines.
+
 Your primary mission is to recover as much alien artifacts as possible
 to provide the research material that could be vital for the development
 of the better inter-system jumps method that is suitable for human beings.
