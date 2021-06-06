@@ -924,7 +924,6 @@ focus_mode = 2
 text = "Action 4"
 
 [node name="RandomEventResolvedPopup" parent="UI" instance=ExtResource( 18 )]
-visible = true
 margin_left = 2192.0
 margin_top = 96.0
 margin_right = 2928.0
@@ -1062,6 +1061,7 @@ focus_mode = 2
 text = "Leave"
 
 [node name="KrigiaPatrolPopup" parent="UI" instance=ExtResource( 18 )]
+visible = true
 margin_left = 752.0
 margin_top = 464.0
 margin_right = 1328.0
@@ -1116,8 +1116,7 @@ margin_left = 208.0
 margin_top = 272.0
 margin_right = 368.0
 margin_bottom = 304.0
-focus_mode = 2
-disabled = true
+enabled_focus_mode = 0
 text = "Communicate"
 
 [node name="LeaveButton" parent="UI/KrigiaPatrolPopup" instance=ExtResource( 19 )]

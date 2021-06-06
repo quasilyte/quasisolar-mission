@@ -78,6 +78,12 @@ public class Skill {
         // },
 
         new Skill{
+            name = "Intimidation",
+            expCost = 50,
+            effect = "easier to intimidate your foes",
+        },
+
+        new Skill{
             name = "Speaking",
             expCost = 65,
             effect = "better deals in negotiations",

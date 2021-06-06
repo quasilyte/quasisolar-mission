@@ -1,0 +1,290 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://styles/text_box.tres" type="StyleBox" id=1]
+[ext_resource path="res://theme.tres" type="Theme" id=3]
+[ext_resource path="res://scripts/TextQuestScreen.cs" type="Script" id=4]
+[ext_resource path="res://images/bg/battle_bg2.jpg" type="Texture" id=5]
+
+[sub_resource type="Theme" id=1]
+TextEdit/colors/background_color = Color( 0, 0, 0, 0 )
+TextEdit/colors/bookmark_color = Color( 0.08, 0.49, 0.98, 1 )
+TextEdit/colors/brace_mismatch_color = Color( 1, 0.2, 0.2, 1 )
+TextEdit/colors/breakpoint_color = Color( 0.8, 0.8, 0.4, 0.2 )
+TextEdit/colors/caret_background_color = Color( 0, 0, 0, 1 )
+TextEdit/colors/caret_color = Color( 0.88, 0.88, 0.88, 1 )
+TextEdit/colors/code_folding_color = Color( 0.8, 0.8, 0.8, 0.8 )
+TextEdit/colors/completion_background_color = Color( 0.17, 0.16, 0.2, 1 )
+TextEdit/colors/completion_existing_color = Color( 0.87, 0.87, 0.87, 0.13 )
+TextEdit/colors/completion_font_color = Color( 0.67, 0.67, 0.67, 1 )
+TextEdit/colors/completion_scroll_color = Color( 1, 1, 1, 1 )
+TextEdit/colors/completion_selected_color = Color( 0.26, 0.26, 0.27, 1 )
+TextEdit/colors/current_line_color = Color( 0.25, 0.25, 0.26, 0.8 )
+TextEdit/colors/executing_line_color = Color( 0.2, 0.8, 0.2, 0.4 )
+TextEdit/colors/font_color = Color( 0.88, 0.88, 0.88, 1 )
+TextEdit/colors/font_color_readonly = Color( 1, 1, 1, 1 )
+TextEdit/colors/font_color_selected = Color( 0, 0, 0, 1 )
+TextEdit/colors/function_color = Color( 0.4, 0.64, 0.81, 1 )
+TextEdit/colors/line_number_color = Color( 0.67, 0.67, 0.67, 0.4 )
+TextEdit/colors/mark_color = Color( 1, 0.4, 0.4, 0.4 )
+TextEdit/colors/member_variable_color = Color( 0.9, 0.31, 0.35, 1 )
+TextEdit/colors/number_color = Color( 0.92, 0.58, 0.2, 1 )
+TextEdit/colors/safe_line_number_color = Color( 0.67, 0.78, 0.67, 0.6 )
+TextEdit/colors/selection_color = Color( 0.49, 0.49, 0.49, 1 )
+TextEdit/colors/symbol_color = Color( 0.94, 0.94, 0.94, 1 )
+TextEdit/colors/word_highlighted_color = Color( 0.8, 0.9, 0.9, 0.15 )
+TextEdit/constants/completion_lines = 7
+TextEdit/constants/completion_max_width = 50
+TextEdit/constants/completion_scroll_width = 3
+TextEdit/constants/line_spacing = 4
+TextEdit/fonts/font = null
+TextEdit/icons/fold = null
+TextEdit/icons/folded = null
+TextEdit/icons/space = null
+TextEdit/icons/tab = null
+TextEdit/styles/completion = null
+TextEdit/styles/focus = null
+TextEdit/styles/normal = null
+TextEdit/styles/read_only = null
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.117647, 0.117647, 0.117647, 1 )
+
+[node name="TextQuestScreen" type="Node2D"]
+script = ExtResource( 4 )
+
+[node name="Background" type="Sprite" parent="."]
+position = Vector2( 960, 540 )
+texture = ExtResource( 5 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="TextPanel" type="Panel" parent="."]
+margin_left = 656.0
+margin_top = 112.0
+margin_right = 1360.0
+margin_bottom = 640.0
+theme = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextBackground" type="Panel" parent="TextPanel"]
+margin_left = 32.0
+margin_top = 32.0
+margin_right = 672.0
+margin_bottom = 496.0
+custom_styles/panel = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Content" type="RichTextLabel" parent="TextPanel/TextBackground"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 624.0
+margin_bottom = 448.0
+focus_mode = 2
+theme = SubResource( 1 )
+bbcode_enabled = true
+bbcode_text = "This is an example text.
+
+This scene is used for both text quests and
+communication with other races.
+
+A picture on the right depends on the context
+as well. Inside text quests it's a visual
+completent for the text. For the communication
+screen it's a talking head.
+
+A box below lists available options.
+The player can only choose one of them.
+Picking an action changes the state and will
+cause new action options to appear."
+text = "This is an example text.
+
+This scene is used for both text quests and
+communication with other races.
+
+A picture on the right depends on the context
+as well. Inside text quests it's a visual
+completent for the text. For the communication
+screen it's a talking head.
+
+A box below lists available options.
+The player can only choose one of them.
+Picking an action changes the state and will
+cause new action options to appear."
+selection_enabled = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ActionsPanel" type="Panel" parent="."]
+margin_left = 656.0
+margin_top = 656.0
+margin_right = 1360.0
+margin_bottom = 1024.0
+theme = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Action1" type="Label" parent="ActionsPanel"]
+margin_left = 32.0
+margin_top = 32.0
+margin_right = 672.0
+margin_bottom = 80.0
+mouse_filter = 0
+text = "(1) Action one;
+Some Actions may span across multiple lines."
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Action2" type="Label" parent="ActionsPanel"]
+margin_left = 32.0
+margin_top = 96.0
+margin_right = 672.0
+margin_bottom = 144.0
+mouse_filter = 0
+text = "(2) Action two; or it can be a single-line text."
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Action3" type="Label" parent="ActionsPanel"]
+margin_left = 32.0
+margin_top = 160.0
+margin_right = 672.0
+margin_bottom = 208.0
+mouse_filter = 0
+text = "(3) Another option."
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Action4" type="Label" parent="ActionsPanel"]
+margin_left = 32.0
+margin_top = 224.0
+margin_right = 672.0
+margin_bottom = 272.0
+mouse_filter = 0
+text = "(4) And another."
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Action5" type="Label" parent="ActionsPanel"]
+margin_left = 32.0
+margin_top = 288.0
+margin_right = 672.0
+margin_bottom = 336.0
+mouse_filter = 0
+text = "(5) Five is a max number of options per state."
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PicPanel" type="Panel" parent="."]
+margin_left = 1376.0
+margin_top = 112.0
+margin_right = 1776.0
+margin_bottom = 560.0
+theme = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite" type="Sprite" parent="PicPanel"]
+position = Vector2( 200, 224 )
+
+[node name="StatusPanel" type="Panel" parent="."]
+margin_left = 1376.0
+margin_top = 576.0
+margin_right = 1776.0
+margin_bottom = 1024.0
+theme = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="StatusPanel"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 384.0
+margin_bottom = 48.0
+text = "Status"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Box" type="Panel" parent="StatusPanel"]
+margin_left = 32.0
+margin_top = 48.0
+margin_right = 368.0
+margin_bottom = 416.0
+custom_styles/panel = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Content" type="Label" parent="StatusPanel/Box"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 320.0
+margin_bottom = 352.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Scratchpad" type="Panel" parent="."]
+margin_left = 144.0
+margin_top = 112.0
+margin_right = 640.0
+margin_bottom = 640.0
+theme = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="Scratchpad"]
+margin_top = 16.0
+margin_right = 496.0
+margin_bottom = 48.0
+text = "Scratchpad"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Box" type="Panel" parent="Scratchpad"]
+margin_left = 32.0
+margin_top = 48.0
+margin_right = 464.0
+margin_bottom = 496.0
+custom_styles/panel = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Content" type="TextEdit" parent="Scratchpad/Box"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 416.0
+margin_bottom = 432.0
+custom_styles/normal = SubResource( 2 )
+text = "Write your notes here..."
+virtual_keyboard_enabled = false
+wrap_enabled = true
+__meta__ = {
+"_edit_use_anchors_": false
+}

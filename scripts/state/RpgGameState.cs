@@ -20,6 +20,7 @@ public class RpgGameState {
     public static StarBase enteredBase = null;
     public static MapTransition transition = MapTransition.NewGame;
     public static BattleResult lastBattleResult = null;
+    public static AbstractTQuest selectedTextQuest = null;
 
     public class Config {
         public ulong gameSeed;
@@ -74,6 +75,8 @@ public class RpgGameState {
         BaseAttackSimulation,
         EnemyUnitDestroyed,
         EnemyBaseAttackRepelled,
+        TQuestExit,
+        EnemyUnitRetreats,
     }
 
     public class MapState {
@@ -213,9 +216,10 @@ public class RpgGameState {
 
     public KrigiaPlans krigiaPlans = new KrigiaPlans();
 
-    public int krigiaReputation = 0;
-    public int wertuReputation = 0;
-    public int zythReputation = 0;
+    public int krigiaReputation = -25;
+    public int wertuReputation = 10;
+    public int zythReputation = -10;
+    public int vespionReputation = 0;
 
     public int drones = 0;
     public int dronePrice;

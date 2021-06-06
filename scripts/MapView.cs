@@ -101,6 +101,9 @@ public class MapView : Node2D {
             if (RpgGameState.arenaUnit1.owner == Faction.Krigia && !RpgGameState.arenaUnit1.deleted) {
                 MarkStarBaseAsDiscovered(RpgGameState.garrisonStarBase);
             }
+        } else if (RpgGameState.transition == RpgGameState.MapTransition.EnemyUnitRetreats) {
+            var unit = RpgGameState.arenaUnit1;
+            unit.waypoint = unit.botOrigin.Get().system.Get().pos;
         }
         if (RpgGameState.arenaUnit1 != null && IsRandomEventFaction(RpgGameState.arenaUnit1.owner)) {
             RpgGameState.arenaUnit1.deleted = true;
@@ -162,6 +165,7 @@ public class MapView : Node2D {
 
         _krigiaPatrolPopup = GetNode<PopupNode>("UI/KrigiaPatrolPopup");
         _krigiaPatrolPopup.GetNode<ButtonNode>("FightButton").Connect("pressed", this, nameof(OnFightEventUnit));
+        _krigiaPatrolPopup.GetNode<ButtonNode>("CommunicateButton").Connect("pressed", this, nameof(OnKrigiaPatrolCommunicateButton));
         _krigiaPatrolPopup.GetNode<ButtonNode>("LeaveButton").Connect("pressed", this, nameof(OnKrigiaPatrolLeaveButton));
 
         _scavengersEventPopup = GetNode<PopupNode>("UI/ScavengersPopup");
@@ -308,11 +312,21 @@ public class MapView : Node2D {
         UpdateUI();
     }
 
+    private void OnKrigiaPatrolCommunicateButton() {
+        var u = _eventUnit;
+        RpgGameState.arenaUnit1 = u.unit;
+        SetArenaSettings(_currentSystem.sys, ConvertVesselList(u.unit.fleet), ConvertVesselList(_humanUnit.fleet));
+        RpgGameState.selectedTextQuest = new KrigiaPatrolTQuest();
+        GetTree().ChangeScene("res://scenes/TextQuestScreen.tscn");
+    }
+
     private void OnKrigiaPatrolLeaveButton() {
         _lockControls = false;
         _krigiaPatrolPopup.Hide();
 
-        MarkStarBaseAsDiscovered(_currentSystem.sys.starBase.Get());
+        if (_currentSystem.sys.starBase.id != 0) {
+            MarkStarBaseAsDiscovered(_currentSystem.sys.starBase.Get());
+        }
 
         _gameState.fuel -= RetreatFuelCost();
         UpdateUI();
@@ -1068,14 +1082,18 @@ public class MapView : Node2D {
             if (u.fleet.Count == 0) {
                 throw new Exception("trying to add a unit with empty fleet");
             }
+            SpaceUnitNode node = null;
             if (u.owner == Faction.Scavenger) {
-                AddSpaceUnit(ScavengerSpaceUnitNode.New(u));
+                node = ScavengerSpaceUnitNode.New(u); 
             } else if (u.owner == Faction.Krigia) {
-                AddSpaceUnit(KrigiaSpaceUnitNode.New(u));
+                node = KrigiaSpaceUnitNode.New(u);
             } else if (u.owner == Faction.Human) {
                 // Handled above.
             } else {
                 throw new Exception("unexpected unit owner: " + u.owner.ToString());
+            }
+            if (node != null) {
+                AddSpaceUnit(node);
             }
         }
     }
