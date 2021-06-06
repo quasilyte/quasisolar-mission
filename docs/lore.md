@@ -141,7 +141,7 @@ If Wertu information is true, there is a flagship that Krigia plans to use
 for doing the finishing blow. Escorted by a big number of elite vessels,
 this battle group would give us no chance if we're not prepared when the moment comes.
 
-We predict that it will enter this part of the space in few years.
+We predict that it will enter this part of the space in a few years.
 
 > Gameplay note: this "arrival" delay depends on the game difficulty settngs.
 > The formal game goal is to defeat this final Krigia unit.
