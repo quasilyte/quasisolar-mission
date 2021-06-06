@@ -12,6 +12,37 @@ class GameControls {
         _initialized = true;
 
         {
+            InputMap.AddAction("tquestAction1");
+            var e = new InputEventKey();
+            e.Scancode = (uint)KeyList.Key1;
+            InputMap.ActionAddEvent("tquestAction1", e);
+        }
+        {
+            InputMap.AddAction("tquestAction2");
+            var e = new InputEventKey();
+            e.Scancode = (uint)KeyList.Key2;
+            InputMap.ActionAddEvent("tquestAction2", e);
+        }
+        {
+            InputMap.AddAction("tquestAction3");
+            var e = new InputEventKey();
+            e.Scancode = (uint)KeyList.Key3;
+            InputMap.ActionAddEvent("tquestAction3", e);
+        }
+        {
+            InputMap.AddAction("tquestAction4");
+            var e = new InputEventKey();
+            e.Scancode = (uint)KeyList.Key4;
+            InputMap.ActionAddEvent("tquestAction4", e);
+        }
+        {
+            InputMap.AddAction("tquestAction5");
+            var e = new InputEventKey();
+            e.Scancode = (uint)KeyList.Key5;
+            InputMap.ActionAddEvent("tquestAction5", e);
+        }
+
+        {
             InputMap.AddAction("escape");
 
             var e = new InputEventKey();
