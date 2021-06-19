@@ -18,6 +18,7 @@ public class Projectile : Node2D, IProjectile {
     private static Texture _shockwaveCasterTexture;
     private static Texture _spreadGunTexture;
     private static Texture _reaperCannonTexture;
+    private static Texture _flakCannonTexture;
     private static Texture _hellfireTexture;
     private static Texture _crystalShardTexture;
     private static Texture _assaultLaserTexture;
@@ -29,6 +30,7 @@ public class Projectile : Node2D, IProjectile {
     private static AudioStream _needleImpactAudioStream;
     private static AudioStream _shockwaveCasterAudioStream;
     private static AudioStream _reaperCannonAudioStream;
+    private static AudioStream _flakCannonAudioStream;
 
     private Pilot _firedBy;
     private WeaponDesign _weapon;
@@ -72,6 +74,8 @@ public class Projectile : Node2D, IProjectile {
             InitAssaultLaser();
         } else if (_weapon == ShockwaveCasterWeapon.Design) {
             InitShockwaveCaster();
+        } else if (_weapon == FlakCannonWeapon.Design) {
+            InitFlakCannon();
         }
 
         _sprite = GetNode<Sprite>("Sprite");
@@ -152,6 +156,19 @@ public class Projectile : Node2D, IProjectile {
         _volumeAdjust = -3;
         _texture = _shockwaveCasterTexture;
         _audioStream = _shockwaveCasterAudioStream;
+    }
+
+    private void InitFlakCannon() {
+        _hp = FlakCannonWeapon.Design.range;
+        if (_flakCannonTexture == null) {
+            _flakCannonTexture = GD.Load<Texture>("res://images/ammo/flak.png");
+        }
+        if (_flakCannonAudioStream == null) {
+            _flakCannonAudioStream = GD.Load<AudioStream>("res://audio/weapon/flak.wav");
+        }
+        _volumeAdjust = -6;
+        _texture = _flakCannonTexture;
+        _audioStream = _flakCannonAudioStream;
     }
 
     private void InitNeedleGun() {

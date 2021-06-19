@@ -90,6 +90,9 @@ public static class WeaponFactory {
         if (w == BubbleGunWeapon.Design) {
             return new BubbleGunWeapon(p);
         }
+        if (w == FlakCannonWeapon.Design) {
+            return new FlakCannonWeapon(p);
+        }
 
         if (w == WarpDeviceWeapon.Design) {
             return new WarpDeviceWeapon(p);

@@ -113,6 +113,7 @@ public class WeaponDesign : IItem {
             PhotonBurstCannonWeapon.Design,
             IonCannonWeapon.Design,
             HellfireWeapon.Design,
+            FlakCannonWeapon.Design,
             PulseLaserWeapon.Design,
             AssaultLaserWeapon.Design,
             RocketLauncherWeapon.Design,

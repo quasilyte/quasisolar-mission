@@ -88,6 +88,10 @@ Special weapons:
 
 ### Vespion
 
+Weapons:
+
+* Flak Cannon
+
 Special weapons:
 
 * **Shockwave Caster**
@@ -129,6 +133,7 @@ Weapons:
 | Reaper Cannon | Earthlings |
 | Zap | Earthlings, Wertu |
 | Bubble Gun | Phaa |
+| Flak Cannon | Vespion |
 | Cutter | Earthlings, Wertu, Zyth |
 | Assault Laser | Earthlings, Krigia, Zyth |
 | Great Scythe | Krigia |
