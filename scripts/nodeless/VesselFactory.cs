@@ -85,6 +85,8 @@ public static class VesselFactory {
             InitWertuDominator(v);
         } else if (kind == "Zyth Hunter") {
             InitZythHunter(v);
+        } else if (kind == "Zyth Invader") {
+            InitZythInvader(v);
         } else if (kind == "Vespion Larva") {
             InitVespionLarva(v);
         } else if (kind == "Vespion Wasp") {
@@ -97,6 +99,8 @@ public static class VesselFactory {
             InitScavengerRaider(v);
         } else if (kind == "Scavenger Marauder") {
             InitScavengerMarauder(v);
+        } else if (kind == "Phaa Mantis") {
+            InitPhaaInvader(v);
         } else {
             throw new Exception($"unexpected player slot kind: {kind}");
         }
@@ -728,7 +732,7 @@ public static class VesselFactory {
         // 40% - hellfire
         // 30% - cutter
         // 20% - assault laser
-        // 10% - disk thrower
+        // 10% - needle gun
         float weaponRoll = QRandom.Float();
         if (weaponRoll < 0.4) {
             v.weapons.Add(HellfireWeapon.Design.name);
@@ -737,7 +741,7 @@ public static class VesselFactory {
         } else if (weaponRoll < 0.9) {
             v.weapons.Add(AssaultLaserWeapon.Design.name);
         } else {
-            v.weapons.Add(DiskThrowerWeapon.Design.name);
+            v.weapons.Add(NeedleGunWeapon.Design.name);
         }
 
         // 40% - ion shield
@@ -747,6 +751,88 @@ public static class VesselFactory {
             v.shieldName = IonCurtainShield.Design.name;
         } else if (shieldRoll < 0.6) {
             v.shieldName = HeatScreenShield.Design.name;
+        }
+    }
+
+    private static void InitZythInvader(Vessel v) {
+        v.designName = "Invader";
+        v.energySourceName = "Graviton Generator";
+
+        // 50% - disk thrower
+        // 50% - assault laser
+        float weaponRoll = QRandom.Float();
+        if (weaponRoll < 0.5) {
+            v.weapons.Add(DiskThrowerWeapon.Design.name);
+        } else {
+            v.weapons.Add(AssaultLaserWeapon.Design.name);
+        }
+
+        // 60% - cutter
+        // 40% - stinger
+        float weaponRoll2 = QRandom.Float();
+        if (weaponRoll2 < 0.6) {
+            v.weapons.Add(CutterWeapon.Design.name);
+        } else {
+            v.weapons.Add(StingerWeapon.Design.name);
+        }
+
+        var weaponRoll3 = QRandom.Float();
+        if (weaponRoll3 < 0.7) {
+            v.specialWeaponName = DisruptorWeapon.Design.name;
+        } else {
+            v.specialWeaponName = HarpoonWeapon.Design.name;
+        }
+
+        // 65% - reflector shield
+        // 35% - dispersion shield
+        var shieldRoll = QRandom.Float();
+        if (shieldRoll < 0.65) {
+            v.shieldName = ReflectorShield.Design.name;
+        } else {
+            v.shieldName = DispersionFieldShield.Design.name;
+        }
+    }
+
+    private static void InitPhaaInvader(Vessel v) {
+        v.designName = "Mantis";
+        v.energySourceName = "Advanced Power Generator";
+
+        float setRoll = QRandom.Float();
+
+        if (setRoll < 0.1) {
+            v.weapons.Add(NeedleGunWeapon.Design.name);
+            v.weapons.Add(NeedleGunWeapon.Design.name);
+        } else if (setRoll < 0.2) {
+            v.weapons.Add(RocketLauncherWeapon.Design.name);
+            v.weapons.Add(RocketLauncherWeapon.Design.name);
+        } else {
+            float weaponRoll = QRandom.Float();
+
+            // 60% - bubble gun
+            // 40% - needle gun
+            if (weaponRoll < 0.6) {
+                v.weapons.Add(BubbleGunWeapon.Design.name);
+            } else {
+                v.weapons.Add(NeedleGunWeapon.Design.name);
+            }
+
+            // 70% - rocket launcher
+            // 30% - hurricane
+            float weaponRoll2 = QRandom.Float();
+            if (weaponRoll2 < 0.7) {
+                v.weapons.Add(RocketLauncherWeapon.Design.name);
+            } else {
+                v.weapons.Add(HurricaneWeapon.Design.name);
+            }
+        }
+
+        // 70% - diffuser
+        // 30% - aegis
+        var shieldRoll = QRandom.Float();
+        if (shieldRoll < 0.7) {
+            v.shieldName = DiffuserShield.Design.name;
+        } else {
+            v.shieldName = AegisShield.Design.name;
         }
     }
 

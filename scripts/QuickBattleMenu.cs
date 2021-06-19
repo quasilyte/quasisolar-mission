@@ -116,6 +116,8 @@ public class QuickBattleMenu : Node2D {
             "Neutral Nomad",
             "Neutral Avenger",
             "Zyth Hunter",
+            "Zyth Invader",
+            "Phaa Mantis",
             "Earthling Scout",
             "Earthling Explorer",
             "Earthling Fighter",
