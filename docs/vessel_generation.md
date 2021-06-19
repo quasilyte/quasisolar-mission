@@ -5,6 +5,7 @@
 * Wertu
 * Zyth
 * Vespion
+* Phaa
 * Scavengers (not bound to a race)
 
 ## Technologies by fraction
@@ -94,19 +95,28 @@ Special weapons:
 
 ## Weapons
 
+### Phaa
+
+Weapons:
+
+* Needle Gun
+* Rocket Launcher
+* Hurricane
+* **Bubble Gun**
+
 ### Level 1 weapons
 
 | Weapon | Used by |
 |---|---|
 | Spread Gun | Earthlings |
 | Ion Cannon | Earthlings, Krigia |
-| Needle Gun | Earthlings, Zyth |
+| Needle Gun | Earthlings, Zyth, Phaa |
 | Harpoon | Zyth |
 | Disruptor | Earthlings, Zyth |
 | Photon Burst Cannon | Wertu |
 | Point-Defense Laser | Earthlings, Krigia, Wertu |
 | Pulse Laser | Earthlings, Krigia |
-| Rocket Launcher | Earthlings, Krigia |
+| Rocket Launcher | Earthlings, Krigia, Phaa |
 | Scythe | Krigia |
 | Hellfire | Zyth |
 | Shockwave Caster | Vespion |
@@ -118,11 +128,12 @@ Special weapons:
 |---|---|
 | Reaper Cannon | Earthlings |
 | Zap | Earthlings, Wertu |
+| Bubble Gun | Phaa |
 | Cutter | Earthlings, Wertu, Zyth |
 | Assault Laser | Earthlings, Krigia, Zyth |
 | Great Scythe | Krigia |
 | Twin Proton Burst Cannon | Wertu |
-| Hurricane | Earthlings, Krigia |
+| Hurricane | Earthlings, Krigia, Phaa |
 | Shield Breaker | Wertu |
 | Restructuring Ray | Wertu |
 | Stinger | Krigia, Zyth |
