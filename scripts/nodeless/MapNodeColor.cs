@@ -1,7 +1,9 @@
 public enum MapNodeColor {
-    Green,
-    Red,
+    Cyan,
     Blue,
-    Yellow,
+    Red,
+    Green,
+    Lime,
     Purple,
+    LightBlue,
 }

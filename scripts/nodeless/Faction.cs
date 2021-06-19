@@ -16,10 +16,10 @@ public enum Faction {
     Pirate,
 
     Human,
-
-    Scavenger,
-
-    Krigia,
     Wertu,
+    Krigia,
     Zyth,
+    Phaa,
+    Scavenger, // TODO: Draklid,
+    Vespion,
 }

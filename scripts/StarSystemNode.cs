@@ -180,7 +180,7 @@ public class StarSystemNode : Node2D {
         Func<MapNodeColor> baseColor = () => {
             var owner = sys.starBase.Get().owner;
             if (owner == Faction.Human) {
-                return MapNodeColor.Green;
+                return MapNodeColor.Cyan;
             }
             if (owner == Faction.Scavenger) {
                 return MapNodeColor.Purple;
@@ -188,7 +188,19 @@ public class StarSystemNode : Node2D {
             if (owner == Faction.Krigia) {
                 return MapNodeColor.Red;
             }
-            return MapNodeColor.Yellow;
+            if (owner == Faction.Wertu) {
+                return MapNodeColor.Blue;
+            }
+            if (owner == Faction.Vespion) {
+                return MapNodeColor.LightBlue;
+            }
+            if (owner == Faction.Zyth) {
+                return MapNodeColor.Green;
+            }
+            if (owner == Faction.Phaa) {
+                return MapNodeColor.Lime;
+            }
+            throw new Exception("unexpected faction: " + owner.ToString());
         };
 
         _starBase.SetColor(baseColor());

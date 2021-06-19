@@ -220,6 +220,7 @@ public class RpgGameState {
     public int wertuReputation = 10;
     public int zythReputation = -10;
     public int vespionReputation = 0;
+    public int phaaReputation = 0;
 
     public int drones = 0;
     public int dronePrice;

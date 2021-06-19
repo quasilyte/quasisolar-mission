@@ -5,7 +5,7 @@ public abstract class SpaceUnitNode : Node2D {
 
     protected RpgGameState _gameState;
 
-    protected MapNodeColor _spriteColor = MapNodeColor.Yellow;
+    protected MapNodeColor _spriteColor;
 
     public float speed;
 
@@ -41,14 +41,10 @@ public abstract class SpaceUnitNode : Node2D {
 
     public void UpdateColor() {
         if (unit.owner == Faction.Human) {
-            GetNode<Sprite>("Sprite").Frame = (int)MapNodeColor.Green;
+            GetNode<Sprite>("Sprite").Frame = (int)MapNodeColor.Cyan;
             return;
         }
-        if (_gameState.technologiesResearched.Contains("Fleet Identifier")) {
-            GetNode<Sprite>("Sprite").Frame = (int)_spriteColor;
-        } else {
-            GetNode<Sprite>("Sprite").Frame = (int)MapNodeColor.Yellow;
-        }
+        GetNode<Sprite>("Sprite").Frame = (int)_spriteColor;
     }
 
     public override void _Ready() {

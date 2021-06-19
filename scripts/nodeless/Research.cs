@@ -407,13 +407,6 @@ public class Research {
         },
 
         new Research{
-            name = "Fleet Identifier",
-            category = Category.Upgrade,
-            researchTime = 40,
-            effect = "color-coding for space units on the map",
-        },
-
-        new Research{
             name = "Jump Tracer Mk2",
             category = Category.Upgrade,
             researchTime = 50,
