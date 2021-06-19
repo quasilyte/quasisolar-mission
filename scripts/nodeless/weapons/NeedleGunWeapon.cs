@@ -27,7 +27,7 @@ public class NeedleGunWeapon : IWeapon {
     }
 
     public bool CanFire(VesselState state, Vector2 cursor) {
-        return _cooldown == 0;
+        return _cooldown == 0 && state.CanConsumeEnergy(Design.energyCost);
     }
 
     public void Process(VesselState state, float delta) {
