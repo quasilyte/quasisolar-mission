@@ -29,6 +29,10 @@ public static class QRandom {
         return rng.Randf();
     }
 
+    public static float Angle() {
+        return rng.RandfRange(0, 2 * Mathf.Pi);
+    }
+
     public static float FloatRange(float from, float to) {
         return rng.RandfRange(from, to);
     }

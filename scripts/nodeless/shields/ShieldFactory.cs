@@ -28,6 +28,12 @@ public static class ShieldFactory {
         if (shield == PhaserShield.Design) {
             return new PhaserShield(p);
         }
+        if (shield == DiffuserShield.Design) {
+            return new DiffuserShield(p);
+        }
+        if (shield == AegisShield.Design) {
+            return new AegisShield(p);
+        }
 
         throw new Exception("invalid ShieldDesign argument");
     }

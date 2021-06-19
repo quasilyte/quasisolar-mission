@@ -76,6 +76,8 @@ public class ShieldDesign : IItem {
             LatticeShield.Design,
 
             PhaserShield.Design,
+            DiffuserShield.Design,
+            AegisShield.Design,
         };
         Array.Sort(list, (x, y) => x.sellingPrice.CompareTo(y.sellingPrice));
         shieldByName = new Dictionary<string, ShieldDesign>();

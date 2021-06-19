@@ -221,7 +221,21 @@ public class Research {
         },
 
         new Research{
+            name = "Diffuser",
+            category = Category.NewShield,
+            researchTime = 100,
+            dependencies = {"Level 3 Shields"},
+        },
+
+        new Research{
             name = "Phaser",
+            category = Category.NewShield,
+            researchTime = 110,
+            dependencies = {"Level 3 Shields"},
+        },
+
+        new Research{
+            name = "Aegis",
             category = Category.NewShield,
             researchTime = 110,
             dependencies = {"Level 3 Shields"},
