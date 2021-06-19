@@ -375,6 +375,11 @@ public class NewGameScene : Node2D {
         new VesselTemplate{design = VesselDesign.Find("Dominator"), roll = 0.85f},
     };
 
+    private VesselTemplate[] _zythTemplates = new VesselTemplate[]{
+        new VesselTemplate{design = VesselDesign.Find("Hunter"), roll = 0},
+        new VesselTemplate{design = VesselDesign.Find("Invader"), roll = 0.65f},
+    };
+
     private void InitFleet(RpgGameState.Config config, StarBase starBase, VesselTemplate[] templates, float budget) {
         var fleet = new List<Vessel.Ref> { };
         var cheapest = (float)templates[0].design.sellingPrice / 1000;
@@ -552,7 +557,7 @@ public class NewGameScene : Node2D {
             numKrigiaBases -= 2;
         }
         var numWertuBases = QRandom.IntRange(3, 4);
-        var numZythBases = QRandom.IntRange(2, 3);
+        var numZythBases = 2;
         GD.Print($"deployed {numKrigiaBases} Krigia bases");
         GD.Print($"deployed {numWertuBases} Wertu bases");
         GD.Print($"deployed {numZythBases} Zyth bases");
@@ -583,6 +588,7 @@ public class NewGameScene : Node2D {
         // Second step: fill everything else.
         DeployBases(config, Faction.Krigia, numKrigiaBases, sectors, _krigiaTemplates);
         DeployBases(config, Faction.Wertu, numWertuBases, sectors, _wertuTemplates);
+        DeployBases(config, Faction.Zyth, numZythBases, sectors, _zythTemplates);
 
         config.startingSystemID = startingSystem.id;
 
