@@ -128,6 +128,7 @@ public class WeaponDesign : IItem {
             CrystalCannonWeapon.Design,
             StormbringerWeapon.Design,
             LancerWeapon.Design,
+            BubbleGunWeapon.Design,
         };
         Array.Sort(list, (x, y) => x.sellingPrice.CompareTo(y.sellingPrice));
         weaponByName = new Dictionary<string, WeaponDesign>();

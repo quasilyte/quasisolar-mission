@@ -30,6 +30,7 @@ class GenericBot : AbstractBot {
                 w is PhotonBeamWeapon ||
                 w is DiskThrowerWeapon ||
                 w is SwarmSpawnerWeapon ||
+                w is BubbleGunWeapon ||
                 w is ReaperCannonWeapon;
         };
 
@@ -474,12 +475,51 @@ class GenericBot : AbstractBot {
         return Vector2.Zero;
     }
 
+    private void MaybeUseBubbleGun(int weaponIndex, IWeapon w) {
+        var design = w.GetDesign();
+        if (design.energyCost != 0 && _energyUsed) {
+            return;
+        }
+
+        var cursor = TargetPosition();
+        if (!w.CanFire(_vessel.State, cursor)) {
+            return;
+        }
+
+        var targetDistance = TargetDistance();
+
+        if (targetDistance >= design.botHintRange) {
+            return;
+        }
+
+        bool shouldFire = false;
+        if (targetDistance <= 96) {
+            shouldFire = true;
+        } else {
+            var dstRotation = cursor.AngleToPoint(_vessel.Position);
+            var calculatedAngle = 1.0f + Mathf.Pi/2;
+            if (Math.Abs(QMath.RotationDiff(dstRotation, _vessel.Rotation)) >= calculatedAngle) {
+                shouldFire = true;
+            }
+        }
+
+        if (shouldFire) {
+            Fire(weaponIndex, cursor);
+        }
+    }
+
     private void MaybeUseWeapon(int weaponIndex) {
         if (_attackCooldown != 0) {
             return;
         }
 
         var w = _vessel.weapons[weaponIndex];
+
+        if (w.GetDesign() == BubbleGunWeapon.Design) {
+            MaybeUseBubbleGun(weaponIndex, w);
+            return;
+        }
+
         var targetCursor = CalculateFireTarget(w);
         if (targetCursor != Vector2.Zero) {
             Fire(weaponIndex, targetCursor);

@@ -87,6 +87,9 @@ public static class WeaponFactory {
         if (w == LancerWeapon.Design) {
             return new LancerWeapon(p);
         }
+        if (w == BubbleGunWeapon.Design) {
+            return new BubbleGunWeapon(p);
+        }
 
         if (w == WarpDeviceWeapon.Design) {
             return new WarpDeviceWeapon(p);
