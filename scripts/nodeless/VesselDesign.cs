@@ -654,6 +654,63 @@ public class VesselDesign: IItem {
             size = Size.Normal,
         },
 
+        new VesselDesign{
+            level = 7,
+            name = "Invader",
+            affiliation = "Zyth",
+            description = "TODO",
+            sellingPrice = 27000,
+            debris = 240,
+            productionTime = 140,
+
+            maxHp = 390,
+            maxShieldLevel = 3,
+
+            maxSpeed = 100,
+            acceleration = 5.0f,
+            rotationSpeed = 2f,
+
+            sentinelSlot = true,
+            specialSlot = true,
+            weaponSlots = 2,
+            artifactSlots = 4,
+
+            cargoSpace = 160,
+            size = Size.Large,
+        },
+
+        // Phaa designs.
+        // - No artifact slots.
+        // - Small cargo capacity.
+        // + Smaller hulls.
+        // + Good shields.
+
+        new VesselDesign{
+            level = 3,
+            name = "Mantis",
+            affiliation = "Phaa",
+            description = "TODO",
+            sellingPrice = 4900,
+            debris = 55,
+            productionTime = 40,
+            availability = ProductionAvailability.Never,
+
+            maxHp = 160,
+            maxShieldLevel = 3,
+
+            maxSpeed = 90,
+            acceleration = 2.2f,
+            rotationSpeed = 2,
+
+            sentinelSlot = false,
+            specialSlot = false,
+            weaponSlots = 2,
+            artifactSlots = 0,
+
+            cargoSpace = 40,
+            size = Size.Normal,
+        },
+
         // Vespion designs.
         // - Low hp.
         // - Low firepower.
