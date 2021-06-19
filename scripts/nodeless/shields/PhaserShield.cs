@@ -14,7 +14,7 @@ public class PhaserShield : AbstractShield {
         cooldown = 8,
         energyCost = 25,
 
-        sellingPrice = 9500,
+        sellingPrice = 13000,
         researchRequired = true,
     };
     public override ShieldDesign GetDesign() { return Design; }
