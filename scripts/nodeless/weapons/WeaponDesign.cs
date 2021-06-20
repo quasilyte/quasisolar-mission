@@ -148,6 +148,7 @@ public class WeaponDesign : IItem {
             DisruptorWeapon.Design,
             ShockwaveCasterWeapon.Design,
             SwarmSpawnerWeapon.Design,
+            HyperCutterWeapon.Design,
         };
         Array.Sort(specialList, (x, y) => x.sellingPrice.CompareTo(y.sellingPrice));
         foreach (var w in specialList) {

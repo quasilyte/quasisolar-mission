@@ -1,20 +1,21 @@
 using Godot;
 
-public class CutterWeapon : IWeapon {
+public class HyperCutterWeapon : IWeapon {
     public static WeaponDesign Design = new WeaponDesign {
-        name = "Cutter",
+        name = "Hyper Cutter",
         level = 2,
         description = "TODO",
         targeting = "front directions (180°), projectiles",
-        sellingPrice = 3900,
-        technologiesNeeded = {"Cutter"},
-        cooldown = 1,
-        energyCost = 13,
+        sellingPrice = 4500,
+        technologiesNeeded = {"Hyper Cutter"},
+        cooldown = 1.25f,
+        energyCost = 18,
         range = 330,
-        damage = 15,
+        damage = 19,
         damageKind = DamageKind.Energy,
         projectileSpeed = 280,
-        botHintSnipe = 0.2f,
+        botHintSnipe = 0.3f,
+        isSpecial = true,
     };
     public WeaponDesign GetDesign() { return Design; }
     public void Ready() {}
@@ -22,7 +23,7 @@ public class CutterWeapon : IWeapon {
     private float _cooldown;
     private Pilot _owner;
 
-    public CutterWeapon(Pilot owner) {
+    public HyperCutterWeapon(Pilot owner) {
         _owner = owner;
     }
 

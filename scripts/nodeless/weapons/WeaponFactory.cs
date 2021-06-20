@@ -109,6 +109,9 @@ public static class WeaponFactory {
         if (w == SwarmSpawnerWeapon.Design) {
             return new SwarmSpawnerWeapon(p);
         }
+        if (w == HyperCutterWeapon.Design) {
+            return new HyperCutterWeapon(p);
+        }
 
         if (w == null) {
             throw new Exception("null WeaponDesign argument");    

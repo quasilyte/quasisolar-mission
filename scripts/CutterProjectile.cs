@@ -9,18 +9,21 @@ public class CutterProjectile : Node2D, IProjectile {
 
     private static AudioStream _audioStream;
 
+    private WeaponDesign _design;
+
     private Pilot _firedBy;
 
-    public WeaponDesign GetWeaponDesign() { return CutterWeapon.Design; }
+    public WeaponDesign GetWeaponDesign() { return _design; }
     public Pilot FiredBy() { return _firedBy; }
 
     private static PackedScene _scene = null;
-    public static CutterProjectile New(Pilot owner) {
+    public static CutterProjectile New(Pilot owner, WeaponDesign design) {
         if (_scene == null) {
             _scene = GD.Load<PackedScene>("res://scenes/CutterProjectile.tscn");
         }
         var o = (CutterProjectile)_scene.Instance();
         o._firedBy = owner;
+        o._design = design;
         return o;
     }
 
@@ -33,7 +36,12 @@ public class CutterProjectile : Node2D, IProjectile {
         _sprite = GetNode<Sprite>("Sprite");
         _mask = GetNode<CollisionShape2D>("Area2D/CollisionShape2D");
 
-        GetParent().AddChild(SoundEffectNode.New(_audioStream, -5));
+        if (_design == HyperCutterWeapon.Design) {
+            _sprite.Texture = GD.Load<Texture>("res://images/ammo/Hyper_Cutter.png");
+            GetNode<Area2D>("Area2D").Connect("area_entered", this, nameof(OnCollision));
+        }
+
+        GetParent().AddChild(SoundEffectNode.New(_audioStream, -7));
     }
 
     public override void _Process(float delta) {
@@ -50,11 +58,33 @@ public class CutterProjectile : Node2D, IProjectile {
             _sprite.Modulate = new Color(m.r, m.g, m.b, m.a - 0.04f);
         }
 
-        float traveled = CutterWeapon.Design.projectileSpeed * delta;
+        float traveled = _design.projectileSpeed * delta;
         Position += Transform.x.Normalized() * traveled;
         _hp -= traveled;
     }
 
     public void OnImpact() {
+    }
+
+    private void OnCollision(Area2D other) {
+        if (other.GetParent() is IProjectile projectile) {
+            var design = projectile.GetWeaponDesign();
+            if (design.ignoresAsteroids) {
+                return;
+            }
+            if (CanDestroyProjectile(design)) {
+                projectile.OnImpact();
+                return;
+            }
+        }
+    }
+
+    private bool CanDestroyProjectile(WeaponDesign w) {
+        return w == PulseLaserWeapon.Design ||
+            w == IonCannonWeapon.Design ||
+            w == AssaultLaserWeapon.Design ||
+            w == StingerWeapon.Design ||
+            w == HarpoonWeapon.Design ||
+            w == DisruptorWeapon.Design;
     }
 }
