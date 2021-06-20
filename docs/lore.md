@@ -95,7 +95,7 @@ The flagship would contain a prototype, one-of-the-kind supercomputer
 that would control these automated vessels. It was designed to have a perfect human
 behavior replica, so it can represent the human race far away from our reach.
 
-With this strategy, humans gained an ability to visit other star systems Wertu supervision.
+With this strategy, humans gained an ability to visit other star systems without Wertu supervision.
 
 ![image](https://user-images.githubusercontent.com/6286655/120939944-3a403000-c723-11eb-938e-e47846ee2262.png)
 
