@@ -121,7 +121,7 @@ public class VesselDesign: IItem {
             description = "A highly maneuverable budget design",
             sellingPrice = 1750,
             debris = 30,
-            productionTime = 10,
+            productionTime = 20,
             availability = ProductionAvailability.Always,
 
             maxHp = 110,
@@ -147,7 +147,7 @@ public class VesselDesign: IItem {
             description = "Simple, yet quite effective",
             sellingPrice = 3900,
             debris = 50,
-            productionTime = 20,
+            productionTime = 35,
             availability = ProductionAvailability.Always,
 
             maxHp = 140,
@@ -173,7 +173,7 @@ public class VesselDesign: IItem {
             description = "Trade battle efficiency for a big cargo",
             sellingPrice = 4500,
             debris = 100,
-            productionTime = 35,
+            productionTime = 75,
             availability = ProductionAvailability.Always,
 
             maxHp = 260,
@@ -199,7 +199,7 @@ public class VesselDesign: IItem {
             description = "Main Earthling military vessel design",
             sellingPrice = 5000,
             debris = 65,
-            productionTime = 30,
+            productionTime = 65,
             availability = ProductionAvailability.Always,
 
             maxHp = 175,
@@ -225,7 +225,7 @@ public class VesselDesign: IItem {
             description = "Elite Earthling military vessel design",
             sellingPrice = 10500,
             debris = 75,
-            productionTime = 50,
+            productionTime = 100,
             availability = ProductionAvailability.ResearchRequired,
 
             maxHp = 200,
@@ -251,7 +251,7 @@ public class VesselDesign: IItem {
             description = "Alien-design inspired battle ship",
             sellingPrice = 14500,
             debris = 100,
-            productionTime = 85,
+            productionTime = 120,
             availability = ProductionAvailability.ResearchRequired,
 
             maxHp = 270,
@@ -277,7 +277,7 @@ public class VesselDesign: IItem {
             description = "Transforms into a star base",
             sellingPrice = 15000,
             debris = 150,
-            productionTime = 60,
+            productionTime = 100,
             availability = ProductionAvailability.ResearchRequired,
 
             maxHp = 320,
@@ -305,7 +305,7 @@ public class VesselDesign: IItem {
             description = "TODO",
             sellingPrice = 3200,
             debris = 45,
-            productionTime = 25,
+            productionTime = 30,
             
             maxHp = 120,
             maxShieldLevel = 1,
@@ -330,7 +330,7 @@ public class VesselDesign: IItem {
             description = "TODO",
             sellingPrice = 6000,
             debris = 65,
-            productionTime = 35,
+            productionTime = 45,
 
             maxHp = 145,
             maxShieldLevel = 1,
@@ -357,7 +357,7 @@ public class VesselDesign: IItem {
             description = "TODO",
             sellingPrice = 2000,
             debris = 45,
-            productionTime = 15,
+            productionTime = 20,
 
             maxHp = 95,
             maxShieldLevel = 1,
@@ -382,7 +382,7 @@ public class VesselDesign: IItem {
             description = "TODO",
             sellingPrice = 3500,
             debris = 65,
-            productionTime = 35,
+            productionTime = 70,
 
             maxHp = 145,
             maxShieldLevel = 1,
@@ -407,7 +407,7 @@ public class VesselDesign: IItem {
             description = "TODO",
             sellingPrice = 14500,
             debris = 110,
-            productionTime = 70,
+            productionTime = 115,
 
             maxHp = 195,
             maxShieldLevel = 2,
@@ -432,7 +432,7 @@ public class VesselDesign: IItem {
             description = "TODO",
             sellingPrice = 18500,
             debris = 190,
-            productionTime = 100,
+            productionTime = 170,
 
             maxHp = 420,
             maxShieldLevel = 3,
@@ -457,7 +457,7 @@ public class VesselDesign: IItem {
             description = "TODO",
             sellingPrice = 23700,
             debris = 220,
-            productionTime = 110,
+            productionTime = 180,
 
             maxHp = 300,
             maxShieldLevel = 3,
@@ -482,7 +482,7 @@ public class VesselDesign: IItem {
             description = "TODO",
             sellingPrice = 50000,
             debris = 500,
-            productionTime = 300,
+            productionTime = 900,
 
             maxHp = 850,
             maxShieldLevel = 3,
@@ -509,7 +509,7 @@ public class VesselDesign: IItem {
             description = "TODO",
             sellingPrice = 2000,
             debris = 50,
-            productionTime = 20,
+            productionTime = 30,
 
             maxHp = 135,
             maxShieldLevel = 1,
@@ -534,7 +534,7 @@ public class VesselDesign: IItem {
             description = "TODO",
             sellingPrice = 6600,
             debris = 130,
-            productionTime = 60,
+            productionTime = 70,
 
             maxHp = 280,
             maxShieldLevel = 2,
@@ -559,7 +559,7 @@ public class VesselDesign: IItem {
             description = "TODO",
             sellingPrice = 15600,
             debris = 145,
-            productionTime = 85,
+            productionTime = 130,
 
             maxHp = 250,
             maxShieldLevel = 2,
@@ -584,7 +584,7 @@ public class VesselDesign: IItem {
             description = "TODO",
             sellingPrice = 16000,
             debris = 165,
-            productionTime = 90,
+            productionTime = 140,
 
             maxHp = 285,
             maxShieldLevel = 1,
@@ -609,7 +609,7 @@ public class VesselDesign: IItem {
             description = "TODO",
             sellingPrice = 23000,
             debris = 265,
-            productionTime = 130,
+            productionTime = 190,
 
             maxHp = 550,
             maxShieldLevel = 3,
@@ -636,7 +636,7 @@ public class VesselDesign: IItem {
             description = "TODO",
             sellingPrice = 8900,
             debris = 125,
-            productionTime = 55,
+            productionTime = 105,
 
             maxHp = 190,
             maxShieldLevel = 1,
@@ -661,7 +661,7 @@ public class VesselDesign: IItem {
             description = "TODO",
             sellingPrice = 27000,
             debris = 240,
-            productionTime = 140,
+            productionTime = 160,
 
             maxHp = 390,
             maxShieldLevel = 3,
@@ -692,7 +692,7 @@ public class VesselDesign: IItem {
             description = "TODO",
             sellingPrice = 4900,
             debris = 55,
-            productionTime = 40,
+            productionTime = 85,
             availability = ProductionAvailability.Never,
 
             maxHp = 160,
@@ -726,7 +726,7 @@ public class VesselDesign: IItem {
             description = "TODO",
             sellingPrice = 1000,
             debris = 20,
-            productionTime = 5,
+            productionTime = 15,
 
             maxHp = 75,
             maxShieldLevel = 1,
@@ -751,7 +751,7 @@ public class VesselDesign: IItem {
             description = "TODO",
             sellingPrice = 2400,
             debris = 35,
-            productionTime = 10,
+            productionTime = 30,
 
             maxHp = 105,
             maxShieldLevel = 1,
@@ -776,7 +776,7 @@ public class VesselDesign: IItem {
             description = "TODO",
             sellingPrice = 7000,
             debris = 60,
-            productionTime = 30,
+            productionTime = 50,
 
             maxHp = 145,
             maxShieldLevel = 2,
@@ -801,7 +801,7 @@ public class VesselDesign: IItem {
             description = "TODO",
             sellingPrice = 16000,
             debris = 105,
-            productionTime = 90,
+            productionTime = 120,
 
             maxHp = 290,
             maxShieldLevel = 3,
@@ -828,7 +828,7 @@ public class VesselDesign: IItem {
             description = "",
             sellingPrice = 3500,
             debris = 50,
-            productionTime = 20,
+            productionTime = 45,
 
             maxHp = 100,
             maxShieldLevel = 2,
@@ -853,7 +853,7 @@ public class VesselDesign: IItem {
             description = "TODO",
             sellingPrice = 12700,
             debris = 160,
-            productionTime = 65,
+            productionTime = 85,
             availability = ProductionAvailability.ResearchRequired,
 
             maxHp = 180,
@@ -879,7 +879,7 @@ public class VesselDesign: IItem {
             description = "TODO",
             sellingPrice = 16500,
             debris = 200,
-            productionTime = 75,
+            productionTime = 100,
             availability = ProductionAvailability.ResearchRequired,
 
             maxHp = 235,
@@ -905,7 +905,7 @@ public class VesselDesign: IItem {
             description = "TODO",
             sellingPrice = 42000,
             debris = 420,
-            productionTime = 185,
+            productionTime = 210,
 
             maxHp = 520,
             maxShieldLevel = 3,
@@ -932,7 +932,7 @@ public class VesselDesign: IItem {
             description = "TODO",
             sellingPrice = 20000,
             debris = 270,
-            productionTime = 135,
+            productionTime = 170,
 
             maxHp = 190,
             maxShieldLevel = 3,
