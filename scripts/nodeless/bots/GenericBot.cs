@@ -31,6 +31,7 @@ class GenericBot : AbstractBot {
                 w is DiskThrowerWeapon ||
                 w is SwarmSpawnerWeapon ||
                 w is BubbleGunWeapon ||
+                w is FlakCannonWeapon ||
                 w is ReaperCannonWeapon;
         };
 
