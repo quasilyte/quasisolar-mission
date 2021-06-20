@@ -119,7 +119,7 @@ Weapons:
 | Disruptor | Earthlings, Zyth |
 | Photon Burst Cannon | Wertu |
 | Point-Defense Laser | Earthlings, Krigia, Wertu |
-| Pulse Laser | Earthlings, Krigia |
+| Pulse Laser | Earthlings, Krigia, Zyth |
 | Rocket Launcher | Earthlings, Krigia, Phaa |
 | Scythe | Krigia |
 | Hellfire | Zyth |
@@ -134,7 +134,8 @@ Weapons:
 | Zap | Earthlings, Wertu |
 | Bubble Gun | Phaa |
 | Flak Cannon | Vespion |
-| Cutter | Earthlings, Wertu, Zyth |
+| Cutter | Earthlings, Wertu, Vespion |
+| Hyper Cutter | Vespion |
 | Assault Laser | Earthlings, Krigia, Zyth |
 | Great Scythe | Krigia |
 | Twin Proton Burst Cannon | Wertu |
