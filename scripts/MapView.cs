@@ -720,6 +720,9 @@ public class MapView : Node2D {
         var starBaseNode = NewStarBaseNode(_currentSystem.sys);
         AddChild(starBaseNode);
         _currentSystem.AddStarBase(starBaseNode);
+        starBaseNode.Visible = true;
+        _currentSystem.UpdateInfo();
+        _currentSystem.RenderKnownInfo();
         GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/construction_completed.wav"));
 
         UpdateUI();
@@ -1002,10 +1005,27 @@ public class MapView : Node2D {
         unitNode.Connect("Removed", this, nameof(OnSpaceUnitRemoved), args);
         unitNode.Connect("DroneDestroyed", this, nameof(OnDroneDestroyed), args);
         unitNode.Connect("SearchForStarBase", this, nameof(OnSearchForStarBase), args);
+        unitNode.Connect("MovePhaaStarBase", this, nameof(OnMovePhaaStarBase), args);
 
         AddChild(unitNode);
         // unitNode.GlobalPosition = unitNode.unit.pos;
         _spaceUnits.Add(unitNode);
+    }
+
+    private void OnMovePhaaStarBase(SpaceUnitNode unitNode) {
+        var oldSystem = RpgGameState.phaaBase.system.Get();
+
+        var sys = RpgGameState.starSystemByPos[unitNode.unit.pos];
+        sys.starBase = RpgGameState.phaaBase.GetRef();
+        var systemNode = _starSystemNodeByStarSystem[sys];
+
+        var oldSystemNode = _starSystemNodeByStarSystem[oldSystem];
+        oldSystemNode.DetachStarBase();
+
+        RpgGameState.phaaBase.system = sys.GetRef();
+        var starBaseNode = NewStarBaseNode(sys);
+        AddChild(starBaseNode);
+        systemNode.AddStarBase(starBaseNode);
     }
 
     private void OnSpaceUnitCreated(SpaceUnitNode unitNode) {
@@ -1024,6 +1044,8 @@ public class MapView : Node2D {
         } else if (starBase.owner == Faction.Krigia) {
             baseNode = KrigiaStarBaseNode.New(starBase);
             baseNode.Connect("SpaceUnitCreated", this, nameof(OnSpaceUnitCreated));
+        } else if (starBase.owner == Faction.Phaa) {
+            baseNode = PhaaStarBaseNode.New(starBase);
         } else {
             baseNode = StarBaseNode.New(starBase);
         }
@@ -1085,6 +1107,8 @@ public class MapView : Node2D {
             SpaceUnitNode node = null;
             if (u.owner == Faction.Scavenger) {
                 node = ScavengerSpaceUnitNode.New(u); 
+            } else if (u.owner == Faction.Phaa) {
+                node = PhaaSpaceUnitNode.New(u);
             } else if (u.owner == Faction.Krigia) {
                 node = KrigiaSpaceUnitNode.New(u);
             } else if (u.owner == Faction.Human) {
@@ -1294,6 +1318,7 @@ public class MapView : Node2D {
         }
 
         ProcessKrigiaActions();
+        ProcessPhaaActions();
 
         if (_gameState.day == _gameState.missionDeadline) {
             SpawnKrigiaFinalAttack(new Vector2(512, 224), RpgGameState.StartingSystem().pos);
@@ -1797,6 +1822,70 @@ public class MapView : Node2D {
         _fleetAttackPopup.GetNode<Label>("Attackers").Text = $"Attackers: {numDefenders} {starBase.owner.ToString()} ship" + pluralSuffix;
         _fleetAttackPopup.GetNode<Button>("RetreatButton").Disabled = _gameState.fuel < RetreatFuelCost();
         _fleetAttackPopup.PopupCentered();
+    }
+
+    private void ProcessPhaaActions() {
+        _gameState.phaaPlans.transitionDelay = QMath.ClampMin(_gameState.phaaPlans.transitionDelay - 1, 0);
+
+        if (_gameState.phaaPlans.transitionDelay != 0) {
+            return;
+        }
+
+        if (RpgGameState.phaaBase == null) {
+            return;
+        }
+
+        var candidateSystems = new List<StarSystem>();
+        var currentSystem = RpgGameState.phaaBase.system.Get();
+        foreach (var sys in _gameState.starSystems.objects.Values) {
+            if (sys.starBase.id != 0) {
+                continue;
+            }
+            if (sys.color == StarColor.Purple) {
+                continue;
+            }
+            if (currentSystem.pos.DistanceTo(sys.pos) < 500) {
+                candidateSystems.Add(sys);
+            }
+        }
+
+        if (candidateSystems.Count == 0) {
+            _gameState.phaaPlans.transitionDelay = QRandom.IntRange(10, 100);
+            return;
+        }
+
+        var targetSystem = QRandom.Element(candidateSystems);
+
+        var alliedBase = currentSystem.starBase.Get();
+        var arkGroup = new List<Vessel.Ref>();
+        var groupSize = 4;
+        var keptInGarrison = alliedBase.garrison.FindAll(v => {
+            if (arkGroup.Count == groupSize) {
+                return true;
+            }
+            arkGroup.Add(v);
+            return false;
+        });
+
+        if (arkGroup.Count < groupSize) {
+            return;
+        }
+
+        alliedBase.garrison = keptInGarrison;
+
+        var spaceUnit = _gameState.spaceUnits.New();
+        spaceUnit.owner = Faction.Phaa;
+        spaceUnit.pos = alliedBase.system.Get().pos;
+        spaceUnit.waypoint = targetSystem.pos;
+        spaceUnit.botProgram = SpaceUnit.Program.PhaaArk;
+        spaceUnit.botOrigin = alliedBase.GetRef();
+        spaceUnit.fleet = arkGroup;
+
+        alliedBase.units.Add(spaceUnit.GetRef());
+
+        var unitNode = PhaaSpaceUnitNode.New(spaceUnit);
+        AddSpaceUnit(unitNode);
+        _gameState.phaaPlans.transitionDelay = QRandom.IntRange(150, 250);
     }
 
     private void KrigiaBaseRequestReinforcements(StarBase starBase) {

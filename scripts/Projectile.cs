@@ -153,7 +153,6 @@ public class Projectile : Node2D, IProjectile {
         if (_shockwaveCasterAudioStream == null) {
             _shockwaveCasterAudioStream = GD.Load<AudioStream>("res://audio/weapon/Shockwave_Caster.wav");
         }
-        _volumeAdjust = -3;
         _texture = _shockwaveCasterTexture;
         _audioStream = _shockwaveCasterAudioStream;
     }

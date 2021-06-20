@@ -360,6 +360,10 @@ public class NewGameScene : Node2D {
         new VesselTemplate{design = VesselDesign.Find("Marauder"), roll = 0.65f},
     };
 
+    private VesselTemplate[] _phaaTemplates = new VesselTemplate[]{
+        new VesselTemplate{design = VesselDesign.Find("Mantis"), roll = 0},
+    };
+
     private VesselTemplate[] _krigiaTemplates = new VesselTemplate[]{
         new VesselTemplate{design = VesselDesign.Find("Talons"), roll = 0},
         new VesselTemplate{design = VesselDesign.Find("Claws"), roll = 0.3f},
@@ -412,6 +416,10 @@ public class NewGameScene : Node2D {
         starBase.garrison = fleet;
 
         GD.Print("fleet = " + fleet.Count);
+    }
+
+    private void InitPhaaFleet(RpgGameState.Config config, StarBase starBase, float budget) {
+        InitFleet(config, starBase, _phaaTemplates, budget);
     }
 
     private void InitKrigiaFleet(RpgGameState.Config config, StarBase starBase, float budget) {
@@ -569,6 +577,12 @@ public class NewGameScene : Node2D {
             BindStarBase(starBase, sector.systems[1]);
             InitKrigiaFleet(config, starBase, 25);
             numKrigiaBases--;
+        }
+        {
+            var sector = sectors[startingSector];
+            var starBase = NewStarBase(config, Faction.Phaa, 3);
+            BindStarBase(starBase, sector.systems[2]);
+            InitPhaaFleet(config, starBase, 30);
         }
         {
             var secondSector = startingRow == 0 ? numMapCols : 0;

@@ -12,6 +12,7 @@ public class RpgGameState {
     public static Dictionary<Vector2, StarSystem> starSystemByPos;
     public static HashSet<ResourcePlanet> planetsWithMines;
     public static HashSet<StarBase> humanBases;
+    public static StarBase phaaBase;
 
     public static int enemyBaseNumAttackers = 0;
     public static SpaceUnit arenaUnit1;
@@ -88,6 +89,10 @@ public class RpgGameState {
         public int taskForceDelay = 0;
     }
 
+    public class PhaaPlans {
+        public int transitionDelay = 5;
+    }
+
     public RpgGameState() {}
 
     public void InitStaticState(bool newGame) {
@@ -109,10 +114,16 @@ public class RpgGameState {
             if (sys.starBase.id == 0) {
                 continue;
             }
-            if (starBases.Get(sys.starBase.id).owner != Faction.Human) {
+            
+            var starBase = starBases.Get(sys.starBase.id);
+            if (starBase.owner == Faction.Human) {
+                humanBases.Add(starBases.Get(sys.starBase.id));
                 continue;
             }
-            humanBases.Add(starBases.Get(sys.starBase.id));
+            if (starBase.owner == Faction.Phaa) {
+                phaaBase = starBases.Get(sys.starBase.id);
+                continue;
+            }
         }
 
         planetsWithMines = new HashSet<ResourcePlanet>();
@@ -215,6 +226,7 @@ public class RpgGameState {
     }
 
     public KrigiaPlans krigiaPlans = new KrigiaPlans();
+    public PhaaPlans phaaPlans = new PhaaPlans();
 
     public int krigiaReputation = -25;
     public int wertuReputation = 10;

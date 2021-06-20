@@ -126,6 +126,7 @@ public class QuickBattleMenu : Node2D {
             "Earthling Gladiator",
             "Vespion Larva",
             "Vespion Wasp",
+            "Vespion Hornet",
             "Scavenger Raider",
             "Scavenger Marauder",
             "Krigia Talons",

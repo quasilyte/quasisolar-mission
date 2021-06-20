@@ -25,10 +25,7 @@ public class StarSystemNode : Node2D {
 
     public void AddStarBase(StarBaseNode starBase) {
         _starBase = starBase;
-        _starBase.Visible = true;
         SetStarBaseColor();
-        UpdateInfo();
-        RenderKnownInfo();
     }
 
     public override void _Ready() {
@@ -61,11 +58,15 @@ public class StarSystemNode : Node2D {
         }
     }
 
-    public void DestroyStarBase() {
+    public void DetachStarBase() {
         _starBase.QueueFree();
         _starBase = null;
-        sys.starBase.Get().deleted = true;
         sys.starBase.id = 0;
+    }
+
+    public void DestroyStarBase(bool explosionEffect = true) {
+        sys.starBase.Get().deleted = true;
+        DetachStarBase();
 
         var explosion = Explosion.New();
         explosion.Position = Position;

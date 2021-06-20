@@ -6,6 +6,7 @@ public class Research {
         Krigia,
         Wertu,
         Zyth,
+        Phaa,
     }
 
     public enum Category {
@@ -503,6 +504,22 @@ public class Research {
             category = Category.NewWeapon,
             researchTime = 75,
             dependencies = {"Wertu Weapons III"},
+        },
+
+        // Phaa tech tree.
+
+        new Research{
+            name = "Phaa Weapons",
+            material = Material.Phaa,
+            researchTime = 100,
+        },
+
+        new Research{
+            name = "Bubble Gun",
+            material = Material.Phaa,
+            category = Category.NewWeapon,
+            researchTime = 85,
+            dependencies = {"Phaa Weapons"},
         },
 
         // Krigia tech tree.

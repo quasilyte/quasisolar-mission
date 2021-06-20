@@ -14,6 +14,7 @@ public class SpaceUnit: AbstractPoolValue {
         KrigiaTaskForce,
         KrigiaReinforcements,
         KrigiaFinalAttack,
+        PhaaArk,
     }
 
     public const int maxFleetSize = 4;

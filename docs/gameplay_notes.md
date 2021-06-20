@@ -413,6 +413,31 @@ When player fleet meets the raid unit inside one system, a special "Scavengers" 
 Depending on the player fleet power, they may be inclined to attack or not.
 Player can always choose to engage them in combat even if they don't want to attack.
 
+## Diplomacy
+
+Initial reputation scores:
+
+| Faction | Starting Value |
+|---|---|
+| Krigia | -25 |
+| Wertu | 10 |
+| Zyth | -10 |
+| Vespion | 0 |
+
+There are several ways to improve the relationships with a faction:
+
+* Provide resources
+* Assist in battles
+* Complete text quests
+* Choose appropriate actions in random events
+
+A player can form an alliance with these races:
+
+* Wertu
+* Vespion
+
+An alliance can be formed when reputation reaches 25.
+
 ## Bosses
 
 Although we cover **battles** in a different document, bosses will be described here.

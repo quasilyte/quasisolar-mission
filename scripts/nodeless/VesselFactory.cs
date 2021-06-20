@@ -91,6 +91,8 @@ public static class VesselFactory {
             InitVespionLarva(v);
         } else if (kind == "Vespion Wasp") {
             InitVespionWasp(v);
+        } else if (kind == "Vespion Hornet") {
+            InitVespionHornet(v);
         } else if (kind == "Unique Spectre") {
             InitUniqueSpectre(v);
         } else if (kind == "Unique Visitor") {
@@ -100,7 +102,7 @@ public static class VesselFactory {
         } else if (kind == "Scavenger Marauder") {
             InitScavengerMarauder(v);
         } else if (kind == "Phaa Mantis") {
-            InitPhaaInvader(v);
+            InitPhaaMantis(v);
         } else {
             throw new Exception($"unexpected player slot kind: {kind}");
         }
@@ -729,17 +731,14 @@ public static class VesselFactory {
             v.specialWeaponName = DisruptorWeapon.Design.name;
         }
 
-        // 40% - hellfire
-        // 30% - cutter
-        // 20% - assault laser
-        // 10% - needle gun
+        // 50% - hellfire
+        // 30% - assault laser
+        // 20% - needle gun
         float weaponRoll = QRandom.Float();
-        if (weaponRoll < 0.4) {
+        if (weaponRoll < 0.5) {
             v.weapons.Add(HellfireWeapon.Design.name);
-        } else if (weaponRoll < 0.7) {
+        } else if (weaponRoll < 0.8) {
             v.weapons.Add(CutterWeapon.Design.name);
-        } else if (weaponRoll < 0.9) {
-            v.weapons.Add(AssaultLaserWeapon.Design.name);
         } else {
             v.weapons.Add(NeedleGunWeapon.Design.name);
         }
@@ -767,20 +766,18 @@ public static class VesselFactory {
             v.weapons.Add(AssaultLaserWeapon.Design.name);
         }
 
-        // 60% - cutter
+        // 60% - pulse laser
         // 40% - stinger
         float weaponRoll2 = QRandom.Float();
         if (weaponRoll2 < 0.6) {
-            v.weapons.Add(CutterWeapon.Design.name);
+            v.weapons.Add(PulseLaserWeapon.Design.name);
         } else {
             v.weapons.Add(StingerWeapon.Design.name);
         }
 
         var weaponRoll3 = QRandom.Float();
-        if (weaponRoll3 < 0.7) {
+        if (weaponRoll3 < 0.5) {
             v.specialWeaponName = DisruptorWeapon.Design.name;
-        } else {
-            v.specialWeaponName = HarpoonWeapon.Design.name;
         }
 
         // 65% - reflector shield
@@ -793,16 +790,19 @@ public static class VesselFactory {
         }
     }
 
-    private static void InitPhaaInvader(Vessel v) {
+    private static void InitPhaaMantis(Vessel v) {
         v.designName = "Mantis";
         v.energySourceName = "Advanced Power Generator";
 
         float setRoll = QRandom.Float();
 
-        if (setRoll < 0.1) {
+        if (setRoll < 0.35) {
+            v.weapons.Add(NeedleGunWeapon.Design.name);
+            v.weapons.Add(BubbleGunWeapon.Design.name);
+        } else if (setRoll < 0.45) {
             v.weapons.Add(NeedleGunWeapon.Design.name);
             v.weapons.Add(NeedleGunWeapon.Design.name);
-        } else if (setRoll < 0.2) {
+        } else if (setRoll < 0.55) {
             v.weapons.Add(RocketLauncherWeapon.Design.name);
             v.weapons.Add(RocketLauncherWeapon.Design.name);
         } else {
@@ -826,12 +826,12 @@ public static class VesselFactory {
             }
         }
 
-        // 70% - diffuser
+        // 60% - diffuser
         // 30% - aegis
         var shieldRoll = QRandom.Float();
-        if (shieldRoll < 0.7) {
+        if (shieldRoll < 0.6) {
             v.shieldName = DiffuserShield.Design.name;
-        } else {
+        } else if (shieldRoll < 0.9) {
             v.shieldName = AegisShield.Design.name;
         }
     }
@@ -840,13 +840,16 @@ public static class VesselFactory {
         v.designName = "Larva";
         v.energySourceName = "Power Generator";
 
-        // 60% - shockwave caster
+        // 40% - shockwave caster
         // 40% - swarm spawner
+        // 20% - hyper cutter
         var weaponRoll = QRandom.Float();
-        if (weaponRoll < 0.6) {
+        if (weaponRoll < 0.4) {
             v.specialWeaponName = ShockwaveCasterWeapon.Design.name;
-        } else {
+        } else if (weaponRoll < 0.8) {
             v.specialWeaponName = SwarmSpawnerWeapon.Design.name;
+        } else {
+            v.specialWeaponName = HyperCutterWeapon.Design.name;
         }
 
         var sentinelRoll = QRandom.Float();
@@ -865,10 +868,13 @@ public static class VesselFactory {
         v.designName = "Wasp";
         v.energySourceName = "Advanced Power Generator";
 
-        // 60% - swarm spawner
-        // 40% - shockwave caster
+        // 50% - hyper cutter
+        // 25% - swarm spawner
+        // 25% - shockwave caster
         var weaponRoll = QRandom.Float();
-        if (weaponRoll < 0.6) {
+        if (weaponRoll < 0.5) {
+            v.specialWeaponName = HyperCutterWeapon.Design.name;
+        } else if (weaponRoll < 0.75) {
             v.specialWeaponName = SwarmSpawnerWeapon.Design.name;
         } else {
             v.specialWeaponName = ShockwaveCasterWeapon.Design.name;
@@ -883,6 +889,32 @@ public static class VesselFactory {
         var shieldRoll = QRandom.Float();
         if (shieldRoll < 0.7) {
             v.shieldName = HeatScreenShield.Design.name;
+        }
+    }
+
+    private static void InitVespionHornet(Vessel v) {
+        v.designName = "Hornet";
+        v.energySourceName = "Advanced Power Generator";
+
+        var weaponSetRoll = QRandom.Float();
+        if (weaponSetRoll < 0.4) {
+            v.weapons.Add(CutterWeapon.Design.name);
+            v.specialWeaponName = ShockwaveCasterWeapon.Design.name;
+        } else if (weaponSetRoll < 0.7) {
+            v.weapons.Add(FlakCannonWeapon.Design.name);
+            v.specialWeaponName = ShockwaveCasterWeapon.Design.name;
+        } else {
+            v.weapons.Add(FlakCannonWeapon.Design.name);
+            v.specialWeaponName = HyperCutterWeapon.Design.name;
+        }
+
+        // 40% - heat screen
+        // 40% - laser perimeter
+        var shieldRoll = QRandom.Float();
+        if (shieldRoll < 0.40) {
+            v.shieldName = HeatScreenShield.Design.name;
+        } else if (shieldRoll < 0.8) {
+            v.shieldName = LaserPerimeterShield.Design.name;
         }
     }
 
