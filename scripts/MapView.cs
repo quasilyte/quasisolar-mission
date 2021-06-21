@@ -459,6 +459,14 @@ public class MapView : Node2D {
 
     private void OnCheatCommandExecuted(MapViewCheatMenuPopup.Command command) {
         switch (command.kind) {
+            case CheatCommandKind.RevealMap:
+                foreach (var sys in _starSystemNodes) {
+                    sys.UpdateInfo();
+                    sys.RenderKnownInfo();
+                    sys.ShowStarBase();
+                }
+                return;
+
             case CheatCommandKind.ResearchComplete:
                 OnCheatsDone();
                 ResearchCompleted();

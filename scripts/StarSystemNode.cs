@@ -42,11 +42,15 @@ public class StarSystemNode : Node2D {
         GetNode<Area2D>("Area2D").Connect("input_event", this, nameof(OnAreaInput));
 
         if (sys.intel != null) {
-            if (sys.starBase.id != 0) {
-                _starBase.Visible = true;
-                SetStarBaseColor();
-            }
+            ShowStarBase();
             RenderKnownInfo();
+        }
+    }
+
+    public void ShowStarBase() {
+        if (sys.starBase.id != 0) {
+            SetStarBaseColor();
+            _starBase.Visible = true;
         }
     }
 

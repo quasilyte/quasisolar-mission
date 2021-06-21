@@ -7,6 +7,7 @@ public class MapViewCheatMenuPopup : PopupDialog {
         CurrentSystemChange,
         CallRandomEvent,
         ResearchComplete,
+        RevealMap,
     }
 
     public class Command : Godot.Object {
@@ -72,6 +73,11 @@ public class MapViewCheatMenuPopup : PopupDialog {
                 Log("Press 'Done' to close this window");
                 Log("Press 'Clear Logs' to clear this text box");
                 Log("Press 'Execute' to run the command from the input");
+                return;
+
+            case "cheat.map.reveal":
+                _command = new Command { kind = CommandKind.RevealMap };
+                Log($"Map revealed");
                 return;
 
             case "cheat.exp":
