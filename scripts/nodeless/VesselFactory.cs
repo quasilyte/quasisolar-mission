@@ -904,7 +904,11 @@ public static class VesselFactory {
             v.weapons.Add(FlakCannonWeapon.Design.name);
             v.specialWeaponName = ShockwaveCasterWeapon.Design.name;
         } else {
-            v.weapons.Add(FlakCannonWeapon.Design.name);
+            if (QRandom.Bool()) {
+                v.weapons.Add(FlakCannonWeapon.Design.name);
+            } else {
+                v.weapons.Add(IonCannonWeapon.Design.name);
+            }
             v.specialWeaponName = HyperCutterWeapon.Design.name;
         }
 

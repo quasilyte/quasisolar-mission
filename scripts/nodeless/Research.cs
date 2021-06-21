@@ -298,13 +298,6 @@ public class Research {
         },
 
         new Research{
-            name = "Assault Laser",
-            category = Category.NewWeapon,
-            researchTime = 70,
-            dependencies = {"Pulse Laser"},
-        },
-
-        new Research{
             name = "Zap",
             category = Category.NewWeapon,
             researchTime = 50,
@@ -343,36 +336,9 @@ public class Research {
         },
 
         new Research{
-            name = "Mortar",
-            category = Category.NewSpecialWeapon,
-            researchTime = 140,
-            dependencies = {"Reaper Cannon"},
-        },
-
-        new Research{
-            name = "Torpedo Launcher",
-            category = Category.NewSpecialWeapon,
-            researchTime = 200,
-            dependencies = {"Flak Weapons", "Rocket Launcher"},
-        },
-
-        new Research{
-            name = "Disruptor",
-            category = Category.NewSpecialWeapon,
-            researchTime = 90,
-        },
-
-        new Research{
             name = "Rocket Launcher",
             category = Category.NewWeapon,
             researchTime = 70,
-        },
-
-        new Research{
-            name = "Hurricane",
-            category = Category.NewWeapon,
-            researchTime = 120,
-            dependencies = {"Rocket Launcher"},
         },
 
         new Research{
@@ -426,6 +392,76 @@ public class Research {
             researchTime = 85,
             dependencies = {"Jump Tracer Mk2"},
             effect = "+25% radar range",
+        },
+
+        // Zyth tech tree.
+
+        new Research{
+            name = "Zyth Weapons I",
+            material = Faction.Zyth,
+            researchTime = 75,
+        },
+
+        new Research{
+            name = "Harpoon",
+            material = Faction.Zyth,
+            category = Category.NewSpecialWeapon,
+            researchTime = 65,
+            dependencies = {"Zyth Weapons I"},
+        },
+
+        new Research{
+            name = "Zyth Weapons II",
+            material = Faction.Zyth,
+            researchTime = 90,
+            dependencies = {"Zyth Weapons I"},
+        },
+
+        new Research{
+            name = "Hellfire",
+            material = Faction.Zyth,
+            category = Category.NewWeapon,
+            researchTime = 75,
+            dependencies = {"Zyth Weapons II"},
+        },
+
+        new Research{
+            name = "Zyth Weapons III",
+            material = Faction.Zyth,
+            researchTime = 100,
+            dependencies = {"Zyth Weapons II"},
+        },
+
+        new Research{
+            name = "Disk Thrower",
+            material = Faction.Zyth,
+            category = Category.NewWeapon,
+            researchTime = 100,
+            dependencies = {"Zyth Weapons III"},
+        },
+
+        // Draklid tech tree.
+
+        new Research{
+            name = "Draklid Weapons",
+            material = Faction.Draklid,
+            researchTime = 75,
+        },
+
+        new Research{
+            name = "Disruptor",
+            material = Faction.Draklid,
+            category = Category.NewSpecialWeapon,
+            researchTime = 90,
+            dependencies = {"Draklid Weapons"},
+        },
+
+        new Research{
+            name = "Assault Laser",
+            material = Faction.Draklid,
+            category = Category.NewWeapon,
+            researchTime = 100,
+            dependencies = {"Draklid Weapons"},
         },
 
         // Wertu tech tree.
@@ -498,6 +534,44 @@ public class Research {
             dependencies = {"Wertu Weapons III"},
         },
 
+        // Vespion tech tree.
+
+        new Research{
+            name = "Vespion Weapons I",
+            material = Faction.Vespion,
+            researchTime = 100,
+        },
+
+        new Research{
+            name = "Swarm Spawner",
+            material = Faction.Vespion,
+            category = Category.NewSpecialWeapon,
+            researchTime = 60,
+            dependencies = {"Vespion Weapons I"},
+        },
+
+        new Research{
+            name = "Shockwave Caster",
+            material = Faction.Vespion,
+            category = Category.NewSpecialWeapon,
+            researchTime = 75,
+            dependencies = {"Vespion Weapons I"},
+        },
+
+        new Research{
+            name = "Vespion Weapons II",
+            material = Faction.Vespion,
+            researchTime = 120,
+            dependencies = {"Vespion Weapons I"},
+        },
+
+        new Research{
+            name = "Hyper Cutter",
+            material = Faction.Vespion,
+            researchTime = 135,
+            dependencies = {"Vespion Weapons II"},
+        },
+
         // Phaa tech tree.
 
         new Research{
@@ -541,8 +615,19 @@ public class Research {
             name = "Great Scythe",
             material = Faction.Krigia,
             category = Category.NewWeapon,
-            researchTime = 150,
+            researchTime = 85,
             dependencies = {"Krigia Weapons II"},
+        },
+
+        new Research{
+            name = "Hurricane",
+            material = Faction.Krigia,
+            category = Category.NewWeapon,
+            researchTime = 110,
+            dependencies = {
+                "Krigia Weapons II",
+                "Rocket Launcher",
+            },
         },
 
         new Research{
@@ -558,6 +643,14 @@ public class Research {
             category = Category.NewWeapon,
             researchTime = 240,
             dependencies = {"Krigia Weapons III"},
+        },
+
+        new Research{
+            name = "Torpedo Launcher",
+            material = Faction.Krigia,
+            category = Category.NewSpecialWeapon,
+            researchTime = 130,
+            dependencies = {"Krigia Weapons III", "Rocket Launcher"},
         },
     };
 }

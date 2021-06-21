@@ -22,16 +22,13 @@ Weapons:
 * Point-Defense Laser
 * Zap
 * Pulse Laser
-* Assault Laser
 * Rocket Launcher
 * Cutter
-* Hurricane
+* Stinger
 
 Special weapons:
 
-* Disruptor
 * **Reaper Cannon**
-* Torpedo Launcher
 
 ### Krigia
 
@@ -51,7 +48,7 @@ Weapons:
 Special Weapons:
 
 * Mortar
-* Torpedo Launcher
+* **Torpedo Launcher**
 
 ### Wertu
 
@@ -90,12 +87,14 @@ Special weapons:
 
 Weapons:
 
+* Ion Cannon
 * Flak Cannon
 
 Special weapons:
 
 * **Shockwave Caster**
 * **Swarm Spawner**
+* **Hyper Cutter**
 
 ## Weapons
 
@@ -127,49 +126,49 @@ Special weapons:
 
 ### Level 1 weapons
 
-| Weapon | Used by |
-|---|---|
-| Spread Gun | Earthlings, Draklid |
-| Ion Cannon | Earthlings, Krigia |
-| Needle Gun | Earthlings, Zyth, Phaa, Draklid |
-| Harpoon | Zyth |
-| Disruptor | Earthlings, Zyth, Draklid |
-| Photon Burst Cannon | Wertu |
-| Point-Defense Laser | Earthlings, Krigia, Wertu, Draklid |
-| Pulse Laser | Earthlings, Krigia, Zyth, Draklid |
-| Rocket Launcher | Earthlings, Krigia, Phaa, Draklid |
-| Scythe | Krigia |
-| Hellfire | Zyth |
-| Shockwave Caster | Vespion |
-| Swarm Spawner | Vespion |
+| Weapon | Used by | Research matetial |
+|---|---|---|
+| Spread Gun | Earthlings, Draklid | n/a |
+| Ion Cannon | Earthlings, Krigia, Vespion | n/a |
+| Needle Gun | Earthlings, Zyth, Phaa, Draklid | n/a |
+| Harpoon | Zyth | Zyth |
+| Disruptor | Zyth, Draklid | Draklid |
+| Photon Burst Cannon | Wertu | Wertu |
+| Point-Defense Laser | Earthlings, Krigia, Wertu, Draklid | n/a |
+| Pulse Laser | Earthlings, Krigia, Zyth, Draklid | n/a |
+| Rocket Launcher | Earthlings, Krigia, Phaa, Draklid | n/a |
+| Scythe | Krigia | Krigia |
+| Shockwave Caster | Vespion | Vespion |
+| Swarm Spawner | Vespion | Vespion |
 
 ### Level 2 weapons
 
-| Weapon | Used by |
-|---|---|
-| Reaper Cannon | Earthlings |
-| Zap | Earthlings, Wertu, Draklid |
-| Bubble Gun | Phaa |
-| Flak Cannon | Vespion |
-| Cutter | Earthlings, Wertu, Vespion |
-| Hyper Cutter | Vespion |
-| Assault Laser | Earthlings, Krigia, Zyth, Draklid |
-| Great Scythe | Krigia |
-| Twin Proton Burst Cannon | Wertu |
-| Hurricane | Earthlings, Krigia, Phaa |
-| Shield Breaker | Wertu |
-| Restructuring Ray | Wertu |
-| Stinger | Krigia, Zyth, Draklid |
-| Crystal Cannon | ? |
+| Weapon | Used by | Research material |
+|---|---|---|
+| Hellfire | Zyth | Zyth |
+| Reaper Cannon | Earthlings | n/a |
+| Zap | Earthlings, Wertu, Draklid | n/a |
+| Bubble Gun | Phaa | Phaa |
+| Flak Cannon | Vespion | Vespion |
+| Cutter | Earthlings, Wertu, Vespion | n/a |
+| Hyper Cutter | Vespion | Vespion |
+| Assault Laser | Krigia, Zyth, Draklid | Draklid |
+| Great Scythe | Krigia | Krigia |
+| Twin Proton Burst Cannon | Wertu | Wertu |
+| Hurricane | Krigia, Phaa | Krigia |
+| Shield Breaker | Wertu | Wertu |
+| Restructuring Ray | Wertu | Wertu |
+| Stinger | Earthling, Krigia, Zyth, Draklid | n/a |
+| Crystal Cannon | ? | ? |
 
 ### Level 3 weapons
 
 | Weapon | Used by |
 |---|---|
-| Disk Thrower | Zyth |
-| Photon Beam | Wertu |
-| Plasma Emitter | Wertu |
-| Mortar | Krigia |
-| Storm Bringer | ? |
-| Torpedo Launcher | Earthlings, Krigia |
-| Lancer | Krigia |
+| Disk Thrower | Zyth | Zyth |
+| Photon Beam | Wertu | Wertu |
+| Plasma Emitter | Wertu | Wertu |
+| Mortar | Krigia, Vespion | ? |
+| Storm Bringer | ? | ? |
+| Torpedo Launcher | Krigia | Krigia |
+| Lancer | Krigia | Krigia |

@@ -3,10 +3,10 @@ using Godot;
 public class HellfireWeapon : IWeapon {
     public static WeaponDesign Design = new WeaponDesign {
         name = "Hellfire",
-        level = 1,
+        level = 2,
         description = "TODO",
         targeting = "forward-only, projectiles",
-        sellingPrice = 2400,
+        sellingPrice = 3000,
         technologiesNeeded = {"Hellfire"},
         cooldown = 0.6f,
         energyCost = 10.0f,
