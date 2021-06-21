@@ -81,7 +81,7 @@ public class NewGameScene : Node2D {
         },
 
         {
-            "ScavengersPresence",
+            "DraklidPresence",
             new Option[]{
                 new Option{text = "Minimal", score = -15},
                 new Option{text = "Normal", score = 0, selected = true},
@@ -355,7 +355,7 @@ public class NewGameScene : Node2D {
     const int numMapCols = 4;
     const int numMapRows = 2;
 
-    private VesselTemplate[] _scavengerTemplates = new VesselTemplate[]{
+    private VesselTemplate[] _draklidTemplates = new VesselTemplate[]{
         new VesselTemplate{design = VesselDesign.Find("Raider"), roll = 0},
         new VesselTemplate{design = VesselDesign.Find("Marauder"), roll = 0.65f},
     };
@@ -430,8 +430,8 @@ public class NewGameScene : Node2D {
         InitFleet(config, starBase, _wertuTemplates, budget);
     }
 
-    private void InitScavengerFleet(RpgGameState.Config config, StarBase starBase, float budget) {
-        InitFleet(config, starBase, _scavengerTemplates, budget);
+    private void InitDraklidFleet(RpgGameState.Config config, StarBase starBase, float budget) {
+        InitFleet(config, starBase, _draklidTemplates, budget);
     }
 
     private StarBase NewStarBase(RpgGameState.Config config, Faction owner, int level) {
@@ -593,9 +593,9 @@ public class NewGameScene : Node2D {
             BindStarBase(base0, sector.systems[0]);
             InitKrigiaFleet(config, base0, roll);
 
-            var base1 = NewStarBase(config, Faction.Scavenger, 2);
+            var base1 = NewStarBase(config, Faction.Draklid, 2);
             BindStarBase(base1, sector.systems[1]);
-            InitScavengerFleet(config, base1, roll);
+            InitDraklidFleet(config, base1, roll);
             numKrigiaBases--;
         }
 

@@ -44,7 +44,7 @@ public class MapView : Node2D {
 
     private SpaceUnitNode _eventUnit;
     private PopupNode _starBaseAttackPopup;
-    private PopupNode _scavengersEventPopup;
+    private PopupNode _draklidsEventPopup;
     private PopupNode _krigiaPatrolPopup;
     private PopupNode _krigiaTaskForcePopup;
 
@@ -168,9 +168,9 @@ public class MapView : Node2D {
         _krigiaPatrolPopup.GetNode<ButtonNode>("CommunicateButton").Connect("pressed", this, nameof(OnKrigiaPatrolCommunicateButton));
         _krigiaPatrolPopup.GetNode<ButtonNode>("LeaveButton").Connect("pressed", this, nameof(OnKrigiaPatrolLeaveButton));
 
-        _scavengersEventPopup = GetNode<PopupNode>("UI/ScavengersPopup");
-        _scavengersEventPopup.GetNode<ButtonNode>("FightButton").Connect("pressed", this, nameof(OnFightEventUnit));
-        _scavengersEventPopup.GetNode<ButtonNode>("LeaveButton").Connect("pressed", this, nameof(OnScavengersLeaveButton));
+        _draklidsEventPopup = GetNode<PopupNode>("UI/DraklidsPopup");
+        _draklidsEventPopup.GetNode<ButtonNode>("FightButton").Connect("pressed", this, nameof(OnFightEventUnit));
+        _draklidsEventPopup.GetNode<ButtonNode>("LeaveButton").Connect("pressed", this, nameof(OnDraklidsLeaveButton));
 
         _battleResult = GetNode<PopupNode>("UI/BattleResultPopup");
         _battleResult.GetNode<ButtonNode>("Done").Connect("pressed", this, nameof(OnBattleResultsDone));
@@ -296,12 +296,12 @@ public class MapView : Node2D {
         return 70;
     }
 
-    private void OnScavengersLeaveButton() {
+    private void OnDraklidsLeaveButton() {
         _lockControls = false;
-        _scavengersEventPopup.Hide();
+        _draklidsEventPopup.Hide();
 
-        var u = (ScavengerSpaceUnitNode)_eventUnit;
-        if (ScavengersWantToAttack(u)) {
+        var u = (DraklidSpaceUnitNode)_eventUnit;
+        if (DraklidsWantToAttack(u)) {
             _gameState.fuel -= RetreatFuelCost();
         } else {
             // Scare them off.
@@ -1042,8 +1042,8 @@ public class MapView : Node2D {
         var starBase = sys.starBase.Get();
         if (starBase.owner == Faction.Earthling) {
             baseNode = HumanStarBaseNode.New(starBase);
-        } else if (starBase.owner == Faction.Scavenger) {
-            baseNode = ScavengerStarBaseNode.New(starBase);
+        } else if (starBase.owner == Faction.Draklid) {
+            baseNode = DraklidStarBaseNode.New(starBase);
             baseNode.Connect("SpaceUnitCreated", this, nameof(OnSpaceUnitCreated));
         } else if (starBase.owner == Faction.Krigia) {
             baseNode = KrigiaStarBaseNode.New(starBase);
@@ -1109,8 +1109,8 @@ public class MapView : Node2D {
                 throw new Exception("trying to add a unit with empty fleet");
             }
             SpaceUnitNode node = null;
-            if (u.owner == Faction.Scavenger) {
-                node = ScavengerSpaceUnitNode.New(u); 
+            if (u.owner == Faction.Draklid) {
+                node = DraklidSpaceUnitNode.New(u); 
             } else if (u.owner == Faction.Phaa) {
                 node = PhaaSpaceUnitNode.New(u);
             } else if (u.owner == Faction.Krigia) {
@@ -1479,8 +1479,8 @@ public class MapView : Node2D {
     }
 
     private bool RollUnitAttack(SpaceUnitNode u) {
-        if (u.unit.owner == Faction.Scavenger) {
-            TriggerScavengersEvent(u);
+        if (u.unit.owner == Faction.Draklid) {
+            TriggerDraklidEvent(u);
             return true;
         }
         if (u.unit.owner == Faction.Krigia) {
@@ -1493,13 +1493,13 @@ public class MapView : Node2D {
         return false;
     }
 
-    private bool ScavengersWantToAttack(SpaceUnitNode u) {
+    private bool DraklidsWantToAttack(SpaceUnitNode u) {
         if (u.unit.CargoFree() == 0) {
             return false;
         }
-        var scavengersForce = u.unit.FleetCost();
+        var draklidForce = u.unit.FleetCost();
         var humanForce = _humanUnit.FleetCost();
-        return scavengersForce * 2 > humanForce;
+        return draklidForce * 2 > humanForce;
     }
 
     private void TriggerKrigiaPatrolEvent(SpaceUnitNode u) {
@@ -1538,28 +1538,28 @@ public class MapView : Node2D {
         _krigiaTaskForcePopup.PopupCentered();
     }
 
-    private void TriggerScavengersEvent(SpaceUnitNode u) {
+    private void TriggerDraklidEvent(SpaceUnitNode u) {
         var pluralSuffix = u.unit.fleet.Count == 1 ? "" : "s";
-        var text = "Short-range radars detect the scavengers raid unit. ";
+        var text = "Short-range radars detect a Draklid raid unit. ";
         text += "They have " + u.unit.fleet.Count + " vessel" + pluralSuffix + ".\n\n";
-        if (ScavengersWantToAttack(u)) {
+        if (DraklidsWantToAttack(u)) {
             text += "Based on the fact that it's moving towards your direction, ";
             text += "the battle is imminent, unless you sacrifice some fuel and warp away.";
-            _scavengersEventPopup.GetNode<ButtonNode>("FightButton").Text = "Prepare for battle";
-            _scavengersEventPopup.GetNode<ButtonNode>("LeaveButton").Text = "Retreat";
-            _scavengersEventPopup.GetNode<ButtonNode>("LeaveButton").Disabled = _gameState.fuel < RetreatFuelCost();
+            _draklidsEventPopup.GetNode<ButtonNode>("FightButton").Text = "Prepare for battle";
+            _draklidsEventPopup.GetNode<ButtonNode>("LeaveButton").Text = "Retreat";
+            _draklidsEventPopup.GetNode<ButtonNode>("LeaveButton").Disabled = _gameState.fuel < RetreatFuelCost();
         } else {
             text += "It looks like they're not looking for a fight.";
-            _scavengersEventPopup.GetNode<ButtonNode>("FightButton").Text = "Attack them";
-            _scavengersEventPopup.GetNode<ButtonNode>("LeaveButton").Text = "Ignore them";
+            _draklidsEventPopup.GetNode<ButtonNode>("FightButton").Text = "Attack them";
+            _draklidsEventPopup.GetNode<ButtonNode>("LeaveButton").Text = "Ignore them";
         }
-        _scavengersEventPopup.GetNode<Label>("Panel/Text").Text = text;
+        _draklidsEventPopup.GetNode<Label>("Panel/Text").Text = text;
 
         GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/interface/random_event.wav"));
         StopMovement();
         _lockControls = true;
         _eventUnit = u;
-        _scavengersEventPopup.PopupCentered();
+        _draklidsEventPopup.PopupCentered();
     }
 
     private void ProcessUnits() {

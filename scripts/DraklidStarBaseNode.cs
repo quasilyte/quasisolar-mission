@@ -2,16 +2,16 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public class ScavengerStarBaseNode : StarBaseNode {
+public class DraklidStarBaseNode : StarBaseNode {
     [Signal]
     public delegate void SpaceUnitCreated(SpaceUnitNode unit);
 
     private static PackedScene _scene = null;
-    public static new ScavengerStarBaseNode New(StarBase starBase) {
+    public static new DraklidStarBaseNode New(StarBase starBase) {
         if (_scene == null) {
-            _scene = GD.Load<PackedScene>("res://scenes/ScavengerStarBaseNode.tscn");
+            _scene = GD.Load<PackedScene>("res://scenes/DraklidStarBaseNode.tscn");
         }
-        var o = (ScavengerStarBaseNode)_scene.Instance();
+        var o = (DraklidStarBaseNode)_scene.Instance();
         o.starBase = starBase;
         return o;
     }
@@ -80,7 +80,7 @@ public class ScavengerStarBaseNode : StarBaseNode {
         }
 
         var spaceUnit = _gameState.spaceUnits.New();
-        spaceUnit.owner = Faction.Scavenger;
+        spaceUnit.owner = Faction.Draklid;
         spaceUnit.pos = starBase.system.Get().pos;
 
         var groupSize = QRandom.IntRange(1, 2);
@@ -90,7 +90,7 @@ public class ScavengerStarBaseNode : StarBaseNode {
 
         starBase.units.Add(spaceUnit.GetRef());
 
-        var unitNode = ScavengerSpaceUnitNode.New(spaceUnit);
+        var unitNode = DraklidSpaceUnitNode.New(spaceUnit);
         EmitSignal(nameof(SpaceUnitCreated), new object[] { unitNode });
     }
 

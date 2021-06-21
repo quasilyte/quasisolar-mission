@@ -799,7 +799,7 @@ public class RandomEvent {
                 }
                 return new Result{
                     text = multilineText(
-                        "Pirates or scavengers may get to them at some point, so why not take the scraps yourself?",
+                        "Pirates or Draklids may get to them at some point, so why not take the scraps yourself?",
                         "",
                         "Undoubtedly, this will affect your Wertu reputation."
                     ),

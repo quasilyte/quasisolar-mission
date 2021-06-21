@@ -296,12 +296,12 @@ public class VesselDesign: IItem {
             size = Size.Large,
         },
 
-        // Scavenger designs.
+        // Draklid designs.
 
         new VesselDesign{
             level = 2,
             name = "Raider",
-            affiliation = Faction.Scavenger,
+            affiliation = Faction.Draklid,
             description = "TODO",
             sellingPrice = 3200,
             debris = 45,
@@ -326,7 +326,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 3,
             name = "Marauder",
-            affiliation = Faction.Scavenger,
+            affiliation = Faction.Draklid,
             description = "TODO",
             sellingPrice = 6000,
             debris = 65,

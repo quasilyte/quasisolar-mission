@@ -97,10 +97,10 @@ public static class VesselFactory {
             InitUniqueSpectre(v);
         } else if (kind == "Unique Visitor") {
             InitUniqueVisitor(v);
-        } else if (kind == "Scavenger Raider") {
-            InitScavengerRaider(v);
-        } else if (kind == "Scavenger Marauder") {
-            InitScavengerMarauder(v);
+        } else if (kind == "Draklid Raider") {
+            InitDraklidRaider(v);
+        } else if (kind == "Draklid Marauder") {
+            InitDraklidMarauder(v);
         } else if (kind == "Phaa Mantis") {
             InitPhaaMantis(v);
         } else {
@@ -191,7 +191,7 @@ public static class VesselFactory {
         }
     }
 
-    private static void InitScavengerRaider(Vessel v) {
+    private static void InitDraklidRaider(Vessel v) {
         v.designName = "Raider";
         v.energySourceName = "Power Generator";
 
@@ -217,7 +217,7 @@ public static class VesselFactory {
         }
     }
 
-    private static void InitScavengerMarauder(Vessel v) {
+    private static void InitDraklidMarauder(Vessel v) {
         v.designName = "Marauder";
         v.energySourceName = "Advanced Power Generator";
 

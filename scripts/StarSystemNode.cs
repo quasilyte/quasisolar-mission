@@ -183,7 +183,7 @@ public class StarSystemNode : Node2D {
             if (owner == Faction.Earthling) {
                 return MapNodeColor.Cyan;
             }
-            if (owner == Faction.Scavenger) {
+            if (owner == Faction.Draklid) {
                 return MapNodeColor.Purple;
             }
             if (owner == Faction.Krigia) {

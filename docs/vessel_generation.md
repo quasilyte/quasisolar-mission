@@ -6,7 +6,7 @@
 * Zyth
 * Vespion
 * Phaa
-* Scavengers (not bound to a race)
+* Draklid
 
 ## Technologies by fraction
 
@@ -108,19 +108,36 @@ Weapons:
 * Hurricane
 * **Bubble Gun**
 
+### Draklid
+
+Weapons:
+
+* Spread Gun
+* Needle Gun
+* Zap
+* Point-Laser Defense
+* Rocket Launcher
+* Assault Laser
+* Pulse Laser
+* Stinger
+
+Special weapons:
+
+* Disruptor
+
 ### Level 1 weapons
 
 | Weapon | Used by |
 |---|---|
-| Spread Gun | Earthlings |
+| Spread Gun | Earthlings, Draklid |
 | Ion Cannon | Earthlings, Krigia |
-| Needle Gun | Earthlings, Zyth, Phaa |
+| Needle Gun | Earthlings, Zyth, Phaa, Draklid |
 | Harpoon | Zyth |
-| Disruptor | Earthlings, Zyth |
+| Disruptor | Earthlings, Zyth, Draklid |
 | Photon Burst Cannon | Wertu |
-| Point-Defense Laser | Earthlings, Krigia, Wertu |
-| Pulse Laser | Earthlings, Krigia, Zyth |
-| Rocket Launcher | Earthlings, Krigia, Phaa |
+| Point-Defense Laser | Earthlings, Krigia, Wertu, Draklid |
+| Pulse Laser | Earthlings, Krigia, Zyth, Draklid |
+| Rocket Launcher | Earthlings, Krigia, Phaa, Draklid |
 | Scythe | Krigia |
 | Hellfire | Zyth |
 | Shockwave Caster | Vespion |
@@ -131,18 +148,18 @@ Weapons:
 | Weapon | Used by |
 |---|---|
 | Reaper Cannon | Earthlings |
-| Zap | Earthlings, Wertu |
+| Zap | Earthlings, Wertu, Draklid |
 | Bubble Gun | Phaa |
 | Flak Cannon | Vespion |
 | Cutter | Earthlings, Wertu, Vespion |
 | Hyper Cutter | Vespion |
-| Assault Laser | Earthlings, Krigia, Zyth |
+| Assault Laser | Earthlings, Krigia, Zyth, Draklid |
 | Great Scythe | Krigia |
 | Twin Proton Burst Cannon | Wertu |
 | Hurricane | Earthlings, Krigia, Phaa |
 | Shield Breaker | Wertu |
 | Restructuring Ray | Wertu |
-| Stinger | Krigia, Zyth |
+| Stinger | Krigia, Zyth, Draklid |
 | Crystal Cannon | ? |
 
 ### Level 3 weapons

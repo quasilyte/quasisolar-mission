@@ -1,18 +1,18 @@
 using Godot;
 using System;
 
-public class ScavengerSpaceUnitNode : SpaceUnitNode {
+public class DraklidSpaceUnitNode : SpaceUnitNode {
     // FIXME: bots lose their field values when scene is switched.
 
     private StarSystem _currentSystem;
     private bool _canBeDetected = false;
 
     private static PackedScene _scene = null;
-    public static new ScavengerSpaceUnitNode New(SpaceUnit unit) {
+    public static new DraklidSpaceUnitNode New(SpaceUnit unit) {
         if (_scene == null) {
-            _scene = GD.Load<PackedScene>("res://scenes/ScavengerSpaceUnitNode.tscn");
+            _scene = GD.Load<PackedScene>("res://scenes/DraklidSpaceUnitNode.tscn");
         }
-        var o = (ScavengerSpaceUnitNode)_scene.Instance();
+        var o = (DraklidSpaceUnitNode)_scene.Instance();
         o.unit = unit;
         o.speed = 40;
         o._spriteColor = MapNodeColor.Purple;
@@ -77,7 +77,7 @@ public class ScavengerSpaceUnitNode : SpaceUnitNode {
         _currentSystem = RpgGameState.starSystemByPos[unit.waypoint];
 
         var starBase = _currentSystem.starBase;
-        if (starBase.id == 0 || starBase.Get().owner == Faction.Scavenger) {
+        if (starBase.id == 0 || starBase.Get().owner == Faction.Draklid) {
             unit.botSystemLeaveDelay = QRandom.IntRange(8, 32);
             _canBeDetected = false;
             return;
@@ -140,10 +140,9 @@ public class ScavengerSpaceUnitNode : SpaceUnitNode {
 
     private void ProcessStarBaseDay() {
         var starBase = _currentSystem.starBase;
-        if (starBase.Get().owner == Faction.Scavenger) {
+        if (starBase.Get().owner == Faction.Draklid) {
             if (unit.CargoSize() != 0) {
                 OffloadResourcesTo(starBase.Get());
-                GD.Print("scavenger offloads resources");
             }
         }
     }

@@ -6,6 +6,8 @@ public class DebrisContainer {
     public int krigia = 0;
     public int zyth = 0;
     public int phaa = 0;
+    public int draklid = 0;
+    public int vespion = 0;
 
     public void Each(Action<int, Faction> f) {
         Update((x, faction) => {
@@ -20,6 +22,8 @@ public class DebrisContainer {
         krigia = f(krigia, Faction.Krigia);
         zyth = f(zyth, Faction.Zyth);
         phaa = f(phaa, Faction.Phaa);
+        draklid = f(draklid, Faction.Draklid);
+        vespion = f(vespion, Faction.Vespion);
     }
 
     public int Count() {

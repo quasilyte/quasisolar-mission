@@ -20,6 +20,6 @@ public enum Faction {
     Krigia,
     Zyth,
     Phaa,
-    Scavenger, // TODO: Draklid,
+    Draklid,
     Vespion,
 }

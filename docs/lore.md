@@ -147,12 +147,6 @@ We predict that it will enter this part of the space in a few years.
 > The formal game goal is to defeat this final Krigia unit.
 > All other actions will affect the ending the player would get.
 
-## TODO
-
-Some parts that are not explained above, but probably should have been:
-
-* Who are "scavengers"?
-
 # Races info
 
 ## Vespion

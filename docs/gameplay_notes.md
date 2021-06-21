@@ -261,7 +261,7 @@ There are different fleets that may roam the space:
 * Unique groups (related to random encounters)
 * Star base patrols
 * Task forces
-* Free roam group (scavengers, for example)
+* Free roam group (Draklids, for example)
 * And some other kinds (described in separate sections)
 
 ## Krigia Patrol Units
@@ -273,8 +273,8 @@ They visit a selected neighbor system, stay there for a while and then go back t
 Notes:
 
 * They are the only fair way of Krigia to discover human bases (to launch an assault later)
-* Just like scavengers, they leave a system immediately if it has a star base
-* Patrol unit stays in the system for a time span comparable with a scavengers raid unit
+* Just like Draklids, they leave a system immediately if it has a star base
+* Patrol unit stays in the system for a time span comparable with a Draklid raid unit
 * They will destroy mining droids
 * They may attempt an attack on the player unit if it's in the area
 
@@ -380,36 +380,32 @@ Ways to get experience points:
 * Winning in battles
 * Some random events can give you experience
 
-## Scavengers
+## Draklid
 
-Scavengers are the local "space pirates". They attack weak bases and fleets in attempt to scavenge their resources.
+Draklids are a pirates-like race. They attack weak fleets in attempt to scavenge their resources.
 
-They don't have own star bases.
-
-> TODO: explain where and when do they spawn.
-
-## Scavenger Bases
+## Draklid Bases
 
 * Keeps 10 garrison ships for defense
 * Not attacked by any other race (but player can destroy them)
 
-Scavenger base activity:
+Draklid base activity:
 
-* Creates scavenger ships using its resources
+* Creates Draklid ships using its resources
 * Spawns a **raid unit** when it has enough vessels
 
-Scavenger bases get resources over time and by receiving resources from the raid units.
+Draklid bases get resources over time and by receiving resources from the raid units.
 
-## Scavenger Raid Unit
+## Draklid Raid Unit
 
-A small fleet of Scavenger ships that flies in a chaotic manner through the map.
+A small fleet of Draklid ships that flies in a chaotic manner through the map.
 
 They leave systems with star bases immediately while they can stay for several days on neutral systems.
 
 If they find a system with player-controlled mines, they'll grab as many resources as they can
-and fly to the nearest scavenger base. It's possible to intercept them and get some resources back.
+and fly to the nearest Draklid base. It's possible to intercept them and get some resources back.
 
-When player fleet meets the raid unit inside one system, a special "Scavengers" event appears.
+When player fleet meets the raid unit inside one system, a special "Draklid" event appears.
 Depending on the player fleet power, they may be inclined to attack or not.
 Player can always choose to engage them in combat even if they don't want to attack.
 

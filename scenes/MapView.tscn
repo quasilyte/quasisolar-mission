@@ -1006,24 +1006,25 @@ margin_right = 256.0
 margin_bottom = 128.0
 text = "Done"
 
-[node name="ScavengersPopup" parent="UI" instance=ExtResource( 18 )]
+[node name="DraklidsPopup" parent="UI" instance=ExtResource( 18 )]
+visible = true
 margin_left = 1040.0
 margin_top = 64.0
 margin_right = 1616.0
 margin_bottom = 384.0
 
-[node name="Label" type="Label" parent="UI/ScavengersPopup"]
+[node name="Label" type="Label" parent="UI/DraklidsPopup"]
 margin_right = 576.0
 margin_bottom = 32.0
 theme = ExtResource( 6 )
-text = "Scavengers!"
+text = "Draklids!"
 align = 1
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Panel" type="Panel" parent="UI/ScavengersPopup"]
+[node name="Panel" type="Panel" parent="UI/DraklidsPopup"]
 margin_left = 16.0
 margin_top = 32.0
 margin_right = 560.0
@@ -1033,7 +1034,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Text" type="Label" parent="UI/ScavengersPopup/Panel"]
+[node name="Text" type="Label" parent="UI/DraklidsPopup/Panel"]
 margin_left = 16.0
 margin_top = 16.0
 margin_right = 528.0
@@ -1045,14 +1046,14 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="FightButton" parent="UI/ScavengersPopup" instance=ExtResource( 19 )]
+[node name="FightButton" parent="UI/DraklidsPopup" instance=ExtResource( 19 )]
 margin_left = 16.0
 margin_top = 272.0
 margin_right = 256.0
 margin_bottom = 304.0
 text = "Fight"
 
-[node name="LeaveButton" parent="UI/ScavengersPopup" instance=ExtResource( 19 )]
+[node name="LeaveButton" parent="UI/DraklidsPopup" instance=ExtResource( 19 )]
 margin_left = 320.0
 margin_top = 272.0
 margin_right = 560.0
