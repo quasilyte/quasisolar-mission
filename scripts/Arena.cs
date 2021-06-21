@@ -348,7 +348,7 @@ public class Arena : Node2D {
             var vessel = _vesselByPilot[p];
             if (p.Active) {
                 var hpLoss = vessel.hp - p.Vessel.State.hp;
-                if (vessel.faction == Faction.Human) {
+                if (vessel.faction == Faction.Earthling) {
                     if (_gameState.skillsLearned.Contains("Repair II")) {
                         hpLoss *= 0.8f;
                     } else if (_gameState.skillsLearned.Contains("Repair I")) {
@@ -356,7 +356,7 @@ public class Arena : Node2D {
                     }
                 }
                 var energyLoss = vessel.energy - p.Vessel.State.backupEnergy;
-                if (vessel.faction == Faction.Human) {
+                if (vessel.faction == Faction.Earthling) {
                     if (_gameState.skillsLearned.Contains("Repair II")) {
                         energyLoss *= 0.75f;
                     }
@@ -413,10 +413,9 @@ public class Arena : Node2D {
 
         if (_gameState.skillsLearned.Contains("Salvaging")) {
             // +5% debris.
-            result.genericDebris = QMath.IntAdjust(result.genericDebris, 1.05);
-            result.krigiaDebris = QMath.IntAdjust(result.krigiaDebris, 1.05);
-            result.wertuDebris = QMath.IntAdjust(result.wertuDebris, 1.05);
-            result.zythDebris = QMath.IntAdjust(result.zythDebris, 1.05);
+            result.debris.Update((x, kind) => {
+                return QMath.IntAdjust(x, 1.05);
+            });
         }
 
         if (_flagshipPilot != null) {
@@ -432,29 +431,22 @@ public class Arena : Node2D {
 
     private void CollectVesselDebris(Vessel vessel, Pilot p, BattleResult result) {
         // Can only collect allied vessel debris that belong to the human player.
-        if (p.alliance == 0 && vessel.faction != Faction.Human) {
+        if (p.alliance == 0 && vessel.faction != Faction.Earthling) {
             return;
         }
 
         var roll = QRandom.FloatRange(0.8f, 1.2f);
         var debris = (int)((float)p.Vessel.State.debris * roll);
         var design = vessel.Design();
-        if (design.affiliation == "Krigia") {
-            result.krigiaDebris += debris;
-            _gameState.metKrigia = true;
-        } else if (design.affiliation == "Wertu") {
-            result.wertuDebris += debris;
-            _gameState.metWertu = true;
-        } else if (design.affiliation == "Zyth") {
-            result.zythDebris += debris;
-            _gameState.metZyth = true;
+        if (design.affiliation != Faction.Earthling && design.affiliation != Faction.Neutral) {
+            result.debris.Add(debris, design.affiliation);
         } else {
-            result.genericDebris += debris;
+            result.debris.Add(debris, Faction.Neutral);
         }
     }
 
     private void CollectUnitCargo(SpaceUnit unit, BattleResult result) {
-        if (!RpgGameState.instance.FactionsAtWar(Faction.Human, unit.owner)) {
+        if (!RpgGameState.instance.FactionsAtWar(Faction.Earthling, unit.owner)) {
             return;
         }
 

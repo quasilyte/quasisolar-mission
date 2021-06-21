@@ -189,7 +189,7 @@ public class RandomEvent {
         e.actions.Add(new Action{
             name = "Capture the vessel",
             apply = (RandomEventContext ctx) => {
-                var scout = RpgGameState.instance.NewVessel(Faction.Human, VesselDesign.Find("Scout"));
+                var scout = RpgGameState.instance.NewVessel(Faction.Earthling, VesselDesign.Find("Scout"));
                 scout.pilotName = PilotNames.UniqHumanName(RpgGameState.instance.usedNames);
                 VesselFactory.Init(scout, "Earthling Scout");
                 scout.hp = 10;
@@ -500,7 +500,7 @@ public class RandomEvent {
                     spaceUnit.cargo.minerals = (int)(ctx.roll * 60);
                 }
 
-                var avenger = RpgGameState.instance.NewVessel(Faction.Human, VesselDesign.Find("Avenger"));
+                var avenger = RpgGameState.instance.NewVessel(Faction.Earthling, VesselDesign.Find("Avenger"));
                 avenger.pilotName = PilotNames.UniqHumanName(RpgGameState.instance.usedNames);
                 VesselFactory.Init(avenger, "Neutral Weak Avenger");
 
@@ -592,7 +592,7 @@ public class RandomEvent {
             hint = () => "(" + vesselPrice() + " credits)",
             condition = () => RpgGameState.instance.credits >= vesselPrice(),
             apply = (RandomEventContext _) => {
-                var v = RpgGameState.instance.NewVessel(Faction.Human, nomadDesign);
+                var v = RpgGameState.instance.NewVessel(Faction.Earthling, nomadDesign);
                 v.pilotName = PilotNames.UniqHumanName(RpgGameState.instance.usedNames);
                 VesselFactory.PadEquipment(v);
             

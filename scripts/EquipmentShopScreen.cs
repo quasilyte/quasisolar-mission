@@ -528,14 +528,9 @@ public class EquipmentShopScreen : Node2D {
         var cargo = _humanUnit.cargo;
 
         _gameState.credits += RpgGameState.enteredBase.DebrisSellPrice().value * _humanUnit.DebrisCount();
-        _gameState.krigiaMaterial += cargo.krigiaDeris;
-        _gameState.wertuMaterial += cargo.wertuDebris;
-        _gameState.zythMaterial += cargo.zythDebris;
+        _gameState.researchMaterial.Add(cargo.debris);
 
-        cargo.genericDebris = 0;
-        cargo.krigiaDeris = 0;
-        cargo.wertuDebris = 0;
-        cargo.zythDebris = 0;
+        cargo.debris = new DebrisContainer();
     }
 
     private void SellMinerals() {

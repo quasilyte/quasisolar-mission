@@ -54,20 +54,12 @@ public class SpaceUnit: AbstractPoolValue {
     }
 
     public int DebrisCount() {
-        return cargo.genericDebris + cargo.krigiaDeris + cargo.wertuDebris + cargo.zythDebris;
+        return cargo.debris.Count();
     }
 
-    public void CargoAddDebris(int amount, Research.Material kind) {
+    public void CargoAddDebris(int amount, Faction kind) {
         var toAdd = QMath.ClampMax(amount, CargoFree());
-        if (kind == Research.Material.Krigia) {
-            cargo.krigiaDeris = QMath.ClampMin(cargo.krigiaDeris + toAdd, 0);
-        } else if (kind == Research.Material.Wertu) {
-            cargo.wertuDebris = QMath.ClampMin(cargo.wertuDebris + toAdd, 0);
-        } else if (kind == Research.Material.Zyth) {
-            cargo.zythDebris = QMath.ClampMin(cargo.zythDebris + toAdd, 0);
-        } else {
-            cargo.genericDebris = QMath.ClampMin(cargo.genericDebris + toAdd, 0);
-        }
+        cargo.debris.Add(toAdd, kind);
     }
 
     public void CargoAddMinerals(int amount) {

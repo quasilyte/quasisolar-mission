@@ -23,7 +23,7 @@ public class VesselDesign: IItem {
 
     public int level;
     public string name;
-    public string affiliation;
+    public Faction affiliation;
     public string description;
     public string extraDescription = "";
 
@@ -117,7 +117,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 1,
             name = "Scout",
-            affiliation = "Earthling",
+            affiliation = Faction.Earthling,
             description = "A highly maneuverable budget design",
             sellingPrice = 1750,
             debris = 30,
@@ -143,7 +143,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 2,
             name = "Explorer",
-            affiliation = "Earthling",
+            affiliation = Faction.Earthling,
             description = "Simple, yet quite effective",
             sellingPrice = 3900,
             debris = 50,
@@ -169,7 +169,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 3,
             name = "Freighter",
-            affiliation = "Earthling",
+            affiliation = Faction.Earthling,
             description = "Trade battle efficiency for a big cargo",
             sellingPrice = 4500,
             debris = 100,
@@ -195,7 +195,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 3,
             name = "Fighter",
-            affiliation = "Earthling",
+            affiliation = Faction.Earthling,
             description = "Main Earthling military vessel design",
             sellingPrice = 5000,
             debris = 65,
@@ -221,7 +221,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 4,
             name = "Interceptor",
-            affiliation = "Earthling",
+            affiliation = Faction.Earthling,
             description = "Elite Earthling military vessel design",
             sellingPrice = 10500,
             debris = 75,
@@ -247,7 +247,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 5,
             name = "Gladiator",
-            affiliation = "Earthling",
+            affiliation = Faction.Earthling,
             description = "Alien-design inspired battle ship",
             sellingPrice = 14500,
             debris = 100,
@@ -273,7 +273,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 4,
             name = "Ark",
-            affiliation = "Earthling",
+            affiliation = Faction.Earthling,
             description = "Transforms into a star base",
             sellingPrice = 15000,
             debris = 150,
@@ -301,7 +301,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 2,
             name = "Raider",
-            affiliation = "Scavenger",
+            affiliation = Faction.Scavenger,
             description = "TODO",
             sellingPrice = 3200,
             debris = 45,
@@ -326,7 +326,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 3,
             name = "Marauder",
-            affiliation = "Scavenger",
+            affiliation = Faction.Scavenger,
             description = "TODO",
             sellingPrice = 6000,
             debris = 65,
@@ -353,7 +353,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 1,
             name = "Talons",
-            affiliation = "Krigia",
+            affiliation = Faction.Krigia,
             description = "TODO",
             sellingPrice = 2000,
             debris = 45,
@@ -378,7 +378,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 2,
             name = "Claws",
-            affiliation = "Krigia",
+            affiliation = Faction.Krigia,
             description = "TODO",
             sellingPrice = 3500,
             debris = 65,
@@ -403,7 +403,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 4,
             name = "Fangs",
-            affiliation = "Krigia",
+            affiliation = Faction.Krigia,
             description = "TODO",
             sellingPrice = 14500,
             debris = 110,
@@ -428,7 +428,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 6,
             name = "Tusks",
-            affiliation = "Krigia",
+            affiliation = Faction.Krigia,
             description = "TODO",
             sellingPrice = 18500,
             debris = 190,
@@ -453,7 +453,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 7,
             name = "Horns",
-            affiliation = "Krigia",
+            affiliation = Faction.Krigia,
             description = "TODO",
             sellingPrice = 23700,
             debris = 220,
@@ -478,7 +478,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 10,
             name = "Ashes",
-            affiliation = "Krigia",
+            affiliation = Faction.Krigia,
             description = "TODO",
             sellingPrice = 50000,
             debris = 500,
@@ -505,7 +505,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 1,
             name = "Probe",
-            affiliation = "Wertu",
+            affiliation = Faction.Wertu,
             description = "TODO",
             sellingPrice = 2000,
             debris = 50,
@@ -530,7 +530,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 4,
             name = "Transporter",
-            affiliation = "Wertu",
+            affiliation = Faction.Wertu,
             description = "TODO",
             sellingPrice = 6600,
             debris = 130,
@@ -555,7 +555,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 5,
             name = "Guardian",
-            affiliation = "Wertu",
+            affiliation = Faction.Wertu,
             description = "TODO",
             sellingPrice = 15600,
             debris = 145,
@@ -580,7 +580,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 6,
             name = "Angel",
-            affiliation = "Wertu",
+            affiliation = Faction.Wertu,
             description = "TODO",
             sellingPrice = 16000,
             debris = 165,
@@ -605,7 +605,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 7,
             name = "Dominator",
-            affiliation = "Wertu",
+            affiliation = Faction.Wertu,
             description = "TODO",
             sellingPrice = 23000,
             debris = 265,
@@ -632,7 +632,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 3,
             name = "Hunter",
-            affiliation = "Zyth",
+            affiliation = Faction.Zyth,
             description = "TODO",
             sellingPrice = 8900,
             debris = 125,
@@ -657,7 +657,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 7,
             name = "Invader",
-            affiliation = "Zyth",
+            affiliation = Faction.Zyth,
             description = "TODO",
             sellingPrice = 27000,
             debris = 240,
@@ -688,7 +688,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 3,
             name = "Mantis",
-            affiliation = "Phaa",
+            affiliation = Faction.Phaa,
             description = "TODO",
             sellingPrice = 4900,
             debris = 55,
@@ -722,7 +722,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 1,
             name = "Larva",
-            affiliation = "Vespion",
+            affiliation = Faction.Vespion,
             description = "TODO",
             sellingPrice = 1000,
             debris = 20,
@@ -747,7 +747,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 2,
             name = "Wasp",
-            affiliation = "Vespion",
+            affiliation = Faction.Vespion,
             description = "TODO",
             sellingPrice = 2400,
             debris = 35,
@@ -772,7 +772,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 4,
             name = "Hornet",
-            affiliation = "Vespion",
+            affiliation = Faction.Vespion,
             description = "TODO",
             sellingPrice = 7000,
             debris = 60,
@@ -797,7 +797,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 6,
             name = "Queen",
-            affiliation = "Vespion",
+            affiliation = Faction.Vespion,
             description = "TODO",
             sellingPrice = 16000,
             debris = 105,
@@ -824,7 +824,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 2,
             name = "Pirate",
-            affiliation = "Neutral",
+            affiliation = Faction.Neutral,
             description = "",
             sellingPrice = 3500,
             debris = 50,
@@ -849,7 +849,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 4,
             name = "Nomad",
-            affiliation = "Neutral",
+            affiliation = Faction.Neutral,
             description = "TODO",
             sellingPrice = 12700,
             debris = 160,
@@ -875,7 +875,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 5,
             name = "Avenger",
-            affiliation = "Neutral",
+            affiliation = Faction.Neutral,
             description = "TODO",
             sellingPrice = 16500,
             debris = 200,
@@ -901,7 +901,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 10,
             name = "Slayer",
-            affiliation = "Neutral",
+            affiliation = Faction.Neutral,
             description = "TODO",
             sellingPrice = 42000,
             debris = 420,
@@ -928,7 +928,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 6,
             name = "Spectre",
-            affiliation = "Unique",
+            affiliation = Faction.Neutral,
             description = "TODO",
             sellingPrice = 20000,
             debris = 270,
@@ -953,7 +953,7 @@ public class VesselDesign: IItem {
         new VesselDesign{
             level = 8,
             name = "Visitor",
-            affiliation = "Unique",
+            affiliation = Faction.Neutral,
             description = "TODO",
             sellingPrice = 35000,
             debris = 400,

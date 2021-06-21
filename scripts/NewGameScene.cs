@@ -548,7 +548,7 @@ public class NewGameScene : Node2D {
             sector.systems.Add(anomalySystem);
         }
 
-        var startingStarBase = NewStarBase(config, Faction.Human, 1);
+        var startingStarBase = NewStarBase(config, Faction.Earthling, 1);
 
         var startingSystem = sectors[startingSector].systems[0];
         startingSystem.name = "Quasisol";
@@ -644,7 +644,7 @@ public class NewGameScene : Node2D {
         var fleet = new List<Vessel.Ref>();
         var humanVessel = config.vessels.New();
         humanVessel.isGamepad = GameControls.preferGamepad;
-        humanVessel.faction = Faction.Human;
+        humanVessel.faction = Faction.Earthling;
         humanVessel.pilotName = PilotNames.UniqHumanName(config.usedNames);
         humanVessel.designName = OptionValue("FlagshipDesign");
         humanVessel.energySourceName = "Power Generator";
@@ -667,14 +667,14 @@ public class NewGameScene : Node2D {
         for (int i = 0; i < OptionIntValue("StartingFleet"); i++) {
             var v = config.vessels.New();
             v.isBot = true;
-            v.faction = Faction.Human;
+            v.faction = Faction.Earthling;
             v.pilotName = PilotNames.UniqHumanName(config.usedNames);
             VesselFactory.Init(v, "Earthling Scout");
             fleet.Add(v.GetRef());
         }
 
         var unit = config.spaceUnits.New();
-        unit.owner = Faction.Human;
+        unit.owner = Faction.Earthling;
         unit.fleet = fleet;
         unit.pos = startingSystem.pos;
 

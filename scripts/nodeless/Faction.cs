@@ -15,7 +15,7 @@ public enum Faction {
     Neutral,
     Pirate,
 
-    Human,
+    Earthling,
     Wertu,
     Krigia,
     Zyth,

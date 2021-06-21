@@ -1,10 +1,7 @@
 public class BattleResult {
     public int exp;
 
-    public int genericDebris;
-    public int krigiaDebris;
-    public int wertuDebris;
-    public int zythDebris;
+    public DebrisContainer debris = new DebrisContainer();
 
     public int minerals;
     public int organic;

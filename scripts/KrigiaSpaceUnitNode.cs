@@ -214,7 +214,7 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
             return;
         }
 
-        if (starBase.owner == Faction.Human) {
+        if (starBase.owner == Faction.Earthling) {
             if (_gameState.humanUnit.Get().pos != _currentSystem.pos) {
                 if (starBase.discoveredByKrigia == 0) {
                     EmitSignal(nameof(SearchForStarBase));

@@ -8,8 +8,6 @@
 [ext_resource path="res://styles/text_box.tres" type="StyleBox" id=6]
 [ext_resource path="res://scripts/ResearchScreen.cs" type="Script" id=7]
 
-
-
 [node name="ResearchScreen" type="Node2D"]
 script = ExtResource( 7 )
 __meta__ = {
@@ -27,7 +25,7 @@ __meta__ = {
 margin_left = 144.0
 margin_top = 32.0
 margin_right = 640.0
-margin_bottom = 256.0
+margin_bottom = 400.0
 theme = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -42,9 +40,9 @@ text = "Leave"
 
 [node name="InvestButton" parent="Status" instance=ExtResource( 4 )]
 margin_left = 304.0
-margin_top = 160.0
+margin_top = 304.0
 margin_right = 464.0
-margin_bottom = 192.0
+margin_bottom = 336.0
 focus_mode = 2
 text = "Invest"
 
@@ -108,11 +106,31 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="PhaaMaterialValue" type="Label" parent="Status"]
+margin_left = 224.0
+margin_top = 112.0
+margin_right = 288.0
+margin_bottom = 144.0
+text = "9999"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Status/PhaaMaterialValue"]
+margin_left = -192.0
+margin_bottom = 32.0
+text = "Phaa material:"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="CreditsValue" type="Label" parent="Status"]
 margin_left = 224.0
-margin_top = 144.0
+margin_top = 288.0
 margin_right = 288.0
-margin_bottom = 176.0
+margin_bottom = 320.0
 text = "9999"
 valign = 1
 __meta__ = {
@@ -130,9 +148,9 @@ __meta__ = {
 
 [node name="ScienceFuncsValue" type="Label" parent="Status"]
 margin_left = 224.0
-margin_top = 176.0
+margin_top = 320.0
 margin_right = 288.0
-margin_bottom = 208.0
+margin_bottom = 352.0
 text = "9999"
 valign = 1
 __meta__ = {
@@ -231,9 +249,9 @@ __meta__ = {
 
 [node name="ResearchProgress" type="Panel" parent="."]
 margin_left = 224.0
-margin_top = 272.0
+margin_top = 416.0
 margin_right = 640.0
-margin_bottom = 400.0
+margin_bottom = 544.0
 theme = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false

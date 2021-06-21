@@ -37,14 +37,10 @@ public class ResearchScreen : Node2D {
             if (!Research.IsAvailable(_gameState.technologiesResearched, r.dependencies)) {
                 continue;
             }
-            if (r.material == Research.Material.Krigia && !_gameState.metKrigia) {
-                continue;
-            }
-            if (r.material == Research.Material.Wertu && !_gameState.metWertu) {
-                continue;
-            }
-            if (r.material == Research.Material.Zyth && !_gameState.metZyth) {
-                continue;
+            if (r.material != Faction.Neutral) {
+                if (_gameState.researchMaterial.Count(r.material) == 0) {
+                    continue;
+                }
             }
             if (r.category == Research.Category.NewArtifact && !_gameState.artifactsRecovered.Contains(r.name)) {
                 continue;
@@ -122,7 +118,7 @@ public class ResearchScreen : Node2D {
 
         var text = r.name + " [" + ResearchCatogoryString(r.category) + "]\n\n";
 
-        if (r.material != Research.Material.None) {
+        if (r.material != Faction.Neutral) {
             text += "Requires " + r.material + " material.\n";
         }
         text += "Research time: " + r.researchTime + "\n\n";
@@ -140,9 +136,10 @@ public class ResearchScreen : Node2D {
     private void UpdateUI() {
         GetNode<Button>("Status/InvestButton").Disabled = _gameState.credits < 1000;
 
-        GetNode<Label>("Status/KrigiaMaterialValue").Text = _gameState.krigiaMaterial.ToString();
-        GetNode<Label>("Status/WertuMaterialValue").Text = _gameState.wertuMaterial.ToString();
-        GetNode<Label>("Status/ZythMaterialValue").Text = _gameState.zythMaterial.ToString();
+        GetNode<Label>("Status/KrigiaMaterialValue").Text = _gameState.researchMaterial.krigia.ToString();
+        GetNode<Label>("Status/WertuMaterialValue").Text = _gameState.researchMaterial.wertu.ToString();
+        GetNode<Label>("Status/ZythMaterialValue").Text = _gameState.researchMaterial.zyth.ToString();
+        GetNode<Label>("Status/PhaaMaterialValue").Text = _gameState.researchMaterial.phaa.ToString();
 
         GetNode<Label>("Status/CreditsValue").Text = _gameState.credits.ToString();
         GetNode<Label>("Status/ScienceFuncsValue").Text = _gameState.scienceFunds.ToString();

@@ -1,14 +1,6 @@
 using System.Collections.Generic;
 
 public class Research {
-    public enum Material {
-        None,
-        Krigia,
-        Wertu,
-        Zyth,
-        Phaa,
-    }
-
     public enum Category {
         Dummy,
         Fundamental,
@@ -23,7 +15,7 @@ public class Research {
     }
 
     public string name;
-    public Material material = Material.None;
+    public Faction material = Faction.Neutral;
     public Category category = Category.Fundamental;
     public int researchTime;
     public string effect = "";
@@ -166,7 +158,7 @@ public class Research {
 
         new Research{
             name = "Photon Fighter",
-            material = Material.Wertu,
+            material = Faction.Wertu,
             category = Category.NewSentinel,
             researchTime = 25,
             dependencies = {"Photon Burst Cannon"},
@@ -174,7 +166,7 @@ public class Research {
 
         new Research{
             name = "Restructuring Guard",
-            material = Material.Wertu,
+            material = Faction.Wertu,
             category = Category.NewSentinel,
             researchTime = 90,
             dependencies = {"Restructuring Ray"},
@@ -440,13 +432,13 @@ public class Research {
 
         new Research{
             name = "Wertu Weapons I",
-            material = Material.Wertu,
+            material = Faction.Wertu,
             researchTime = 70,
         },
 
         new Research{
             name = "Photon Burst Cannon",
-            material = Material.Wertu,
+            material = Faction.Wertu,
             category = Category.NewWeapon,
             researchTime = 50,
             dependencies = {"Wertu Weapons I"},
@@ -454,14 +446,14 @@ public class Research {
 
         new Research{
             name = "Wertu Weapons II",
-            material = Material.Wertu,
+            material = Faction.Wertu,
             researchTime = 110,
             dependencies = {"Wertu Weapons I"},
         },
 
         new Research{
             name = "Twin Photon Burst Cannon",
-            material = Material.Wertu,
+            material = Faction.Wertu,
             category = Category.NewWeapon,
             researchTime = 20,
             dependencies = {"Wertu Weapons II"},
@@ -469,7 +461,7 @@ public class Research {
 
         new Research{
             name = "Shield Breaker",
-            material = Material.Wertu,
+            material = Faction.Wertu,
             category = Category.NewWeapon,
             researchTime = 65,
             dependencies = {"Wertu Weapons II"},
@@ -477,7 +469,7 @@ public class Research {
 
         new Research{
             name = "Restructuring Ray",
-            material = Material.Wertu,
+            material = Faction.Wertu,
             category = Category.NewSpecialWeapon,
             researchTime = 40,
             dependencies = {"Wertu Weapons II"},
@@ -485,14 +477,14 @@ public class Research {
 
         new Research{
             name = "Wertu Weapons III",
-            material = Material.Wertu,
+            material = Faction.Wertu,
             researchTime = 125,
             dependencies = {"Wertu Weapons II"},
         },
 
         new Research{
             name = "Photon Beam",
-            material = Material.Wertu,
+            material = Faction.Wertu,
             category = Category.NewSpecialWeapon,
             researchTime = 100,
             dependencies = {"Wertu Weapons III"},
@@ -500,7 +492,7 @@ public class Research {
 
         new Research{
             name = "Plasma Emitter",
-            material = Material.Wertu,
+            material = Faction.Wertu,
             category = Category.NewWeapon,
             researchTime = 75,
             dependencies = {"Wertu Weapons III"},
@@ -510,13 +502,13 @@ public class Research {
 
         new Research{
             name = "Phaa Weapons",
-            material = Material.Phaa,
+            material = Faction.Phaa,
             researchTime = 100,
         },
 
         new Research{
             name = "Bubble Gun",
-            material = Material.Phaa,
+            material = Faction.Phaa,
             category = Category.NewWeapon,
             researchTime = 85,
             dependencies = {"Phaa Weapons"},
@@ -526,13 +518,13 @@ public class Research {
 
         new Research{
             name = "Krigia Weapons I",
-            material = Material.Krigia,
+            material = Faction.Krigia,
             researchTime = 100,
         },
 
         new Research{
             name = "Scythe",
-            material = Material.Krigia,
+            material = Faction.Krigia,
             category = Category.NewWeapon,
             researchTime = 40,
             dependencies = {"Krigia Weapons I"},
@@ -540,14 +532,14 @@ public class Research {
 
         new Research{
             name = "Krigia Weapons II",
-            material = Material.Krigia,
+            material = Faction.Krigia,
             researchTime = 120,
             dependencies = {"Krigia Weapons I"},
         },
 
         new Research{
             name = "Great Scythe",
-            material = Material.Krigia,
+            material = Faction.Krigia,
             category = Category.NewWeapon,
             researchTime = 150,
             dependencies = {"Krigia Weapons II"},
@@ -555,14 +547,14 @@ public class Research {
 
         new Research{
             name = "Krigia Weapons III",
-            material = Material.Krigia,
+            material = Faction.Krigia,
             researchTime = 140,
             dependencies = {"Krigia Weapons II"},
         },
 
         new Research{
             name = "Lancer",
-            material = Material.Krigia,
+            material = Faction.Krigia,
             category = Category.NewWeapon,
             researchTime = 240,
             dependencies = {"Krigia Weapons III"},

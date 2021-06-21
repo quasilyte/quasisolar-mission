@@ -43,7 +43,7 @@ public abstract class SpaceUnitNode : Node2D {
     public virtual void ProcessDay() {}
 
     public void UpdateColor() {
-        if (unit.owner == Faction.Human) {
+        if (unit.owner == Faction.Earthling) {
             GetNode<Sprite>("Sprite").Frame = (int)MapNodeColor.Cyan;
             return;
         }

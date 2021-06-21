@@ -180,7 +180,7 @@ public class StarSystemNode : Node2D {
     private void SetStarBaseColor() {
         Func<MapNodeColor> baseColor = () => {
             var owner = sys.starBase.Get().owner;
-            if (owner == Faction.Human) {
+            if (owner == Faction.Earthling) {
                 return MapNodeColor.Cyan;
             }
             if (owner == Faction.Scavenger) {
@@ -284,7 +284,7 @@ public class StarSystemNode : Node2D {
         }
 
         var starBase = sys.starBase.Get();
-        if (starBase.owner == Faction.Human) {
+        if (starBase.owner == Faction.Earthling) {
             CollectResources();
         }
     }

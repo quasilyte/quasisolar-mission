@@ -114,7 +114,7 @@ public class ShipyardScreen : Node2D {
         UpdateFleet();
         UpdateGarrison();
 
-        var ark = _gameState.NewVessel(Faction.Human, VesselDesign.Find("Ark"));
+        var ark = _gameState.NewVessel(Faction.Earthling, VesselDesign.Find("Ark"));
         ark.pilotName = PilotNames.UniqHumanName(_gameState.usedNames);
         VesselFactory.PadEquipment(ark);
         _gameState.humanUnit.Get().fleet.Add(ark.GetRef());

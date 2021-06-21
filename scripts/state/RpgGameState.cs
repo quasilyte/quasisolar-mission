@@ -116,7 +116,7 @@ public class RpgGameState {
             }
             
             var starBase = starBases.Get(sys.starBase.id);
-            if (starBase.owner == Faction.Human) {
+            if (starBase.owner == Faction.Earthling) {
                 humanBases.Add(starBases.Get(sys.starBase.id));
                 continue;
             }
@@ -219,7 +219,7 @@ public class RpgGameState {
     public bool FactionsAtWar(Faction x, Faction y) {
         // TODO: implement a real system
 
-        if (x == Faction.Human && y == Faction.RandomEventAlly) {
+        if (x == Faction.Earthling && y == Faction.RandomEventAlly) {
             return false;
         }
         return x != y;
@@ -267,13 +267,10 @@ public class RpgGameState {
     public HashSet<string> technologiesResearched = new HashSet<string>{};
     public double researchProgress = 0;
     public string currentResearch = "";
-    public int krigiaMaterial = 0;
-    public int wertuMaterial = 0;
-    public int zythMaterial = 0;
+    
+    public DebrisContainer researchMaterial = new DebrisContainer();
+
     public int scienceFunds = 0;
-    public bool metKrigia = false;
-    public bool metWertu = false;
-    public bool metZyth = false;
     
     public HashSet<string> skillsLearned;
 
@@ -314,13 +311,9 @@ public class RpgGameState {
         }
         if (instance.currentResearch != "") {
             var research = Research.Find(instance.currentResearch);
-            if (research.material != Research.Material.None) {
+            if (research.material != Faction.Neutral) {
                 // Without needed material, research is performed at the 25% rate.
-                if (research.material == Research.Material.Krigia && instance.krigiaMaterial == 0) {
-                    value *= 0.25;
-                } else if (research.material == Research.Material.Wertu && instance.wertuMaterial == 0) {
-                    value *= 0.25;
-                } else if (research.material == Research.Material.Zyth && instance.zythMaterial == 0) {
+                if (instance.researchMaterial.Count(research.material) == 0) {
                     value *= 0.25;
                 }
                 if (instance.technologiesResearched.Contains("Alien Tech Lab")) {

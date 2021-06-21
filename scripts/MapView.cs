@@ -226,7 +226,7 @@ public class MapView : Node2D {
         }
 
         if (_currentSystem != null) {
-            _currentSystem.OnPlayerEnter(Faction.Human);
+            _currentSystem.OnPlayerEnter(Faction.Earthling);
         }
         UpdateUI();
 
@@ -382,21 +382,25 @@ public class MapView : Node2D {
             lines.Add($"+{result.fuel} fuel units");
         }
 
-        if (result.genericDebris != 0) {
-            _humanUnit.CargoAddDebris(result.genericDebris, Research.Material.None);
-            lines.Add($"+{result.genericDebris} debris");
+        if (result.debris.other != 0) {
+            _humanUnit.CargoAddDebris(result.debris.other, Faction.Neutral);
+            lines.Add($"+{result.debris.other} debris");
         }
-        if (result.krigiaDebris != 0) {
-            _humanUnit.CargoAddDebris(result.krigiaDebris, Research.Material.Krigia);
-            lines.Add($"+{result.krigiaDebris} Krigia debris");
+        if (result.debris.krigia != 0) {
+            _humanUnit.CargoAddDebris(result.debris.krigia, Faction.Krigia);
+            lines.Add($"+{result.debris.krigia} Krigia debris");
         }
-        if (result.wertuDebris != 0) {
-            _humanUnit.CargoAddDebris(result.wertuDebris, Research.Material.Wertu);
-            lines.Add($"+{result.wertuDebris} Wertu debris");
+        if (result.debris.wertu != 0) {
+            _humanUnit.CargoAddDebris(result.debris.wertu, Faction.Wertu);
+            lines.Add($"+{result.debris.wertu} Wertu debris");
         }
-        if (result.zythDebris != 0) {
-            _humanUnit.CargoAddDebris(result.zythDebris, Research.Material.Zyth);
-            lines.Add($"+{result.zythDebris} Zyth debris");
+        if (result.debris.zyth != 0) {
+            _humanUnit.CargoAddDebris(result.debris.zyth, Faction.Zyth);
+            lines.Add($"+{result.debris.zyth} Zyth debris");
+        }
+        if (result.debris.phaa != 0) {
+            _humanUnit.CargoAddDebris(result.debris.phaa, Faction.Phaa);
+            lines.Add($"+{result.debris.phaa} Phaa debris");
         }
 
         if (result.minerals != 0) {
@@ -453,7 +457,7 @@ public class MapView : Node2D {
                 return;
 
             case CheatCommandKind.CurrentSystemChange:
-                _currentSystem.OnPlayerEnter(Faction.Human);
+                _currentSystem.OnPlayerEnter(Faction.Earthling);
                 UpdateUI();
                 return;
 
@@ -604,7 +608,7 @@ public class MapView : Node2D {
                 }
 
             case RandomEvent.EffectKind.AddKrigiaMaterial:
-                _gameState.krigiaMaterial += (int)effect.value;
+                _gameState.researchMaterial.Add((int)effect.value, Faction.Krigia);
                 return;
 
             case RandomEvent.EffectKind.DamageFlagshipPercentage: {
@@ -708,7 +712,7 @@ public class MapView : Node2D {
         ReorderUnitMembers();
 
         var starBase = _gameState.starBases.New();
-        starBase.owner = Faction.Human;
+        starBase.owner = Faction.Earthling;
         starBase.level = 1;
         starBase.mineralsStock = 0;
         starBase.organicStock = 0;
@@ -1036,7 +1040,7 @@ public class MapView : Node2D {
         StarBaseNode baseNode;
 
         var starBase = sys.starBase.Get();
-        if (starBase.owner == Faction.Human) {
+        if (starBase.owner == Faction.Earthling) {
             baseNode = HumanStarBaseNode.New(starBase);
         } else if (starBase.owner == Faction.Scavenger) {
             baseNode = ScavengerStarBaseNode.New(starBase);
@@ -1111,7 +1115,7 @@ public class MapView : Node2D {
                 node = PhaaSpaceUnitNode.New(u);
             } else if (u.owner == Faction.Krigia) {
                 node = KrigiaSpaceUnitNode.New(u);
-            } else if (u.owner == Faction.Human) {
+            } else if (u.owner == Faction.Earthling) {
                 // Handled above.
             } else {
                 throw new Exception("unexpected unit owner: " + u.owner.ToString());
@@ -1126,9 +1130,9 @@ public class MapView : Node2D {
         _gameState.travelSlowPoints = 0;
         _currentSystem = _starSystemNodeByStarSystem[sys];
         _dstSystem = null;
-        _currentSystem.OnPlayerEnter(Faction.Human);
+        _currentSystem.OnPlayerEnter(Faction.Earthling);
         if (sys.starBase.id != 0) {
-            if (sys.starBase.Get().owner == Faction.Human) {
+            if (sys.starBase.Get().owner == Faction.Earthling) {
                 RecoverFleetEnergy(_humanUnit.fleet);
             }
         }
@@ -1213,11 +1217,11 @@ public class MapView : Node2D {
         UpdateDronesValue();
         if (_currentSystem != null) {
             GetNode<Label>("UI/LocationValue").Text = _currentSystem.sys.name;
-            if (_currentSystem.sys.starBase.id != 0 && _currentSystem.sys.starBase.Get().owner == Faction.Human) {
+            if (_currentSystem.sys.starBase.id != 0 && _currentSystem.sys.starBase.Get().owner == Faction.Earthling) {
                 enterBase.Disabled = false;
             }
             // Can mine only in own or neutral systems.
-            if (_currentSystem.sys.starBase.id == 0 || _currentSystem.sys.starBase.Get().owner == Faction.Human) {
+            if (_currentSystem.sys.starBase.id == 0 || _currentSystem.sys.starBase.Get().owner == Faction.Earthling) {
                 mining.Disabled = false;
             }
 
@@ -1334,12 +1338,8 @@ public class MapView : Node2D {
 
         _gameState.researchProgress += RpgGameState.ResearchRate();
 
-        if (research.material == Research.Material.Krigia) {
-            _gameState.krigiaMaterial = QMath.ClampMin(_gameState.krigiaMaterial - 1, 0);
-        } else if (research.material == Research.Material.Wertu) {
-            _gameState.wertuMaterial = QMath.ClampMin(_gameState.wertuMaterial - 1, 0);
-        } else if (research.material == Research.Material.Zyth) {
-            _gameState.zythMaterial = QMath.ClampMin(_gameState.zythMaterial - 1, 0);
+        if (research.material != Faction.Neutral) {
+            _gameState.researchMaterial.Add(-1, research.material);
         }
 
         if (_gameState.scienceFunds > 0) {
@@ -1455,7 +1455,7 @@ public class MapView : Node2D {
 
         var starBase = _currentSystem.sys.starBase;
         if (starBase.id != 0) {
-            if (starBase.Get().owner == Faction.Human) {
+            if (starBase.Get().owner == Faction.Earthling) {
                 RecoverFleetEnergy(_humanUnit.fleet);
             }
         }
@@ -1472,7 +1472,7 @@ public class MapView : Node2D {
         }
 
         if (starBase.id != 0) {
-            if (_gameState.FactionsAtWar(starBase.Get().owner, Faction.Human)) {
+            if (_gameState.FactionsAtWar(starBase.Get().owner, Faction.Earthling)) {
                 RollFleetAttack();
             }
         }
@@ -1619,7 +1619,7 @@ public class MapView : Node2D {
                 return;
             }
             var starBase = starBaseRef.Get();
-            if (!_gameState.FactionsAtWar(starBase.owner, Faction.Human)) {
+            if (!_gameState.FactionsAtWar(starBase.owner, Faction.Earthling)) {
                 return;
             }
             
@@ -1650,7 +1650,7 @@ public class MapView : Node2D {
             if (_currentSystem.sys.artifact == null) {
                 return;
             }
-            if (starBaseRef.id != 0 && _gameState.FactionsAtWar(starBaseRef.Get().owner, Faction.Human)) {
+            if (starBaseRef.id != 0 && _gameState.FactionsAtWar(starBaseRef.Get().owner, Faction.Earthling)) {
                 _currentSystem.sys.artifactRecoveryDelay -= 1;
             } else {
                 _currentSystem.sys.artifactRecoveryDelay -= 2;
@@ -1745,7 +1745,7 @@ public class MapView : Node2D {
         vessels.AddRange(alliedFleet);
         var alliances = new Dictionary<Vessel, int>();
         foreach (var v in vessels) {
-            alliances[v] = _gameState.FactionsAtWar(Faction.Human, v.faction) ? 1 : 0;
+            alliances[v] = _gameState.FactionsAtWar(Faction.Earthling, v.faction) ? 1 : 0;
         }
         SetArenaSettings(location, vessels, spawnMap, alliances);
     }

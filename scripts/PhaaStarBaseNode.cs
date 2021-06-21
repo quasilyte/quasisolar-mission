@@ -25,7 +25,6 @@ public class PhaaStarBaseNode : StarBaseNode {
 
         var vesselProduced = ProcessProduction();
         if (vesselProduced != null) {
-            GD.Print("mantis created");
             VesselFactory.Init(vesselProduced, vesselProduced.Design());
         }
 
@@ -43,7 +42,6 @@ public class PhaaStarBaseNode : StarBaseNode {
                 starBase.powerStock += p.powerPerDay;
             }
         }
-        GD.Print(starBase.mineralsStock + ", " + starBase.organicStock + ", " + starBase.powerStock);
     }
 
     private void MaybeEnqueueVessel() {
@@ -52,6 +50,5 @@ public class PhaaStarBaseNode : StarBaseNode {
         }
 
         starBase.productionQueue.Enqueue("Mantis");
-        GD.Print("enqueue mantis");
     }
 }
