@@ -402,6 +402,14 @@ public class MapView : Node2D {
             _humanUnit.CargoAddDebris(result.debris.phaa, Faction.Phaa);
             lines.Add($"+{result.debris.phaa} Phaa debris");
         }
+        if (result.debris.draklid != 0) {
+            _humanUnit.CargoAddDebris(result.debris.draklid, Faction.Draklid);
+            lines.Add($"+{result.debris.draklid} Draklid debris");
+        }
+        if (result.debris.vespion != 0) {
+            _humanUnit.CargoAddDebris(result.debris.phaa, Faction.Vespion);
+            lines.Add($"+{result.debris.vespion} Vespion debris");
+        }
 
         if (result.minerals != 0) {
             _humanUnit.CargoAddMinerals(result.minerals);

@@ -126,6 +126,46 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="DraklidMaterialValue" type="Label" parent="Status"]
+margin_left = 224.0
+margin_top = 144.0
+margin_right = 288.0
+margin_bottom = 176.0
+text = "9999"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Status/DraklidMaterialValue"]
+margin_left = -192.0
+margin_bottom = 32.0
+text = "Draklid material:"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VespionMaterialValue" type="Label" parent="Status"]
+margin_left = 224.0
+margin_top = 176.0
+margin_right = 288.0
+margin_bottom = 208.0
+text = "9999"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Status/VespionMaterialValue"]
+margin_left = -192.0
+margin_bottom = 32.0
+text = "Vespion material:"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="CreditsValue" type="Label" parent="Status"]
 margin_left = 224.0
 margin_top = 288.0
