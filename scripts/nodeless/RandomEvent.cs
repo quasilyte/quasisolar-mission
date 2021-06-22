@@ -262,7 +262,7 @@ public class RandomEvent {
             "(Krigia unit will attack you even if you'll try to help them.)"
         );
         e.condition = () => {
-            return RpgGameState.instance.day >= 600 && !AtStartingSystem();
+            return RpgGameState.instance.day >= 600 && !AtFriendlySystem();
         };
         e.actions.Add(new Action{
             name = "Join the Wertu side",
