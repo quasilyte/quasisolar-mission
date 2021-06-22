@@ -97,6 +97,11 @@ public class RandomEvent {
         return RpgGameState.instance.humanUnit.Get().pos == RpgGameState.StartingSystem().pos;
     }
 
+    private static bool AtFriendlySystem() {
+        var starSystem = RpgGameState.starSystemByPos[RpgGameState.instance.humanUnit.Get().pos];
+        return starSystem.starBase.id != 0 && starSystem.starBase.Get().owner == Faction.Earthling;
+    }
+
     private static bool SystemHasStarBase() {
         return RpgGameState.starSystemByPos[RpgGameState.instance.humanUnit.Get().pos].starBase.id != 0;
     }
@@ -621,7 +626,7 @@ public class RandomEvent {
             apply = (RandomEventContext _) => {
                 return new Result{
                     text = multilineText(
-                        "Instead of getting just one vessel, now you can produce as much Nomad vessels as you please.",
+                        "Instead of getting just one vessel, now you can produce as many Nomad vessels as you please.",
                         "",
                         "As long as you have enough resources, that is."
                     ),
@@ -854,7 +859,9 @@ public class RandomEvent {
             "We either pay, or fight our way out of it."
         );
         e.condition = () => {
-            return RpgGameState.instance.day > 150 && RpgGameState.instance.humanUnit.Get().FleetCost() < 17500;
+            return RpgGameState.instance.day > 250 &&
+                RpgGameState.instance.humanUnit.Get().FleetCost() < 17500 &&
+                !AtFriendlySystem();
         };
         e.actions.Add(new Action{
             name = "Give all resources",
