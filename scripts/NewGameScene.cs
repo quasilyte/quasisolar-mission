@@ -558,6 +558,12 @@ public class NewGameScene : Node2D {
             new ResourcePlanet(1, 0, 0),
         };
 
+        var numDraklidBases = 2;
+        if (OptionValue("DraklidPresence") == "high") {
+            numDraklidBases++;
+        } else if (OptionValue("DraklidPresence") == "minimal") {
+            numDraklidBases--;
+        }
         var numKrigiaBases = QRandom.IntRange(7, 10);
         if (OptionValue("KrigiaPresence") == "high") {
             numKrigiaBases += 2;
@@ -578,12 +584,12 @@ public class NewGameScene : Node2D {
             InitKrigiaFleet(config, starBase, 25);
             numKrigiaBases--;
         }
-        {
-            var sector = sectors[startingSector];
-            var starBase = NewStarBase(config, Faction.Phaa, 3);
-            BindStarBase(starBase, sector.systems[2]);
-            InitPhaaFleet(config, starBase, 30);
-        }
+        // {
+        //     var sector = sectors[startingSector];
+        //     var starBase = NewStarBase(config, Faction.Phaa, 3);
+        //     BindStarBase(starBase, sector.systems[2]);
+        //     InitPhaaFleet(config, starBase, 30);
+        // }
         {
             var secondSector = startingRow == 0 ? numMapCols : 0;
             var sector = sectors[secondSector];
@@ -592,17 +598,20 @@ public class NewGameScene : Node2D {
             var base0 = NewStarBase(config, Faction.Krigia, 3);
             BindStarBase(base0, sector.systems[0]);
             InitKrigiaFleet(config, base0, roll);
+            numKrigiaBases--;
 
             var base1 = NewStarBase(config, Faction.Draklid, 2);
             BindStarBase(base1, sector.systems[1]);
             InitDraklidFleet(config, base1, roll);
-            numKrigiaBases--;
+            numDraklidBases--;
         }
 
         // Second step: fill everything else.
         DeployBases(config, Faction.Krigia, numKrigiaBases, sectors, _krigiaTemplates);
         DeployBases(config, Faction.Wertu, numWertuBases, sectors, _wertuTemplates);
         DeployBases(config, Faction.Zyth, numZythBases, sectors, _zythTemplates);
+        DeployBases(config, Faction.Draklid, numDraklidBases, sectors, _draklidTemplates);
+        DeployBases(config, Faction.Phaa, 1, sectors, _phaaTemplates);
 
         config.startingSystemID = startingSystem.id;
 
