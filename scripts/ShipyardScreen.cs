@@ -157,7 +157,7 @@ public class ShipyardScreen : Node2D {
             var progressValue = 0;
             if (_starBase.productionQueue.Count != 0) {
                 var vesselDesign = VesselDesign.Find(_starBase.productionQueue.Peek());
-                progressValue = QMath.Percantage(_starBase.productionProgress, vesselDesign.productionTime);
+                progressValue = QMath.Percantage((int)_starBase.productionProgress, vesselDesign.productionTime);
             }
             productionQueue.GetNode<Label>("ProgressValue").Text = progressValue + "%";
         }

@@ -31,7 +31,7 @@ public class StarBase: AbstractPoolValue {
     public int organicStock = 0;
     public int powerStock = 0;
 
-    public int productionProgress = 0;
+    public double productionProgress = 0;
     public Queue<string> productionQueue = new Queue<string>();
 
     public List<Vessel.Ref> garrison = new List<Vessel.Ref>();

@@ -27,10 +27,12 @@ public class KrigiaStarBaseNode : StarBaseNode {
     public override void ProcessDay() {
         base.ProcessDay();
 
-        var vesselProduced = ProcessProduction();
+        // Krigia has unlimited resources, but their
+        // production rate heavily depends on the star base level.
+        var vesselProduced = ProcessProduction(0.2 * starBase.level);
         if (vesselProduced != null) {
             VesselFactory.Init(vesselProduced, vesselProduced.Design());
-            starBase.botProductionDelay = QRandom.IntRange(40, 80);
+            starBase.botProductionDelay = QRandom.IntRange(50, 80);
         }
 
         ProcessResources();
@@ -45,7 +47,6 @@ public class KrigiaStarBaseNode : StarBaseNode {
     }
 
     private void ProcessResources() {
-        // Krigia has unlimited resources.
         starBase.mineralsStock = 1000;
         starBase.organicStock = 1000;
         starBase.powerStock = 1000;
@@ -72,15 +73,24 @@ public class KrigiaStarBaseNode : StarBaseNode {
             return;
         }
 
-        var fleet = new List<Vessel.Ref>();
-        var minGroupSize = 1;
-        var maxGroupSize = 1;
-        if (_gameState.day > 600) {
+
+        int minGroupSize;
+        int maxGroupSize;
+        if (_gameState.day > 1400) {
+            minGroupSize = 2;
+            maxGroupSize = 4;
+        } else if (_gameState.day > 700) {
             minGroupSize = 2;
             maxGroupSize = 3;
         } else if (_gameState.day > 350) {
+            minGroupSize = 1;
             maxGroupSize = 2;
+        } else {
+            minGroupSize = 1;
+            maxGroupSize = 1;
         }
+
+        var fleet = new List<Vessel.Ref>();
         var groupSize = QRandom.IntRange(minGroupSize, maxGroupSize);
         var keptInGarrison = starBase.garrison.FindAll(v => {
             var maxVesselLevel = _gameState.day > 1000 ? 4 : 2;

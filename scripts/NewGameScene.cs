@@ -595,7 +595,7 @@ public class NewGameScene : Node2D {
             var sector = sectors[secondSector];
             var roll = QRandom.FloatRange(35, 55);
 
-            var base0 = NewStarBase(config, Faction.Krigia, 3);
+            var base0 = NewStarBase(config, Faction.Krigia, 2);
             BindStarBase(base0, sector.systems[0]);
             InitKrigiaFleet(config, base0, roll);
             numKrigiaBases--;

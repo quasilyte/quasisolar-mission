@@ -56,18 +56,20 @@ public class StarBaseNode : Node2D {
         }
     }
 
-    protected Vessel ProcessProduction() {
+    protected Vessel ProcessProduction(double productionRate = 1) {
         if (starBase.productionQueue.Count == 0) {
             return null;
         }
         if (starBase.mineralsStock == 0 || starBase.powerStock == 0) {
             return null;
         }
+
+        var productionDelta = productionRate;
         
         Vessel vessel = null;
         var vesselDesignName = starBase.productionQueue.Peek();
         var vesselDesign = VesselDesign.Find(vesselDesignName);
-        if ((starBase.productionProgress + 1) >= vesselDesign.productionTime) {
+        if ((starBase.productionProgress + productionDelta) >= vesselDesign.productionTime) {
             if (starBase.garrison.Count >= StarBase.maxGarrisonSize) {
                 // The vessel is ready, but can't be produced
                 // until something is moved outside of a garrison.
@@ -78,7 +80,7 @@ public class StarBaseNode : Node2D {
             vessel = _gameState.NewVessel(starBase.owner, vesselDesign);
             starBase.garrison.Add(vessel.GetRef());
         } else {
-            starBase.productionProgress++;
+            starBase.productionProgress += productionDelta;
         }
 
         starBase.mineralsStock--;
