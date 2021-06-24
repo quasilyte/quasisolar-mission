@@ -115,6 +115,8 @@ public class QuickBattleMenu : Node2D {
             "Neutral Pirate",
             "Neutral Nomad",
             "Neutral Avenger",
+            "Neutral Spectre",
+            "Neutral Visitor",
             "Zyth Hunter",
             "Zyth Invader",
             "Phaa Mantis",
@@ -140,8 +142,6 @@ public class QuickBattleMenu : Node2D {
             "Wertu Guardian",
             "Wertu Angel",
             "Wertu Dominator",
-            "Unique Spectre",
-            "Unique Visitor",
         };
 
         _specialWeaponOption = GetNode<OptionButton>("SpecialWeaponSelect");

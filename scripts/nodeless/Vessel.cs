@@ -17,6 +17,9 @@ public class Vessel: AbstractPoolValue, IItem {
 
     public string pilotName;
 
+    // There are 3 ranks: 1, 2 and 3.
+    public int rank = 2;
+
     public string designName;
     public string energySourceName;
     public List<string> artifacts = new List<string>();

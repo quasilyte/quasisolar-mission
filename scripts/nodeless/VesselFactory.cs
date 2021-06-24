@@ -93,9 +93,9 @@ public static class VesselFactory {
             InitVespionWasp(v);
         } else if (kind == "Vespion Hornet") {
             InitVespionHornet(v);
-        } else if (kind == "Unique Spectre") {
+        } else if (kind == "Neutral Spectre") {
             InitUniqueSpectre(v);
-        } else if (kind == "Unique Visitor") {
+        } else if (kind == "Neutral Visitor") {
             InitUniqueVisitor(v);
         } else if (kind == "Draklid Raider") {
             InitDraklidRaider(v);
@@ -121,61 +121,86 @@ public static class VesselFactory {
         InitStats(v);
     }
 
+    private static double RankChance(int rank, double first, double second, double third) {
+        if (rank == 1) {
+            return first;
+        }
+        if (rank == 2) {
+            return second;
+        }
+        return third;
+    }
+
+    private static string Pick(object[] options) {
+        var roll = QRandom.Float();
+        double current = 0;
+        for (int i = 0; i < options.Length; i += 2) {
+            double key = (double)options[i];
+            string val = (string)options[i+1];
+            current += key;
+            if (current > 1.0) {
+                throw new Exception("total chance space exceeds 1.0");
+            }
+            if (roll < current) {
+                return val;
+            }
+        }
+        return "";
+    }
+
+    private static void SetShield(Vessel v, params object[] options) {
+        var shield = Pick(options);
+        if (shield != "") {
+            v.shieldName = shield;
+        }
+    }
+
+    private static void AddWeapon(Vessel v, params object[] options) {
+        var w = Pick(options);
+        if (w != "") {
+            v.weapons.Add(w);
+        }
+    }
+
+    private static void SetSpecialWeapon(Vessel v, params object[] options) {
+        var w = Pick(options);
+        if (w != "") {
+            v.specialWeaponName = w;
+        }
+    }
+
     private static void InitNeutralPirate(Vessel v) {
         v.designName = "Pirate";
         v.energySourceName = "Power Generator";
 
-        // 60% - assault laser
-        // 40% - stinger
-        float weaponRoll = QRandom.Float();
-        if (weaponRoll < 0.6) {
-            v.weapons.Add(AssaultLaserWeapon.Design.name);
-        } else {
-            v.weapons.Add(StingerWeapon.Design.name);
-        }
+        AddWeapon(v,
+            0.6, AssaultLaserWeapon.Design.name,
+            0.4, StingerWeapon.Design.name);
 
-        // 70% - spread gun
-        // 30% - rocket launcher
-        float weaponRoll2 = QRandom.Float();
-        if (weaponRoll < 0.7) {
-            v.weapons.Add(SpreadGunWeapon.Design.name);
-        } else {
-            v.weapons.Add(RocketLauncherWeapon.Design.name);
-        }
+        AddWeapon(v,
+            0.7, SpreadGunWeapon.Design.name,
+            0.3, RocketLauncherWeapon.Design.name);
 
-        var shieldRoll = QRandom.Float();
-        if (shieldRoll < 0.25) {
-            v.shieldName = DispersionFieldShield.Design.name;
-        } else if (shieldRoll < 0.5) {
-            v.shieldName = ReflectorShield.Design.name;
-        } else if (shieldRoll < 0.75) {
-            v.shieldName = LaserPerimeterShield.Design.name;
-        }
+        SetShield(v,
+            0.25, DispersionFieldShield.Design.name,
+            0.5, ReflectorShield.Design.name,
+            0.75, LaserPerimeterShield.Design.name);
     }
 
     private static void InitNeutralNomad(Vessel v) {
         v.designName = "Nomad";
         v.energySourceName = "Vortex Battery";
 
-        // 60% - photon burst
-        // 40% - zap
-        float weaponRoll = QRandom.Float();
-        if (weaponRoll < 0.6) {
-            v.weapons.Add(PhotonBurstCannonWeapon.Design.name);
-        } else {
-            v.weapons.Add(ZapWeapon.Design.name);
-        }
+        AddWeapon(v,
+            0.6, PhotonBurstCannonWeapon.Design.name,
+            0.4, ZapWeapon.Design.name);
 
         v.weapons.Add(CutterWeapon.Design.name);
 
-        var shieldRoll = QRandom.Float();
-        if (shieldRoll < 0.25) {
-            v.shieldName = DispersionFieldShield.Design.name;
-        } else if (shieldRoll < 0.5) {
-            v.shieldName = ReflectorShield.Design.name;
-        } else {
-            v.shieldName = LatticeShield.Design.name;
-        }
+        SetShield(v,
+            0.25, DispersionFieldShield.Design.name,
+            0.25, ReflectorShield.Design.name,
+            0.5, LatticeShield.Design.name);
     }
 
     private static void InitNeutralAvenger(Vessel v, bool weak) {
@@ -195,57 +220,29 @@ public static class VesselFactory {
         v.designName = "Raider";
         v.energySourceName = "Power Generator";
 
-        // 40% - needle gun
-        // 30% - zap
-        // 20% - point-defense laser
-        // 10% - spread gun
-        float weaponRoll = QRandom.Float();
-        if (weaponRoll < 0.4) {
-            v.weapons.Add(NeedleGunWeapon.Design.name);
-        } else if (weaponRoll < 0.7) {
-            v.weapons.Add(ZapWeapon.Design.name);
-        } else if (weaponRoll < 0.9) {
-            v.weapons.Add(PointDefenseLaserWeapon.Design.name);
-        } else {
-            v.weapons.Add(SpreadGunWeapon.Design.name);
-        }
+        AddWeapon(v,
+            0.4, NeedleGunWeapon.Design.name,
+            0.3, ZapWeapon.Design.name,
+            0.2, PointDefenseLaserWeapon.Design.name,
+            0.1, SpreadGunWeapon.Design.name);
 
-        // 30% - ion shield
-        var shieldRoll = QRandom.Float();
-        if (shieldRoll < 0.3) {
-            v.shieldName = IonCurtainShield.Design.name;
-        }
+        SetShield(v, 0.3, IonCurtainShield.Design.name);
     }
 
     private static void InitDraklidMarauder(Vessel v) {
         v.designName = "Marauder";
         v.energySourceName = "Advanced Power Generator";
 
-        // 30% - rocket launcher
-        // 30% - point-defense laser
-        // 15% - stinger
-        // 15% - pulse laser
-        // 10% - assault laser
-        float weaponRoll = QRandom.Float();
-        if (weaponRoll < 0.3) {
-            v.weapons.Add(RocketLauncherWeapon.Design.name);
-        } else if (weaponRoll < 0.6) {
-            v.weapons.Add(PointDefenseLaserWeapon.Design.name);
-        } else if (weaponRoll < 0.75) {
-            v.weapons.Add(StingerWeapon.Design.name);
-        } else if (weaponRoll < 0.90) {
-            v.weapons.Add(PulseLaserWeapon.Design.name);
-        } else {
-            v.weapons.Add(AssaultLaserWeapon.Design.name);
-        }
+        AddWeapon(v,
+            0.3, RocketLauncherWeapon.Design.name,
+            0.3, PointDefenseLaserWeapon.Design.name,
+            0.15, StingerWeapon.Design.name,
+            0.15, PulseLaserWeapon.Design.name,
+            0.1, AssaultLaserWeapon.Design.name);
 
         v.specialWeaponName = DisruptorWeapon.Design.name;
 
-        // 50% - ion shield
-        var shieldRoll = QRandom.Float();
-        if (shieldRoll < 0.5) {
-            v.shieldName = IonCurtainShield.Design.name;
-        }
+        SetShield(v, 0.5, IonCurtainShield.Design.name);
 
         // 40% - ion fighter
         // 20% - point-defense guard
@@ -261,110 +258,63 @@ public static class VesselFactory {
         v.designName = "Scout";
         v.energySourceName = "Power Generator";
 
-        // 60% - spread gun
-        // 40% - needle gun
-        float weaponRoll = QRandom.Float();
-        if (weaponRoll < 0.6) {
-            v.weapons.Add(SpreadGunWeapon.Design.name);
-        } else {
-            v.weapons.Add(NeedleGunWeapon.Design.name);
-        }
+        AddWeapon(v,
+            0.6, SpreadGunWeapon.Design.name,
+            0.4, NeedleGunWeapon.Design.name);
     }
 
     private static void InitEarthlingExplorer(Vessel v) {
         v.designName = "Explorer";
         v.energySourceName = "Power Generator";
 
-        float weaponRoll = QRandom.Float();
-        // 50% - ion cannon
-        // 50% - needle gun
-        if (weaponRoll < 0.5) {
-            v.weapons.Add(IonCannonWeapon.Design.name);
-        } else {
-            v.weapons.Add(NeedleGunWeapon.Design.name);
-        }
+        AddWeapon(v,
+            0.5, IonCannonWeapon.Design.name,
+            0.5, NeedleGunWeapon.Design.name);
     }
 
     private static void InitEarthlingFreighter(Vessel v) {
         v.designName = "Freighter";
         v.energySourceName = "Power Generator";
 
-        float weaponRoll = QRandom.Float();
-        // 50% - ion cannon
-        // 50% - needle gun
-        if (weaponRoll < 0.5) {
-            v.weapons.Add(IonCannonWeapon.Design.name);
-        } else {
-            v.weapons.Add(NeedleGunWeapon.Design.name);
-        }
+        AddWeapon(v,
+            0.5, IonCannonWeapon.Design.name,
+            0.5, NeedleGunWeapon.Design.name);
     }
 
     private static void InitEarthlingFighter(Vessel v) {
         v.designName = "Fighter";
         v.energySourceName = "Advanced Power Generator";
 
-        float weaponRoll = QRandom.Float();
-        // 50% - ion cannon
-        // 50% - zap
-        if (weaponRoll < 0.5) {
-            v.weapons.Add(IonCannonWeapon.Design.name);
-        } else {
-            v.weapons.Add(ZapWeapon.Design.name);
-        }
-        // 70% - pulse laser
-        // 30% - needle gun
-        float weaponRoll2 = QRandom.Float();
-        if (weaponRoll2 < 0.7) {
-            v.weapons.Add(PulseLaserWeapon.Design.name);
-        } else {
-            v.weapons.Add(NeedleGunWeapon.Design.name);
-        }
+        AddWeapon(v,
+            0.5, IonCannonWeapon.Design.name,
+            0.5, ZapWeapon.Design.name);
 
-        // 35% - heat shield
-        // 25% - ion shield
-        var shieldRoll = QRandom.Float();
-        if (shieldRoll < 0.35) {
-            v.shieldName = HeatScreenShield.Design.name;
-        } else if (shieldRoll < 0.6) {
-            v.shieldName = IonCurtainShield.Design.name;
-        }
+        AddWeapon(v,
+            0.7, PulseLaserWeapon.Design.name,
+            0.3, NeedleGunWeapon.Design.name);
+
+        SetShield(v,
+            0.35, HeatScreenShield.Design.name,
+            0.25, IonCurtainShield.Design.name);
     }
 
     private static void InitEarthlingInterceptor(Vessel v) {
         v.designName = "Interceptor";
         v.energySourceName = "Vortex Battery";
 
-        float weaponRoll = QRandom.Float();
-        // 50% - stinger
-        // 30% - pulse laser
-        // 20% - ion cannon
-        if (weaponRoll < 0.5) {
-            v.weapons.Add(StingerWeapon.Design.name);
-        } else if (weaponRoll < 0.8) {
-            v.weapons.Add(PulseLaserWeapon.Design.name);
-        } else {
-            v.weapons.Add(IonCannonWeapon.Design.name);
-        }
-        // 80% - rocket launcher
-        // 20% - zap
-        float weaponRoll2 = QRandom.Float();
-        if (weaponRoll2 < 0.8) {
-            v.weapons.Add(RocketLauncherWeapon.Design.name);
-        } else {
-            v.weapons.Add(ZapWeapon.Design.name);
-        }
+        AddWeapon(v,
+            0.5, StingerWeapon.Design.name,
+            0.3, PulseLaserWeapon.Design.name,
+            0.2, IonCannonWeapon.Design.name);
 
-        // 20% - ion shield
-        // 30% - heat shield
-        // 20% - dispersion shield
-        var shieldRoll = QRandom.Float();
-        if (shieldRoll < 0.2) {
-            v.shieldName = IonCurtainShield.Design.name;
-        } else if (shieldRoll < 0.5) {
-            v.shieldName = HeatScreenShield.Design.name;
-        } else if (shieldRoll < 0.7) {
-            v.shieldName = DispersionFieldShield.Design.name;
-        }
+        AddWeapon(v,
+            0.8, RocketLauncherWeapon.Design.name,
+            0.2, ZapWeapon.Design.name);
+
+        SetShield(v,
+            0.3, HeatScreenShield.Design.name,
+            0.2, IonCurtainShield.Design.name,
+            0.2, DispersionFieldShield.Design.name);
     }
 
     private static void InitEarthlingArk(Vessel v) {
@@ -378,121 +328,96 @@ public static class VesselFactory {
         v.designName = "Gladiator";
         v.energySourceName = "Vortex Battery";
 
-        float weaponRoll = QRandom.Float();
-        // 50% - pulse laser
-        // 50% - zap
-        if (weaponRoll < 0.5) {
-            v.weapons.Add(PulseLaserWeapon.Design.name);
-        } else {
-            v.weapons.Add(ZapWeapon.Design.name);
-        }
+        AddWeapon(v,
+            0.5, PulseLaserWeapon.Design.name,
+            0.5, ZapWeapon.Design.name);
 
-        // 60% - reaper cannon
-        // 40% - disruptor
-        float weaponRoll2 = QRandom.Float();
-        if (weaponRoll2 < 0.6) {
-            v.weapons.Add(ReaperCannonWeapon.Design.name);
-        } else {
-            v.weapons.Add(DisruptorWeapon.Design.name);
-        }
 
-        // 50% - laser perimeter
-        // 30% - dispersion shield
-        var shieldRoll = QRandom.Float();
-        if (shieldRoll < 0.5) {
-            v.shieldName = LaserPerimeterShield.Design.name;
-        } else if (shieldRoll < 0.8) {
-            v.shieldName = DispersionFieldShield.Design.name;
-        }
+        AddWeapon(v,
+            0.6, ReaperCannonWeapon.Design.name,
+            0.4, DisruptorWeapon.Design.name);
+
+        SetShield(v,
+            0.5, LaserPerimeterShield.Design.name,
+            0.3, DispersionFieldShield.Design.name);
     }
 
     private static void InitKrigiaTalons(Vessel v) {
         v.designName = "Talons";
-        v.energySourceName = "Power Generator";
 
-        // 30% - scythe
-        // 30% - ion cannon
-        // 25% - pulse laser
-        // 15% - stinger
-        float weaponRoll = QRandom.Float();
-        if (weaponRoll < 0.3) {
-            v.weapons.Add(ScytheWeapon.Design.name);
-        } else if (weaponRoll < 0.6) {
-            v.weapons.Add(IonCannonWeapon.Design.name);
-        } else if (weaponRoll < 0.85) {
-            v.weapons.Add(PulseLaserWeapon.Design.name);
+        if (v.rank < 3) {
+            v.energySourceName = "Power Generator";
         } else {
-            v.weapons.Add(StingerWeapon.Design.name);
+            v.energySourceName = "Advanced Power Generator";
+        }
+
+        if (v.rank == 1) {
+            AddWeapon(v, 
+                0.5, ScytheWeapon.Design.name,
+                0.5, IonCannonWeapon.Design.name);
+        } else if (v.rank == 2) {
+            AddWeapon(v,
+                0.4, ScytheWeapon.Design.name,
+                0.4, IonCannonWeapon.Design.name,
+                0.2, PulseLaserWeapon.Design.name);
+        } else {
+            AddWeapon(v, 
+                0.4, PulseLaserWeapon.Design.name,
+                0.2, ScytheWeapon.Design.name,
+                0.2, IonCannonWeapon.Design.name,
+                0.2, StingerWeapon.Design.name);
         }
     }
 
     private static void InitKrigiaClaws(Vessel v) {
         v.designName = "Claws";
-        v.energySourceName = "Advanced Power Generator";
 
-        float weaponRoll = QRandom.Float();
-        // 50% - pulse laser
-        // 30% - ion cannon
-        // 20% - point-defense laser
-        if (weaponRoll < 0.5) {
-            v.weapons.Add(PulseLaserWeapon.Design.name);
-        } else if (weaponRoll < 0.8) {
-            v.weapons.Add(IonCannonWeapon.Design.name);
-        } else {
-            v.weapons.Add(PointDefenseLaserWeapon.Design.name);
-        }
-        // 50% - rocket launcher
-        // 40% - scythe
-        // 10% - none
-        float weaponRoll2 = QRandom.Float();
-        if (weaponRoll2 < 0.5) {
-            v.weapons.Add(RocketLauncherWeapon.Design.name);
-        } else if (weaponRoll2 < 0.9) {
-            v.weapons.Add(ScytheWeapon.Design.name);
-        } else {
-            // No second weapon.   
+        if (v.rank == 1) {
+            v.energySourceName = "Power Generator";    
+        } else if (v.rank == 2) {
+            v.energySourceName = "Advanced Power Generator";
+        } else if (v.rank == 3) {
+            if (QRandom.Bool()) {
+                v.energySourceName = "Advanced Power Generator";
+            } else {
+                v.energySourceName = "Advanced Power Generator";
+            }
         }
 
-        if (QRandom.Float() < 0.3) {
+        AddWeapon(v,
+            0.5, PulseLaserWeapon.Design.name,
+            0.3, IonCannonWeapon.Design.name,
+            0.2, PointDefenseLaserWeapon.Design.name);
+
+        AddWeapon(v,
+            0.5, RocketLauncherWeapon.Design.name,
+            0.4, ScytheWeapon.Design.name);
+
+        if (QRandom.Float() < RankChance(v.rank, 0.2, 0.3, 0.7)) {
             v.shieldName = IonCurtainShield.Design.name;
         }
     }
 
     private static void InitKrigiaFangs(Vessel v) {
         v.designName = "Fangs";
-        v.energySourceName = "Vortex Battery";
-
-        float weaponRoll = QRandom.Float();
-        // 60% - pulse laser
-        // 20% - assault laser
-        // 20% - stinger
-        if (weaponRoll < 0.6) {
-            v.weapons.Add(PulseLaserWeapon.Design.name);
-        } else if (weaponRoll < 0.8) {
-            v.weapons.Add(AssaultLaserWeapon.Design.name);
+        if (v.rank == 1) {
+            v.energySourceName = "Advanced Power Generator";
         } else {
-            v.weapons.Add(StingerWeapon.Design.name);
-        }
-        // 70% - rocket launcher
-        // 30% - scythe
-        float weaponRoll2 = QRandom.Float();
-        if (weaponRoll2 < 0.7) {
-            v.weapons.Add(RocketLauncherWeapon.Design.name);
-        } else {
-            v.weapons.Add(ScytheWeapon.Design.name);
+            v.energySourceName = "Vortex Battery";
         }
 
-        // 10% - ion shield
-        // 20% - dispersion shield
-        // 30% - reflector shield
-        var shieldRoll = QRandom.Float();
-        if (shieldRoll < 0.1) {
-            v.shieldName = IonCurtainShield.Design.name;
-        } else if (shieldRoll < 0.3) {
-            v.shieldName = DispersionFieldShield.Design.name;
-        } else if (shieldRoll < 0.6) {
-            v.shieldName = ReflectorShield.Design.name;
-        }
+        AddWeapon(v,
+            0.6, PulseLaserWeapon.Design.name,
+            0.2, AssaultLaserWeapon.Design.name,
+            0.2, StingerWeapon.Design.name);
+        AddWeapon(v,
+            0.7, RocketLauncherWeapon.Design.name,
+            0.3, ScytheWeapon.Design.name);
+
+        SetShield(v,
+            0.3, ReflectorShield.Design.name,
+            0.2, DispersionFieldShield.Design.name,
+            0.1, IonCurtainShield.Design.name);
     }
 
     private static void InitKrigiaTusks(Vessel v) {
@@ -502,72 +427,45 @@ public static class VesselFactory {
         v.weapons.Add(StingerWeapon.Design.name);
         if (roll < 0.5) {
             v.energySourceName = "Radioisotope Generator";
-            float weaponRoll = QRandom.Float();
-            if (weaponRoll < 0.5) {
-                v.weapons.Add(RocketLauncherWeapon.Design.name);
-            } else {
-                v.weapons.Add(HurricaneWeapon.Design.name);
-            }
+            AddWeapon(v, 
+                0.5, RocketLauncherWeapon.Design.name,
+                0.5, HurricaneWeapon.Design.name);
         } else {
             v.energySourceName = "Cryogenic Block";
-            float weaponRoll = QRandom.Float();
-            if (weaponRoll < 0.5) {
-                v.weapons.Add(GreatScytheWeapon.Design.name);
-            } else {
-                v.weapons.Add(AssaultLaserWeapon.Design.name);
-            }
+            AddWeapon(v, 
+                0.5, GreatScytheWeapon.Design.name,
+                0.5, AssaultLaserWeapon.Design.name);
         }
 
         var specialRoll = QRandom.Float();
-        if (specialRoll < 0.4) {
+        if (specialRoll < RankChance(v.rank, 0.2, 0.4, 0.8)) {
             v.specialWeaponName = TorpedoLauncherWeapon.Design.name;
         }
 
-        // 30% - ion shield
-        // 20% - dispersion shield
-        // 10% - reflector shield
-        var shieldRoll = QRandom.Float();
-        if (shieldRoll < 0.3) {
-            v.shieldName = IonCurtainShield.Design.name;
-        } else if (shieldRoll < 0.5) {
-            v.shieldName = DispersionFieldShield.Design.name;
-        } else if (shieldRoll < 0.6) {
-            v.shieldName = ReflectorShield.Design.name;
-        }
+        SetShield(v,
+            0.3, IonCurtainShield.Design.name,
+            0.2, DispersionFieldShield.Design.name,
+            0.1, ReflectorShield.Design.name);
     }
 
     private static void InitKrigiaHorns(Vessel v) {
         v.designName = "Horns";
         v.energySourceName = "Graviton Generator";
 
-        float weaponRoll = QRandom.Float();
-        // 50% - pulse laser
-        // 50% - ion cannon
-        if (weaponRoll < 0.5) {
-            v.weapons.Add(PulseLaserWeapon.Design.name);
-        } else {
-            v.weapons.Add(IonCannonWeapon.Design.name);
-        }
+        AddWeapon(v,
+            0.5, PulseLaserWeapon.Design.name,
+            0.5, IonCannonWeapon.Design.name);
+
         v.weapons.Add(PointDefenseLaserWeapon.Design.name);
 
-        var specialRoll = QRandom.Float();
-        if (specialRoll < 0.6) {
-            v.specialWeaponName = MortarWeapon.Design.name;
-        } else {
-            v.specialWeaponName = TorpedoLauncherWeapon.Design.name;
-        }
+        SetSpecialWeapon(v,
+            0.6, MortarWeapon.Design.name,
+            0.4, TorpedoLauncherWeapon.Design.name);
 
-        // 20% - ion shield
-        // 50% - dispersion shield
-        // 30% - reflector shield
-        var shieldRoll = QRandom.Float();
-        if (shieldRoll < 0.2) {
-            v.shieldName = IonCurtainShield.Design.name;
-        } else if (shieldRoll < 0.7) {
-            v.shieldName = DispersionFieldShield.Design.name;
-        } else {
-            v.shieldName = ReflectorShield.Design.name;
-        }
+        SetShield(v,
+            0.5, DispersionFieldShield.Design.name,
+            0.3, ReflectorShield.Design.name,
+            0.2, IonCurtainShield.Design.name);
     }
 
     private static void InitKrigiaAshes(Vessel v) {
@@ -582,34 +480,17 @@ public static class VesselFactory {
 
         v.artifacts.Add(DroidArtifact.Design.name);
 
-        // 20% - ion shield
-        // 50% - dispersion shield
-        // 30% - reflector shield
-        var shieldRoll = QRandom.Float();
-        if (shieldRoll < 0.2) {
-            v.shieldName = IonCurtainShield.Design.name;
-        } else if (shieldRoll < 0.7) {
-            v.shieldName = DispersionFieldShield.Design.name;
-        } else {
-            v.shieldName = ReflectorShield.Design.name;
-        }
+        v.shieldName = AegisShield.Design.name;
     }
 
     private static void InitWertuProbe(Vessel v) {
         v.designName = "Probe";
         v.energySourceName = "Power Generator";
 
-        // 50% - photon burst cannon
-        // 30% - zap
-        // 20% - point-laser defense
-        float weaponRoll = QRandom.Float();
-        if (weaponRoll < 0.5) {
-            v.weapons.Add(PhotonBurstCannonWeapon.Design.name);
-        } else if (weaponRoll < 0.8) {
-            v.weapons.Add(ZapWeapon.Design.name);
-        } else {
-            v.weapons.Add(PointDefenseLaserWeapon.Design.name);
-        }
+        AddWeapon(v,
+            0.5, PhotonBurstCannonWeapon.Design.name,
+            0.3, ZapWeapon.Design.name,
+            0.2, PointDefenseLaserWeapon.Design.name);
     }
 
     private static void InitWertuTransporter(Vessel v) {
@@ -618,176 +499,99 @@ public static class VesselFactory {
 
         v.weapons.Add(TwinPhotonBurstCannonWeapon.Design.name);
 
-        // 40% - lattice
-        // 40% - laser perimeter
-        var shieldRoll = QRandom.Float();
-        if (shieldRoll < 0.4) {
-            v.shieldName = LatticeShield.Design.name;
-        } else if (shieldRoll < 0.8) {
-            v.shieldName = LaserPerimeterShield.Design.name;
-        }
+        SetShield(v,
+            0.4, LatticeShield.Design.name,
+            0.4, LaserPerimeterShield.Design.name);
     }
 
     private static void InitWertuGuardian(Vessel v) {
         v.designName = "Guardian";
         v.energySourceName = "Vortex Battery";
 
-        float weaponRoll = QRandom.Float();
-        // 70% - photon burst cannon
-        // 30% - twin photon burst cannon
-        if (weaponRoll < 0.7) {
-            v.weapons.Add(PhotonBurstCannonWeapon.Design.name);
-        } else {
-            v.weapons.Add(TwinPhotonBurstCannonWeapon.Design.name);
-        }
-        var weaponRoll2 = QRandom.Float();
-        // 40% - point-laser defense
-        // 30% - cutter
-        // 30% - shield breaker
-        if (weaponRoll2 < 0.4) {
-            v.weapons.Add(PointDefenseLaserWeapon.Design.name);
-        } else if (weaponRoll2 < 0.7) {
-            v.weapons.Add(CutterWeapon.Design.name);
-        } else {
-            v.weapons.Add(ShieldBreakerWeapon.Design.name);
-        }
+        AddWeapon(v,
+            0.7, PhotonBurstCannonWeapon.Design.name,
+            0.3, TwinPhotonBurstCannonWeapon.Design.name);
+
+        AddWeapon(v,
+            0.4, PointDefenseLaserWeapon.Design.name,
+            0.3, CutterWeapon.Design.name,
+            0.3, ShieldBreakerWeapon.Design.name);
+
         v.specialWeaponName = PhotonBeamWeapon.Design.name;
 
-        // 20% - lattice
-        // 20% - laser perimeter
-        // 20% - heat screen
-        var shieldRoll = QRandom.Float();
-        if (shieldRoll < 0.2) {
-            v.shieldName = LatticeShield.Design.name;
-        } else if (shieldRoll < 0.4) {
-            v.shieldName = LaserPerimeterShield.Design.name;
-        } else if (shieldRoll < 0.6) {
-            v.shieldName = HeatScreenShield.Design.name;
-        }
+        SetShield(v,
+            0.2, LatticeShield.Design.name,
+            0.2, LaserPerimeterShield.Design.name,
+            0.2, HeatScreenShield.Design.name);
     }
 
     private static void InitWertuAngel(Vessel v) {
         v.designName = "Angel";
         v.energySourceName = "Cryogenic Block";
 
-        float weaponRoll = QRandom.Float();
-        // 60% - point-defense laser
-        // 40% - twin photon burst cannon
-        if (weaponRoll < 0.6) {
-            v.weapons.Add(PointDefenseLaserWeapon.Design.name);
-        } else {
-            v.weapons.Add(TwinPhotonBurstCannonWeapon.Design.name);
-        }
+        AddWeapon(v,
+            0.6, PointDefenseLaserWeapon.Design.name,
+            0.4, TwinPhotonBurstCannonWeapon.Design.name);
 
-        // 70% - cutter
-        // 30% - shield breaker
-        var weaponRoll2 = QRandom.Float();
-        if (weaponRoll < 0.7) {
-            v.weapons.Add(CutterWeapon.Design.name);
-        } else {
-            v.weapons.Add(ShieldBreakerWeapon.Design.name);
-        }
+        AddWeapon(v,
+            0.7, CutterWeapon.Design.name,
+            0.3, ShieldBreakerWeapon.Design.name);
+
         v.specialWeaponName = RestructuringRayWeapon.Design.name;
 
-        // 40% - heat screen
-        var shieldRoll = QRandom.Float();
-        if (shieldRoll < 0.4) {
-            v.shieldName = HeatScreenShield.Design.name;
-        }
+        SetShield(v, 0.4, HeatScreenShield.Design.name);
     }
 
     private static void InitWertuDominator(Vessel v) {
         v.designName = "Dominator";
         v.energySourceName = "Singularial Reactor";
 
-        float weaponRoll = QRandom.Float();
-        // 70% - shield breaker
-        // 30% - twin photon burst cannon
-        if (weaponRoll < 0.7) {
-            v.weapons.Add(ShieldBreakerWeapon.Design.name);
-        } else {
-            v.weapons.Add(TwinPhotonBurstCannonWeapon.Design.name);
-        }
+        AddWeapon(v,
+            0.7, ShieldBreakerWeapon.Design.name,
+            0.3, TwinPhotonBurstCannonWeapon.Design.name);
+
         v.weapons.Add(PlasmaEmitterWeapon.Design.name);
 
-        // 50% - lattice
-        // 50% - laser perimeter
-        var shieldRoll = QRandom.Float();
-        if (shieldRoll < 0.5) {
-            v.shieldName = LatticeShield.Design.name;
-        } else {
-            v.shieldName = LaserPerimeterShield.Design.name;
-        }
+        SetShield(v,
+            0.5, LatticeShield.Design.name,
+            0.5, LaserPerimeterShield.Design.name);
     }
 
     private static void InitZythHunter(Vessel v) {
         v.designName = "Hunter";
         v.energySourceName = "Advanced Power Generator";
 
-        var weaponRoll2 = QRandom.Float();
-        if (weaponRoll2 < 0.5) {
-            v.specialWeaponName = HarpoonWeapon.Design.name;
-        } else {
-            v.specialWeaponName = DisruptorWeapon.Design.name;
-        }
+        SetSpecialWeapon(v,
+            0.5, HarpoonWeapon.Design.name,
+            0.5, DisruptorWeapon.Design.name);
 
-        // 50% - hellfire
-        // 30% - assault laser
-        // 20% - needle gun
-        float weaponRoll = QRandom.Float();
-        if (weaponRoll < 0.5) {
-            v.weapons.Add(HellfireWeapon.Design.name);
-        } else if (weaponRoll < 0.8) {
-            v.weapons.Add(CutterWeapon.Design.name);
-        } else {
-            v.weapons.Add(NeedleGunWeapon.Design.name);
-        }
+        AddWeapon(v,
+            0.5, HellfireWeapon.Design.name,
+            0.3, CutterWeapon.Design.name,
+            0.2, NeedleGunWeapon.Design.name);
 
-        // 40% - ion shield
-        // 20% - heat shield
-        var shieldRoll = QRandom.Float();
-        if (shieldRoll < 0.4) {
-            v.shieldName = IonCurtainShield.Design.name;
-        } else if (shieldRoll < 0.6) {
-            v.shieldName = HeatScreenShield.Design.name;
-        }
+        SetShield(v,
+            0.4, IonCurtainShield.Design.name,
+            0.2, HeatScreenShield.Design.name);
     }
 
     private static void InitZythInvader(Vessel v) {
         v.designName = "Invader";
         v.energySourceName = "Graviton Generator";
 
-        // 50% - disk thrower
-        // 50% - assault laser
-        float weaponRoll = QRandom.Float();
-        if (weaponRoll < 0.5) {
-            v.weapons.Add(DiskThrowerWeapon.Design.name);
-        } else {
-            v.weapons.Add(AssaultLaserWeapon.Design.name);
-        }
+        AddWeapon(v,
+            0.6, DiskThrowerWeapon.Design.name,
+            0.4, AssaultLaserWeapon.Design.name);
 
-        // 60% - pulse laser
-        // 40% - stinger
-        float weaponRoll2 = QRandom.Float();
-        if (weaponRoll2 < 0.6) {
-            v.weapons.Add(PulseLaserWeapon.Design.name);
-        } else {
-            v.weapons.Add(StingerWeapon.Design.name);
-        }
+        AddWeapon(v,
+            0.6, PulseLaserWeapon.Design.name,
+            0.4, StingerWeapon.Design.name);
 
-        var weaponRoll3 = QRandom.Float();
-        if (weaponRoll3 < 0.5) {
-            v.specialWeaponName = DisruptorWeapon.Design.name;
-        }
+        SetSpecialWeapon(v, 0.5, DisruptorWeapon.Design.name);
 
-        // 65% - reflector shield
-        // 35% - dispersion shield
-        var shieldRoll = QRandom.Float();
-        if (shieldRoll < 0.65) {
-            v.shieldName = ReflectorShield.Design.name;
-        } else {
-            v.shieldName = DispersionFieldShield.Design.name;
-        }
+        SetShield(v,
+            0.65, ReflectorShield.Design.name,
+            0.35, DispersionFieldShield.Design.name);
     }
 
     private static void InitPhaaMantis(Vessel v) {
@@ -806,90 +610,51 @@ public static class VesselFactory {
             v.weapons.Add(RocketLauncherWeapon.Design.name);
             v.weapons.Add(RocketLauncherWeapon.Design.name);
         } else {
-            float weaponRoll = QRandom.Float();
-
-            // 60% - bubble gun
-            // 40% - needle gun
-            if (weaponRoll < 0.6) {
-                v.weapons.Add(BubbleGunWeapon.Design.name);
-            } else {
-                v.weapons.Add(NeedleGunWeapon.Design.name);
-            }
-
-            // 70% - rocket launcher
-            // 30% - hurricane
-            float weaponRoll2 = QRandom.Float();
-            if (weaponRoll2 < 0.7) {
-                v.weapons.Add(RocketLauncherWeapon.Design.name);
-            } else {
-                v.weapons.Add(HurricaneWeapon.Design.name);
-            }
+            AddWeapon(v,
+                0.7, BubbleGunWeapon.Design.name,
+                0.3, NeedleGunWeapon.Design.name);
+            AddWeapon(v,
+                0.7, RocketLauncherWeapon.Design.name,
+                0.3, HurricaneWeapon.Design.name);
         }
 
-        // 60% - diffuser
-        // 30% - aegis
-        var shieldRoll = QRandom.Float();
-        if (shieldRoll < 0.6) {
-            v.shieldName = DiffuserShield.Design.name;
-        } else if (shieldRoll < 0.9) {
-            v.shieldName = AegisShield.Design.name;
-        }
+        SetShield(v,
+            0.6, DiffuserShield.Design.name,
+            0.3, AegisShield.Design.name);
     }
 
     private static void InitVespionLarva(Vessel v) {
         v.designName = "Larva";
         v.energySourceName = "Power Generator";
 
-        // 40% - shockwave caster
-        // 40% - swarm spawner
-        // 20% - hyper cutter
-        var weaponRoll = QRandom.Float();
-        if (weaponRoll < 0.4) {
-            v.specialWeaponName = ShockwaveCasterWeapon.Design.name;
-        } else if (weaponRoll < 0.8) {
-            v.specialWeaponName = SwarmSpawnerWeapon.Design.name;
-        } else {
-            v.specialWeaponName = HyperCutterWeapon.Design.name;
-        }
+        SetSpecialWeapon(v,
+            0.4, ShockwaveCasterWeapon.Design.name,
+            0.4, SwarmSpawnerWeapon.Design.name,
+            0.2, HyperCutterWeapon.Design.name);
 
         var sentinelRoll = QRandom.Float();
         if (sentinelRoll < 0.4) {
             v.sentinelName = "Point-Defense Guard";
         }
 
-        // 60% - heat shield
-        var shieldRoll = QRandom.Float();
-        if (shieldRoll < 0.6) {
-            v.shieldName = HeatScreenShield.Design.name;
-        }
+        SetShield(v, 0.6, HeatScreenShield.Design.name);
     }
 
     private static void InitVespionWasp(Vessel v) {
         v.designName = "Wasp";
         v.energySourceName = "Advanced Power Generator";
 
-        // 50% - hyper cutter
-        // 25% - swarm spawner
-        // 25% - shockwave caster
-        var weaponRoll = QRandom.Float();
-        if (weaponRoll < 0.5) {
-            v.specialWeaponName = HyperCutterWeapon.Design.name;
-        } else if (weaponRoll < 0.75) {
-            v.specialWeaponName = SwarmSpawnerWeapon.Design.name;
-        } else {
-            v.specialWeaponName = ShockwaveCasterWeapon.Design.name;
-        }
+        SetSpecialWeapon(v,
+            0.5, HyperCutterWeapon.Design.name,
+            0.25, ShockwaveCasterWeapon.Design.name,
+            0.25, SwarmSpawnerWeapon.Design.name);
 
         var sentinelRoll = QRandom.Float();
         if (sentinelRoll < 0.5) {
             v.sentinelName = "Point-Defense Guard";
         }
 
-        // 70% - heat shield
-        var shieldRoll = QRandom.Float();
-        if (shieldRoll < 0.7) {
-            v.shieldName = HeatScreenShield.Design.name;
-        }
+        SetShield(v, 0.7, HeatScreenShield.Design.name);
     }
 
     private static void InitVespionHornet(Vessel v) {
@@ -912,14 +677,9 @@ public static class VesselFactory {
             v.specialWeaponName = HyperCutterWeapon.Design.name;
         }
 
-        // 40% - heat screen
-        // 40% - laser perimeter
-        var shieldRoll = QRandom.Float();
-        if (shieldRoll < 0.40) {
-            v.shieldName = HeatScreenShield.Design.name;
-        } else if (shieldRoll < 0.8) {
-            v.shieldName = LaserPerimeterShield.Design.name;
-        }
+        SetShield(v,
+            0.4, HeatScreenShield.Design.name,
+            0.4, LaserPerimeterShield.Design.name);
     }
 
     private static void InitUniqueSpectre(Vessel v) {
