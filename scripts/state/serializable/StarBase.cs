@@ -70,6 +70,33 @@ public class StarBase: AbstractPoolValue {
         return CalculateSellingPrice(powerStock, 22);
     }
 
+    public int VesselRank(float roll) {
+        if (level == 1) {
+            return GenerateRank(0.9, 0.1);
+        }
+        if (level == 2) {
+            return GenerateRank(0.7, 0.3);
+        }
+        if (level == 3) {
+            return GenerateRank(0.5, 0.4);
+        }
+        if (level == 4) {
+            return GenerateRank(0.3, 0.45);
+        }
+        return GenerateRank(0.1, 0.45);
+    }
+
+    private int GenerateRank(double first, double second) {
+        var roll = QRandom.Float();
+        if (roll < first) {
+            return 1;
+        }
+        if (roll < second) {
+            return 2;
+        }
+        return 3;
+    }
+
     private PriceInfo CalculateSellingPrice(int currentAmount, float basePrice) {
         // 1 = 120%
         // 2 = 110%

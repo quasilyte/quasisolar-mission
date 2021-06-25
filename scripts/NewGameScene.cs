@@ -406,6 +406,7 @@ public class NewGameScene : Node2D {
                 v.isBot = true;
                 v.pilotName = starBase.owner.ToString(); // FIXME
                 v.faction = starBase.owner;
+                v.rank = starBase.VesselRank(QRandom.Float());
                 VesselFactory.Init(v, _template.design);
                 fleet.Add(v.GetRef());
                 budget -= cost;

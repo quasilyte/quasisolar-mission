@@ -78,6 +78,7 @@ public class StarBaseNode : Node2D {
             starBase.productionProgress = 0;
             starBase.productionQueue.Dequeue();
             vessel = _gameState.NewVessel(starBase.owner, vesselDesign);
+            vessel.rank = starBase.VesselRank(QRandom.Float());
             starBase.garrison.Add(vessel.GetRef());
         } else {
             starBase.productionProgress += productionDelta;

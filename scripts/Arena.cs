@@ -435,7 +435,7 @@ public class Arena : Node2D {
             return;
         }
 
-        var roll = QRandom.FloatRange(0.8f, 1.2f);
+        var roll = QRandom.FloatRange(0.8f, 1 + (0.1f * vessel.rank));
         var debris = (int)((float)p.Vessel.State.debris * roll);
         var design = vessel.Design();
         if (design.affiliation != Faction.Earthling && design.affiliation != Faction.Neutral) {
