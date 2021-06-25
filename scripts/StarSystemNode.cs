@@ -7,8 +7,6 @@ public class StarSystemNode : Node2D {
 
     private StarBaseNode _starBase;
 
-    private PanelContainer _infoBox;
-
     [Signal]
     public delegate void Clicked();
 
@@ -31,9 +29,6 @@ public class StarSystemNode : Node2D {
     public override void _Ready() {
         Position = sys.pos;
 
-        _infoBox = GetNode<PanelContainer>("Z/InfoBox");
-        _infoBox.Visible = false;
-
         GetNode<Label>("Label").Text = sys.name;
         GetNode<Sprite>("Sprite").Frame = (int)sys.color;
 
@@ -43,7 +38,6 @@ public class StarSystemNode : Node2D {
 
         if (sys.intel != null) {
             ShowStarBase();
-            RenderKnownInfo();
         }
     }
 
@@ -85,7 +79,6 @@ public class StarSystemNode : Node2D {
             OnFirstPlayerEnter(faction);
         }
         UpdateInfo();
-        RenderKnownInfo();
     }
 
     public void UpdateInfo() {
@@ -111,74 +104,92 @@ public class StarSystemNode : Node2D {
         }
     }
 
-    private static Label CreateLabel(string name) {
-        var label = new Label();
-        label.Theme = GD.Load<Theme>("res://theme.tres");
-        label.Name = name;
-        label.Align = Label.AlignEnum.Center;
-        return label;
-    }
+    public List<string> GetKnownInfo() {
+        if (sys.intel == null) {
+            return new List<string>{"Unvisited System"};
+        }
 
-    public void RenderKnownInfo() {
-        var box = _infoBox.GetNode<VBoxContainer>("Box");
         var info = sys.intel;
 
+        var lines = new List<string>();
+
         var owner = info.hasBase ? info.baseOwner.ToString() : "Neutral";
-        var titleLabel = box.GetNode<Label>("Title");
-        titleLabel.Text = owner + " System";
+        lines.Add(owner + " System");
 
         if (info.hasBase) {
-            Label baseLabel;
-            if (box.HasNode("Base")) {
-                baseLabel = box.GetNode<Label>("Base");
-            } else {
-                baseLabel = CreateLabel("Base");
-                box.AddChild(baseLabel);
-            }
             var numShips = info.garrisonSize;
             var pluralSuffix = numShips == 1 ? "" : "s";
             var level = Utils.IntToRoman(info.baseLevel);
-            baseLabel.Text = $"Base {level}: {info.baseHp}% HP, {numShips} ship" + pluralSuffix;
-        } else {
-            if (box.HasNode("Base")) {
-                box.GetNode<Label>("Base").QueueFree();
-            }
+            lines.Add($"Base {level}: {info.baseHp}% HP, {numShips} ship" + pluralSuffix);
         }
 
         if (info.hasArtifact) {
-            Label artifactLabel;
-            if (box.HasNode("Artifact")) {
-                artifactLabel = box.GetNode<Label>("Artifact");
-            } else {
-                artifactLabel = CreateLabel("Artifact");
-                box.AddChild(artifactLabel);
-            }
-            artifactLabel.Text = "Artifact Detected";
+            lines.Add("Artifact Detected");
         }
 
         if (info.numResourcePlanets != 0) {
-            Label resourcePlanetsLabel;
-            if (box.HasNode("ResourcePlanets")) {
-                resourcePlanetsLabel = box.GetNode<Label>("ResourcePlanets");
-            } else {
-                resourcePlanetsLabel = CreateLabel("ResourcePlanets");
-                box.AddChild(resourcePlanetsLabel);
-            }
             if (info.numMines == 0) {
-                resourcePlanetsLabel.Text = $"Resource planets: {info.numResourcePlanets}";
+                lines.Add($"Resource planets: {info.numResourcePlanets}");
             } else {
                 var pluralSuffix = info.numMines == 1 ? "" : "s";
-                resourcePlanetsLabel.Text = $"Resource planets: {info.numResourcePlanets} ({info.numMines} mine{pluralSuffix})";
+                lines.Add($"Resource planets: {info.numResourcePlanets} ({info.numMines} mine{pluralSuffix})");
             }
         }
+
+        return lines;
+
+        // if (info.hasBase) {
+        //     Label baseLabel;
+        //     if (box.HasNode("Base")) {
+        //         baseLabel = box.GetNode<Label>("Base");
+        //     } else {
+        //         baseLabel = CreateLabel("Base");
+        //         box.AddChild(baseLabel);
+        //     }
+        //     var numShips = info.garrisonSize;
+        //     var pluralSuffix = numShips == 1 ? "" : "s";
+        //     var level = Utils.IntToRoman(info.baseLevel);
+        //     baseLabel.Text = $"Base {level}: {info.baseHp}% HP, {numShips} ship" + pluralSuffix;
+        // } else {
+        //     if (box.HasNode("Base")) {
+        //         box.GetNode<Label>("Base").QueueFree();
+        //     }
+        // }
+
+        // if (info.hasArtifact) {
+        //     Label artifactLabel;
+        //     if (box.HasNode("Artifact")) {
+        //         artifactLabel = box.GetNode<Label>("Artifact");
+        //     } else {
+        //         artifactLabel = CreateLabel("Artifact");
+        //         box.AddChild(artifactLabel);
+        //     }
+        //     artifactLabel.Text = "Artifact Detected";
+        // }
+
+        // if (info.numResourcePlanets != 0) {
+        //     Label resourcePlanetsLabel;
+        //     if (box.HasNode("ResourcePlanets")) {
+        //         resourcePlanetsLabel = box.GetNode<Label>("ResourcePlanets");
+        //     } else {
+        //         resourcePlanetsLabel = CreateLabel("ResourcePlanets");
+        //         box.AddChild(resourcePlanetsLabel);
+        //     }
+        //     if (info.numMines == 0) {
+        //         resourcePlanetsLabel.Text = $"Resource planets: {info.numResourcePlanets}";
+        //     } else {
+        //         var pluralSuffix = info.numMines == 1 ? "" : "s";
+        //         resourcePlanetsLabel.Text = $"Resource planets: {info.numResourcePlanets} ({info.numMines} mine{pluralSuffix})";
+        //     }
+        // }
     }
 
     private void OnMouseEnter() {
-        _infoBox.Visible = true;
+        MapItemInfoNode.instance.Pin(this, new Vector2(0, -64), GetKnownInfo());
     }
 
     private void OnMouseExited() {
-        _infoBox.Visible = false;
+        MapItemInfoNode.instance.Unpin(this);
     }
 
     private void SetStarBaseColor() {

@@ -765,7 +765,7 @@ public class RandomEvent {
             "`This is a non-military Wertu liner from Zeta Draconis. Our batteries are exhausted and we can't charge the warp engine to leave this system. Please help.`"
         );
         e.extraText = (RandomEventContext ctx) => {
-            if (RpgGameState.instance.technologiesResearched.Contains("Long-range Scanners") || RpgGameState.instance.technologiesResearched.Contains("Long-range Scanners II")) {
+            if (RpgGameState.instance.technologiesResearched.Contains("Long-range Scanners")) {
                 if (ctx.roll < 0.4) {
                     return "(Long-range Scanners) Vessel cargo contains valuable resources.";
                 }

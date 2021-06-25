@@ -116,6 +116,9 @@ public class MapView : Node2D {
         RpgGameState.arenaUnit2 = null;
         _gameState.CollectGarbage();
 
+        MapItemInfoNode.instance = MapItemInfoNode.New();
+        AddChild(MapItemInfoNode.instance);
+
         RenderMap();
 
         _movementToggle = GetNode<TextureButton>("UI/MovementToggle");
@@ -462,7 +465,6 @@ public class MapView : Node2D {
             case CheatCommandKind.RevealMap:
                 foreach (var sys in _starSystemNodes) {
                     sys.UpdateInfo();
-                    sys.RenderKnownInfo();
                     sys.ShowStarBase();
                 }
                 return;
@@ -742,7 +744,6 @@ public class MapView : Node2D {
         _currentSystem.AddStarBase(starBaseNode);
         starBaseNode.Visible = true;
         _currentSystem.UpdateInfo();
-        _currentSystem.RenderKnownInfo();
         GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/construction_completed.wav"));
 
         UpdateUI();
@@ -1477,7 +1478,6 @@ public class MapView : Node2D {
         }
 
         _currentSystem.UpdateInfo();
-        _currentSystem.RenderKnownInfo();
 
         foreach (var u in _spaceUnits) {
             if (u.unit.pos == _currentSystem.sys.pos) {
@@ -1688,7 +1688,6 @@ public class MapView : Node2D {
                 StopMovement();
 
                 _currentSystem.UpdateInfo();
-                _currentSystem.RenderKnownInfo();
             }
             _gameState.fuel -= 3;
             return;

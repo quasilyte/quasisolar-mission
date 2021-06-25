@@ -53,23 +53,6 @@ public class Research {
     }
 
     public static List<Research> list = new List<Research>{
-        // Misc tech.
-
-        new Research{
-            name = "Long-range Scanners",
-            category = Category.Upgrade,
-            researchTime = 35,
-            effect = "an ability to scan non-military vessels",
-        },
-
-        new Research{
-            name = "Long-range Scanners II",
-            category = Category.Upgrade,
-            researchTime = 60,
-            effect = "an ability to scan any vessel",
-            dependencies = {"Long-range Scanners"},
-        },
-
         // Science tech.
 
         new Research{

@@ -1,4 +1,5 @@
 using Godot;
+using System.Collections.Generic;
 
 public abstract class SpaceUnitNode : Node2D {
     public SpaceUnit unit;
@@ -53,6 +54,9 @@ public abstract class SpaceUnitNode : Node2D {
     public override void _Ready() {
         _gameState = RpgGameState.instance;
         UpdateColor();
+
+        GetNode<Area2D>("Area2D").Connect("mouse_entered", this, nameof(OnMouseEnter));
+        GetNode<Area2D>("Area2D").Connect("mouse_exited", this, nameof(OnMouseExited));
     }
 
     public override void _Process(float delta) {
@@ -92,5 +96,34 @@ public abstract class SpaceUnitNode : Node2D {
 
     public Vector2 GetDestination() {
         return unit.waypoint;
+    }
+
+    private void OnMouseEnter() {
+        if (!Visible) {
+            return;
+        }
+        if (RpgGameState.instance.humanUnit.id == unit.id) {
+            return;
+        }
+        MapItemInfoNode.instance.Pin(this, new Vector2(0, -48), GetKnownInfo());
+    }
+
+    private void OnMouseExited() {
+        MapItemInfoNode.instance.Unpin(this);
+    }
+
+    private List<string> GetKnownInfo() {
+        var lines = new List<string>();
+        lines.Add(unit.owner.ToString() + " Unit");
+        
+        lines.Add("--");
+        foreach (var x in unit.fleet) {
+            var v = x.Get();
+            var rank = new string('*', v.rank);
+            var level = v.Design().level;
+            lines.Add($"{v.designName} [{level}] [{rank}]");
+        }
+
+        return lines;
     }
 }
