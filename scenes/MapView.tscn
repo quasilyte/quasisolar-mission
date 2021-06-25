@@ -465,7 +465,6 @@ __meta__ = {
 }
 
 [node name="MiningPopup" type="Popup" parent="UI"]
-visible = true
 margin_left = 432.0
 margin_top = 432.0
 margin_right = 1328.0
@@ -1007,7 +1006,6 @@ margin_bottom = 128.0
 text = "Done"
 
 [node name="DraklidsPopup" parent="UI" instance=ExtResource( 18 )]
-visible = true
 margin_left = 1040.0
 margin_top = 64.0
 margin_right = 1616.0
@@ -1062,7 +1060,6 @@ focus_mode = 2
 text = "Leave"
 
 [node name="KrigiaPatrolPopup" parent="UI" instance=ExtResource( 18 )]
-visible = true
 margin_left = 752.0
 margin_top = 464.0
 margin_right = 1328.0
@@ -1129,6 +1126,7 @@ focus_mode = 2
 text = "Retreat"
 
 [node name="KrigiaTaskForcePopup" parent="UI" instance=ExtResource( 18 )]
+visible = true
 margin_left = 784.0
 margin_top = 32.0
 margin_right = 1360.0
@@ -1162,9 +1160,7 @@ margin_right = 528.0
 margin_bottom = 208.0
 text = "Krigia fleet is about to attack a star base.
 
-You can try to escape, but that will put the star base in danger.
-
-Task force is in \"do or die\" mode, they'll not consider any negotiations."
+You can try to escape, but that will put the star base in danger."
 align = 1
 valign = 1
 autowrap = true
