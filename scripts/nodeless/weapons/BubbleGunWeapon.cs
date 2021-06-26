@@ -16,7 +16,7 @@ public class BubbleGunWeapon : IWeapon {
         projectileSpeed = 125.0f,
         botHintSnipe = 0,
         // botHintEffectiveAngle = -0.8f,
-        botHintRange = 300,
+        botHintRange = 350,
     };
     public WeaponDesign GetDesign() { return Design; }
     public void Ready() {}
