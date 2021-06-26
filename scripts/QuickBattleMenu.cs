@@ -127,7 +127,7 @@ public class QuickBattleMenu : Node2D {
             "Earthling Interceptor",
             "Earthling Ark",
             "Earthling Gladiator",
-            "Earthling Valkyrie",
+            "Earthling Ragnarok",
             "Vespion Larva",
             "Vespion Hornet",
             "Draklid Raider",

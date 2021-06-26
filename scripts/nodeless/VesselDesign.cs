@@ -270,18 +270,84 @@ public class VesselDesign: IItem {
             size = Size.Normal,
         },
 
+        // + HP
+        // + Speed
+        // + Sentinel
+        // + Cargo space
+        // - Increased production time
+        // - Acceleration
+        // - Weapon slot
         new VesselDesign{
             level = 6,
             name = "Valkyrie",
             affiliation = Faction.Earthling,
-            description = "Earthling dreadnought vessel",
+            description = "Wertu-based cruiser design",
+            sellingPrice = 22000,
+            debris = 160,
+            productionTime = 210,
+            availability = ProductionAvailability.ResearchRequired,
+
+            maxHp = 430,
+            maxShieldLevel = 3,
+
+            maxSpeed = 85,
+            acceleration = 2,
+            rotationSpeed = 2,
+
+            sentinelSlot = true,
+            specialSlot = true,
+            weaponSlots = 1,
+            artifactSlots = 4,
+
+            cargoSpace = 140,
+            size = Size.Large,
+        },
+
+        // + Acceleration
+        // + Rotation speed
+        // + Faster Production time
+        // - Increased price
+        // - HP
+        new VesselDesign{
+            level = 6,
+            name = "Einherjar",
+            affiliation = Faction.Earthling,
+            description = "Wertu-based cruiser design",
+            sellingPrice = 24500,
+            debris = 160,
+            productionTime = 180,
+            availability = ProductionAvailability.ResearchRequired,
+
+            maxHp = 330,
+            maxShieldLevel = 3,
+
+            maxSpeed = 75,
+            acceleration = 4.5f,
+            rotationSpeed = 3.5f,
+
+            sentinelSlot = false,
+            specialSlot = true,
+            weaponSlots = 2,
+            artifactSlots = 4,
+
+            cargoSpace = 80,
+            size = Size.Large,
+        },
+
+        // + Artifact slot
+        // - Shield level
+        new VesselDesign{
+            level = 6,
+            name = "Valhalla",
+            affiliation = Faction.Earthling,
+            description = "Rarilou-based cruiser design",
             sellingPrice = 22000,
             debris = 160,
             productionTime = 190,
             availability = ProductionAvailability.ResearchRequired,
 
             maxHp = 360,
-            maxShieldLevel = 3,
+            maxShieldLevel = 2,
 
             maxSpeed = 75,
             acceleration = 3,
@@ -293,6 +359,32 @@ public class VesselDesign: IItem {
             artifactSlots = 5,
 
             cargoSpace = 80,
+            size = Size.Large,
+        },
+
+        new VesselDesign{
+            level = 7,
+            name = "Ragnarok",
+            affiliation = Faction.Earthling,
+            description = "An ultimate Earthling vessel design",
+            sellingPrice = 35000,
+            debris = 200,
+            productionTime = 250,
+            availability = ProductionAvailability.ResearchRequired,
+
+            maxHp = 450,
+            maxShieldLevel = 3,
+
+            maxSpeed = 90,
+            acceleration = 4.5f,
+            rotationSpeed = 4,
+
+            sentinelSlot = true,
+            specialSlot = true,
+            weaponSlots = 2,
+            artifactSlots = 5,
+
+            cargoSpace = 250,
             size = Size.Large,
         },
 
@@ -460,7 +552,7 @@ public class VesselDesign: IItem {
             debris = 190,
             productionTime = 170,
 
-            maxHp = 420,
+            maxHp = 450,
             maxShieldLevel = 3,
 
             maxSpeed = 70,
@@ -712,9 +804,9 @@ public class VesselDesign: IItem {
             name = "Leviathan",
             affiliation = Faction.Rarilou,
             description = "TODO",
-            sellingPrice = 11500,
+            sellingPrice = 12500,
             debris = 90,
-            productionTime = 120,
+            productionTime = 130,
 
             maxHp = 250,
             maxShieldLevel = 1,

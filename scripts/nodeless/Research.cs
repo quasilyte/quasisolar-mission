@@ -125,10 +125,47 @@ public class Research {
         },
 
         new Research{
-            name = "Valkyrie",
+            name = "Valhalla",
+            material = Faction.Rarilou,
             category = Category.NewVesselDesign,
-            researchTime = 200,
-            dependencies = {"Gladiator"},
+            researchTime = 190,
+            dependencies = {
+                "Rarilou Vessels",
+                "Gladiator",
+            },
+        },
+
+        new Research{
+            name = "Einherjar",
+            material = Faction.Krigia,
+            category = Category.NewVesselDesign,
+            researchTime = 190,
+            dependencies = {
+                "Krigia Vessels",
+                "Gladiator",
+            },
+        },
+
+        new Research{
+            name = "Valkyrie",
+            material = Faction.Wertu,
+            category = Category.NewVesselDesign,
+            researchTime = 190,
+            dependencies = {
+                "Wertu Vessels",
+                "Gladiator",
+            },
+        },
+
+        new Research{
+            name = "Ragnarok",
+            category = Category.NewVesselDesign,
+            researchTime = 300,
+            dependencies = {
+                "Valhalla",
+                "Einherjar",
+                "Valkyrie",
+            },
         },
 
         new Research{
@@ -457,6 +494,12 @@ public class Research {
         // Wertu tech tree.
 
         new Research{
+            name = "Wertu Vessels",
+            material = Faction.Wertu,
+            researchTime = 130,
+        },
+
+        new Research{
             name = "Wertu Weapons I",
             material = Faction.Wertu,
             researchTime = 70,
@@ -565,6 +608,12 @@ public class Research {
         // Rarilou tech tree.
 
         new Research{
+            name = "Rarilou Vessels",
+            material = Faction.Rarilou,
+            researchTime = 130,
+        },
+
+        new Research{
             name = "Rarilou Weapons",
             material = Faction.Rarilou,
             researchTime = 125,
@@ -595,6 +644,12 @@ public class Research {
         },
 
         // Krigia tech tree.
+
+        new Research{
+            name = "Krigia Vessels",
+            material = Faction.Krigia,
+            researchTime = 130,
+        },
 
         new Research{
             name = "Krigia Weapons I",

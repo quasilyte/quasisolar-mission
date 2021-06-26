@@ -73,8 +73,8 @@ public static class VesselFactory {
             InitEarthlingArk(v);
         } else if (kind == "Earthling Gladiator") {
             InitEarthlingGladiator(v);
-        } else if (kind == "Earthling Valkyrie") {
-            InitEarthlingValkyrie(v);
+        } else if (kind == "Earthling Ragnarok") {
+            InitEarthlingRagnarok(v);
         } else if (kind == "Wertu Probe") {
             InitWertuProbe(v);
         } else if (kind == "Wertu Transporter") {
@@ -349,9 +349,9 @@ public static class VesselFactory {
             0.3, DispersionFieldShield.Design.name);
     }
 
-    private static void InitEarthlingValkyrie(Vessel v) {
-        v.designName = "Valkyrie";
-        v.energySourceName = "Cryogenic Block";
+    private static void InitEarthlingRagnarok(Vessel v) {
+        v.designName = "Ragnarok";
+        v.energySourceName = "Graviton Generator";
 
         AddWeapon(v,
             0.7, IonCannonWeapon.Design.name,
