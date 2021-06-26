@@ -142,6 +142,7 @@ public class ResearchScreen : Node2D {
         GetNode<Label>("Status/PhaaMaterialValue").Text = _gameState.researchMaterial.phaa.ToString();
         GetNode<Label>("Status/DraklidMaterialValue").Text = _gameState.researchMaterial.draklid.ToString();
         GetNode<Label>("Status/VespionMaterialValue").Text = _gameState.researchMaterial.vespion.ToString();
+        GetNode<Label>("Status/RarilouMaterialValue").Text = _gameState.researchMaterial.rarilou.ToString();
 
         GetNode<Label>("Status/CreditsValue").Text = _gameState.credits.ToString();
         GetNode<Label>("Status/ScienceFuncsValue").Text = _gameState.scienceFunds.ToString();

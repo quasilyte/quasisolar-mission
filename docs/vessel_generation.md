@@ -54,12 +54,12 @@ Special Weapons:
 
 Weapons:
 
-* **Photon Burst Cannon**
+* Photon Burst Cannon
 * Point-Laser Defense
 * Zap
 * Cutter
 * **Shield Breaker**
-* **Twin Photon Burst Cannon**
+* Twin Photon Burst Cannon
 * **Plasma Emitter**
 
 Special weapons:
@@ -82,6 +82,18 @@ Special weapons:
 
 * **Harpoon**
 * Disruptor
+
+### Rarilou
+
+Weapons:
+
+* Photon Burst Cannon
+* Twin Photon Burst Cannon
+* Flak Cannon
+
+Special Weapons:
+
+* **Mjolnir**
 
 ### Vespion
 
@@ -133,7 +145,7 @@ Special weapons:
 | Needle Gun | Earthlings, Zyth, Phaa, Draklid | n/a |
 | Harpoon | Zyth | Zyth |
 | Disruptor | Zyth, Draklid | Draklid |
-| Photon Burst Cannon | Wertu | Wertu |
+| Photon Burst Cannon | Wertu, Rarilou | Wertu |
 | Point-Defense Laser | Earthlings, Krigia, Wertu, Draklid | n/a |
 | Pulse Laser | Earthlings, Krigia, Zyth, Draklid | n/a |
 | Rocket Launcher | Earthlings, Krigia, Phaa, Draklid | n/a |
@@ -149,12 +161,12 @@ Special weapons:
 | Reaper Cannon | Earthlings | n/a |
 | Zap | Earthlings, Wertu, Draklid | n/a |
 | Bubble Gun | Phaa | Phaa |
-| Flak Cannon | Vespion | Vespion |
+| Flak Cannon | Vespion, Rarilou | Vespion |
 | Cutter | Earthlings, Wertu, Vespion | n/a |
 | Hyper Cutter | Vespion | Vespion |
 | Assault Laser | Krigia, Zyth, Draklid | Draklid |
 | Great Scythe | Krigia | Krigia |
-| Twin Proton Burst Cannon | Wertu | Wertu |
+| Twin Proton Burst Cannon | Wertu, Rarilou | Wertu |
 | Hurricane | Krigia, Phaa | Krigia |
 | Shield Breaker | Wertu | Wertu |
 | Restructuring Ray | Wertu | Wertu |

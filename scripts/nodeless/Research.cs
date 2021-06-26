@@ -125,6 +125,13 @@ public class Research {
         },
 
         new Research{
+            name = "Valkyrie",
+            category = Category.NewVesselDesign,
+            researchTime = 200,
+            dependencies = {"Gladiator"},
+        },
+
+        new Research{
             name = "Ark Exodus",
             researchTime = 35,
             dependencies = {"Ark"},
@@ -553,6 +560,22 @@ public class Research {
             material = Faction.Vespion,
             researchTime = 135,
             dependencies = {"Vespion Weapons II"},
+        },
+
+        // Rarilou tech tree.
+
+        new Research{
+            name = "Rarilou Weapons",
+            material = Faction.Rarilou,
+            researchTime = 125,
+        },
+
+        new Research{
+            name = "Mjolnir",
+            material = Faction.Rarilou,
+            category = Category.NewSpecialWeapon,
+            researchTime = 190,
+            dependencies = {"Rarilou Weapons"},
         },
 
         // Phaa tech tree.

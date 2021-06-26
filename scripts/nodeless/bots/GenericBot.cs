@@ -25,6 +25,7 @@ class GenericBot : AbstractBot {
         Func<IWeapon, bool> isLongRangeWeapon = (IWeapon w) => {
             return w is TorpedoLauncherWeapon ||
                 w is MortarWeapon ||
+                w is MjolnirWeapon ||
                 w is LancerWeapon ||
                 w is DisruptorWeapon ||
                 w is PhotonBeamWeapon ||
@@ -413,7 +414,7 @@ class GenericBot : AbstractBot {
             return;
         }
 
-        if (design == MortarWeapon.Design || design == ReaperCannonWeapon.Design || design == HarpoonWeapon.Design || design == DisruptorWeapon.Design || design == ShockwaveCasterWeapon.Design || design == SwarmSpawnerWeapon.Design) {
+        if (design == MortarWeapon.Design || design == MjolnirWeapon.Design || design == ReaperCannonWeapon.Design || design == HarpoonWeapon.Design || design == DisruptorWeapon.Design || design == ShockwaveCasterWeapon.Design || design == SwarmSpawnerWeapon.Design) {
             var targetCursor = CalculateFireTarget(_vessel.specialWeapon);
             if (targetCursor != Vector2.Zero) {
                 FireSpecial(targetCursor);

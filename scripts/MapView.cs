@@ -413,6 +413,10 @@ public class MapView : Node2D {
             _humanUnit.CargoAddDebris(result.debris.phaa, Faction.Vespion);
             lines.Add($"+{result.debris.vespion} Vespion debris");
         }
+        if (result.debris.rarilou != 0) {
+            _humanUnit.CargoAddDebris(result.debris.rarilou, Faction.Rarilou);
+            lines.Add($"+{result.debris.rarilou} Rarilou debris");
+        }
 
         if (result.minerals != 0) {
             _humanUnit.CargoAddMinerals(result.minerals);

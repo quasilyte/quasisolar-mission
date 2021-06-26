@@ -44,7 +44,6 @@ script = ExtResource( 2 )
 scale = Vector2( 0.75, 0.75 )
 texture = ExtResource( 1 )
 hframes = 24
-frame = 9
 
 [node name="MissileExplosion" type="AnimationPlayer" parent="."]
 anims/explosion = SubResource( 1 )

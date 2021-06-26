@@ -143,6 +143,7 @@ public class WeaponDesign : IItem {
             TorpedoLauncherWeapon.Design,
             PhotonBeamWeapon.Design,
             MortarWeapon.Design,
+            MjolnirWeapon.Design,
             RestructuringRayWeapon.Design,
             WarpDeviceWeapon.Design,
             DisruptorWeapon.Design,

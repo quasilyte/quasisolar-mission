@@ -81,6 +81,9 @@ public static class WeaponFactory {
         if (w == MortarWeapon.Design) {
             return new MortarWeapon(p);
         }
+        if (w == MjolnirWeapon.Design) {
+            return new MjolnirWeapon(p);
+        }
         if (w == StormbringerWeapon.Design) {
             return new StormbringerWeapon(p);
         }

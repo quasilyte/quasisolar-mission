@@ -8,6 +8,7 @@ public class Projectile : Node2D, IProjectile {
     private Texture _texture;
     private AudioStream _audioStream = null;
     private float _volumeAdjust = 0;
+    private bool _spriteRotation = false;
 
     private static Texture _laserTexture;
     private static Texture _ionTexture;
@@ -165,7 +166,7 @@ public class Projectile : Node2D, IProjectile {
         if (_flakCannonAudioStream == null) {
             _flakCannonAudioStream = GD.Load<AudioStream>("res://audio/weapon/flak.wav");
         }
-        _volumeAdjust = -6;
+        _spriteRotation = true;
         _texture = _flakCannonTexture;
         _audioStream = _flakCannonAudioStream;
     }
@@ -234,6 +235,10 @@ public class Projectile : Node2D, IProjectile {
         if (_hp < 0) {
             QueueFree();
             return;
+        }
+
+        if (_spriteRotation) {
+            _sprite.Rotation += 10 * delta;
         }
 
         var speed = _weapon.projectileSpeed;

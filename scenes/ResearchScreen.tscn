@@ -166,6 +166,26 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="RarilouMaterialValue" type="Label" parent="Status"]
+margin_left = 224.0
+margin_top = 208.0
+margin_right = 288.0
+margin_bottom = 240.0
+text = "9999"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Status/RarilouMaterialValue"]
+margin_left = -192.0
+margin_bottom = 32.0
+text = "Rarilou material:"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="CreditsValue" type="Label" parent="Status"]
 margin_left = 224.0
 margin_top = 288.0

@@ -73,6 +73,8 @@ public static class VesselFactory {
             InitEarthlingArk(v);
         } else if (kind == "Earthling Gladiator") {
             InitEarthlingGladiator(v);
+        } else if (kind == "Earthling Valkyrie") {
+            InitEarthlingValkyrie(v);
         } else if (kind == "Wertu Probe") {
             InitWertuProbe(v);
         } else if (kind == "Wertu Transporter") {
@@ -89,8 +91,6 @@ public static class VesselFactory {
             InitZythInvader(v);
         } else if (kind == "Vespion Larva") {
             InitVespionLarva(v);
-        } else if (kind == "Vespion Wasp") {
-            InitVespionWasp(v);
         } else if (kind == "Vespion Hornet") {
             InitVespionHornet(v);
         } else if (kind == "Neutral Spectre") {
@@ -103,6 +103,8 @@ public static class VesselFactory {
             InitDraklidMarauder(v);
         } else if (kind == "Phaa Mantis") {
             InitPhaaMantis(v);
+        } else if (kind == "Rarilou Leviathan") {
+            InitRarilouLeviathan(v);
         } else {
             throw new Exception($"unexpected player slot kind: {kind}");
         }
@@ -158,6 +160,9 @@ public static class VesselFactory {
     private static void AddWeapon(Vessel v, params object[] options) {
         var w = Pick(options);
         if (w != "") {
+            if (WeaponDesign.Find(w).isSpecial) {
+                throw new Exception("added special weapon with AddWeapon");
+            }
             v.weapons.Add(w);
         }
     }
@@ -165,6 +170,9 @@ public static class VesselFactory {
     private static void SetSpecialWeapon(Vessel v, params object[] options) {
         var w = Pick(options);
         if (w != "") {
+            if (!WeaponDesign.Find(w).isSpecial) {
+                throw new Exception("added normal weapon with SetSpecialWeapon");
+            }
             v.specialWeaponName = w;
         }
     }
@@ -332,14 +340,33 @@ public static class VesselFactory {
             0.5, PulseLaserWeapon.Design.name,
             0.5, ZapWeapon.Design.name);
 
-
-        AddWeapon(v,
+        SetSpecialWeapon(v,
             0.6, ReaperCannonWeapon.Design.name,
             0.4, DisruptorWeapon.Design.name);
 
         SetShield(v,
             0.5, LaserPerimeterShield.Design.name,
             0.3, DispersionFieldShield.Design.name);
+    }
+
+    private static void InitEarthlingValkyrie(Vessel v) {
+        v.designName = "Valkyrie";
+        v.energySourceName = "Cryogenic Block";
+
+        AddWeapon(v,
+            0.7, IonCannonWeapon.Design.name,
+            0.3, ZapWeapon.Design.name);
+
+        AddWeapon(v,
+            0.7, RocketLauncherWeapon.Design.name,
+            0.3, PointDefenseLaserWeapon.Design.name);
+
+        SetSpecialWeapon(v,
+            1.0, MjolnirWeapon.Design.name);
+
+        SetShield(v,
+            0.6, LaserPerimeterShield.Design.name,
+            0.4, DispersionFieldShield.Design.name);
     }
 
     private static void InitKrigiaTalons(Vessel v) {
@@ -623,6 +650,24 @@ public static class VesselFactory {
             0.3, AegisShield.Design.name);
     }
 
+    private static void InitRarilouLeviathan(Vessel v) {
+        v.designName = "Leviathan";
+        v.energySourceName = "Vortex Battery";
+
+        AddWeapon(v,
+            0.5, TwinPhotonBurstCannonWeapon.Design.name,
+            0.3, PhotonBurstCannonWeapon.Design.name,
+            0.2, FlakCannonWeapon.Design.name);
+
+        if (QRandom.Float() < 0.6) {
+            v.specialWeaponName = MjolnirWeapon.Design.name;
+        }
+
+        SetShield(v,
+            0.2, IonCurtainShield.Design.name,
+            0.2, HeatScreenShield.Design.name);
+    }
+
     private static void InitVespionLarva(Vessel v) {
         v.designName = "Larva";
         v.energySourceName = "Power Generator";
@@ -638,23 +683,6 @@ public static class VesselFactory {
         }
 
         SetShield(v, 0.6, HeatScreenShield.Design.name);
-    }
-
-    private static void InitVespionWasp(Vessel v) {
-        v.designName = "Wasp";
-        v.energySourceName = "Advanced Power Generator";
-
-        SetSpecialWeapon(v,
-            0.5, HyperCutterWeapon.Design.name,
-            0.25, ShockwaveCasterWeapon.Design.name,
-            0.25, SwarmSpawnerWeapon.Design.name);
-
-        var sentinelRoll = QRandom.Float();
-        if (sentinelRoll < 0.5) {
-            v.sentinelName = "Point-Defense Guard";
-        }
-
-        SetShield(v, 0.7, HeatScreenShield.Design.name);
     }
 
     private static void InitVespionHornet(Vessel v) {

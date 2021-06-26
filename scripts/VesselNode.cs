@@ -315,8 +315,9 @@ public class VesselNode : Node2D {
         }
     }
 
-    private void ApplyEnergyDamage(float amount) {
-        State.energy -= amount;
+    public void ApplyEnergyDamage(float amount) {
+        var energyDamage = _hasMagneticNegator ? amount / 2 : amount;
+        State.energy -= energyDamage;
         if (State.energy < 0) {
             State.energy = 0;
         }
@@ -346,8 +347,7 @@ public class VesselNode : Node2D {
             projectile.OnImpact();
             ApplyDamage(design.damage, design.damageKind);
             if (design.energyDamage != 0) {
-                var energyDamage = design.energyDamage;
-                ApplyEnergyDamage(_hasMagneticNegator ? energyDamage / 2 : energyDamage);
+                ApplyEnergyDamage(design.energyDamage);
             }
 
             if (design == StingerWeapon.Design) {

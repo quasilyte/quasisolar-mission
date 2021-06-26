@@ -229,7 +229,7 @@ public class VesselDesign: IItem {
             availability = ProductionAvailability.ResearchRequired,
 
             maxHp = 200,
-            maxShieldLevel = 2,
+            maxShieldLevel = 1,
 
             maxSpeed = 95,
             acceleration = 3.5f,
@@ -268,6 +268,32 @@ public class VesselDesign: IItem {
 
             cargoSpace = 110,
             size = Size.Normal,
+        },
+
+        new VesselDesign{
+            level = 6,
+            name = "Valkyrie",
+            affiliation = Faction.Earthling,
+            description = "Earthling dreadnought vessel",
+            sellingPrice = 22000,
+            debris = 160,
+            productionTime = 190,
+            availability = ProductionAvailability.ResearchRequired,
+
+            maxHp = 360,
+            maxShieldLevel = 3,
+
+            maxSpeed = 75,
+            acceleration = 3,
+            rotationSpeed = 2,
+
+            sentinelSlot = false,
+            specialSlot = true,
+            weaponSlots = 2,
+            artifactSlots = 5,
+
+            cargoSpace = 80,
+            size = Size.Large,
         },
 
         new VesselDesign{
@@ -455,11 +481,11 @@ public class VesselDesign: IItem {
             name = "Horns",
             affiliation = Faction.Krigia,
             description = "TODO",
-            sellingPrice = 23700,
+            sellingPrice = 25000,
             debris = 220,
             productionTime = 180,
 
-            maxHp = 300,
+            maxHp = 320,
             maxShieldLevel = 3,
 
             maxSpeed = 105,
@@ -679,6 +705,33 @@ public class VesselDesign: IItem {
             size = Size.Large,
         },
 
+        // Rarilou designs.
+
+        new VesselDesign{
+            level = 4,
+            name = "Leviathan",
+            affiliation = Faction.Rarilou,
+            description = "TODO",
+            sellingPrice = 11500,
+            debris = 90,
+            productionTime = 120,
+
+            maxHp = 250,
+            maxShieldLevel = 1,
+
+            maxSpeed = 95,
+            acceleration = 4,
+            rotationSpeed = 3.5f,
+
+            sentinelSlot = false,
+            specialSlot = true,
+            weaponSlots = 1,
+            artifactSlots = 4,
+
+            cargoSpace = 130,
+            size = Size.Normal,
+        },
+
         // Phaa designs.
         // - No artifact slots.
         // - Small cargo capacity.
@@ -741,31 +794,6 @@ public class VesselDesign: IItem {
             artifactSlots = 1,
 
             cargoSpace = 90,
-            size = Size.Small,
-        },
-
-        new VesselDesign{
-            level = 2,
-            name = "Wasp",
-            affiliation = Faction.Vespion,
-            description = "TODO",
-            sellingPrice = 2400,
-            debris = 35,
-            productionTime = 30,
-
-            maxHp = 105,
-            maxShieldLevel = 1,
-
-            maxSpeed = 105,
-            acceleration = 2.7f,
-            rotationSpeed = 3.75f,
-
-            sentinelSlot = true,
-            specialSlot = true,
-            weaponSlots = 0,
-            artifactSlots = 4,
-
-            cargoSpace = 160,
             size = Size.Small,
         },
 

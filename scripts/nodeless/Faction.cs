@@ -22,4 +22,5 @@ public enum Faction {
     Phaa,
     Draklid,
     Vespion,
+    Rarilou,
 }
