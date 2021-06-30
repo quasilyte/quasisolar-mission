@@ -585,12 +585,6 @@ public class NewGameScene : Node2D {
             InitKrigiaFleet(config, starBase, 25);
             numKrigiaBases--;
         }
-        // {
-        //     var sector = sectors[startingSector];
-        //     var starBase = NewStarBase(config, Faction.Phaa, 3);
-        //     BindStarBase(starBase, sector.systems[2]);
-        //     InitPhaaFleet(config, starBase, 30);
-        // }
         {
             var secondSector = startingRow == 0 ? numMapCols : 0;
             var sector = sectors[secondSector];

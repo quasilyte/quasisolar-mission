@@ -2,7 +2,6 @@ using Godot;
 using System;
 
 public class PhaaSpaceUnitNode : SpaceUnitNode {
-    private StarSystem _currentSystem;
     private bool _canBeDetected = false;
 
     private static PackedScene _scene = null;
@@ -44,9 +43,21 @@ public class PhaaSpaceUnitNode : SpaceUnitNode {
         _currentSystem = null;
     }
 
-    private void OnDestinationReached() {
-        _currentSystem = RpgGameState.starSystemByPos[unit.waypoint];
+    private bool SystemIsFree() {
+        foreach (var u in _gameState.spaceUnits.objects.Values) {
+            if (u.id == unit.id) {
+                continue;
+            }
+            if (u.pos != unit.pos) {
+                continue;
+            }
+            return false;
+        }
 
+        return true;
+    }
+
+    private void OnDestinationReached() {
         if (_currentSystem.starBase.id != 0) {
             if (_currentSystem == unit.botOrigin.Get().system.Get()) {
                 EnterBase(unit.botOrigin.Get());
@@ -55,8 +66,7 @@ public class PhaaSpaceUnitNode : SpaceUnitNode {
             return;
         }
 
-        bool sectorIsFree = _gameState.humanUnit.Get().pos != _currentSystem.pos;
-        if (!sectorIsFree) {
+        if (!SystemIsFree()) {
             return;
         }
 

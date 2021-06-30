@@ -50,8 +50,8 @@ public class RandomEvent {
         AddFleetBackupEnergyPercentage,
         AddVesselToFleet,
         AddTechnology,
-        AddWertuReputation,
-        AddKrigiaReputation,
+        AddReputation,
+        DeclareWar,
         SpendAnyVesselBackupEnergy,
         ApplySlow,
         DamageFleetPercentage,
@@ -59,6 +59,8 @@ public class RandomEvent {
         AddKrigiaMaterial,
         TeleportToSystem,
         EnterArena,
+        EnterTextQuest,
+        PrepareArenaSettings,
     }
 
     public class Effect {
@@ -69,6 +71,7 @@ public class RandomEvent {
 
     public class Result {
         public string text;
+        public bool skipText = false;
         public List<Effect> effects = new List<Effect>();
     }
 
@@ -80,8 +83,8 @@ public class RandomEvent {
     }
 
     public string title;
-    public int expReward;
-    public int luckScore;
+    public int expReward = 0;
+    public int luckScore = 0;
     public TriggerKind trigger;
     public string text;
     public List<Action> actions = new List<Action>();
@@ -125,6 +128,67 @@ public class RandomEvent {
         spaceUnit.pos = RpgGameState.instance.humanUnit.Get().pos;
         spaceUnit.fleet = fleetList;
         return spaceUnit;
+    }
+
+    // TODO: not really random!
+    private static RandomEvent newRarilouEncounter() {
+        var e = new RandomEvent { };
+        e.title = "Rarilou Encounter";
+        e.trigger = TriggerKind.OnSystemEntered;
+        e.text = multilineText(
+            "It's a rare occasion to meet Rarilou fleet in space.",
+            "",
+            "They're already trying to leave this system, so if you have any business with them, you need to do it now."
+        );
+        e.actions.Add(new Action{
+            name = "Attack",
+            apply = (RandomEventContext ctx) => {
+                return new Result{
+                    skipText = true,
+                    effects = {
+                        new Effect{
+                            kind = EffectKind.DeclareWar,
+                            value = Faction.Rarilou,
+                        },
+                        new Effect{
+                            kind = EffectKind.AddReputation,
+                            value = -4,
+                            value2 = Faction.Rarilou,
+                        },
+                        new Effect{
+                            kind = EffectKind.EnterArena,
+                            value = ctx.spaceUnit,
+                        },
+                    },
+                };
+            }
+        });
+        e.actions.Add(new Action{
+            name = "Communicate",
+            apply = (RandomEventContext _) => {
+                return new Result{
+                    skipText = true,
+                    effects = {
+                        new Effect{
+                            kind = EffectKind.PrepareArenaSettings,
+                        },
+                        new Effect{
+                            kind = EffectKind.EnterTextQuest,
+                            value = new RarilouEncounterTQuest(),
+                        }
+                    },
+                };
+            }
+        });
+        e.actions.Add(new Action{
+            name = "Ignore",
+            apply = (RandomEventContext _) => {
+                return new Result{
+                    skipText = true,
+                };
+            }
+        });
+        return e;
     }
 
     private static RandomEvent newDevastatedHomeworld() {
@@ -275,8 +339,9 @@ public class RandomEvent {
                     ),
                     effects = {
                         new Effect{
-                            kind = EffectKind.AddWertuReputation,
+                            kind = EffectKind.AddReputation,
                             value = +3,
+                            value2 = Faction.Wertu,
                         },
                         new Effect{
                             kind = EffectKind.EnterArena,
@@ -298,8 +363,9 @@ public class RandomEvent {
                     ),
                     effects = {
                         new Effect{
-                            kind = EffectKind.AddWertuReputation,
+                            kind = EffectKind.AddReputation,
                             value = -1,
+                            value2 = Faction.Wertu,
                         },
                         new Effect{
                             kind = EffectKind.EnterArena,
@@ -377,8 +443,9 @@ public class RandomEvent {
                     ),
                     effects = {
                         new Effect{
-                            kind = EffectKind.AddKrigiaReputation,
+                            kind = EffectKind.AddReputation,
                             value = -1,
+                            value2 = Faction.Krigia,
                         },
                         new Effect{
                             kind = EffectKind.EnterArena,
@@ -399,8 +466,9 @@ public class RandomEvent {
                     ),
                     effects = {
                         new Effect{
-                            kind = EffectKind.AddKrigiaReputation,
+                            kind = EffectKind.AddReputation,
                             value = +1,
+                            value2 = Faction.Krigia,
                         },
                     },
                 };
@@ -736,8 +804,9 @@ public class RandomEvent {
                 text += "In reward, they paid 900 credits for your assistance.";
             } else {
                 effects.Add(new Effect{
-                    kind = EffectKind.AddWertuReputation,
-                    value = 5,
+                    kind = EffectKind.AddReputation,
+                    value = 3,
+                    value2 = Faction.Wertu,
                 });
                 text += multilineText(
                     "The transport crew gives you the infinite gratitude, but they don't have anything valuable to share.",
@@ -780,7 +849,7 @@ public class RandomEvent {
             name = "Transfer the energy",
             condition = () => {
                 foreach (var v in RpgGameState.instance.humanUnit.Get().fleet) {
-                    if (v.Get().energy > 40) {
+                    if (v.Get().energy >= 40) {
                         return true;
                     }
                 }
@@ -814,8 +883,9 @@ public class RandomEvent {
                             value = spaceUnit,
                         },
                         new Effect{
-                            kind = EffectKind.AddWertuReputation,
+                            kind = EffectKind.AddReputation,
                             value = -2,
+                            value2 = Faction.Wertu,
                         },
                     },
                 };
@@ -1292,6 +1362,8 @@ public class RandomEvent {
         });
         return e;
     }
+
+    public static RandomEvent rarilouEncounter = newRarilouEncounter();
 
     public static RandomEvent[] list;
     public static List<RandomEvent> onSystemEnteredList;

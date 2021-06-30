@@ -149,6 +149,29 @@ We predict that it will enter this part of the space in a few years.
 
 # Races info
 
+## Rarilou
+
+A race that lost their homeworld long ago due to the Zyth war.
+
+Instead of trying to relocate their bases, they developed technologies
+that allow them to survive in the endless journey. They don't have any
+star bases -- their vessels can act as such.
+
+Their fleets fly around the galaxy, harvesting resources from the neutral star systems.
+
+During the game events, they're not activly hostile to any other race.
+
+Normally, there are 2 Rarilou units constantly flying around.
+Destroyed units are replaced after some time.
+
+### Interacting with Rarilou
+
+Since it's impossible to board their bases (there are none),
+all intractions happen through the communication with their space units.
+
+Space units leave the system if they're detected by any other group,
+but there is an encounter event upon the system entrance.
+
 ## Vespion
 
 A carnivorous, xenophobic race that has hard times communicating with other

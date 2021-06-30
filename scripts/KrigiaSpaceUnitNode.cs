@@ -2,7 +2,6 @@ using Godot;
 using System;
 
 public class KrigiaSpaceUnitNode : SpaceUnitNode {
-    private StarSystem _currentSystem;
     private bool _canBeDetected = false;
 
     private static PackedScene _scene = null;
@@ -39,9 +38,6 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
         base.Connect("DestinationReached", this, nameof(OnDestinationReached));
 
         _canBeDetected = unit.waypoint != Vector2.Zero || unit.botProgram == SpaceUnit.Program.KrigiaTaskForce;
-        if (RpgGameState.starSystemByPos.ContainsKey(unit.pos)) {
-            _currentSystem = RpgGameState.starSystemByPos[unit.pos];
-        }
 
         GlobalPosition = unit.pos;
         UpdateVisibility();
@@ -173,7 +169,6 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
     }
 
     private void ReinforcementsDestinationReached() {
-        _currentSystem = RpgGameState.starSystemByPos[unit.waypoint];
         if (_currentSystem.starBase.id != 0 && _currentSystem.starBase.Get().owner == Faction.Krigia) {
             EnterBase(_currentSystem.starBase.Get());
         } else {
@@ -182,12 +177,9 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
     }
 
     private void FinalAttackDestinationReached() {
-        _currentSystem = RpgGameState.starSystemByPos[unit.waypoint];
     }
 
     private void TaskForceDestinationReached() {
-        _currentSystem = RpgGameState.starSystemByPos[unit.waypoint];
-
         var starBase = _currentSystem.starBase;
         if (_currentSystem == unit.botOrigin.Get().system.Get()) {
             EnterBase(starBase.Get());
@@ -196,8 +188,6 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
     }
 
     private void PatrolDestinationReached() {
-        _currentSystem = RpgGameState.starSystemByPos[unit.waypoint];
-
         if (_currentSystem.starBase.id == 0) {
             unit.botSystemLeaveDelay = QRandom.IntRange(8, 32);
             _canBeDetected = false;

@@ -28,6 +28,7 @@ public class ArenaSettings {
     public static int numAsteroids;
 
     public static List<Vessel> combatants;
+    public static Vessel flagship;
 
     // Used only for the campaign mode.
     public static Dictionary<Vessel, int> alliances;
@@ -43,5 +44,7 @@ public class ArenaSettings {
 
         starColor = StarColor.Yellow;
         envDanger = EnvDanger.None;
+
+        flagship = null;
     }
 }

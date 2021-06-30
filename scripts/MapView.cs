@@ -88,6 +88,7 @@ public class MapView : Node2D {
         QRandom.SetRandomNumberGenerator(RpgGameState.rng);
         GetNode<BackgroundMusic>("/root/BackgroundMusic").PlayMapMusic();
 
+        GD.Print("transition = " + RpgGameState.transition.ToString());
         if (RpgGameState.transition == RpgGameState.MapTransition.EnemyBaseAttackRepelled) {
             ProcessUnitCasualties(_humanUnit);
             ProcessStarBaseCasualties(RpgGameState.garrisonStarBase);
@@ -490,7 +491,7 @@ public class MapView : Node2D {
             case CheatCommandKind.CallRandomEvent:
                 OnCheatsDone();
                 _randomEvent = (RandomEvent)command.value;
-                OpenRandomEvent();
+                OpenRandomEvent(NewRandomEventContext());
                 return;
         }
     }
@@ -504,13 +505,13 @@ public class MapView : Node2D {
         _cheatsPopup.Hide();
     }
 
-    private void OpenRandomEvent() {
+    private void OpenRandomEvent(RandomEventContext ctx) {
         StopMovement();
 
         GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/interface/random_event.wav"));
 
         _randomEventPopup.GetNode<Label>("Title").Text = _randomEvent.title;
-        _randomEventContext = NewRandomEventContext();
+        _randomEventContext = ctx;
 
         var text = _randomEvent.text;
         var extraText = _randomEvent.extraText(_randomEventContext);
@@ -546,32 +547,46 @@ public class MapView : Node2D {
         _lockControls = false;
         _randomEventResolvedPopup.Hide();
 
+        RunEventResolutionPostEffect();
+    }
+
+    private void RunEventResolutionPostEffect() {
         switch (_randomEventResolutionPostEffect) {
             case RandomEvent.EffectKind.EnterArena:
                 GetTree().ChangeScene("res://scenes/ArenaScreen.tscn");
+                return;
+            case RandomEvent.EffectKind.EnterTextQuest:
+                GetTree().ChangeScene("res://scenes/TextQuestScreen.tscn");
                 return;
         }
     }
 
     private void OnRandomEventAction(int actionIndex) {
         var eventResult = _randomEvent.actions[actionIndex].apply(_randomEventContext);
-        var outcomeText = "<" + _randomEvent.actions[actionIndex].name + ">";
-        outcomeText += "\n\n" + eventResult.text;
-        outcomeText += $"\n\nGained {_randomEvent.expReward} experience points.";
-
-        _gameState.experience += _randomEvent.expReward;
 
         foreach (var effect in eventResult.effects) {
             ExecuteEffect(effect);
         }
 
-        _randomEventResolvedPopup.GetNode<Label>("Title").Text = _randomEvent.title;
-        _randomEventResolvedPopup.GetNode<Label>("Text").Text = outcomeText;
+        if (eventResult.skipText) {
+            _randomEventPopup.Hide();
+            _lockControls = false;
+            RunEventResolutionPostEffect();
+        } else {
+            var outcomeText = "<" + _randomEvent.actions[actionIndex].name + ">";
+            outcomeText += "\n\n" + eventResult.text;
+            outcomeText += $"\n\nGained {_randomEvent.expReward} experience points.";
+
+            _gameState.experience += _randomEvent.expReward;
+
+            _randomEventResolvedPopup.GetNode<Label>("Title").Text = _randomEvent.title;
+            _randomEventResolvedPopup.GetNode<Label>("Text").Text = outcomeText;
+
+            _randomEventPopup.Hide();
+            _randomEventResolvedPopup.PopupCentered();
+        }
 
         _randomEvent = null;
-
-        _randomEventPopup.Hide();
-        _randomEventResolvedPopup.PopupCentered();
         UpdateUI();
     }
 
@@ -585,6 +600,13 @@ public class MapView : Node2D {
                 AddUnitMember((Vessel)effect.value);
                 ReorderUnitMembers();
                 _gameState.humanUnit.Get().fleet.Add(((Vessel)effect.value).GetRef());
+                return;
+
+            case RandomEvent.EffectKind.DeclareWar:
+                if (_gameState.diplomaticStatuses[(Faction)effect.value] != DiplomaticStatus.War) {
+                    _gameState.reputations[(Faction)effect.value] -= 5;
+                }
+                _gameState.diplomaticStatuses[(Faction)effect.value] = DiplomaticStatus.War;
                 return;
 
             case RandomEvent.EffectKind.AddCredits:
@@ -602,12 +624,11 @@ public class MapView : Node2D {
             case RandomEvent.EffectKind.AddFlagshipBackupEnergy:
                 _humanUnit.fleet[0].Get().AddEnergy((float)effect.value);
                 return;
-            case RandomEvent.EffectKind.AddWertuReputation:
-                _gameState.wertuReputation += (int)effect.value;
+
+            case RandomEvent.EffectKind.AddReputation:
+                _gameState.reputations[(Faction)effect.value2] += (int)effect.value2;
                 return;
-            case RandomEvent.EffectKind.AddKrigiaReputation:
-                _gameState.krigiaReputation += (int)effect.value;
-                return;
+
             case RandomEvent.EffectKind.SpendAnyVesselBackupEnergy:
                 foreach (var v in _humanUnit.fleet) {
                     if (v.Get().energy >= (int)effect.value) {
@@ -661,6 +682,15 @@ public class MapView : Node2D {
                 return;
             case RandomEvent.EffectKind.ApplySlow:
                 _gameState.travelSlowPoints += (int)effect.value;
+                return;
+
+            case RandomEvent.EffectKind.EnterTextQuest:
+                RpgGameState.selectedTextQuest = (AbstractTQuest)effect.value;
+                _randomEventResolutionPostEffect = effect.kind;
+                return;
+
+            case RandomEvent.EffectKind.PrepareArenaSettings:
+                SetArenaSettings(_currentSystem.sys, ConvertVesselList(_randomEventContext.spaceUnit.fleet), ConvertVesselList(_humanUnit.fleet));
                 return;
 
             case RandomEvent.EffectKind.EnterArena: {
@@ -1136,6 +1166,8 @@ public class MapView : Node2D {
                 node = PhaaSpaceUnitNode.New(u);
             } else if (u.owner == Faction.Krigia) {
                 node = KrigiaSpaceUnitNode.New(u);
+            } else if (u.owner == Faction.Rarilou) {
+                node = RarilouSpaceUnitNode.New(u);
             } else if (u.owner == Faction.Earthling) {
                 // Handled above.
             } else {
@@ -1163,9 +1195,30 @@ public class MapView : Node2D {
             if (_gameState.randomEventsAvailable.Contains(e.title)) {
                 _randomEvent = e;
                 _gameState.randomEventsAvailable.Remove(_randomEvent.title);
-                OpenRandomEvent();
+                OpenRandomEvent(NewRandomEventContext());
+                return;
             }
-        } else if (_gameState.randomEventCooldown == 0 && sys.randomEventCooldown == 0) {
+        }
+
+        if (sys.starBase.id == 0) {
+            SpaceUnit rarilouUnit = null;
+            foreach (var x in _gameState.spaceUnits.objects.Values) {
+                if (x.pos == sys.pos && x.owner == Faction.Rarilou) {
+                    rarilouUnit = x;
+                    break;
+                }
+            }
+            if (rarilouUnit != null) {
+                _randomEvent = RandomEvent.rarilouEncounter;
+                var ctx = NewRandomEventContext();
+                ctx.spaceUnit = rarilouUnit;
+                RpgGameState.arenaUnit1 = rarilouUnit;
+                OpenRandomEvent(ctx);
+                return;
+            }
+        }
+
+        if (_gameState.randomEventCooldown == 0 && sys.randomEventCooldown == 0) {
             var roll = QRandom.Float();
             if (roll < 0.5) {
                 MaybeTriggerEnterSystemEvent(sys);
@@ -1198,7 +1251,7 @@ public class MapView : Node2D {
 
         _randomEvent = QRandom.Element(enterSystemEvents);
         _gameState.randomEventsAvailable.Remove(_randomEvent.title);
-        OpenRandomEvent();
+        OpenRandomEvent(NewRandomEventContext());
     }
 
     private void OnDestinationReached() {
@@ -1344,6 +1397,7 @@ public class MapView : Node2D {
 
         ProcessKrigiaActions();
         ProcessPhaaActions();
+        ProcessRarilouActions();
 
         if (_gameState.day == _gameState.missionDeadline) {
             SpawnKrigiaFinalAttack(new Vector2(512, 224), RpgGameState.StartingSystem().pos);
@@ -1749,6 +1803,10 @@ public class MapView : Node2D {
         ArenaSettings.starColor = location.color;
 
         foreach (var v in vessels) {
+            if (v.id == _humanUnit.fleet[0].id) {
+                ArenaSettings.flagship = v;
+            }
+
             v.spawnPos = spawnMap[v];
             ArenaSettings.combatants.Add(v);
             if (!v.isBot) {
@@ -1841,6 +1899,64 @@ public class MapView : Node2D {
         _fleetAttackPopup.GetNode<Label>("Attackers").Text = $"Attackers: {numDefenders} {starBase.owner.ToString()} ship" + pluralSuffix;
         _fleetAttackPopup.GetNode<Button>("RetreatButton").Disabled = _gameState.fuel < RetreatFuelCost();
         _fleetAttackPopup.PopupCentered();
+    }
+
+    private void ProcessRarilouActions() {
+        _gameState.rarilouPlans.unitSpawnDelay = QMath.ClampMin(_gameState.rarilouPlans.unitSpawnDelay - 1, 0);
+
+        if (_gameState.rarilouPlans.unitSpawnDelay != 0) {
+            return;
+        }
+
+        var numUnits = 0;
+        foreach (var u in _gameState.spaceUnits.objects.Values) {
+            if (u.owner == Faction.Rarilou) {
+                numUnits++;
+            }
+        }
+        if (numUnits >= 2) {
+            return;
+        }
+
+        _gameState.rarilouPlans.unitSpawnDelay = QRandom.IntRange(400, 900);
+
+        var fleetSize = QRandom.IntRange(1, 3);
+        var fleet = new List<Vessel.Ref>();
+        for (int i = 0; i < fleetSize; i++) {
+            var rank = QRandom.IntRange(1, 2);
+            if (_gameState.day > 1400) {
+                rank++;
+            }
+            var vessel = VesselFactory.NewVessel(Faction.Rarilou, "Leviathan", rank);
+            fleet.Add(vessel.GetRef());
+        }
+
+        var candidateSystems = new List<StarSystem>();
+        foreach (var sys in _gameState.starSystems.objects.Values) {
+            if (sys.starBase.id != 0) {
+                continue;
+            }
+            if (sys.color == StarColor.Purple) {
+                continue;
+            }
+            candidateSystems.Add(sys);
+        }
+        var system = QRandom.Element(candidateSystems);
+
+        var spaceUnit = _gameState.spaceUnits.New();
+        spaceUnit.owner = Faction.Rarilou;
+        spaceUnit.pos = QMath.RandomizedLocation(system.pos, 60);
+        spaceUnit.waypoint = system.pos;
+        spaceUnit.fleet = fleet;
+
+        if (_gameState.humanUnit.Get().pos.DistanceTo(spaceUnit.pos) <= RpgGameState.RadarRange()) {
+            var notification = MapNotificationNode.New("Unit Materialized");
+            AddChild(notification);
+            notification.GlobalPosition = spaceUnit.pos;
+        }
+
+        var unitNode = RarilouSpaceUnitNode.New(spaceUnit);
+        AddSpaceUnit(unitNode);
     }
 
     private void ProcessPhaaActions() {
@@ -1974,10 +2090,10 @@ public class MapView : Node2D {
         spaceUnit.botProgram = SpaceUnit.Program.KrigiaFinalAttack;
 
         spaceUnit.fleet = new List<Vessel.Ref>{
-            VesselFactory.NewVessel(Faction.Krigia, "Ashes").GetRef(),
-            VesselFactory.NewVessel(Faction.Krigia, "Horns").GetRef(),
-            VesselFactory.NewVessel(Faction.Krigia, "Horns").GetRef(),
-            VesselFactory.NewVessel(Faction.Krigia, "Horns").GetRef(),
+            VesselFactory.NewVessel(Faction.Krigia, "Ashes", 3).GetRef(),
+            VesselFactory.NewVessel(Faction.Krigia, "Horns", 3).GetRef(),
+            VesselFactory.NewVessel(Faction.Krigia, "Horns", 3).GetRef(),
+            VesselFactory.NewVessel(Faction.Krigia, "Horns", 3).GetRef(),
         };
 
         var unitNode = KrigiaSpaceUnitNode.New(spaceUnit);

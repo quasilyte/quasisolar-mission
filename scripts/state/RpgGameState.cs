@@ -93,6 +93,10 @@ public class RpgGameState {
         public int transitionDelay = 5;
     }
 
+    public class RarilouPlans {
+        public int unitSpawnDelay = 0;
+    }
+
     public RpgGameState() {}
 
     public void InitStaticState(bool newGame) {
@@ -227,12 +231,27 @@ public class RpgGameState {
 
     public KrigiaPlans krigiaPlans = new KrigiaPlans();
     public PhaaPlans phaaPlans = new PhaaPlans();
+    public RarilouPlans rarilouPlans = new RarilouPlans();
 
-    public int krigiaReputation = -25;
-    public int wertuReputation = 10;
-    public int zythReputation = -10;
-    public int vespionReputation = 0;
-    public int phaaReputation = 0;
+    public Dictionary<Faction, int> reputations = new Dictionary<Faction, int>{
+        {Faction.Krigia, -25},
+        {Faction.Wertu, 10},
+        {Faction.Zyth, -10},
+        {Faction.Vespion, 0},
+        {Faction.Phaa, 0},
+        {Faction.Draklid, -5},
+        {Faction.Rarilou, 0},
+    };
+
+    public Dictionary<Faction, DiplomaticStatus> diplomaticStatuses = new Dictionary<Faction, DiplomaticStatus>{
+        {Faction.Krigia, DiplomaticStatus.War},
+        {Faction.Wertu, DiplomaticStatus.NonAttackPact},
+        {Faction.Zyth, DiplomaticStatus.Unspecified},
+        {Faction.Vespion, DiplomaticStatus.Unspecified},
+        {Faction.Phaa, DiplomaticStatus.Unspecified},
+        {Faction.Draklid, DiplomaticStatus.Unspecified},
+        {Faction.Rarilou, DiplomaticStatus.Unspecified},
+    };
 
     public int drones = 0;
     public int dronePrice;

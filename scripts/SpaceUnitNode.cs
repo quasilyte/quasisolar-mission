@@ -4,6 +4,8 @@ using System.Collections.Generic;
 public abstract class SpaceUnitNode : Node2D {
     public SpaceUnit unit;
 
+    protected StarSystem _currentSystem;
+
     protected RpgGameState _gameState;
 
     protected MapNodeColor _spriteColor;
@@ -55,6 +57,10 @@ public abstract class SpaceUnitNode : Node2D {
         _gameState = RpgGameState.instance;
         UpdateColor();
 
+        if (RpgGameState.starSystemByPos.ContainsKey(unit.pos)) {
+            _currentSystem = RpgGameState.starSystemByPos[unit.pos];
+        }
+
         GetNode<Area2D>("Area2D").Connect("mouse_entered", this, nameof(OnMouseEnter));
         GetNode<Area2D>("Area2D").Connect("mouse_exited", this, nameof(OnMouseExited));
     }
@@ -85,6 +91,9 @@ public abstract class SpaceUnitNode : Node2D {
         EmitSignal(nameof(PositionChanged), new object[]{traveled});
 
         if (destinationReached) {
+            if (RpgGameState.starSystemByPos.ContainsKey(unit.waypoint)) {
+                _currentSystem = RpgGameState.starSystemByPos[unit.waypoint];
+            }
             EmitSignal(nameof(DestinationReached));
             unit.waypoint = Vector2.Zero;
         }

@@ -4,7 +4,6 @@ using System;
 public class DraklidSpaceUnitNode : SpaceUnitNode {
     // FIXME: bots lose their field values when scene is switched.
 
-    private StarSystem _currentSystem;
     private bool _canBeDetected = false;
 
     private static PackedScene _scene = null;
@@ -24,9 +23,6 @@ public class DraklidSpaceUnitNode : SpaceUnitNode {
         base.Connect("DestinationReached", this, nameof(OnDestinationReached));
 
         _canBeDetected = unit.waypoint != Vector2.Zero;
-        if (RpgGameState.starSystemByPos.ContainsKey(unit.pos)) {
-            _currentSystem = RpgGameState.starSystemByPos[unit.pos];
-        }
 
         GlobalPosition = unit.pos;
         UpdateVisibility();
@@ -74,8 +70,6 @@ public class DraklidSpaceUnitNode : SpaceUnitNode {
     }
 
     private void OnDestinationReached() {
-        _currentSystem = RpgGameState.starSystemByPos[unit.waypoint];
-
         var starBase = _currentSystem.starBase;
         if (starBase.id == 0 || starBase.Get().owner == Faction.Draklid) {
             unit.botSystemLeaveDelay = QRandom.IntRange(8, 32);

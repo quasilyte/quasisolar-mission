@@ -1,7 +1,6 @@
 using Godot;
 using System.Collections.Generic;
 using System;
-using System.Collections.Generic;
 
 public class MapItemInfoNode : Node2D {
     public static MapItemInfoNode instance = null;

@@ -3,12 +3,33 @@ using System.Collections.Generic;
 public class KrigiaPatrolTQuest : AbstractTQuest {
     public KrigiaPatrolTQuest() {
         var gameState = RpgGameState.instance;
-        DeclareValue("Krigia reputation", () => gameState.krigiaReputation, true);
+        DeclareValue("Krigia reputation", () => gameState.reputations[Faction.Krigia], true);
+        DeclareValue("Status", () => DiplomaticStatusString(gameState.diplomaticStatuses[Faction.Krigia]), true);
         DeclareValue("Credits", () => gameState.credits, true);
+        DeclareValue("Minerals", () => gameState.humanUnit.Get().cargo.minerals, true);
+        DeclareValue("Organic", () => gameState.humanUnit.Get().cargo.organic, true);
+        DeclareValue("Power", () => gameState.humanUnit.Get().cargo.power, true);
+        DeclareValue("Free cargo space", () => gameState.humanUnit.Get().CargoFree(), true);
     }
 
     public override TQuestCard GetFirstCard() {
         return DialogueRoot();
+    }
+
+    private string DiplomaticStatusString(DiplomaticStatus status) {
+        if (status == DiplomaticStatus.War) {
+            return "at war";
+        }
+        if (status == DiplomaticStatus.Alliance) {
+            return "allies";
+        }
+        if (status == DiplomaticStatus.NonAttackPact) {
+            return "non-aggression pact";
+        }
+        if (status == DiplomaticStatus.TradingAgreement) {
+            return "trading agreement";
+        }
+        return "unspecified";
     }
 
     private TQuestCard DialogueRoot() {

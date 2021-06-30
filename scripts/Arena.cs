@@ -101,15 +101,15 @@ public class Arena : Node2D {
         AddChild(computer);
     }
 
-    private void AddHumanCombatant(ArenaViewport v, Pilot pilot, bool isGamepad, int deviceId) {
+    private void AddHumanCombatant(ArenaViewport v, Pilot pilot, Vessel combatant) {
         // TODO: HumanNode.New().
         var human = (HumanNode)GD.Load<PackedScene>("res://scenes/HumanNode.tscn").Instance();
         human.pilot = pilot;
         human.camera = v.camera;
         human.canvas = v.canvasLayer;
-        human.playerInput = new PlayerInput(isGamepad, deviceId);
+        human.playerInput = new PlayerInput(combatant.isGamepad, combatant.deviceId);
 
-        if (deviceId == 0) {
+        if (combatant == ArenaSettings.flagship) {
             _flagshipPilot = pilot;
             human.Connect("Defeated", this, nameof(OnHumanDefeated));
         }
@@ -186,7 +186,7 @@ public class Arena : Node2D {
             } else {
                 var v = viewports[combatant.deviceId];
                 v.used = true;
-                AddHumanCombatant(v, pilot, combatant.isGamepad, combatant.deviceId);
+                AddHumanCombatant(v, pilot, combatant);
                 if (humanVessel == null) {
                     humanVessel = vesselNode;
                 }
