@@ -34,7 +34,6 @@ public class RpgGameState {
         public ObjectPool<Vessel> vessels = new ObjectPool<Vessel>();
 
         public int dronePrice;
-        public int repairPrice;
         public int fuelPrice;
         public int exodusPrice;
 
@@ -188,7 +187,6 @@ public class RpgGameState {
         o.seed = c.gameSeed;
 
         o.dronePrice = c.dronePrice;
-        o.repairPrice = c.repairPrice;
         o.fuelPrice = c.fuelPrice;
         o.exodusPrice = c.exodusPrice;
 
@@ -263,7 +261,6 @@ public class RpgGameState {
 
     public int credits = 0;
 
-    public int repairPrice;
     public int fuelPrice;
     public int exodusPrice;
 

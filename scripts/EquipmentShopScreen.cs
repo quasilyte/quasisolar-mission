@@ -616,7 +616,8 @@ public class EquipmentShopScreen : Node2D {
             if (missingHp == 0) {
                 continue;
             }
-            var repairAmount = QMath.ClampMax(missingHp, _gameState.credits / _gameState.repairPrice);
+            var repairPrice = RpgGameState.enteredBase.RepairPrice(v.Design());
+            var repairAmount = QMath.ClampMax(missingHp, _gameState.credits / repairPrice);
             if (repairAmount == 0) {
                 continue;
             }
@@ -626,7 +627,7 @@ public class EquipmentShopScreen : Node2D {
             } else {
                 v.hp += repairAmount;
             }
-            _gameState.credits -= repairAmount * _gameState.repairPrice;
+            _gameState.credits -= repairAmount * repairPrice;
         }
 
         if (repairedSome) {
@@ -640,10 +641,11 @@ public class EquipmentShopScreen : Node2D {
             return;
         }
 
+        var repairPrice = RpgGameState.enteredBase.RepairPrice(_selectedVessel.Design());
         var missingHp = (int)(_selectedVessel.Design().maxHp - _selectedVessel.hp);
-        _repairPopup.GetNode<Label>("RepairFull/Label").Text = (_gameState.repairPrice * missingHp).ToString() + " cr";
+        _repairPopup.GetNode<Label>("RepairFull/Label").Text = (repairPrice * missingHp).ToString() + " cr";
         _repairPopup.GetNode<Button>("RepairMinor").Disabled = _selectedVessel.hp + 25 > _selectedVessel.Design().maxHp;
-        _repairPopup.GetNode<Label>("RepairMinor/Label").Text = (_gameState.repairPrice * 25).ToString() + " cr";
+        _repairPopup.GetNode<Label>("RepairMinor/Label").Text = (repairPrice * 25).ToString() + " cr";
 
         _lockControls = true;
         _repairPopup.PopupCentered();
@@ -653,7 +655,7 @@ public class EquipmentShopScreen : Node2D {
         _repairPopup.Hide();
         _lockControls = false;
         var missingHp = (int)(_selectedVessel.Design().maxHp - _selectedVessel.hp);
-        var price = _gameState.repairPrice * missingHp;
+        var price = RpgGameState.enteredBase.RepairPrice(_selectedVessel.Design()) * missingHp;
         if (_gameState.credits < price) {
             return;
         }
@@ -666,7 +668,7 @@ public class EquipmentShopScreen : Node2D {
     private void OnMinorRepairButton() {
         _repairPopup.Hide();
         _lockControls = false;
-        var price = _gameState.repairPrice * 25;
+        var price = RpgGameState.enteredBase.RepairPrice(_selectedVessel.Design()) * 25;
         if (_gameState.credits < price) {
             return;
         }

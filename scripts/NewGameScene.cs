@@ -254,7 +254,6 @@ public class NewGameScene : Node2D {
             startingCredits = OptionIntValue("StartingCredits"),
             startingFuel = (int)(limits.maxFuel) - 100,
             fuelPrice = 3,
-            repairPrice = 7,
             travelSpeed = 60,
             randomEventCooldown = 20,
 

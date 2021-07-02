@@ -56,6 +56,10 @@ public class StarBase: AbstractPoolValue {
         return new Vessel.Ref{id = 0};
     }
 
+    public int RepairPrice(VesselDesign design) {
+        return 3 + (design.level * 2);
+    }
+
     public PriceInfo DebrisSellPrice() { return new PriceInfo{value = 13, multiplier = 1}; }
 
     public PriceInfo MineralsSellPrice() {
