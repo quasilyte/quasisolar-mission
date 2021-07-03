@@ -60,7 +60,9 @@ public class StarBase: AbstractPoolValue {
         return 3 + (design.level * 2);
     }
 
-    public PriceInfo DebrisSellPrice() { return new PriceInfo{value = 13, multiplier = 1}; }
+    public PriceInfo DebrisSellPrice() {
+        return new PriceInfo{value = 18, multiplier = 1};
+    }
 
     public PriceInfo MineralsSellPrice() {
         return CalculateSellingPrice(mineralsStock, 14);
