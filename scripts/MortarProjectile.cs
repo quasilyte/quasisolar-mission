@@ -22,6 +22,8 @@ public class MortarProjectile : Node2D {
     }
 
     public override void _Ready() {
+        AddToGroup("mortar_shells");
+
         _hp = MortarWeapon.Design.range;
 
         if (_audioStream == null) {

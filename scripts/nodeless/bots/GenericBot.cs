@@ -21,6 +21,8 @@ class GenericBot : AbstractBot {
     private float _attackCooldown = 0;
     private float _fleeDelay = 0;
 
+    private bool _followingAlly = false;
+
     public GenericBot(VesselNode vessel) : base(vessel) {
         Func<IWeapon, bool> isLongRangeWeapon = (IWeapon w) => {
             return w is TorpedoLauncherWeapon ||
@@ -195,24 +197,27 @@ class GenericBot : AbstractBot {
 
     private void ActMove() {
         if (_vessel.HasWaypoints()) {
+            if (_followingAlly) {
+                return;
+            }
             if (_preferCloseRange && _vessel.CurrentWaypointDistance() > 350) {
                 if (_currentTarget != null && TargetDistance() < 300) {
                     var pos = QMath.RandomizedLocation(TargetPosition(), 32);
-                    _actions.ChangeWaypoint(pos);
+                    ChangeWaypoint(pos);
                 }
             }
             if (_preferLongRange && _fleeDelay == 0 && _currentTarget != null && TargetDistance() < 160) {
                 var fleeRoll = QRandom.Float();
                 if (fleeRoll < 0.05) {
                     _fleeDelay = 3 + fleeRoll;
-                    _actions.ChangeWaypoint(CorrectedPos(PickWaypoint(fleeRoll)));
+                    ChangeWaypoint(CorrectedPos(PickWaypoint(fleeRoll)));
                 }
             }
             return;
         }
 
         if (IsOutOfScreen(_vessel.Position)) {
-            _actions.AddWaypoint(QMath.RandomizedLocation(_screenCenter, 512));
+            AddWaypoint(QMath.RandomizedLocation(_screenCenter, 512));
             return;
         }
 
@@ -221,14 +226,39 @@ class GenericBot : AbstractBot {
         }
 
         var roll = QRandom.Float();
-        if (TargetDistance() > 350 && roll > 0.5 && numActiveEnemies() > 1) {
-            var closest = QMath.NearestEnemy(_vessel.Position, _pilot);
-            if (closest != _currentTarget) {
-                SetTarget(closest);
+        if (roll < 0.5) {
+            if (TargetDistance() > 350 && numActiveEnemies() > 1) {
+                var closest = QMath.NearestEnemy(_vessel.Position, _pilot);
+                if (closest != _currentTarget) {
+                    SetTarget(closest);
+                }
+            }
+        } else if (roll < 0.7 && !_preferCloseRange) {
+            if (MaybeFollowAlly()) {
+                _followingAlly = true;
+                return;
             }
         }
 
-        _actions.AddWaypoint(CorrectedPos(PickWaypoint(roll)));
+        AddWaypoint(CorrectedPos(PickWaypoint(QRandom.Float())));
+    }
+
+    private bool MaybeFollowAlly() {
+        Pilot leader = null;
+        foreach (var ally in _pilot.Allies) {
+            if (!ally.Active) {
+                continue;
+            }
+            if (QRandom.Bool()) {
+                leader = ally;
+                break;
+            }
+        }
+        if (leader == null) {
+            return false;
+        }
+        AddWaypoint(CorrectedPos(QMath.RandomizedLocation(leader.Vessel.Position, 80)));
+        return true;
     }
 
     private bool CanReduceDamage(DamageKind damageKind) {
@@ -255,6 +285,40 @@ class GenericBot : AbstractBot {
 
         if (events.targetedByZap) {
             if (_shield.activeEnergyDamageReceive != 1) {
+                Shield();
+                return;
+            }
+        }
+
+        foreach (var n in _vessel.GetTree().GetNodesInGroup("mortar_shells")) {
+            Node2D shell = null;
+            if (n is MjolnirProjectile mjolnirProjectile) {
+                if (mjolnirProjectile.FiredBy.alliance == _pilot.alliance) {
+                    continue;
+                }
+                if (!CanReduceDamage(MjolnirWeapon.Design.damageKind)) {
+                    continue;
+                }
+                shell = mjolnirProjectile;
+                
+            }
+            if (n is MortarProjectile mortarProjectile) {
+                if (mortarProjectile.FiredBy.alliance == _pilot.alliance) {
+                    continue;
+                }
+                if (!CanReduceDamage(MjolnirWeapon.Design.damageKind)) {
+                    continue;
+                }
+                shell = mortarProjectile;
+            }
+
+            if (shell != null) {
+                if (_vessel.Position.DistanceTo(shell.Position) >= 50) {
+                    continue;
+                }
+                if (QRandom.Float() < 0.1) {
+                    continue;
+                }
                 Shield();
                 return;
             }
@@ -540,6 +604,16 @@ class GenericBot : AbstractBot {
             MaybeUseWeapon(1);
             MaybeUseWeapon(0);
         }
+    }
+
+    private void ChangeWaypoint(Vector2 pos) {
+        _actions.ChangeWaypoint(pos);
+        _followingAlly = false;
+    }
+
+    private void AddWaypoint(Vector2 pos) {
+        _actions.AddWaypoint(pos);
+        _followingAlly = false;
     }
 
     private void Shield() {
