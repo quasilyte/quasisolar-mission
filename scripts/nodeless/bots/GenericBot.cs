@@ -292,6 +292,7 @@ class GenericBot : AbstractBot {
 
         foreach (var n in _vessel.GetTree().GetNodesInGroup("mortar_shells")) {
             Node2D shell = null;
+            var dangerDistance = 0;
             if (n is MjolnirProjectile mjolnirProjectile) {
                 if (mjolnirProjectile.FiredBy.alliance == _pilot.alliance) {
                     continue;
@@ -299,6 +300,7 @@ class GenericBot : AbstractBot {
                 if (!CanReduceDamage(MjolnirWeapon.Design.damageKind)) {
                     continue;
                 }
+                dangerDistance = 45;
                 shell = mjolnirProjectile;
                 
             }
@@ -309,11 +311,16 @@ class GenericBot : AbstractBot {
                 if (!CanReduceDamage(MjolnirWeapon.Design.damageKind)) {
                     continue;
                 }
+                dangerDistance = 35;
                 shell = mortarProjectile;
             }
 
             if (shell != null) {
-                if (_vessel.Position.DistanceTo(shell.Position) >= 50) {
+                if (!CanUseForFree(_vessel.shield.GetDesign().energyCost)) {
+                    dangerDistance += 15;
+                }
+
+                if (_vessel.Position.DistanceTo(shell.Position) > dangerDistance) {
                     continue;
                 }
                 if (QRandom.Float() < 0.1) {
@@ -403,7 +410,7 @@ class GenericBot : AbstractBot {
             return;
         }
         // Never spend the backup energy on healing.
-        if (!CanShootForFree(RestructuringRayWeapon.Design.energyCost)) {
+        if (!CanUseForFree(RestructuringRayWeapon.Design.energyCost)) {
             return;
         }
 
@@ -521,7 +528,7 @@ class GenericBot : AbstractBot {
         var effectiveRange = design.botHintRange != 0 ? design.botHintRange : design.range;
 
         if (TargetDistance() <= effectiveRange && w.CanFire(_vessel.State, cursor)) {
-            if (lowOnEnergy && !CanShootForFree(design.energyCost) && !closeRange) {
+            if (lowOnEnergy && !CanUseForFree(design.energyCost) && !closeRange) {
                 // Do not waste energy for shooting at the
                 // targets that are way too far.
                 return Vector2.Zero;
@@ -637,7 +644,7 @@ class GenericBot : AbstractBot {
         }
     }
 
-    private bool CanShootForFree(float energy) {
+    private bool CanUseForFree(float energy) {
         return _vessel.State.energy >= energy;
     }
 
