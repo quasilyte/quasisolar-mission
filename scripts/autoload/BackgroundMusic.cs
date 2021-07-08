@@ -2,18 +2,19 @@ using Godot;
 using System;
 
 public class BackgroundMusic : AudioStreamPlayer {
-    public static bool disabled = true;
+    public static int volumeSetting = 0;
 
     private AudioStream _mainMenuMusic = null;
     private AudioStream _outfitMusic = null;
     private AudioStream _shipyardMusic = null;
     private AudioStream _mapMusic = null;
+    private AudioStream _mapMusic2 = null;
     private AudioStream _battleMusic = null;
 
     public override void _Ready() {}
 
     public void PlayMenuMusic() {
-        if (disabled) {
+        if (volumeSetting == 0) {
             return;
         }
         if (Playing && Stream == _mainMenuMusic) {
@@ -24,12 +25,12 @@ public class BackgroundMusic : AudioStreamPlayer {
             _mainMenuMusic = GD.Load<AudioStream>("res://audio/music/main_menu.ogg");
         }
         Stream = _mainMenuMusic;
-        VolumeDb = -10;
+        VolumeDb = -20 + (volumeSetting * 10);
         Play();
     }
 
     public void PlayOutfitMusic() {
-        if (disabled) {
+        if (volumeSetting == 0) {
             return;
         }
         if (Playing && Stream == _outfitMusic) {
@@ -40,12 +41,12 @@ public class BackgroundMusic : AudioStreamPlayer {
             _outfitMusic = GD.Load<AudioStream>("res://audio/music/outfit.ogg");
         }
         Stream = _outfitMusic;
-        VolumeDb = -5;
+        VolumeDb = -15 + (volumeSetting * 10);
         Play();
     }
 
     public void PlayShipyardMusic() {
-        if (disabled) {
+        if (volumeSetting == 0) {
             return;
         }
         if (Playing && Stream == _shipyardMusic) {
@@ -56,12 +57,12 @@ public class BackgroundMusic : AudioStreamPlayer {
             _shipyardMusic = GD.Load<AudioStream>("res://audio/music/shipyard.ogg");
         }
         Stream = _shipyardMusic;
-        VolumeDb = -10;
+        VolumeDb = -20 + (volumeSetting * 10);
         Play();
     }
 
     public void PlayMapMusic() {
-        if (disabled) {
+        if (volumeSetting == 0) {
             return;
         }
         if (Playing && Stream == _mapMusic) {
@@ -72,12 +73,28 @@ public class BackgroundMusic : AudioStreamPlayer {
             _mapMusic = GD.Load<AudioStream>("res://audio/music/map.ogg");
         }
         Stream = _mapMusic;
-        VolumeDb = -20;
+        VolumeDb = -30 + (volumeSetting * 10);
+        Play();
+    }
+
+    public void PlayMapMusic2() {
+        if (volumeSetting == 0) {
+            return;
+        }
+        if (Playing && Stream == _mapMusic2) {
+            return;
+        }
+        Stop();
+        if (_mapMusic2 == null) {
+            _mapMusic2 = GD.Load<AudioStream>("res://audio/music/map2.ogg");
+        }
+        Stream = _mapMusic2;
+        VolumeDb = -25 + (volumeSetting * 10);
         Play();
     }
 
     public void PlayBattleMusic() {
-        if (disabled) {
+        if (volumeSetting == 0) {
             return;
         }
         if (Playing && Stream == _battleMusic) {
@@ -87,7 +104,7 @@ public class BackgroundMusic : AudioStreamPlayer {
         if (_battleMusic == null) {
             _battleMusic = GD.Load<AudioStream>("res://audio/music/battle.ogg");
         }
-        VolumeDb = 0;
+        VolumeDb = -15 + (volumeSetting * 10);
         Stream = _battleMusic;
         Play();
     }

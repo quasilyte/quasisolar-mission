@@ -12,18 +12,22 @@ public class SettingsScreen : Node2D {
 
         var musicVolume = GetNode<OptionButton>("MusicVolume");
         musicVolume.AddItem("Turned off", 0);
-        musicVolume.AddItem("Normal", 1);
-        musicVolume.Select(BackgroundMusic.disabled ? 0 : 1);
+        musicVolume.AddItem("Quiet", 1);
+        musicVolume.AddItem("Normal", 2);
+        musicVolume.AddItem("Loud", 3);
+        musicVolume.Select(BackgroundMusic.volumeSetting);
 
         GetNode<ButtonNode>("ExitButton").Connect("pressed", this, nameof(OnExitButton));
     }
 
     private void OnExitButton() {
+        var oldMusicVolume = BackgroundMusic.volumeSetting;
+
         GameControls.preferGamepad = GetNode<OptionButton>("ControlMethod").Selected == 0;
-        BackgroundMusic.disabled = GetNode<OptionButton>("MusicVolume").Selected == 0;
+        BackgroundMusic.volumeSetting = GetNode<OptionButton>("MusicVolume").Selected;
 
         var bgMusic = GetNode<BackgroundMusic>("/root/BackgroundMusic");
-        if (BackgroundMusic.disabled && bgMusic.Playing) {
+        if ((oldMusicVolume != BackgroundMusic.volumeSetting || BackgroundMusic.volumeSetting == 0) && bgMusic.Playing) {
             bgMusic.Stop();
         }
 
