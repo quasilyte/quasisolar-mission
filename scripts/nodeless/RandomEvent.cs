@@ -191,6 +191,86 @@ public class RandomEvent {
         return e;
     }
 
+    private static RandomEvent newGamblingExperiment() {
+        var e = new RandomEvent();
+        e.title = "Gambling Experiment";
+        e.expReward = 3;
+        e.luckScore = 9;
+        e.trigger = TriggerKind.OnSystemEntered;
+        e.text = multilineText(
+            "An unidentified vessel contacts you.",
+            "",
+            "`We're trying to better understand the human nature. If you're willing to help us, here is the deal: you can have 1500 RU or 3000 RU with 50% chance of not getting anything. What would you choose?`"
+        );
+        e.actions.Add(new Action{
+            name = "Pick 1500 RU",
+            apply = (RandomEventContext _) => {
+                return new Result{
+                    text = "`Wise choice! I would do the same, but most of my colleagues are convinced that humans would always gamble in this situation.`",
+                    effects = {
+                        new Effect{
+                            kind = EffectKind.AddCredits,
+                            value = 1500,
+                        },
+                    },
+                };
+            }
+        });
+        e.actions.Add(new Action{
+            name = "Go for 3000 RU",
+            apply = (RandomEventContext ctx) => {
+                if (ctx.roll < 0.5) {
+                    return new Result{
+                        text = "`So humans really are into gambling! Unfortunately, this time you were out of luck.`",
+                    };
+                }
+                return new Result{
+                    text = "`So humans really are into gambling! Consider yourself lucky, 3000 resource units will be transfered right away.`",
+                    effects = {
+                        new Effect{
+                            kind = EffectKind.AddCredits,
+                            value = 3000,
+                        },
+                    },
+                };
+            }
+        });
+        e.actions.Add(new Action{
+            name = "Don't pick anything",
+            apply = (RandomEventContext _) => {
+                return new Result{
+                    text = "`Hmm, that's interesting indeed! It doesn't sound rational, but perhaps that's the point!`",
+                };
+            }
+        });
+        return e;
+    }
+
+    // private static RandomEvent newZythOffer() {
+    //     var e = new RandomEvent { };
+    //     e.title = "Zyth Offer";
+    //     e.expReward = 5;
+    //     e.luckScore = 7;
+    //     e.trigger = TriggerKind.OnSystemEntered;
+    //     e.condition = () => RpgGameState.instance.day >= 300;
+    //     e.text = multilineText(
+    //         "Zyth captain contacts your flagship with some unusual offer.",
+    //         "",
+    //         "If you join their battle against two Krigia vessels, you'll get 5000 resource units.",
+    //         "",
+    //         "Note that you'll get that reward only if Zyth vessel survives the battle."
+    //     );
+    //     e.actions.Add(new Action{
+    //         name = "Accept the offer",
+    //     });
+    //     e.actions.Add(new Action{
+    //         name = "Attack the Zyth vessel",
+    //     });
+    //     e.actions.Add(new Action{
+    //         name = "",
+    //     });
+    // }
+
     private static RandomEvent newDevastatedHomeworld() {
         var e = new RandomEvent { };
         e.title = "Devastated Homeworld";
@@ -1388,6 +1468,7 @@ public class RandomEvent {
             newSkirmish(),
             newEarthlingScout(),
             newDevastatedHomeworld(),
+            newGamblingExperiment(),
 
             newPurpleSystemVisitor(),
         };
