@@ -11,7 +11,7 @@ public class MjolnirWeapon : IWeapon {
         cooldown = 2.5f,
         energyCost = 17,
         range = 550,
-        minRange = 150,
+        minRange = 250,
         damage = 20,
         energyDamage = 25,
         damageKind = DamageKind.Energy,

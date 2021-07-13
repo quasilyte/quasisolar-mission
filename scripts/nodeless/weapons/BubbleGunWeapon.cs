@@ -11,7 +11,7 @@ public class BubbleGunWeapon : IWeapon {
         cooldown = 0.45f,
         energyCost = 7.0f,
         range = -6,
-        damage = 7.0f,
+        damage = 9.0f,
         damageKind = DamageKind.Energy,
         projectileSpeed = 130.0f,
         botHintSnipe = 0,

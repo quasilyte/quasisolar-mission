@@ -88,6 +88,16 @@ public class DraklidStarBaseNode : StarBaseNode {
             spaceUnit.fleet.Add(starBase.PopVessel());
         }
 
+        if (QRandom.Float() < 0.5) {
+            spaceUnit.cargo.minerals = QRandom.IntRange(5, 40) * groupSize;
+        }
+        if (QRandom.Float() < 0.3) {
+            spaceUnit.cargo.organic = QRandom.IntRange(10, 25) * groupSize;
+        }
+        if (QRandom.Float() < 0.4) {
+            spaceUnit.cargo.organic = QRandom.IntRange(5, 35) * groupSize;
+        }
+
         starBase.units.Add(spaceUnit.GetRef());
 
         var unitNode = DraklidSpaceUnitNode.New(spaceUnit);

@@ -12,5 +12,5 @@ public class StarSystemIntel {
     public int baseHp;
 
     public int numResourcePlanets;
-    public int numMines;
+    public int numExplored;
 }

@@ -26,19 +26,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Laboratory" type="Button" parent="."]
-margin_left = 832.0
-margin_top = 528.0
-margin_right = 1088.0
-margin_bottom = 560.0
-focus_mode = 0
-theme = ExtResource( 2 )
-disabled = true
-text = "Laboratory"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="Shipyard" type="Button" parent="."]
 margin_left = 832.0
 margin_top = 464.0
@@ -47,6 +34,17 @@ margin_bottom = 496.0
 focus_mode = 0
 theme = ExtResource( 2 )
 text = "Shipyard"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StarBaseModules" type="Button" parent="."]
+margin_left = 832.0
+margin_top = 528.0
+margin_right = 1088.0
+margin_bottom = 560.0
+theme = ExtResource( 2 )
+text = "Star Base Modules"
 __meta__ = {
 "_edit_use_anchors_": false
 }

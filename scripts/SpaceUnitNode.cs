@@ -19,9 +19,6 @@ public abstract class SpaceUnitNode : Node2D {
     public delegate void SearchForStarBase();
 
     [Signal]
-    public delegate void DroneDestroyed();
-
-    [Signal]
     public delegate void AttackStarBase();
 
     [Signal]

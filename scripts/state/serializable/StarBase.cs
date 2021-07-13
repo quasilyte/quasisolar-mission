@@ -8,12 +8,20 @@ public class StarBase: AbstractPoolValue {
     }
     public Ref GetRef() { return new Ref{id = id}; }
 
+    public enum Mode {
+        ProduceMinerals,
+        ProducePower,
+        ProduceRU,
+    }
+
     public struct PriceInfo {
         public int value;
         public float multiplier;
     }
 
     public Faction owner;
+
+    public Mode mode;
 
     public StarSystem.Ref system;
 
@@ -31,10 +39,15 @@ public class StarBase: AbstractPoolValue {
     public int organicStock = 0;
     public int powerStock = 0;
 
+    public int constructionProgress = 0;
+    public string constructionTarget = "";
+
     public double productionProgress = 0;
     public Queue<string> productionQueue = new Queue<string>();
 
     public List<Vessel.Ref> garrison = new List<Vessel.Ref>();
+
+    public List<string> modules = new List<string>();
 
     // For bots: base-controlled space units.
     public HashSet<SpaceUnit.Ref> units = new HashSet<SpaceUnit.Ref>();
@@ -47,6 +60,26 @@ public class StarBase: AbstractPoolValue {
 
     public StarBase() {}
 
+    public int StorageFreeSpace() {
+        return StorageCapacity() - mineralsStock - organicStock - powerStock;
+    }
+
+    public int StorageCapacity() {
+        return modules.Contains("Warehouse") ? 1500 : 750;
+    }
+
+    public void AddMinerals(int amount) {
+        mineralsStock += QMath.ClampMax(amount, StorageFreeSpace());
+    }
+
+    public void AddOrganic(int amount) {
+        organicStock += QMath.ClampMax(amount, StorageFreeSpace());
+    }
+
+    public void AddPower(int amount) {
+        powerStock += QMath.ClampMax(amount, StorageFreeSpace());
+    }
+
     public Vessel.Ref PopVessel() {
         if (garrison.Count > 0) {
             var vessel = garrison[garrison.Count - 1];
@@ -56,11 +89,18 @@ public class StarBase: AbstractPoolValue {
         return new Vessel.Ref{id = 0};
     }
 
+    public int FuelPrice() {
+        return modules.Contains("Refuel Station") ? 1 : 3;
+    }
+
     public int RepairPrice(VesselDesign design) {
         return 3 + (design.level * 2);
     }
 
     public PriceInfo DebrisSellPrice() {
+        if (modules.Contains("Debris Rectifier")) {
+            return new PriceInfo{value = 21, multiplier = 1};
+        }
         return new PriceInfo{value = 18, multiplier = 1};
     }
 

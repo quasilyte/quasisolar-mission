@@ -10,7 +10,6 @@ public class RpgGameState {
     public static List<StarSystem> starSystemList;
     public static Dictionary<StarSystem, List<StarSystem>> starSystemConnections;
     public static Dictionary<Vector2, StarSystem> starSystemByPos;
-    public static HashSet<ResourcePlanet> planetsWithMines;
     public static HashSet<StarBase> humanBases;
     public static StarBase phaaBase;
 
@@ -33,8 +32,6 @@ public class RpgGameState {
         public ObjectPool<StarBase> starBases = new ObjectPool<StarBase>();
         public ObjectPool<Vessel> vessels = new ObjectPool<Vessel>();
 
-        public int dronePrice;
-        public int fuelPrice;
         public int exodusPrice;
 
         public int missionDeadline;
@@ -59,10 +56,6 @@ public class RpgGameState {
     }
 
     public class GameLimits {
-        // How much resources can drone collect.
-        // TODO: make it a per-drone stat?
-        public int droneCapacity;
-
         public float maxFuel;
     }
 
@@ -129,15 +122,6 @@ public class RpgGameState {
             }
         }
 
-        planetsWithMines = new HashSet<ResourcePlanet>();
-        foreach (var sys in starSystemList) {
-            foreach (var p in sys.resourcePlanets) {
-                if (p.hasMine) {
-                    planetsWithMines.Add(p);
-                }
-            }
-        }
-
         starSystemByPos = new Dictionary<Vector2, StarSystem>();
         foreach (var sys in starSystemList) {
             starSystemByPos[sys.pos] = sys;
@@ -186,8 +170,6 @@ public class RpgGameState {
 
         o.seed = c.gameSeed;
 
-        o.dronePrice = c.dronePrice;
-        o.fuelPrice = c.fuelPrice;
         o.exodusPrice = c.exodusPrice;
 
         o.starSystems = c.starSystems;
@@ -251,9 +233,7 @@ public class RpgGameState {
         {Faction.Rarilou, DiplomaticStatus.Unspecified},
     };
 
-    public int drones = 0;
-    public int dronePrice;
-    public int dronesOwned = 0;
+    public List<string> explorationDrones = new List<string>{};
 
     public ulong seed;
 
@@ -261,7 +241,6 @@ public class RpgGameState {
 
     public int credits = 0;
 
-    public int fuelPrice;
     public int exodusPrice;
 
     public int experience = 0;
@@ -340,16 +319,8 @@ public class RpgGameState {
         return value;
     }
 
-    public static int MaxDrones() {
-        var value = 5;
-        if (instance.skillsLearned.Contains("Drone Control III")) {
-            value = 15;
-        } else if (instance.skillsLearned.Contains("Drone Control II")) {
-            value = 11;
-        } else if (instance.skillsLearned.Contains("Drone Control I")) {
-            value = 8;
-        }
-        return value;
+    public static int MaxExplorationDrones() {
+        return 3;
     }
 
     public static void AddFuel(float amount) {

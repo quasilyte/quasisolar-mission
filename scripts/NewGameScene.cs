@@ -122,6 +122,21 @@ public class NewGameScene : Node2D {
     private int _scoreMultiplier;
     private Label _scoreMultiplierLabel;
 
+    private Dictionary<string, int> _planetSprites = new Dictionary<string, int>{
+        {"alpine", 6}, // Organic with normal climate
+        {"oceanic", 12}, // Organic with normal climate
+        {"fungal", 6}, // Organic with bad climate
+        {"savannah", 6}, // Organic with bad climate
+        {"dry", 7}, // Minerals-only
+        {"rock", 5}, // Minerals-only
+        {"venusian", 6}, // Minerals-only
+        {"gas", 6}, // Power-only
+        {"ice", 6}, // Cold planets
+        {"volcanic", 6}, // Hot planets
+        {"primordial", 6}, // Fallback kind
+        {"martian", 8}, // Fallback kind
+    };
+
     public override void _Ready() {
         _scoreMultiplierLabel = GetNode<Label>("ScoreMultiplier");
 
@@ -190,6 +205,8 @@ public class NewGameScene : Node2D {
         gameStateInstance.InitStaticState(true);
         RpgGameState.instance = gameStateInstance;
 
+        gameStateInstance.explorationDrones.Add("Curiosity");
+
         GetTree().ChangeScene("res://scenes/MapView.tscn");
     }
 
@@ -233,7 +250,6 @@ public class NewGameScene : Node2D {
     private RpgGameState.Config NewGameConfig(ulong gameSeed) {
         var limits = new RpgGameState.GameLimits {
             maxFuel = 500,
-            droneCapacity = 500,
         };
 
         var skills = new HashSet<string>();
@@ -250,10 +266,8 @@ public class NewGameScene : Node2D {
         var config = new RpgGameState.Config{
             limits = limits,
             exodusPrice = 5000,
-            dronePrice = 1200,
             startingCredits = OptionIntValue("StartingCredits"),
             startingFuel = (int)(limits.maxFuel) - 100,
-            fuelPrice = 3,
             travelSpeed = 60,
             randomEventCooldown = 20,
 
@@ -305,7 +319,19 @@ public class NewGameScene : Node2D {
         return result;
     }
 
-    private ResourcePlanet NewResourcePlanet(float budget) {
+    private string PickPlanetSprite(string kind, HashSet<string> picked) {
+        var numChoices = _planetSprites[kind];
+        while (true) {
+            var i = QRandom.IntRange(1, numChoices);
+            var spriteName = $"{kind}{i}";
+            if (picked.Contains(spriteName)) {
+                continue;
+            }
+            return spriteName;
+        }
+    }
+
+    private ResourcePlanet NewResourcePlanet(float budget, int level, HashSet<string> planetSprites) {
         int minerals = 0;
         int organic = 0;
         int power = 0;
@@ -328,7 +354,85 @@ public class NewGameScene : Node2D {
             }
         }
 
-        return new ResourcePlanet(minerals, organic, power);
+        if (minerals == 0 && organic == 0 && power == 0) {
+            minerals = 1;
+        }
+
+        var planet = new ResourcePlanet(minerals, organic, power);
+
+        var explorationBonus = QRandom.IntRange(3000, 6000);
+        explorationBonus += level * QRandom.IntRange(2500, 3000);
+
+        // 20% - cold
+        // 25% - normal
+        // 25% - hot
+        // 30% - very hot
+        var temperatureClassRoll = QRandom.Float();
+        if (temperatureClassRoll < 0.2) {
+            planet.temperature = QRandom.IntRange(-240, -20);
+            explorationBonus = QMath.IntAdjust(explorationBonus, 0.9);
+        } else if (temperatureClassRoll < 0.45) {
+            planet.temperature = QRandom.IntRange(-70, 100);
+        } else if (temperatureClassRoll < 0.7) {
+            planet.temperature = QRandom.IntRange(100, 260);
+            explorationBonus = QMath.IntAdjust(explorationBonus, 1.1);
+        } else {
+            planet.temperature = QRandom.IntRange(150, 495);
+            explorationBonus = QMath.IntAdjust(explorationBonus, 1.3);
+        }
+
+        planet.explorationUnits = QRandom.IntRange(70, 240) + (level * 10);
+
+        if (QRandom.Float() < 0.25) {
+            explorationBonus = QMath.IntAdjust(explorationBonus, 1.5);
+        }
+
+        if (planet.powerPerDay != 0 && planet.mineralsPerDay == 0 && planet.organicPerDay == 0) {
+            planet.textureName = PickPlanetSprite("gas", planetSprites);
+            planet.gasGiant = true;
+            planet.explorationUnits = QMath.IntAdjust(planet.explorationUnits, 1.25);
+        } else if (planet.temperature > 200) {
+            planet.textureName = PickPlanetSprite("volcanic", planetSprites);
+        } else if (planet.temperature < -70) {
+            planet.textureName = PickPlanetSprite("ice", planetSprites);
+        } else if (planet.powerPerDay == 0 && planet.mineralsPerDay != 0 && planet.organicPerDay == 0) {
+            var roll = QRandom.Float();
+            if (roll < 0.33) {
+                planet.textureName = PickPlanetSprite("dry", planetSprites);
+            } else if (roll < 0.66) {
+                planet.textureName = PickPlanetSprite("rock", planetSprites);
+            } else {
+                planet.textureName = PickPlanetSprite("venusian", planetSprites);
+            }
+        } else if (planet.organicPerDay != 0) {
+            if (planet.temperature < 120) {
+                if (QRandom.Bool()) {
+                    planet.textureName = PickPlanetSprite("oceanic", planetSprites);
+                } else {
+                    planet.textureName = PickPlanetSprite("alpine", planetSprites);
+                }
+            } else {
+                if (QRandom.Bool()) {
+                    planet.textureName = PickPlanetSprite("savannah", planetSprites);
+                } else {
+                    planet.textureName = PickPlanetSprite("fungal", planetSprites);
+                }
+            }
+        } else {
+            if (QRandom.Bool()) {
+                planet.textureName = PickPlanetSprite("martian", planetSprites);
+            } else {
+                planet.textureName = PickPlanetSprite("primordial", planetSprites);
+            }
+        }
+
+        if (planet.gasGiant) {
+            planet.temperature = QMath.ClampMax(planet.temperature, 205);
+        }
+
+        planet.explorationBonus = explorationBonus;
+
+        return planet;
     }
 
     class VesselTemplate {
@@ -339,16 +443,6 @@ public class NewGameScene : Node2D {
     class Sector {
         public List<StarSystem> systems = new List<StarSystem>();
         public Rect2 rect;
-
-        public int NumArtifacts() {
-            var n = 0;
-            foreach (var sys in systems) {
-                if (sys.artifact != null) {
-                    n++;
-                }
-            }
-            return n;
-        }
     }
 
     const int numMapCols = 4;
@@ -469,22 +563,24 @@ public class NewGameScene : Node2D {
         starBase.system = system.GetRef();
     }
 
-    private StarSystem NewStarSystem(RpgGameState.Config config, HashSet<string> starSystenNames, Vector2 pos) {
+    private StarSystem NewStarSystem(RpgGameState.Config config, HashSet<string> starSystenNames, Vector2 pos, int level) {
         var sys = config.starSystems.New();
         sys.name = StarSystemNames.UniqStarSystemName(starSystenNames);
         sys.color = RandomStarSystemColor();
         sys.pos = pos;
 
+        var planetSprites = new HashSet<string>();
+
         var planetsRollBonus = (float)OptionIntValue("PlanetResources") * 0.20f;
         var planetsBudget = QRandom.FloatRange(0, 0.6f) + planetsRollBonus;
         if (planetsBudget < 0.1) {
             sys.resourcePlanets = new List<ResourcePlanet>{
-                new ResourcePlanet(1, 0, 0),
+                NewResourcePlanet(planetsBudget, level, planetSprites),
             };
         } else {
             while (planetsBudget >= 0.1) {
                 if (sys.resourcePlanets.Count == 2) {
-                    sys.resourcePlanets.Add(NewResourcePlanet(planetsBudget));
+                    sys.resourcePlanets.Add(NewResourcePlanet(planetsBudget, level, planetSprites));
                     break;
                 }
                 var toSpend = QRandom.FloatRange(0.1f, planetsBudget);
@@ -494,7 +590,7 @@ public class NewGameScene : Node2D {
                     toSpend = 0.6f;
                 }
                 planetsBudget -= toSpend;
-                sys.resourcePlanets.Add(NewResourcePlanet(toSpend));
+                sys.resourcePlanets.Add(NewResourcePlanet(toSpend, level, planetSprites));
             }
         }
 
@@ -519,7 +615,7 @@ public class NewGameScene : Node2D {
                 var middle = sector.rect.Position + sector.rect.Size / 2;
 
                 var color = RandomStarSystemColor();
-                sector.systems.Add(NewStarSystem(config, starSystenNames, RandomizedLocation(middle, 120)));
+                sector.systems.Add(NewStarSystem(config, starSystenNames, RandomizedLocation(middle, 120), col));
 
                 var minSystems = 2;
                 var maxSystems = 4;
@@ -528,7 +624,7 @@ public class NewGameScene : Node2D {
                 }
                 var numSystems = QRandom.IntRange(minSystems, maxSystems);
                 for (int j = 0; j < numSystems; j++) {
-                    sector.systems.Add(NewStarSystem(config, starSystenNames, RandomStarSystemPosition(sector)));
+                    sector.systems.Add(NewStarSystem(config, starSystenNames, RandomStarSystemPosition(sector), col));
                 }
             }
         }
@@ -554,8 +650,13 @@ public class NewGameScene : Node2D {
         startingSystem.name = "Quasisol";
         startingSystem.color = StarColor.Yellow;
         BindStarBase(startingStarBase, startingSystem);
+        var solPlanetsHash = new HashSet<string>();
+        var solPlanet = NewResourcePlanet(0.05f, 1, solPlanetsHash);
+        solPlanet.temperature = QRandom.IntRange(30, 70);
+        solPlanet.textureName = PickPlanetSprite("dry", solPlanetsHash);
         startingSystem.resourcePlanets = new List<ResourcePlanet>{
-            new ResourcePlanet(1, 0, 0),
+            solPlanet,
+            NewResourcePlanet(0.3f, 1, solPlanetsHash),
         };
 
         var numDraklidBases = 2;
@@ -631,15 +732,15 @@ public class NewGameScene : Node2D {
         foreach (var art in ArtifactDesign.list) {
             while (true) {
                 var sys = QRandom.Element(systems);
-                if (sys.artifact != null || sys.color == StarColor.Purple) {
+                if (sys.HasArtifact() || sys.color == StarColor.Purple) {
                     continue;
                 }
                 if (sys == startingSystem) {
                     continue;
                 }
-                sys.artifact = art.name;
-                sys.artifactRecoveryDelay = QRandom.IntRange(10, 40);
-                GD.Print("placed " + art.name + " in " + sys.name + " with " + sys.artifactRecoveryDelay + " recovery delay");
+                var planet = QRandom.Element(sys.resourcePlanets);
+                planet.artifact = art.name;
+                GD.Print("placed " + art.name + " in " + sys.name + " at " + planet.name);
                 break;
             }   
         }

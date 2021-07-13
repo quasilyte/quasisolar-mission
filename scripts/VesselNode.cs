@@ -370,7 +370,7 @@ public class VesselNode : Node2D {
                 shield.Deactivate();
             } else if (design == ShockwaveCasterWeapon.Design) {
                 var p = (Projectile)projectile;
-                State.velocity += p.Transform.x * 50;
+                State.velocity += p.Transform.x * 75;
             }
 
             return;

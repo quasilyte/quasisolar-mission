@@ -46,6 +46,7 @@ public class RandomEvent {
         AddOrganic,
         AddPower,
         AddFuel,
+        AddDrone,
         AddFlagshipBackupEnergy,
         AddFleetBackupEnergyPercentage,
         AddVesselToFleet,
@@ -61,6 +62,7 @@ public class RandomEvent {
         EnterArena,
         EnterTextQuest,
         PrepareArenaSettings,
+        SpawnSpaceUnit,
     }
 
     public class Effect {
@@ -103,6 +105,11 @@ public class RandomEvent {
     private static bool AtFriendlySystem() {
         var starSystem = RpgGameState.starSystemByPos[RpgGameState.instance.humanUnit.Get().pos];
         return starSystem.starBase.id != 0 && starSystem.starBase.Get().owner == Faction.Earthling;
+    }
+
+    private static bool AtKrigiaSystem() {
+        var starSystem = RpgGameState.starSystemByPos[RpgGameState.instance.humanUnit.Get().pos];
+        return starSystem.starBase.id != 0 && starSystem.starBase.Get().owner == Faction.Krigia;
     }
 
     private static bool SystemHasStarBase() {
@@ -185,6 +192,323 @@ public class RandomEvent {
             apply = (RandomEventContext _) => {
                 return new Result{
                     skipText = true,
+                };
+            }
+        });
+        return e;
+    }
+
+    private static RandomEvent newBrokenRadar() {
+        Func<StarSystem> knownWertuSystem = () => {
+            foreach (var sys in RpgGameState.instance.starSystems.objects.Values) {
+                if (sys.intel == null) {
+                    continue;
+                }
+                if (sys.starBase.id != 0 && sys.starBase.Get().owner == Faction.Wertu) {
+                    return sys;
+                }
+            }
+            return null;
+        };
+        Func<StarSystem> knownKrigiaSystem = () => {
+            foreach (var sys in RpgGameState.instance.starSystems.objects.Values) {
+                if (sys.intel == null) {
+                    continue;
+                }
+                if (sys.starBase.id != 0 && sys.starBase.Get().owner == Faction.Krigia) {
+                    return sys;
+                }
+            }
+            return null;
+        };
+
+        var e = new RandomEvent();
+        e.title = "Broken Radar";
+        e.expReward = 2;
+        e.luckScore = 6;
+        e.condition = () => RpgGameState.instance.day > 350 && !SystemHasStarBase();
+        e.text = multilineText(
+            "A single Wertu Guardian class vessel contacts you.",
+            "",
+            "Their radar is not working properly after the battle, so they can't calculate the proper jump coordinates.",
+            "",
+            "If you happen to know any Wertu system location, that could help them out."
+        );
+        e.actions.Add(new Action{
+            name = "Transfer coordinates",
+            hint = () => {
+                var sys = knownWertuSystem();
+                return sys == null ? "" : $"({sys.name})";
+            },
+            condition = () => knownWertuSystem() != null,
+            apply = (RandomEventContext _) => {
+                var sys = knownWertuSystem();
+                var unit = NewSpaceUnit(Faction.RandomEventHostile, VesselFactory.NewVessel(Faction.Wertu, "Guardian"));
+                unit.botProgram = SpaceUnit.Program.BackToTheBase;
+                unit.waypoint = sys.pos;
+                return new Result{
+                    text = $"You directed this unit to the {sys.name} Wertu system.",
+                    effects = {
+                        new Effect{
+                            kind = EffectKind.AddReputation,
+                            value = 2,
+                            value2 = Faction.Wertu,
+                        },
+                        new Effect{
+                            kind = EffectKind.SpawnSpaceUnit,
+                            value = unit,
+                        },
+                    },
+                };
+            }
+        });
+        e.actions.Add(new Action{
+            name = "Lead them to Krigia",
+            hint = () => {
+                var sys = knownKrigiaSystem();
+                return sys == null ? "" : $"({sys.name})";
+            },
+            condition = () => knownKrigiaSystem() != null,
+            apply = (RandomEventContext _) => {
+                var sys = knownKrigiaSystem();
+                var unit = NewSpaceUnit(Faction.Wertu, VesselFactory.NewVessel(Faction.Wertu, "Guardian"));
+                unit.botProgram = SpaceUnit.Program.AttackStarBase;
+                unit.waypoint = sys.pos;
+                return new Result{
+                    text = $"You directed this unit to the {sys.name} Krigia system. Cruel!",
+                    effects = {
+                        new Effect{
+                            kind = EffectKind.SpawnSpaceUnit,
+                            value = unit,
+                        },
+                    },
+                };
+            }
+        });
+        e.actions.Add(new Action{
+            name = "Attack the Guardian",
+            apply = (RandomEventContext _) => {
+                var unit = NewSpaceUnit(Faction.Wertu, VesselFactory.NewVessel(Faction.Wertu, "Guardian"));
+                return new Result{
+                    text = "You consider Wertu to be your enemy. This Guardian luck definitely ran out.",
+                    effects = {
+                        new Effect{
+                            kind = EffectKind.DeclareWar,
+                            value = Faction.Wertu,
+                        },
+                        new Effect{
+                            kind = EffectKind.EnterArena,
+                            value = unit,
+                        },
+                    },
+                };
+            }
+        });
+        e.actions.Add(new Action{
+            name = "Fly away",
+            apply = (RandomEventContext _) => {
+                return new Result{
+                    text = "You decided to leave that Wertu behind.",
+                };
+            }
+        });
+        return e;
+    }
+
+    private static RandomEvent newEnigma() {
+        var e = new RandomEvent();
+        e.title = "Enigma";
+        e.expReward = 2;
+        e.luckScore = 7;
+        e.condition = () => RpgGameState.MaxExplorationDrones() > RpgGameState.instance.explorationDrones.Count &&
+            (RpgGameState.instance.humanUnit.Get().cargo.minerals != 0 ||
+             RpgGameState.instance.humanUnit.Get().cargo.organic != 0 ||
+             RpgGameState.instance.humanUnit.Get().cargo.power != 0);
+        e.text = multilineText(
+            "`Would you like to buy our unique Enigma exploration drone model? We're willing to give it in exchange for some raw materials.` - this is what you received the moments after you entered the system.",
+            "",
+            "Looks like we can get some experimental exploration drone here."
+        );
+        e.actions.Add(new Action{
+            name = "Give minerals",
+            hint = () => "(140)",
+            condition = () => RpgGameState.instance.humanUnit.Get().cargo.minerals >= 140,
+            apply = (RandomEventContext ctx) => {
+                return new Result{
+                    text = $"140 minerals is a good price for such a nice drone.",
+                    effects = {
+                        new Effect{
+                            kind = EffectKind.AddMinerals,
+                            value = -140,
+                        },
+                        new Effect{
+                            kind = EffectKind.AddDrone,
+                            value = "Enigma",
+                        },
+                    },
+                };
+            }
+        });
+        e.actions.Add(new Action{
+            name = "Give organic",
+            hint = () => "(90)",
+            condition = () => RpgGameState.instance.humanUnit.Get().cargo.organic >= 90,
+            apply = (RandomEventContext ctx) => {
+                return new Result{
+                    text = $"90 organic is a good price for such a nice drone.",
+                    effects = {
+                        new Effect{
+                            kind = EffectKind.AddOrganic,
+                            value = -90,
+                        },
+                        new Effect{
+                            kind = EffectKind.AddDrone,
+                            value = "Enigma",
+                        },
+                    },
+                };
+            }
+        });
+        e.actions.Add(new Action{
+            name = "Give power",
+            hint = () => "(70)",
+            condition = () => RpgGameState.instance.humanUnit.Get().cargo.power >= 70,
+            apply = (RandomEventContext ctx) => {
+                return new Result{
+                    text = $"70 power is a good price for such a nice drone.",
+                    effects = {
+                        new Effect{
+                            kind = EffectKind.AddPower,
+                            value = -70,
+                        },
+                        new Effect{
+                            kind = EffectKind.AddDrone,
+                            value = "Enigma",
+                        },
+                    },
+                };
+            }
+        });
+        e.actions.Add(new Action{
+            name = "Ignore this offer",
+            apply = (RandomEventContext _) => {
+                return new Result{
+                    text = "We're not buying this Enigma thing.",
+                };
+            }
+        });
+        return e;
+    }
+
+    private static RandomEvent newKrigiaDrone() {
+        var e = new RandomEvent();
+        e.title = "Krigia Drone";
+        e.expReward = 2;
+        e.luckScore = 7;
+        e.trigger = TriggerKind.OnSystemEntered;
+        e.condition = () => AtKrigiaSystem();
+        e.text = multilineText(
+            "A lone Krigia exploration drone flies across the planet.",
+            "",
+            "We can intercept that drone and take whatever it managed to scavenge there.",
+            "",
+            "That maneuver would require some fuel."
+        );
+        e.actions.Add(new Action{
+            name = "Capture the drone",
+            hint = () => "(100 fuel)",
+            condition = () => RpgGameState.instance.fuel >= 100 && RpgGameState.MaxExplorationDrones() > RpgGameState.instance.explorationDrones.Count,
+            apply = (RandomEventContext ctx) => {
+                var ru = (int)(ctx.roll * 600) + 500;
+                return new Result{
+                    text = $"You successfully captured the Scavenger drone along with {ru} resource units it carried.",
+                    effects = {
+                        new Effect{
+                            kind = EffectKind.AddFuel,
+                            value = -100,
+                        },
+                        new Effect{
+                            kind = EffectKind.AddDrone,
+                            value = "Scavenger",
+                        },
+                        new Effect{
+                            kind = EffectKind.AddCredits,
+                            value = ru,
+                        },
+                    },
+                };
+            }
+        });
+        e.actions.Add(new Action{
+            name = "Gun down the drone",
+            hint = () => "(10 fuel)",
+            condition = () => RpgGameState.instance.fuel >= 10,
+            apply = (RandomEventContext ctx) => {
+                var ru = (int)(ctx.roll * 400) + 500;
+                return new Result{
+                    text = $"A few hours later, the drone is no more. What remains is there for you to harvest ({ru} resource units).",
+                    effects = {
+                        new Effect{
+                            kind = EffectKind.AddFuel,
+                            value = -10,
+                        },
+                        new Effect{
+                            kind = EffectKind.AddCredits,
+                            value = ru,
+                        },
+                    },
+                };
+            }
+        });
+        e.actions.Add(new Action{
+            name = "Don't do anything",
+            apply = (RandomEventContext _) => {
+                return new Result{
+                    text = "We can't spend the fuel on this chasing game right now.",
+                };
+            }
+        });
+        return e;
+    }
+
+    private static RandomEvent newHijack() {
+        var e = new RandomEvent();
+        e.title = "Hijack";
+        e.expReward = 5;
+        e.luckScore = 5;
+        e.trigger = TriggerKind.OnSystemEntered;
+        e.condition = () => !SystemHasStarBase();
+        e.text = multilineText(
+            "Two Earthling-design Explorer class vessels fly towards your fleet. The weapons are charged.",
+            "",
+            "They could be re-programmed relicts from the previous war. But how your enemies managed to get their hands on our vessels? And how did they manage to re-program them?"
+        );
+        e.actions.Add(new Action{
+            name = "Let them closer",
+            apply = (RandomEventContext ctx) => {
+                var v1 = VesselFactory.NewVessel(Faction.Neutral, "Explorer");
+                var v2 = VesselFactory.NewVessel(Faction.Neutral, "Explorer");
+                var unit = NewSpaceUnit(Faction.RandomEventHostile, v1, v2);
+                unit.cargo.minerals = (int)(ctx.roll * 40) + 10;
+                if (RpgGameState.instance.skillsLearned.Contains("Luck")) {
+                    unit.cargo.minerals *= 2;
+                }
+                return new Result{
+                    text = "As you suspected, they're acting hostile. Not much left to do here; prepare your fleet for battle.",
+                    effects = {
+                        new Effect{
+                            kind = EffectKind.EnterArena,
+                            value = unit,
+                        },
+                    },
+                };
+            }
+        });
+        e.actions.Add(new Action{
+            name = "Avoid the fight",
+            apply = (RandomEventContext _) => {
+                return new Result{
+                    text = "You managed to evade this confrontation.",
                 };
             }
         });
@@ -1424,6 +1748,7 @@ public class RandomEvent {
         });
         e.actions.Add(new Action {
             name = "Warp away",
+            hint = () => "(70 fuel)",
             condition = () => RpgGameState.instance.fuel >= 70,
             apply = (RandomEventContext _) => {
                 return new Result {
@@ -1469,6 +1794,10 @@ public class RandomEvent {
             newEarthlingScout(),
             newDevastatedHomeworld(),
             newGamblingExperiment(),
+            newHijack(),
+            newKrigiaDrone(),
+            newEnigma(),
+            newBrokenRadar(),
 
             newPurpleSystemVisitor(),
         };

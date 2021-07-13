@@ -61,8 +61,6 @@ public class DraklidSpaceUnitNode : SpaceUnitNode {
         if (_currentSystem != null) {
             if (_currentSystem.starBase.id != 0) {
                 ProcessStarBaseDay();
-            } else {
-                MaybeCollectResources();
             }
         }
 
@@ -75,51 +73,6 @@ public class DraklidSpaceUnitNode : SpaceUnitNode {
             unit.botSystemLeaveDelay = QRandom.IntRange(8, 32);
             _canBeDetected = false;
             return;
-        }
-    }
-
-    private void MaybeCollectResources() {
-        if (_gameState.humanUnit.Get().pos == unit.pos) {
-            return;
-        }
-
-        var cargoFree = unit.CargoFree();
-        if (cargoFree == 0) {
-            return;
-        }
-
-        Func<int, int> collectAmount = (int resources) => {
-            var roll = QRandom.IntRange(2, 10);
-            var collected = QMath.ClampMax(QMath.ClampMin(roll, cargoFree), resources);
-            cargoFree -= collected;
-            return collected;
-        };
-        foreach (var p in _currentSystem.resourcePlanets) {
-            if (p.hasMine) {
-                p.hasMine = false;
-                RpgGameState.planetsWithMines.Remove(p);
-                EmitSignal(nameof(DroneDestroyed));
-            }
-
-            if (cargoFree == 0) {
-                break;
-            }
-
-            if (p.powerCollected > 0) {
-                var collected = collectAmount(p.powerCollected);
-                unit.cargo.power += collected;
-                p.powerCollected -= collected;
-            }
-            if (p.organicCollected > 0) {
-                var collected = collectAmount(p.organicCollected);
-                unit.cargo.organic += collected;
-                p.organicCollected -= collected;
-            }
-            if (p.mineralsCollected > 0) {
-                var collected = collectAmount(p.mineralsCollected);
-                unit.cargo.minerals += collected;
-                p.mineralsCollected -= collected;
-            }
         }
     }
 

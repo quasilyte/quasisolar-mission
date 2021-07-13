@@ -120,16 +120,6 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
         if (_gameState.humanUnit.Get().pos == unit.pos) {
             return;
         }
-
-        if (_currentSystem != null && _currentSystem.starBase.id == 0) {
-            foreach (var p in _currentSystem.resourcePlanets) {
-                if (p.hasMine) {
-                    p.hasMine = false;
-                    RpgGameState.planetsWithMines.Remove(p);
-                    EmitSignal(nameof(DroneDestroyed));
-                }
-            }
-        }
     }
 
     private void OnDestinationReached() {

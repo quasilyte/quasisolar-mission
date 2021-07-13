@@ -20,26 +20,6 @@ public class Skill {
 
     public static Skill[] list = {
         new Skill{
-            name = "Drone Control I",
-            expCost = 50,
-            effect = "can own up to 8 drones",
-        },
-
-        new Skill{
-            name = "Drone Control II",
-            expCost = 80,
-            effect = "can own up to 11 drones",
-            requires = "Drone Control I",
-        },
-
-        new Skill{
-            name = "Drone Control III",
-            expCost = 110,
-            effect = "can own up to 15 drones",
-            requires = "Drone Control II",
-        },
-
-        new Skill{
             name = "Scholar",
             expCost = 50,
             effect = "-10 research time to all technologies",

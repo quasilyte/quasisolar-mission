@@ -587,11 +587,11 @@ __meta__ = {
 }
 
 [node name="CreditsValue" type="Label" parent="Status"]
-margin_left = 128.0
+margin_left = 112.0
 margin_top = 16.0
 margin_right = 192.0
 margin_bottom = 48.0
-text = "0"
+text = "999999"
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false

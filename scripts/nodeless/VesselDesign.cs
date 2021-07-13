@@ -393,7 +393,7 @@ public class VesselDesign: IItem {
             name = "Ark",
             affiliation = Faction.Earthling,
             description = "Transforms into a star base",
-            sellingPrice = 15000,
+            sellingPrice = 11000,
             debris = 150,
             productionTime = 100,
             availability = ProductionAvailability.ResearchRequired,

@@ -40,8 +40,6 @@ public class StarBaseNode : Node2D {
         // 35% consume mineral
         // 10% consume organic
         // 20% consume power
-        // 25% produce mineral
-        // 10% produce power
         var resourcesRoll = QRandom.Float();
         if (resourcesRoll < 0.35f) {
             starBase.mineralsStock = QMath.ClampMin(starBase.mineralsStock - 1, 0);
@@ -49,9 +47,18 @@ public class StarBaseNode : Node2D {
             starBase.organicStock = QMath.ClampMin(starBase.organicStock - 1, 0);
         } else if (resourcesRoll < 0.65f) {
             starBase.powerStock = QMath.ClampMin(starBase.powerStock - 1, 0);
-        } else if (resourcesRoll < 0.9f) {
+        }
+
+        GatherResources();
+    }
+
+    protected virtual void GatherResources() {
+        // 25% produce mineral
+        // 10% produce power
+        var resourcesRoll = QRandom.Float();
+        if (resourcesRoll < 0.25f) {
             starBase.mineralsStock++;
-        } else {
+        } else if (resourcesRoll < 0.35f) {
             starBase.powerStock++;
         }
     }

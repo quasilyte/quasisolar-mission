@@ -1,0 +1,39 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://images/planet/oceanic1.png" type="Texture" id=1]
+[ext_resource path="res://scripts/AnimatedPlanetNode.cs" type="Script" id=2]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+void fragment() {
+	vec2 center = UV - 0.5;
+	center.x *= 2.0;
+	
+	if (length(center) > 0.5) {
+		COLOR.a = 0.0;
+	} else {
+		COLOR = texture(TEXTURE, vec2(UV.x - TIME/20.0, UV.y));
+		vec2 light = UV - 0.5;
+		light.x += 0.2;
+		light.y += 0.1;
+		float ligth_dist = distance(light, POINT_COORD);
+		COLOR.x *= clamp(1.2 - ligth_dist * 2.1, 0.0, 1.0);
+		COLOR.y *= clamp(1.2 - ligth_dist * 2.1, 0.0, 1.0);
+		COLOR.z *= clamp(1.2 - ligth_dist * 2.1, 0.0, 1.0);
+	}
+}
+"
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
+
+[node name="AnimatedPlanetNode" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="."]
+material = SubResource( 2 )
+texture = ExtResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}

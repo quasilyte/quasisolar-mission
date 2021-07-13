@@ -83,17 +83,17 @@ public class StarSystemNode : Node2D {
 
     public void UpdateInfo() {
         var numPlanets = sys.resourcePlanets.Count;
-        int numMines = 0;
+        int numExplored = 0;
         foreach (var planet in sys.resourcePlanets) {
-            if (planet.hasMine) {
-                numMines++;
+            if (planet.IsExplored()) {
+                numExplored++;
             }
         }
         sys.intel = new StarSystemIntel{
-            hasArtifact = sys.artifact != null,
+            hasArtifact = sys.HasArtifact(),
             hasBase = sys.starBase.id != 0,
             numResourcePlanets = numPlanets,
-            numMines = numMines,
+            numExplored = numExplored,
         };
         if (sys.starBase.id != 0) {
             var starBase = sys.starBase.Get();
@@ -128,11 +128,10 @@ public class StarSystemNode : Node2D {
         }
 
         if (info.numResourcePlanets != 0) {
-            if (info.numMines == 0) {
-                lines.Add($"Resource planets: {info.numResourcePlanets}");
+            if (info.numExplored == 0) {
+                lines.Add($"Planets: {info.numResourcePlanets}");
             } else {
-                var pluralSuffix = info.numMines == 1 ? "" : "s";
-                lines.Add($"Resource planets: {info.numResourcePlanets} ({info.numMines} mine{pluralSuffix})");
+                lines.Add($"Planets: {info.numResourcePlanets} ({info.numExplored} explored)");
             }
         }
 
@@ -231,7 +230,7 @@ public class StarSystemNode : Node2D {
             }
         }
 
-        if (sys.artifact != null) {
+        if (sys.HasArtifact()) {
             GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/artifact_detected.wav"));
         }
     }
@@ -261,32 +260,32 @@ public class StarSystemNode : Node2D {
     }
 
     private void TransferResources(int limit) {
-        var starBase = sys.starBase.Get();
+        // var starBase = sys.starBase.Get();
 
-        Func<int, int, int> collect = (int price, int amount) => {
-            int collectAmount = QMath.ClampMax(amount, limit);
-            limit -= collectAmount;
-            RpgGameState.instance.credits += price * collectAmount;
-            return collectAmount;
-        };
+        // Func<int, int, int> collect = (int price, int amount) => {
+        //     int collectAmount = QMath.ClampMax(amount, limit);
+        //     limit -= collectAmount;
+        //     RpgGameState.instance.credits += price * collectAmount;
+        //     return collectAmount;
+        // };
 
-        foreach (var p in sys.resourcePlanets) {
-            if (!p.hasMine) {
-                continue;
-            }
+        // foreach (var p in sys.resourcePlanets) {
+        //     if (!p.hasMine) {
+        //         continue;
+        //     }
 
-            int mineralsCollected = collect(starBase.MineralsSellPrice().value, p.mineralsCollected);
-            starBase.mineralsStock += mineralsCollected;
-            p.mineralsCollected -= mineralsCollected;
+        //     int mineralsCollected = collect(starBase.MineralsSellPrice().value, p.mineralsCollected);
+        //     starBase.mineralsStock += mineralsCollected;
+        //     p.mineralsCollected -= mineralsCollected;
 
-            int organicCollected = collect(starBase.OrganicSellPrice().value, p.organicCollected);
-            starBase.organicStock += organicCollected;
-            p.organicCollected -= organicCollected;
+        //     int organicCollected = collect(starBase.OrganicSellPrice().value, p.organicCollected);
+        //     starBase.organicStock += organicCollected;
+        //     p.organicCollected -= organicCollected;
 
-            int powerCollected = collect(starBase.PowerSellPrice().value, p.powerCollected);
-            starBase.powerStock += powerCollected;
-            p.powerCollected -= powerCollected;
-        }
+        //     int powerCollected = collect(starBase.PowerSellPrice().value, p.powerCollected);
+        //     starBase.powerStock += powerCollected;
+        //     p.powerCollected -= powerCollected;
+        // }
     }
 
     public void ProcessDay() {

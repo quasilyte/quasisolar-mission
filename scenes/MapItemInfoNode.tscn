@@ -15,7 +15,7 @@ corner_radius_bottom_right = 64
 corner_radius_bottom_left = 64
 
 [node name="MapItemInfoNode" type="Node2D"]
-z_index = 3
+z_index = 5
 z_as_relative = false
 script = ExtResource( 2 )
 

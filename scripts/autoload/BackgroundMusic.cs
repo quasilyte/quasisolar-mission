@@ -10,6 +10,7 @@ public class BackgroundMusic : AudioStreamPlayer {
     private AudioStream _mapMusic = null;
     private AudioStream _mapMusic2 = null;
     private AudioStream _battleMusic = null;
+    private AudioStream _battleMusic2 = null;
 
     public override void _Ready() {}
 
@@ -61,6 +62,10 @@ public class BackgroundMusic : AudioStreamPlayer {
         Play();
     }
 
+    public bool PlayingMapMusic() {
+        return Playing && (Stream == _mapMusic || Stream == _mapMusic2);
+    }
+
     public void PlayMapMusic() {
         if (volumeSetting == 0) {
             return;
@@ -104,8 +109,24 @@ public class BackgroundMusic : AudioStreamPlayer {
         if (_battleMusic == null) {
             _battleMusic = GD.Load<AudioStream>("res://audio/music/battle.ogg");
         }
-        VolumeDb = -15 + (volumeSetting * 10);
+        VolumeDb = -10 + (volumeSetting * 10);
         Stream = _battleMusic;
+        Play();
+    }
+
+    public void PlayBattleMusic2() {
+        if (volumeSetting == 0) {
+            return;
+        }
+        if (Playing && Stream == _battleMusic2) {
+            return;
+        }
+        Stop();
+        if (_battleMusic2 == null) {
+            _battleMusic2 = GD.Load<AudioStream>("res://audio/music/battle2.ogg");
+        }
+        VolumeDb = -20 + (volumeSetting * 10);
+        Stream = _battleMusic2;
         Play();
     }
 }

@@ -12,6 +12,7 @@ public class Research {
         NewArtifact,
         NewVesselDesign,
         NewSentinel,
+        NewExplorationDrone,
     }
 
     public string name;
@@ -67,6 +68,27 @@ public class Research {
         new Research{
             name = "Utility Lab Branch",
             researchTime = 90,
+        },
+
+        new Research{
+            name = "Flame Eater",
+            category = Category.NewExplorationDrone,
+            researchTime = 70,
+            dependencies = {"Utility Lab Branch"},
+        },
+
+        new Research{
+            name = "Seeker",
+            category = Category.NewExplorationDrone,
+            researchTime = 50,
+            dependencies = {"Utility Lab Branch"},
+        },
+
+        new Research{
+            name = "Moon Shark",
+            category = Category.NewExplorationDrone,
+            researchTime = 80,
+            dependencies = {"Seeker"},
         },
 
         new Research{
@@ -424,6 +446,13 @@ public class Research {
         // Zyth tech tree.
 
         new Research{
+            name = "Ifrit",
+            material = Faction.Zyth,
+            category = Category.NewExplorationDrone,
+            researchTime = 80,
+        },
+
+        new Research{
             name = "Zyth Weapons I",
             material = Faction.Zyth,
             researchTime = 75,
@@ -628,6 +657,13 @@ public class Research {
         },
 
         // Phaa tech tree.
+
+        new Research{
+            name = "Stingray",
+            material = Faction.Phaa,
+            category = Category.NewExplorationDrone,
+            researchTime = 95,
+        },
 
         new Research{
             name = "Phaa Weapons",

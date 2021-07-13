@@ -10,11 +10,15 @@ public class SpaceUnit: AbstractPoolValue {
 
     public enum Program {
         GenericBehavior,
+
         KrigiaPatrol,
         KrigiaTaskForce,
         KrigiaReinforcements,
         KrigiaFinalAttack,
         PhaaArk,
+
+        BackToTheBase,
+        AttackStarBase,
     }
 
     public const int maxFleetSize = 4;

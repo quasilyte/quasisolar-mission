@@ -227,7 +227,11 @@ public class Arena : Node2D {
             GetNode<Sprite>("Background").Texture = GD.Load<Texture>("res://images/bg/battle_bg2.jpg");
         }
 
-        GetNode<BackgroundMusic>("/root/BackgroundMusic").PlayBattleMusic();
+        if (QRandom.Bool()) {
+            GetNode<BackgroundMusic>("/root/BackgroundMusic").PlayBattleMusic();
+        } else {
+            GetNode<BackgroundMusic>("/root/BackgroundMusic").PlayBattleMusic2();
+        }
 
         if (ArenaSettings.speed != ArenaSettings.BattleSpeed.Normal) {
             if (ArenaSettings.speed == ArenaSettings.BattleSpeed.Slow) {
@@ -373,6 +377,14 @@ public class Arena : Node2D {
                         result.technology = "Crystal Cannon";
                     }
                 }
+            }
+        }
+
+        if (QRandom.Float() < 0.8) {
+            result.fuel = QRandom.IntRange(10, 40);
+            // +20% fuel.
+            if (_gameState.skillsLearned.Contains("Salvaging")) {
+                result.fuel = QMath.IntAdjust(result.fuel, 1.20);
             }
         }
 

@@ -193,7 +193,7 @@ public static class VesselFactory {
         SetShield(v,
             0.25, DispersionFieldShield.Design.name,
             0.5, ReflectorShield.Design.name,
-            0.75, LaserPerimeterShield.Design.name);
+            0.25, LaserPerimeterShield.Design.name);
     }
 
     private static void InitNeutralNomad(Vessel v) {

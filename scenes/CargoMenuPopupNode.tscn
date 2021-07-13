@@ -1,0 +1,231 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://scenes/ButtonNode.tscn" type="PackedScene" id=1]
+[ext_resource path="res://images/spacemap/minerals_icon.png" type="Texture" id=2]
+[ext_resource path="res://images/spacemap/power_icon.png" type="Texture" id=3]
+[ext_resource path="res://images/spacemap/organic_icon.png" type="Texture" id=4]
+[ext_resource path="res://scenes/PopupNode.tscn" type="PackedScene" id=5]
+[ext_resource path="res://theme.tres" type="Theme" id=6]
+[ext_resource path="res://scripts/CargoMenuPopupNode.cs" type="Script" id=7]
+
+[node name="CargoMenuPopupNode" instance=ExtResource( 5 )]
+margin_right = 448.0
+margin_bottom = 416.0
+script = ExtResource( 7 )
+
+[node name="Title" type="Label" parent="." index="0"]
+margin_top = 16.0
+margin_right = 448.0
+margin_bottom = 48.0
+text = "Cargo Menu"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Minerals" type="Sprite" parent="." index="1"]
+position = Vector2( 224, 128 )
+texture = ExtResource( 2 )
+
+[node name="LoadButton" parent="Minerals" index="0" instance=ExtResource( 1 )]
+margin_left = -64.0
+margin_top = -16.0
+margin_right = -32.0
+margin_bottom = 16.0
+text = "<"
+
+[node name="UnloadButton" parent="Minerals" index="1" instance=ExtResource( 1 )]
+margin_left = 32.0
+margin_top = -16.0
+margin_right = 64.0
+margin_bottom = 16.0
+text = ">"
+
+[node name="FleetValue" type="Label" parent="Minerals" index="2"]
+margin_left = -144.0
+margin_top = -16.0
+margin_right = -64.0
+margin_bottom = 16.0
+theme = ExtResource( 6 )
+text = "0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StockValue" type="Label" parent="Minerals" index="3"]
+margin_left = 64.0
+margin_top = -16.0
+margin_right = 144.0
+margin_bottom = 16.0
+theme = ExtResource( 6 )
+text = "0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Organic" type="Sprite" parent="." index="2"]
+position = Vector2( 224, 176 )
+texture = ExtResource( 4 )
+
+[node name="LoadButton" parent="Organic" index="0" instance=ExtResource( 1 )]
+margin_left = -64.0
+margin_top = -16.0
+margin_right = -32.0
+margin_bottom = 16.0
+text = "<"
+
+[node name="UnloadButton" parent="Organic" index="1" instance=ExtResource( 1 )]
+margin_left = 32.0
+margin_top = -16.0
+margin_right = 64.0
+margin_bottom = 16.0
+text = ">"
+
+[node name="FleetValue" type="Label" parent="Organic" index="2"]
+margin_left = -144.0
+margin_top = -16.0
+margin_right = -64.0
+margin_bottom = 16.0
+theme = ExtResource( 6 )
+text = "0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StockValue" type="Label" parent="Organic" index="3"]
+margin_left = 64.0
+margin_top = -16.0
+margin_right = 144.0
+margin_bottom = 16.0
+theme = ExtResource( 6 )
+text = "0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Power" type="Sprite" parent="." index="3"]
+position = Vector2( 224, 224 )
+texture = ExtResource( 3 )
+
+[node name="LoadButton" parent="Power" index="0" instance=ExtResource( 1 )]
+margin_left = -64.0
+margin_top = -16.0
+margin_right = -32.0
+margin_bottom = 16.0
+text = "<"
+
+[node name="UnloadButton" parent="Power" index="1" instance=ExtResource( 1 )]
+margin_left = 32.0
+margin_top = -16.0
+margin_right = 64.0
+margin_bottom = 16.0
+text = ">"
+
+[node name="FleetValue" type="Label" parent="Power" index="2"]
+margin_left = -144.0
+margin_top = -16.0
+margin_right = -64.0
+margin_bottom = 16.0
+theme = ExtResource( 6 )
+text = "0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StockValue" type="Label" parent="Power" index="3"]
+margin_left = 64.0
+margin_top = -16.0
+margin_right = 144.0
+margin_bottom = 16.0
+theme = ExtResource( 6 )
+text = "0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FleetCargoHeader" type="Label" parent="." index="4"]
+margin_left = 48.0
+margin_top = 64.0
+margin_right = 192.0
+margin_bottom = 96.0
+text = "Fleet Cargo"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StockHeader" type="Label" parent="." index="5"]
+margin_left = 256.0
+margin_top = 64.0
+margin_right = 400.0
+margin_bottom = 96.0
+text = "Base Stock"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FreeSpaceHeader" type="Label" parent="." index="6"]
+margin_left = 160.0
+margin_top = 320.0
+margin_right = 288.0
+margin_bottom = 352.0
+text = "Free Space"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StockFreeSpaceValue" type="Label" parent="." index="7"]
+margin_left = 288.0
+margin_top = 320.0
+margin_right = 368.0
+margin_bottom = 352.0
+text = "0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FleetFreeSpaceValue" type="Label" parent="." index="8"]
+margin_left = 80.0
+margin_top = 320.0
+margin_right = 160.0
+margin_bottom = 352.0
+text = "0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DoneButton" parent="." index="9" instance=ExtResource( 1 )]
+margin_left = 144.0
+margin_top = 368.0
+margin_right = 304.0
+margin_bottom = 400.0
+text = "Done"
+
+[node name="UnloadAllButton" parent="." index="10" instance=ExtResource( 1 )]
+margin_left = 144.0
+margin_top = 272.0
+margin_right = 304.0
+margin_bottom = 304.0
+text = "Offload All"

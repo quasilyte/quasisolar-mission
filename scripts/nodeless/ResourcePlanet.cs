@@ -1,15 +1,25 @@
 public class ResourcePlanet {
     public string name;
 
+    public string textureName;
+
     public int powerPerDay;
     public int organicPerDay;
     public int mineralsPerDay;
 
-    public int powerCollected = 0;
-    public int organicCollected = 0;
-    public int mineralsCollected = 0;
+    public int temperature;
+    public int explorationUnits;
+    public int explorationBonus;
 
-    public bool hasMine = false;
+    public bool gasGiant = false;
+    public int explored = 0;
+    public string activeDrone = "";
+
+    public string artifact = "";
+
+    public bool IsExplored() {
+        return explored >= explorationUnits;
+    }
 
     public ResourcePlanet(int minerals, int organic, int power) {
         powerPerDay = power;

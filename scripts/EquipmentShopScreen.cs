@@ -11,13 +11,14 @@ public class EquipmentShopScreen : Node2D {
     private bool _lockControls = false;
 
     private Popup _repairPopup;
-    private Popup _cargoPopup;
-    private Popup _dronesPopup;
+    private CargoMenuPopupNode _cargoPopup;
+    private DronesShopPopupNode _dronesPopup;
     private Popup _sellEquipmentPopup;
 
     private RpgGameState _gameState;
 
     private SpaceUnit _humanUnit;
+    private StarBase _starBase;
 
     private List<IItem> _shopSelection;
 
@@ -44,6 +45,7 @@ public class EquipmentShopScreen : Node2D {
     public override void _Ready() {
         _gameState = RpgGameState.instance;
         _humanUnit = RpgGameState.instance.humanUnit.Get();
+        _starBase = RpgGameState.enteredBase;
 
         _shopSelection = RpgGameState.enteredBase.ShopSelection();
 
@@ -53,8 +55,8 @@ public class EquipmentShopScreen : Node2D {
         GetNode<Button>("Status/RefuelButton").Connect("pressed", this, nameof(OnRefuelButton));
         GetNode<Button>("Status/RepairAllButton").Connect("pressed", this, nameof(OnRepairAllButton));
         GetNode<Button>("Status/CargoButton").Connect("pressed", this, nameof(OnCargoButton));
-        GetNode<Button>("Status/SellAllButton").Connect("pressed", this, nameof(OnSellAllButton));
         GetNode<Button>("Status/DronesButton").Connect("pressed", this, nameof(OnDronesButton));
+        GetNode<Button>("Status/SellDebris").Connect("pressed", this, nameof(OnSellDebrisButton));
 
         GetNode<Button>("UnitMenu/RepairButton").Connect("pressed", this, nameof(OnRepairButton));
 
@@ -73,17 +75,9 @@ public class EquipmentShopScreen : Node2D {
         _repairPopup.GetNode<Button>("RepairMinor").Connect("pressed", this, nameof(OnMinorRepairButton));
         _repairPopup.GetNode<Button>("Cancel").Connect("pressed", this, nameof(OnRepairCancelButton));
 
-        _cargoPopup = GetNode<Popup>("CargoPopup");
-        _cargoPopup.GetNode<Button>("Done").Connect("pressed", this, nameof(OnCargoDoneButton));
-        _cargoPopup.GetNode<Button>("SellDebris").Connect("pressed", this, nameof(OnCargoSellDebrisButton));
-        _cargoPopup.GetNode<Button>("SellMinerals").Connect("pressed", this, nameof(OnCargoSellMineralsButton));
-        _cargoPopup.GetNode<Button>("SellOrganic").Connect("pressed", this, nameof(OnCargoSellOrganicButton));
-        _cargoPopup.GetNode<Button>("SellPower").Connect("pressed", this, nameof(OnCargoSellPowerButton));
-
-        _dronesPopup = GetNode<Popup>("DronesPopup");
-        _dronesPopup.GetNode<Button>("Done").Connect("pressed", this, nameof(OnDronesDoneButton));
-        _dronesPopup.GetNode<Button>("BuyDrone").Connect("pressed", this, nameof(OnDronesBuyButton));
-
+        SetupCargoPopup();
+        SetupDronesPopup();
+        
         for (int i = 0; i < _humanUnit.fleet.Count; i++) {
             var u = _humanUnit.fleet[i];
             if (u.id == 0) {
@@ -103,6 +97,205 @@ public class EquipmentShopScreen : Node2D {
         SelectShopCategory("Weapon");
 
         UpdateUI();
+    }
+
+    private void SetupCargoPopup() {
+        _cargoPopup = CargoMenuPopupNode.New();
+        AddChild(_cargoPopup);
+
+        _cargoPopup.GetNode<ButtonNode>("Minerals/LoadButton").Connect("pressed", this, nameof(OnLoadMineralsButton));
+        _cargoPopup.GetNode<ButtonNode>("Organic/LoadButton").Connect("pressed", this, nameof(OnLoadOrganicButton));
+        _cargoPopup.GetNode<ButtonNode>("Power/LoadButton").Connect("pressed", this, nameof(OnLoadPowerButton));
+
+        _cargoPopup.GetNode<ButtonNode>("Minerals/UnloadButton").Connect("pressed", this, nameof(OnUnloadMineralsButton));
+        _cargoPopup.GetNode<ButtonNode>("Organic/UnloadButton").Connect("pressed", this, nameof(OnUnloadOrganicButton));
+        _cargoPopup.GetNode<ButtonNode>("Power/UnloadButton").Connect("pressed", this, nameof(OnUnloadPowerButton));
+
+        _cargoPopup.GetNode<ButtonNode>("UnloadAllButton").Connect("pressed", this, nameof(OnCargoUnloadAllButton));
+
+        _cargoPopup.GetNode<Button>("DoneButton").Connect("pressed", this, nameof(OnCargoDoneButton));
+
+        UpdateCargoPopup();
+    }
+
+    private void OnCargoUnloadAllButton() {
+        UnloadMinerals(999999);
+        UnloadOrganic(999999);
+        UnloadPower(999999);
+        UpdateCargoPopup();
+    }
+
+    private void UnloadMinerals(int maxAmount) {
+        var amount = Math.Min(maxAmount, _humanUnit.cargo.minerals);
+        amount = Math.Min(amount, _starBase.StorageFreeSpace());
+        _humanUnit.cargo.minerals -= amount;
+        _starBase.mineralsStock += amount;
+    }
+
+    private void UnloadOrganic(int maxAmount) {
+        var amount = Math.Min(maxAmount, _humanUnit.cargo.organic);
+        amount = Math.Min(amount, _starBase.StorageFreeSpace());
+        _humanUnit.cargo.organic -= amount;
+        _starBase.organicStock += amount;
+    }
+
+    private void UnloadPower(int maxAmount) {
+        var amount = Math.Min(maxAmount, _humanUnit.cargo.power);
+        amount = Math.Min(amount, _starBase.StorageFreeSpace());
+        _humanUnit.cargo.power -= amount;
+        _starBase.powerStock += amount;
+    }
+
+    private void OnUnloadMineralsButton() {
+        UnloadMinerals(50);
+        UpdateCargoPopup();
+    }
+
+    private void OnUnloadOrganicButton() {
+        UnloadOrganic(50);
+        UpdateCargoPopup();
+    }
+
+    private void OnUnloadPowerButton() {
+        UnloadPower(50);
+        UpdateCargoPopup();
+    }
+
+    private void OnLoadMineralsButton() {
+        var amount = Math.Min(50, _starBase.mineralsStock);
+        amount = Math.Min(amount, _humanUnit.CargoFree());
+        _starBase.mineralsStock -= amount;
+        _humanUnit.cargo.minerals += amount;
+        UpdateCargoPopup();
+    }
+
+    private void OnLoadOrganicButton() {
+        var amount = Math.Min(50, _starBase.organicStock);
+        amount = Math.Min(amount, _humanUnit.CargoFree());
+        _starBase.organicStock -= amount;
+        _humanUnit.cargo.organic += amount;
+        UpdateCargoPopup();
+    }
+
+    private void OnLoadPowerButton() {
+        var amount = Math.Min(50, _starBase.powerStock);
+        amount = Math.Min(amount, _humanUnit.CargoFree());
+        _starBase.powerStock -= amount;
+        _humanUnit.cargo.power += amount;
+        UpdateCargoPopup();
+    }
+
+    private void UpdateCargoPopup() {
+        _cargoPopup.GetNode<Label>("Minerals/FleetValue").Text = _humanUnit.cargo.minerals.ToString();
+        _cargoPopup.GetNode<Label>("Organic/FleetValue").Text = _humanUnit.cargo.organic.ToString();
+        _cargoPopup.GetNode<Label>("Power/FleetValue").Text = _humanUnit.cargo.power.ToString();
+
+        _cargoPopup.GetNode<Label>("Minerals/StockValue").Text = _starBase.mineralsStock.ToString();
+        _cargoPopup.GetNode<Label>("Organic/StockValue").Text = _starBase.organicStock.ToString();
+        _cargoPopup.GetNode<Label>("Power/StockValue").Text = _starBase.powerStock.ToString();
+
+        _cargoPopup.GetNode<Label>("FleetFreeSpaceValue").Text = _humanUnit.CargoFree().ToString();
+        _cargoPopup.GetNode<Label>("StockFreeSpaceValue").Text = _starBase.StorageFreeSpace().ToString();
+    }
+
+    private void SetupDronesPopup() {
+        _dronesPopup = DronesShopPopupNode.New();
+        AddChild(_dronesPopup);
+        _dronesPopup.GetNode<Button>("DoneButton").Connect("pressed", this, nameof(OnDronesDoneButton));
+
+        DroneInfoBoxClear();
+
+        for (int i = 0; i < 3; i++) {
+            var label = _dronesPopup.GetNode<Label>($"FleetDronesBox/Slot{i}");
+            label.Connect("mouse_entered", this, nameof(OnFleetDroneMouseEnter), new Godot.Collections.Array { i });
+            label.Connect("mouse_exited", this, nameof(DroneInfoBoxClear));
+            label.GetNode<ButtonNode>("SellButton").Connect("pressed", this, nameof(OnFleetDroneSellPressed), new Godot.Collections.Array { i });
+        }
+
+        var dronesForSale = new List<ExplorationDrone>();
+        foreach (var drone in ExplorationDrone.list) {
+            if (drone.needsResearch && !_gameState.technologiesResearched.Contains(drone.name)) {
+                continue;
+            }
+            dronesForSale.Add(drone);
+        }
+
+        var box = _dronesPopup.GetNode<Panel>("DroneSelectionBox");
+        var offsetX = 64;
+        var offsetY = 24;
+        foreach (var drone in dronesForSale) {
+            var droneLabel = new Label();
+            droneLabel.Text = drone.name;
+            droneLabel.RectSize = new Vector2(256, 32);
+            droneLabel.Valign = Label.VAlign.Center;
+            droneLabel.RectPosition = new Vector2(offsetX, offsetY);
+            droneLabel.MouseFilter = Control.MouseFilterEnum.Stop;
+            box.AddChild(droneLabel);
+
+            droneLabel.Connect("mouse_entered", this, nameof(OnDroneSelectionMouseEnter), new Godot.Collections.Array { drone.name });
+            droneLabel.Connect("mouse_exited", this, nameof(DroneInfoBoxClear));
+
+            var buyButton = ButtonNode.New();
+            buyButton.Text = "$";
+            buyButton.RectSize = new Vector2(32, 32);
+            buyButton.RectPosition = new Vector2(-48, 0);
+            buyButton.Connect("pressed", this, nameof(OnDroneBuyPressed), new Godot.Collections.Array { drone.name });
+            droneLabel.AddChild(buyButton);
+
+            offsetY += 48;
+        }
+    }
+
+    private void DroneInfoBoxClear() {
+        var infoLabel = _dronesPopup.GetNode<Label>("DroneInfoBox/Text");
+        infoLabel.Text = "";
+    }
+
+    private string GetDroneInfoText(ExplorationDrone drone) {
+        var infoLines = new List<string>();
+        infoLines.Add(drone.name + " (" + drone.sellingPrice + ")");
+        infoLines.Add("");
+        infoLines.Add("Max temperature: " + drone.maxTemp);
+        infoLines.Add("Exploration rate: " + drone.explorationRate);
+        infoLines.Add("Planet types: " + (drone.canExploreGasGiants ? "any" : "rocky"));
+        return string.Join("\n", infoLines);
+    }
+
+    private void OnDroneBuyPressed(string droneName) {
+        var buyingPrice = ExplorationDrone.Find(droneName).sellingPrice;
+        if (_gameState.credits < buyingPrice) {
+            return;
+        }
+        if (_gameState.explorationDrones.Count >= RpgGameState.MaxExplorationDrones()) {
+            return;
+        }
+
+        _gameState.explorationDrones.Add(droneName);
+        _gameState.credits -= buyingPrice;
+
+        PlayMoneySound();
+        UpdateUI();
+    }
+
+    private void OnDroneSelectionMouseEnter(string droneName) {
+        var drone = ExplorationDrone.Find(droneName);
+        var infoLabel = _dronesPopup.GetNode<Label>("DroneInfoBox/Text");
+        infoLabel.Text = GetDroneInfoText(drone);
+    }
+
+    private void OnFleetDroneSellPressed(int i) {
+        var sellingPrice = ExplorationDrone.Find(_gameState.explorationDrones[i]).sellingPrice / 2;
+        _gameState.explorationDrones.RemoveAt(i);
+        _gameState.credits += sellingPrice;
+
+        PlayMoneySound();
+        UpdateUI();
+    }
+
+    private void OnFleetDroneMouseEnter(int i) {
+        var drone = ExplorationDrone.Find(_gameState.explorationDrones[i]);
+        var infoLabel = _dronesPopup.GetNode<Label>("DroneInfoBox/Text");
+        infoLabel.Text = GetDroneInfoText(drone);
     }
 
     private void SetupUI() {
@@ -412,9 +605,20 @@ public class EquipmentShopScreen : Node2D {
     }
 
     private void UpdateUI() {
-        var starBase = RpgGameState.enteredBase;
+        // _dronesPopup.GetNode<Label>("ControlLimitValue").Text = _gameState.dronesOwned + "/" + RpgGameState.MaxDrones();
 
-        _dronesPopup.GetNode<Label>("ControlLimitValue").Text = _gameState.dronesOwned + "/" + RpgGameState.MaxDrones();
+        var numDrones = _gameState.explorationDrones.Count;
+        var maxDrones = RpgGameState.MaxExplorationDrones();
+        _dronesPopup.GetNode<Label>("FleetDronesTitle").Text = $"Fleet Drones ({numDrones}/{maxDrones})";
+        for (int i = 0; i < 3; i++) {
+            var label = _dronesPopup.GetNode<Label>($"FleetDronesBox/Slot{i}");
+            if (i < _gameState.explorationDrones.Count) {
+                label.Visible = true;
+                label.Text = _gameState.explorationDrones[i];
+            } else {
+                label.Visible = false;
+            }
+        }
 
         GetNode<Label>("Status/CreditsValue").Text = _gameState.credits.ToString();
         GetNode<Label>("Status/FuelValue").Text = ((int)_gameState.fuel).ToString() + "/" + RpgGameState.MaxFuel().ToString();
@@ -425,25 +629,6 @@ public class EquipmentShopScreen : Node2D {
         GetNode<Button>("UnitMenu/RepairButton").Disabled = _selectedVessel.hp == _selectedVessel.Design().maxHp;
 
         GetNode<Button>("Status/RefuelButton").Disabled = _gameState.fuel == RpgGameState.MaxFuel();
-
-        _dronesPopup.GetNode<Label>("BuyDrone/Value").Text = _gameState.drones.ToString();
-        _dronesPopup.GetNode<Button>("BuyDrone").Disabled = !CanBuyDrone();
-
-        Func<StarBase.PriceInfo, string> formatPrice = (StarBase.PriceInfo info) => {
-            return info.value + " (" + (int)(100 * info.multiplier) + "%)";
-        };
-
-        _cargoPopup.GetNode<Label>("SellDebris/Value").Text = _humanUnit.DebrisCount().ToString();
-        _cargoPopup.GetNode<Label>("SellDebris/Price").Text = formatPrice(starBase.DebrisSellPrice());
-        _cargoPopup.GetNode<Label>("SellMinerals/Value").Text = _humanUnit.cargo.minerals.ToString();
-        _cargoPopup.GetNode<Label>("SellMinerals/Price").Text = formatPrice(starBase.MineralsSellPrice());
-        _cargoPopup.GetNode<Label>("SellMinerals/Stock").Text = starBase.mineralsStock.ToString();
-        _cargoPopup.GetNode<Label>("SellOrganic/Value").Text = _humanUnit.cargo.organic.ToString();
-        _cargoPopup.GetNode<Label>("SellOrganic/Price").Text = formatPrice(starBase.OrganicSellPrice());
-        _cargoPopup.GetNode<Label>("SellOrganic/Stock").Text = starBase.organicStock.ToString();
-        _cargoPopup.GetNode<Label>("SellPower/Value").Text = _humanUnit.cargo.power.ToString();
-        _cargoPopup.GetNode<Label>("SellPower/Price").Text = formatPrice(starBase.PowerSellPrice());
-        _cargoPopup.GetNode<Label>("SellPower/Stock").Text = starBase.powerStock.ToString();
 
         GetNode<Button>("EquipmentShop/Buy").Disabled = _selectedMerchandise.sprite == null ||
             ItemInfo.BuyingPrice(_selectedMerchandise.item) > _gameState.credits;
@@ -465,10 +650,6 @@ public class EquipmentShopScreen : Node2D {
         
         _lockControls = true;
         _sellEquipmentPopup.PopupCentered();
-    }
-
-    private bool CanBuyDrone() {
-        return _gameState.credits >= _gameState.dronePrice && _gameState.dronesOwned < RpgGameState.MaxDrones();
     }
 
     private void PlayMoneySound() {
@@ -501,27 +682,25 @@ public class EquipmentShopScreen : Node2D {
             return;
         }
 
-        _dronesPopup.GetNode<Label>("BuyDrone/Value").Text = _gameState.drones.ToString();
-        _dronesPopup.GetNode<Label>("BuyDrone/Price").Text = "(" + _gameState.dronePrice + " cr/unit)";
-
         _lockControls = true;
         _dronesPopup.PopupCentered();
-    }
-
-    private void OnDronesBuyButton() {
-        if (_gameState.credits < _gameState.dronePrice) {
-            return;
-        }
-        _gameState.drones++;
-        _gameState.dronesOwned++;
-        _gameState.credits -= _gameState.dronePrice;
-        PlayMoneySound();
-        UpdateUI();
     }
 
     private void OnDronesDoneButton() {
         _dronesPopup.Hide();
         _lockControls = false;
+    }
+
+    private void OnSellDebrisButton() {
+        if (_lockControls) {
+            return;
+        }
+
+        if (_humanUnit.DebrisCount() != 0) {
+            PlayMoneySound();
+        }
+        SellDebris();
+        UpdateUI();
     }
 
     private void SellDebris() {
@@ -531,57 +710,6 @@ public class EquipmentShopScreen : Node2D {
         _gameState.researchMaterial.Add(cargo.debris);
 
         cargo.debris = new DebrisContainer();
-    }
-
-    private void SellMinerals() {
-        _gameState.credits += RpgGameState.enteredBase.MineralsSellPrice().value * _humanUnit.cargo.minerals;
-        RpgGameState.enteredBase.mineralsStock += _humanUnit.cargo.minerals;
-        _humanUnit.cargo.minerals = 0;
-    }
-
-    private void SellOrganic() {
-        _gameState.credits += RpgGameState.enteredBase.OrganicSellPrice().value * _humanUnit.cargo.organic;
-        RpgGameState.enteredBase.organicStock += _humanUnit.cargo.organic;
-        _humanUnit.cargo.organic = 0;
-    }
-
-    private void SellPower() {
-        _gameState.credits += RpgGameState.enteredBase.PowerSellPrice().value * _humanUnit.cargo.power;
-        RpgGameState.enteredBase.powerStock += _humanUnit.cargo.power;
-        _humanUnit.cargo.power = 0;
-    }
-
-    private void OnCargoSellDebrisButton() {
-        SellDebris();
-        PlayMoneySound();
-        UpdateUI();
-    }
-
-    private void OnCargoSellMineralsButton() {
-        SellMinerals();
-        PlayMoneySound();
-        UpdateUI();
-    }
-
-    private void OnCargoSellOrganicButton() {
-        SellOrganic();
-        PlayMoneySound();
-        UpdateUI();
-    }
-
-    private void OnCargoSellPowerButton() {
-        SellPower();
-        PlayMoneySound();
-        UpdateUI();
-    }
-
-    private void OnSellAllButton() {
-        SellDebris();
-        SellMinerals();
-        SellOrganic();
-        SellPower();
-        PlayMoneySound();
-        UpdateUI();
     }
 
     private void OnCargoButton() {
@@ -685,7 +813,7 @@ public class EquipmentShopScreen : Node2D {
 
         var missingFuel = (int)(RpgGameState.MaxFuel() - _gameState.fuel);
         var toBuy = QMath.ClampMax(missingFuel, 50);
-        var price = _gameState.fuelPrice * toBuy;
+        var price = _starBase.FuelPrice() * toBuy;
         if (_gameState.credits < price) {
             return;
         }

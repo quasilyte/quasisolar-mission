@@ -24,6 +24,7 @@ public class StarSystem: AbstractPoolValue {
 
     public StarBase.Ref starBase;
 
-    public string artifact;
-    public int artifactRecoveryDelay;
+    public bool HasArtifact() {
+        return resourcePlanets.Find((x) => x.artifact != "") != null;
+    }
 }

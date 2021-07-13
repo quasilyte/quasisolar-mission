@@ -1,0 +1,377 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://images/bg/starbase_bg.png" type="Texture" id=1]
+[ext_resource path="res://theme.tres" type="Theme" id=2]
+[ext_resource path="res://images/shipyard/item_slot.png" type="Texture" id=3]
+[ext_resource path="res://images/spacemap/health_bar_purple.png" type="Texture" id=4]
+[ext_resource path="res://images/spacemap/health_bar_gray.png" type="Texture" id=5]
+[ext_resource path="res://scripts/StarBaseModulesScreen.cs" type="Script" id=6]
+[ext_resource path="res://scenes/ButtonNode.tscn" type="PackedScene" id=7]
+[ext_resource path="res://styles/text_box.tres" type="StyleBox" id=8]
+[ext_resource path="res://scenes/SlotButtonNode.tscn" type="PackedScene" id=9]
+[ext_resource path="res://images/recycle.png" type="Texture" id=10]
+[ext_resource path="res://images/spacemap/minerals_icon.png" type="Texture" id=11]
+[ext_resource path="res://images/spacemap/power_icon.png" type="Texture" id=12]
+
+[node name="StarBaseModulesScreen" type="Node2D"]
+script = ExtResource( 6 )
+
+[node name="Background" type="Sprite" parent="."]
+position = Vector2( 960, 540 )
+texture = ExtResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Modules" type="Panel" parent="."]
+margin_left = 96.0
+margin_top = 288.0
+margin_right = 544.0
+margin_bottom = 688.0
+theme = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="Modules"]
+margin_top = 16.0
+margin_right = 448.0
+margin_bottom = 48.0
+theme = ExtResource( 2 )
+text = "Star Base Modules"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Module0" type="Sprite" parent="Modules"]
+position = Vector2( 112, 96 )
+texture = ExtResource( 3 )
+hframes = 3
+frame = 1
+
+[node name="Name" type="Label" parent="Modules/Module0"]
+anchor_left = 1.25
+anchor_top = 0.25
+anchor_right = 1.25
+anchor_bottom = 0.25
+margin_left = -32.0
+margin_top = -32.0
+margin_right = 224.0
+text = "Module 1"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SellButton" parent="Modules/Module0" instance=ExtResource( 7 )]
+margin_left = -80.0
+margin_top = -16.0
+margin_right = -48.0
+margin_bottom = 16.0
+text = "$"
+
+[node name="Module1" type="Sprite" parent="Modules"]
+position = Vector2( 112, 176 )
+texture = ExtResource( 3 )
+hframes = 3
+frame = 1
+
+[node name="Name" type="Label" parent="Modules/Module1"]
+anchor_left = 1.25
+anchor_top = 0.25
+anchor_right = 1.25
+anchor_bottom = 0.25
+margin_left = -32.0
+margin_top = -32.0
+margin_right = 224.0
+text = "Module 2"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SellButton" parent="Modules/Module1" instance=ExtResource( 7 )]
+margin_left = -80.0
+margin_top = -16.0
+margin_right = -48.0
+margin_bottom = 16.0
+text = "$"
+
+[node name="Module2" type="Sprite" parent="Modules"]
+position = Vector2( 112, 256 )
+texture = ExtResource( 3 )
+hframes = 3
+frame = 1
+
+[node name="Name" type="Label" parent="Modules/Module2"]
+anchor_left = 1.25
+anchor_top = 0.25
+anchor_right = 1.25
+anchor_bottom = 0.25
+margin_left = -32.0
+margin_top = -32.0
+margin_right = 224.0
+text = "Module 3"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SellButton" parent="Modules/Module2" instance=ExtResource( 7 )]
+margin_left = -80.0
+margin_top = -16.0
+margin_right = -48.0
+margin_bottom = 16.0
+text = "$"
+
+[node name="Module3" type="Sprite" parent="Modules"]
+position = Vector2( 112, 336 )
+texture = ExtResource( 3 )
+hframes = 3
+frame = 1
+
+[node name="Name" type="Label" parent="Modules/Module3"]
+anchor_left = 1.25
+anchor_top = 0.25
+anchor_right = 1.25
+anchor_bottom = 0.25
+margin_left = -32.0
+margin_top = -32.0
+margin_right = 224.0
+text = "Module 4"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SellButton" parent="Modules/Module3" instance=ExtResource( 7 )]
+margin_left = -80.0
+margin_top = -16.0
+margin_right = -48.0
+margin_bottom = 16.0
+focus_mode = 2
+text = "$"
+
+[node name="ModulesAvailable" type="Panel" parent="."]
+margin_left = 560.0
+margin_top = 208.0
+margin_right = 1008.0
+margin_bottom = 896.0
+theme = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="ModulesAvailable"]
+margin_top = 16.0
+margin_right = 448.0
+margin_bottom = 48.0
+theme = ExtResource( 2 )
+text = "Available Modules"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Box" type="Panel" parent="ModulesAvailable"]
+margin_left = 16.0
+margin_top = 64.0
+margin_right = 432.0
+margin_bottom = 672.0
+custom_styles/panel = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ModuleInfo" type="Panel" parent="."]
+margin_left = 1024.0
+margin_top = 208.0
+margin_right = 1856.0
+margin_bottom = 544.0
+theme = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="ModuleInfo"]
+margin_top = 16.0
+margin_right = 832.0
+margin_bottom = 48.0
+theme = ExtResource( 2 )
+text = "Module Info"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Box" type="Panel" parent="ModuleInfo"]
+margin_left = 16.0
+margin_top = 64.0
+margin_right = 816.0
+margin_bottom = 320.0
+custom_styles/panel = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Body" type="Label" parent="ModuleInfo/Box"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 784.0
+margin_bottom = 240.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ProductionMenu" type="Panel" parent="."]
+margin_left = 1024.0
+margin_top = 560.0
+margin_right = 1376.0
+margin_bottom = 752.0
+theme = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="ProductionMenu"]
+margin_top = 16.0
+margin_right = 352.0
+margin_bottom = 48.0
+theme = ExtResource( 2 )
+text = "Star Base Production"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ModeName" type="Label" parent="ProductionMenu"]
+margin_top = 144.0
+margin_right = 352.0
+margin_bottom = 176.0
+theme = ExtResource( 2 )
+text = "Generating Minerals"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MineralsMode" parent="ProductionMenu" instance=ExtResource( 9 )]
+margin_left = 48.0
+margin_top = 64.0
+margin_right = 112.0
+margin_bottom = 128.0
+
+[node name="minerals_icon" type="Sprite" parent="ProductionMenu/MineralsMode"]
+position = Vector2( 32, 32 )
+texture = ExtResource( 11 )
+
+[node name="PowerMode" parent="ProductionMenu" instance=ExtResource( 9 )]
+margin_left = 144.0
+margin_top = 64.0
+margin_right = 208.0
+margin_bottom = 128.0
+
+[node name="power_icon" type="Sprite" parent="ProductionMenu/PowerMode"]
+position = Vector2( 32, 32 )
+texture = ExtResource( 12 )
+
+[node name="RUMode" parent="ProductionMenu" instance=ExtResource( 9 )]
+margin_left = 240.0
+margin_top = 64.0
+margin_right = 304.0
+margin_bottom = 128.0
+
+[node name="recycle" type="Sprite" parent="ProductionMenu/RUMode"]
+position = Vector2( 32, 32 )
+texture = ExtResource( 10 )
+
+[node name="ConstructionProgress" type="Panel" parent="."]
+margin_left = 96.0
+margin_top = 704.0
+margin_right = 544.0
+margin_bottom = 832.0
+theme = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="ConstructionProgress"]
+margin_top = 16.0
+margin_right = 448.0
+margin_bottom = 48.0
+theme = ExtResource( 2 )
+text = "Construction Progress"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Name" type="Label" parent="ConstructionProgress"]
+margin_top = 48.0
+margin_right = 448.0
+margin_bottom = 80.0
+text = "<Module name>"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ProgressBar" type="TextureProgress" parent="ConstructionProgress"]
+margin_left = 112.0
+margin_top = 96.0
+margin_right = 272.0
+margin_bottom = 106.0
+rect_scale = Vector2( 1.4, 1.4 )
+value = 50.0
+texture_under = ExtResource( 5 )
+texture_progress = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Status" type="Panel" parent="."]
+margin_left = 96.0
+margin_top = 208.0
+margin_right = 544.0
+margin_bottom = 272.0
+theme = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Credits" type="Label" parent="Status"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 112.0
+margin_bottom = 48.0
+theme = ExtResource( 2 )
+text = "Credits:"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Value" type="Label" parent="Status/Credits"]
+margin_left = 96.0
+margin_right = 176.0
+margin_bottom = 32.0
+text = "999999"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LeaveButton" parent="Status" instance=ExtResource( 7 )]
+margin_left = 336.0
+margin_top = 16.0
+margin_right = 432.0
+margin_bottom = 48.0
+text = "Leave"
