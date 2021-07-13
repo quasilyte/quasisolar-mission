@@ -331,15 +331,15 @@ public class RandomEvent {
         );
         e.actions.Add(new Action{
             name = "Give minerals",
-            hint = () => "(140)",
-            condition = () => RpgGameState.instance.humanUnit.Get().cargo.minerals >= 140,
+            hint = () => "(70)",
+            condition = () => RpgGameState.instance.humanUnit.Get().cargo.minerals >= 70,
             apply = (RandomEventContext ctx) => {
                 return new Result{
-                    text = $"140 minerals is a good price for such a nice drone.",
+                    text = $"70 minerals is a good price for such a nice drone.",
                     effects = {
                         new Effect{
                             kind = EffectKind.AddMinerals,
-                            value = -140,
+                            value = -70,
                         },
                         new Effect{
                             kind = EffectKind.AddDrone,
@@ -351,15 +351,15 @@ public class RandomEvent {
         });
         e.actions.Add(new Action{
             name = "Give organic",
-            hint = () => "(90)",
-            condition = () => RpgGameState.instance.humanUnit.Get().cargo.organic >= 90,
+            hint = () => "(35)",
+            condition = () => RpgGameState.instance.humanUnit.Get().cargo.organic >= 35,
             apply = (RandomEventContext ctx) => {
                 return new Result{
-                    text = $"90 organic is a good price for such a nice drone.",
+                    text = $"35 organic is a good price for such a nice drone.",
                     effects = {
                         new Effect{
                             kind = EffectKind.AddOrganic,
-                            value = -90,
+                            value = -35,
                         },
                         new Effect{
                             kind = EffectKind.AddDrone,
@@ -371,15 +371,15 @@ public class RandomEvent {
         });
         e.actions.Add(new Action{
             name = "Give power",
-            hint = () => "(70)",
-            condition = () => RpgGameState.instance.humanUnit.Get().cargo.power >= 70,
+            hint = () => "(25)",
+            condition = () => RpgGameState.instance.humanUnit.Get().cargo.power >= 25,
             apply = (RandomEventContext ctx) => {
                 return new Result{
-                    text = $"70 power is a good price for such a nice drone.",
+                    text = $"25 power is a good price for such a nice drone.",
                     effects = {
                         new Effect{
                             kind = EffectKind.AddPower,
-                            value = -70,
+                            value = -25,
                         },
                         new Effect{
                             kind = EffectKind.AddDrone,
