@@ -21,6 +21,8 @@ public class ResourcePlanet {
         return explored >= explorationUnits;
     }
 
+    public ResourcePlanet() {}
+
     public ResourcePlanet(int minerals, int organic, int power) {
         powerPerDay = power;
         organicPerDay = organic;

@@ -9,6 +9,7 @@ public class MainMenu : Node2D {
         GetNode<BackgroundMusic>("/root/BackgroundMusic").PlayMenuMusic();
 
         GetNode<Button>("NewAdventureButton").Connect("pressed", this, nameof(OnNewAdventureButtonPressed));
+        GetNode<Button>("LoadGameButton").Connect("pressed", this, nameof(OnLoadGameButtonPressed));        
         GetNode<Button>("QuickBattleButton").Connect("pressed", this, nameof(OnQuickBattleButtonPressed));
         GetNode<Button>("SettingsButton").Connect("pressed", this, nameof(OnSettingsButtonPressed));
         GetNode<Button>("ExitButton").Connect("pressed", this, nameof(OnExitButtonPressed));
@@ -33,6 +34,10 @@ public class MainMenu : Node2D {
     private void OnSettingsButtonPressed() {
         SettingsScreen.fromMainMenu = true;
         GetTree().ChangeScene("res://scenes/SettingsScreen.tscn");
+    }
+
+    private void OnLoadGameButtonPressed() {
+        GetTree().ChangeScene("res://scenes/LoadGameScreen.tscn");
     }
 
     private void OnNewAdventureButtonPressed() {
