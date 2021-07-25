@@ -83,10 +83,10 @@ public class SentinelDesign: IItem {
             name = "Photon Fighter",
             description = "TODO",
             kind = Kind.Attack,
-            hp = 60,
+            hp = 70,
             sellingPrice = 3500,
             weapon = PhotonBurstCannonWeapon.Design,
-            attackCooldown = 1.5f,
+            attackCooldown = 1.3f,
         },
 
         new SentinelDesign{
