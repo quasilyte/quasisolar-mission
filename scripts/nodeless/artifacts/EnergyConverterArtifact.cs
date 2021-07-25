@@ -9,10 +9,10 @@ public class EnergyConverterArtifact : IArtifact {
     };
 
     public void Apply(VesselState state, float delta) {
-        if (state.energy >= state.maxEnergy) {
+        if (state.energy >= state.stats.maxEnergy) {
             state.backupEnergy += delta;
-            if (state.backupEnergy >= state.maxBackupEnergy) {
-                state.backupEnergy = state.maxBackupEnergy;
+            if (state.backupEnergy >= state.stats.maxBackupEnergy) {
+                state.backupEnergy = state.stats.maxBackupEnergy;
             }
         }
     }

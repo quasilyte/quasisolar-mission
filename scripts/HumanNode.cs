@@ -56,8 +56,8 @@ public class HumanNode : Node2D {
 
     private void UpdateHUD() {
         var state = pilot.Vessel.State;
-        _hud.UpdateEnergyPercentage(QMath.Percantage(state.energy, state.maxEnergy));
-        _hud.UpdateBackupEnergyPercentage(QMath.Percantage(state.backupEnergy, state.maxBackupEnergy));
+        _hud.UpdateEnergyPercentage(QMath.Percantage(state.energy, state.stats.maxEnergy));
+        _hud.UpdateBackupEnergyPercentage(QMath.Percantage(state.backupEnergy, state.stats.maxBackupEnergy));
     }
 
     private void HandleInput() {

@@ -44,7 +44,7 @@ public class SpaceUnit: AbstractPoolValue {
     public int CargoCapacity() {
         int max = 0;
         foreach (var v in fleet) {
-            max += v.Get().Design().cargoSpace;
+            max += v.Get().MaxCargo();
         }
         return max;
     }

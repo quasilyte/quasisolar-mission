@@ -4,12 +4,8 @@ using Godot;
 public class VesselState {
     public int vesselLevel;
 
-    public float maxEnergy;
-    public float maxBackupEnergy;
-    public float energyRegen;
+    public VesselStats stats;
 
-    public float maxHp;
-    public float maxSpeed;
     public float acceleration;
     public float rotationSpeed;
 
@@ -40,21 +36,17 @@ public class VesselState {
 
     public VesselDesign.Size vesselSize;
 
-    public VesselState(VesselDesign design, EnergySource battery) {
+    public VesselState(VesselStats vesselStats, VesselDesign design, EnergySource battery) {
         vesselLevel = design.level;
 
-        maxHp = design.maxHp;
-        maxSpeed = design.maxSpeed;
         acceleration = design.acceleration;
         rotationSpeed = design.rotationSpeed;
 
-        maxEnergy = 15 + battery.maxEnergy;
-        maxBackupEnergy = battery.maxBackupEnergy;
-        energyRegen = 0.5f + battery.energyRegen;
+        stats = vesselStats;
 
-        hp = design.maxHp;
-        energy = maxEnergy;
-        backupEnergy = maxBackupEnergy;
+        hp = stats.maxHp;
+        energy = stats.maxEnergy;
+        backupEnergy = stats.maxBackupEnergy;
 
         debris = design.debris;
 

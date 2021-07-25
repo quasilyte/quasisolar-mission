@@ -24,6 +24,7 @@ public class Vessel: AbstractPoolValue, IItem {
     public string energySourceName;
     public List<string> artifacts = new List<string>();
     public List<string> weapons = new List<string>();
+    public List<string> patches = new List<string>();
     public string specialWeaponName = EmptyWeapon.Design.name;
     public string shieldName = EmptyShield.Design.name;
     public string sentinelName = "Empty";
@@ -32,11 +33,12 @@ public class Vessel: AbstractPoolValue, IItem {
 
     public float hp;
     public float energy;
+    public int exp;
 
     public ItemKind GetItemKind() { return ItemKind.Vessel; }
 
     public void AddEnergy(float amount) {
-        energy = QMath.Clamp(energy + amount, 0, GetEnergySource().maxBackupEnergy);
+        energy = QMath.Clamp(energy + amount, 0, MaxBackupEnergy());
     }
 
     public EnergySource GetEnergySource() { return EnergySource.Find(energySourceName); }
@@ -48,6 +50,17 @@ public class Vessel: AbstractPoolValue, IItem {
     public ShieldDesign Shield() { return ShieldDesign.Find(shieldName); }
 
     public SentinelDesign Sentinel() { return SentinelDesign.Find(sentinelName); }
+
+    public float MaxHp() { return (new VesselStats(this)).maxHp; }
+    public float MaxBackupEnergy() { return (new VesselStats(this).maxBackupEnergy); }
+
+    public int MaxCargo() { 
+        float cargo = (float)Design().cargoSpace;
+        foreach (var patchName in patches) {
+            cargo *= VesselPatch.patchByName[patchName].cargoMultiplier;
+        }
+        return (int)cargo;
+    }
 
     // public ArtifactDesign Artifact(int i) { return ArtifactDesign.Find(artifacts[i]); }
 

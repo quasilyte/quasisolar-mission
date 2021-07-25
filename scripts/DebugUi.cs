@@ -21,10 +21,10 @@ public class DebugUi : VBoxContainer {
         _speedPenaltyLabel = GetNode<Label>("Table2/SpeedPenaltyValue");
         _fpsLabel = GetNode<Label>("Table2/FpsValue");
 
-        GetNode<Label>("Table3/HpMaxValue").Text = "/" + _vessel.State.maxHp.ToString();
-        GetNode<Label>("Table3/EnergyMaxValue").Text = "/" + _vessel.State.maxEnergy.ToString();
-        GetNode<Label>("Table3/BackupEnergyMaxValue").Text = "/" + _vessel.State.maxBackupEnergy.ToString();
-        GetNode<Label>("Table3/SpeedMaxValue").Text = "/" + _vessel.State.maxSpeed.ToString();
+        GetNode<Label>("Table3/HpMaxValue").Text = "/" + _vessel.State.stats.maxHp.ToString();
+        GetNode<Label>("Table3/EnergyMaxValue").Text = "/" + _vessel.State.stats.maxEnergy.ToString();
+        GetNode<Label>("Table3/BackupEnergyMaxValue").Text = "/" + _vessel.State.stats.maxBackupEnergy.ToString();
+        GetNode<Label>("Table3/SpeedMaxValue").Text = "/" + _vessel.State.stats.maxSpeed.ToString();
 
         var timer = new Timer();
         AddChild(timer);

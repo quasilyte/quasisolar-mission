@@ -491,13 +491,13 @@ text = "Done"
 margin_left = 1312.0
 margin_top = 112.0
 margin_right = 2112.0
-margin_bottom = 512.0
+margin_bottom = 592.0
 
 [node name="Panel" type="Panel" parent="UI/RandomEventPopup"]
 margin_left = 16.0
 margin_top = 32.0
 margin_right = 784.0
-margin_bottom = 288.0
+margin_bottom = 368.0
 custom_styles/panel = ExtResource( 20 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -518,7 +518,7 @@ __meta__ = {
 margin_left = 32.0
 margin_top = 48.0
 margin_right = 768.0
-margin_bottom = 272.0
+margin_bottom = 352.0
 text = "This is a random event description.
 
 The player needs to choose one of the actions listed below."
@@ -531,32 +531,32 @@ __meta__ = {
 
 [node name="Action1" parent="UI/RandomEventPopup" instance=ExtResource( 19 )]
 margin_left = 16.0
-margin_top = 304.0
+margin_top = 384.0
 margin_right = 384.0
-margin_bottom = 336.0
+margin_bottom = 416.0
 text = "Action 1"
 
 [node name="Action2" parent="UI/RandomEventPopup" instance=ExtResource( 19 )]
 margin_left = 416.0
-margin_top = 304.0
+margin_top = 384.0
 margin_right = 784.0
-margin_bottom = 336.0
+margin_bottom = 416.0
 focus_mode = 2
 text = "Action 2"
 
 [node name="Action3" parent="UI/RandomEventPopup" instance=ExtResource( 19 )]
 margin_left = 16.0
-margin_top = 352.0
+margin_top = 432.0
 margin_right = 384.0
-margin_bottom = 384.0
+margin_bottom = 464.0
 focus_mode = 2
 text = "Action 3"
 
 [node name="Action4" parent="UI/RandomEventPopup" instance=ExtResource( 19 )]
 margin_left = 416.0
-margin_top = 352.0
+margin_top = 432.0
 margin_right = 784.0
-margin_bottom = 384.0
+margin_bottom = 464.0
 focus_mode = 2
 text = "Action 4"
 
@@ -564,13 +564,13 @@ text = "Action 4"
 margin_left = 2192.0
 margin_top = 96.0
 margin_right = 2928.0
-margin_bottom = 496.0
+margin_bottom = 560.0
 
 [node name="Panel" type="Panel" parent="UI/RandomEventResolvedPopup"]
 margin_left = 16.0
 margin_top = 32.0
 margin_right = 720.0
-margin_bottom = 336.0
+margin_bottom = 400.0
 custom_styles/panel = ExtResource( 20 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -591,7 +591,7 @@ __meta__ = {
 margin_left = 32.0
 margin_top = 48.0
 margin_right = 704.0
-margin_bottom = 320.0
+margin_bottom = 384.0
 text = "This is a text of the event results.
 
 Gained 3 experience points."
@@ -604,9 +604,9 @@ __meta__ = {
 
 [node name="Done" parent="UI/RandomEventResolvedPopup" instance=ExtResource( 19 )]
 margin_left = 240.0
-margin_top = 352.0
+margin_top = 416.0
 margin_right = 496.0
-margin_bottom = 384.0
+margin_bottom = 448.0
 focus_mode = 2
 text = "Done"
 

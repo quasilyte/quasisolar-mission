@@ -21,8 +21,9 @@ public static class VesselFactory {
     }
 
     public static void InitStats(Vessel v) {
-        v.hp = v.Design().maxHp;
-        v.energy = v.GetEnergySource().maxBackupEnergy;
+        var stats = new VesselStats(v);
+        v.hp = stats.maxHp;
+        v.energy = stats.maxBackupEnergy;
     }
 
     public static void Init(Vessel v, VesselDesign design) {
@@ -583,6 +584,12 @@ public static class VesselFactory {
         SetShield(v,
             0.5, LatticeShield.Design.name,
             0.5, LaserPerimeterShield.Design.name);
+
+        if (v.rank == 2) {
+            v.sentinelName = "Photon Fighter";
+        } else if (v.rank == 3) {
+            v.sentinelName = "Restructuring Guard";
+        }
     }
 
     private static void InitZythHunter(Vessel v) {

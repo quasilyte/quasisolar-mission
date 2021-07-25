@@ -25,7 +25,8 @@ public class MainMenu : Node2D {
             ArtifactDesign.InitLists();
             SentinelDesign.InitLists();
             Research.InitLists();
-            RandomEvent.InitLists();
+            MapEventRegistry.InitLists();
+            VesselPatch.InitLists();
         }
 
         QuickBattleState.Reset();

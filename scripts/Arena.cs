@@ -69,7 +69,8 @@ public class Arena : Node2D {
             }
         }
 
-        var state = new VesselState(v.Design(), v.GetEnergySource());
+        var stats = new VesselStats(v);
+        var state = new VesselState(stats, v.Design(), v.GetEnergySource());
         foreach (var a in artifacts) {
             a.Upgrade(state);
         }
@@ -375,6 +376,8 @@ public class Arena : Node2D {
                     result.exp += p.Vessel.State.vesselLevel * 3;
                     if (vessel.designName == "Visitor") {
                         result.technology = "Crystal Cannon";
+                    } else if (vessel.designName == "Spectre") {
+                        result.technology = "Stormbringer";
                     }
                 }
             }

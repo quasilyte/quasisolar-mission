@@ -9,10 +9,10 @@ public class DroidArtifact : IArtifact {
     };
 
     public void Apply(VesselState state, float delta) {
-        if (state.hp >= state.maxHp) {
+        if (state.hp >= state.stats.maxHp) {
             return;
         }
-        if (state.hp < (state.maxHp / 2)) {
+        if (state.hp < (state.stats.maxHp / 2)) {
             state.hp += 0.5f * delta;
         }
     }

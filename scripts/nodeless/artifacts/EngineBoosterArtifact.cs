@@ -11,6 +11,6 @@ public class EngineBoosterArtifact : IArtifact {
     public void Apply(VesselState state, float delta) {}
 
     public void Upgrade(VesselState state) {
-        state.maxSpeed += 15.0f;
+        state.stats.maxSpeed += 15.0f;
     }
 }

@@ -117,6 +117,7 @@ public class ShipyardScreen : Node2D {
         var ark = _gameState.NewVessel(Faction.Earthling, VesselDesign.Find("Ark"));
         ark.pilotName = PilotNames.UniqHumanName(_gameState.usedNames);
         VesselFactory.PadEquipment(ark);
+        VesselFactory.InitStats(ark);
         _gameState.humanUnit.Get().fleet.Add(ark.GetRef());
 
         GetTree().ChangeScene("res://scenes/MapView.tscn");

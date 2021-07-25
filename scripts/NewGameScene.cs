@@ -259,7 +259,7 @@ public class NewGameScene : Node2D {
         }
 
         var randomEvents = new HashSet<string>();
-        foreach (var e in RandomEvent.list) {
+        foreach (var e in MapEventRegistry.list) {
             randomEvents.Add(e.title);
         }
 
@@ -765,6 +765,7 @@ public class NewGameScene : Node2D {
         };
         humanVessel.sentinelName = "Empty";
         humanVessel.specialWeaponName = EmptyWeapon.Design.name;
+        // humanVessel.patches.Add("Improved Cargo");
         VesselFactory.InitStats(humanVessel);
         fleet.Add(humanVessel.GetRef());
 

@@ -235,59 +235,6 @@ public class StarSystemNode : Node2D {
         }
     }
 
-    private void CollectResources() {
-        if (RpgGameState.instance.day % 30 == 0) {
-            GarrisonCollectResources();
-            return;
-        }
-    }
-
-    private void GarrisonCollectResources() {
-        var starBase = sys.starBase.Get();
-
-        if (starBase.garrison.Count == 0) {
-            return;
-        }
-
-        Vessel v = null;
-        foreach (var x in starBase.garrison) {
-            if (v == null || v.Design().cargoSpace < x.Get().Design().cargoSpace) {
-                v = x.Get();
-            }
-        }
-
-        TransferResources(v.Design().cargoSpace);
-    }
-
-    private void TransferResources(int limit) {
-        // var starBase = sys.starBase.Get();
-
-        // Func<int, int, int> collect = (int price, int amount) => {
-        //     int collectAmount = QMath.ClampMax(amount, limit);
-        //     limit -= collectAmount;
-        //     RpgGameState.instance.credits += price * collectAmount;
-        //     return collectAmount;
-        // };
-
-        // foreach (var p in sys.resourcePlanets) {
-        //     if (!p.hasMine) {
-        //         continue;
-        //     }
-
-        //     int mineralsCollected = collect(starBase.MineralsSellPrice().value, p.mineralsCollected);
-        //     starBase.mineralsStock += mineralsCollected;
-        //     p.mineralsCollected -= mineralsCollected;
-
-        //     int organicCollected = collect(starBase.OrganicSellPrice().value, p.organicCollected);
-        //     starBase.organicStock += organicCollected;
-        //     p.organicCollected -= organicCollected;
-
-        //     int powerCollected = collect(starBase.PowerSellPrice().value, p.powerCollected);
-        //     starBase.powerStock += powerCollected;
-        //     p.powerCollected -= powerCollected;
-        // }
-    }
-
     public void ProcessDay() {
         if (_starBase != null) {
             _starBase.ProcessDay();
@@ -295,11 +242,6 @@ public class StarSystemNode : Node2D {
 
         if (sys.starBase.id == 0) {
             return;
-        }
-
-        var starBase = sys.starBase.Get();
-        if (starBase.owner == Faction.Earthling) {
-            CollectResources();
         }
     }
 }

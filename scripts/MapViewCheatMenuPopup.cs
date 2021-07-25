@@ -116,7 +116,7 @@ public class MapViewCheatMenuPopup : PopupDialog {
                 if (e == null) {
                     throw new Exception($"event {arg} not found");
                 }
-                if (!e.condition()) {
+                if (!e.Condition()) {
                     throw new Exception($"{arg} event condition is not satisfied");
                 }
                 _command = new Command { kind = CommandKind.CallRandomEvent, value = e };
@@ -185,9 +185,9 @@ public class MapViewCheatMenuPopup : PopupDialog {
         return null;
     }
 
-    public RandomEvent FindRandomEvent(string name) {
+    public AbstractMapEvent FindRandomEvent(string name) {
         name = name.ToLower();
-        foreach (var e in RandomEvent.list) {
+        foreach (var e in MapEventRegistry.list) {
             if (e.title.ToLower() == name) {
                 return e;
             }

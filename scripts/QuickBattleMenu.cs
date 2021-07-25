@@ -498,11 +498,10 @@ public class QuickBattleMenu : Node2D {
 
             if (slot.kind.StartsWith("Human")) {
                 InitHuman(v);
+                VesselFactory.InitStats(v);
             } else {
                 VesselFactory.Init(v, slot.kind);
             }
-
-            v.hp = v.Design().maxHp;
 
             ArenaSettings.combatants.Add(v);
         }
@@ -513,7 +512,6 @@ public class QuickBattleMenu : Node2D {
 
         v.designName = settings.vesselDesignName;
         v.energySourceName = settings.energySource.name;
-        v.energy = settings.energySource.maxBackupEnergy;
 
         var artifacts = settings.artifacts;
         var weapons = settings.weapons;

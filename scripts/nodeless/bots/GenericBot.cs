@@ -418,7 +418,7 @@ class GenericBot : AbstractBot {
         if (ally == null) {
             return;
         }
-        var hpMissing = ally.Vessel.State.maxHp - ally.Vessel.State.hp;
+        var hpMissing = ally.Vessel.State.stats.maxHp - ally.Vessel.State.hp;
         if (hpMissing < 40) {
             return;
         }
@@ -523,7 +523,7 @@ class GenericBot : AbstractBot {
             cursor = QMath.RandomizedLocation(TargetPosition(), 24 * design.botHintScatter);
         }
         var closeRange = TargetDistance() < 150;
-        var lowOnEnergy = _vessel.State.backupEnergy < (_vessel.State.maxBackupEnergy * 0.33);
+        var lowOnEnergy = _vessel.State.backupEnergy < (_vessel.State.stats.maxBackupEnergy * 0.33);
 
         var effectiveRange = design.botHintRange != 0 ? design.botHintRange : design.range;
 

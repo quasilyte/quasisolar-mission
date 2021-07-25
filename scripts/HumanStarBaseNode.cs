@@ -88,6 +88,7 @@ public class HumanStarBaseNode : StarBaseNode {
         if (vesselProduced != null) {
             vesselProduced.pilotName = PilotNames.UniqHumanName(RpgGameState.instance.usedNames);
             VesselFactory.PadEquipment(vesselProduced);
+            VesselFactory.InitStats(vesselProduced);
             GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/production_completed.wav"));
             var notification = MapNotificationNode.New("Production completed");
             GetParent().AddChild(notification);

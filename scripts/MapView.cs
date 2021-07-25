@@ -6,7 +6,8 @@ using CheatCommandKind = MapViewCheatMenuPopup.CommandKind;
 public class MapView : Node2D {
     const float MAP_WIDTH = (1080 * 3) + 220;
 
-    private RandomEvent _randomEvent;
+    private AbstractMapEvent _randomEventProto;
+    private AbstractMapEvent _randomEventInstance;
     private RandomEventContext _randomEventContext;
 
     private GameMenuNode _menuNode;
@@ -41,7 +42,7 @@ public class MapView : Node2D {
     private PopupNode _patrolReachesBasePopup;
     private MapViewCheatMenuPopup _cheatsPopup;
 
-    private RandomEvent.EffectKind _randomEventResolutionPostEffect;
+    private AbstractMapEvent.EffectKind _randomEventResolutionPostEffect;
 
     private SpaceUnitNode _eventUnit;
     private PopupNode _starBaseAttackPopup;
@@ -262,7 +263,7 @@ public class MapView : Node2D {
     private void ProcessStarBaseCasualties(StarBase starBase) {
         starBase.garrison = RemoveCasualties(starBase.garrison);
         foreach (var v in starBase.garrison) {
-            v.Get().energy = v.Get().GetEnergySource().maxBackupEnergy;
+            v.Get().energy = v.Get().MaxBackupEnergy();
         }
     }
 
@@ -498,7 +499,7 @@ public class MapView : Node2D {
 
             case CheatCommandKind.CallRandomEvent:
                 OnCheatsDone();
-                _randomEvent = (RandomEvent)command.value;
+                _randomEventProto = (AbstractMapEvent)command.value;
                 OpenRandomEvent(NewRandomEventContext());
                 return;
         }
@@ -518,20 +519,22 @@ public class MapView : Node2D {
 
         GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/interface/random_event.wav"));
 
-        _randomEventPopup.GetNode<Label>("Title").Text = _randomEvent.title;
+        _randomEventInstance = _randomEventProto.Create(ctx);
+
+        _randomEventPopup.GetNode<Label>("Title").Text = _randomEventInstance.title;
         _randomEventContext = ctx;
 
-        var text = _randomEvent.text;
-        var extraText = _randomEvent.extraText(_randomEventContext);
-        if (!extraText.Empty()) {
-            text += "\n\n" + extraText;
-        }
+        var text = _randomEventInstance.text;
+        // var extraText = _randomEvent.extraText(_randomEventContext);
+        // if (!extraText.Empty()) {
+        //     text += "\n\n" + extraText;
+        // }
         _randomEventPopup.GetNode<Label>("Text").Text = text;
 
         for (int i = 0; i < 4; i++) {
             var button = _randomEventPopup.GetNode<ButtonNode>($"Action{i + 1}");
-            if (_randomEvent.actions.Count > i) {
-                var a = _randomEvent.actions[i];
+            if (_randomEventInstance.actions.Count > i) {
+                var a = _randomEventInstance.actions[i];
                 button.Disabled = !a.condition();
                 button.Visible = true;
 
@@ -560,17 +563,17 @@ public class MapView : Node2D {
 
     private void RunEventResolutionPostEffect() {
         switch (_randomEventResolutionPostEffect) {
-            case RandomEvent.EffectKind.EnterArena:
+            case AbstractMapEvent.EffectKind.EnterArena:
                 GetTree().ChangeScene("res://scenes/ArenaScreen.tscn");
                 return;
-            case RandomEvent.EffectKind.EnterTextQuest:
+            case AbstractMapEvent.EffectKind.EnterTextQuest:
                 GetTree().ChangeScene("res://scenes/TextQuestScreen.tscn");
                 return;
         }
     }
 
     private void OnRandomEventAction(int actionIndex) {
-        var eventResult = _randomEvent.actions[actionIndex].apply(_randomEventContext);
+        var eventResult = _randomEventInstance.actions[actionIndex].apply();
 
         foreach (var effect in eventResult.effects) {
             ExecuteEffect(effect);
@@ -581,67 +584,78 @@ public class MapView : Node2D {
             _lockControls = false;
             RunEventResolutionPostEffect();
         } else {
-            var outcomeText = "<" + _randomEvent.actions[actionIndex].name + ">";
+            var outcomeText = "<" + _randomEventInstance.actions[actionIndex].name + ">";
             outcomeText += "\n\n" + eventResult.text;
-            outcomeText += $"\n\nGained {_randomEvent.expReward} experience points.";
 
-            _gameState.experience += _randomEvent.expReward;
+            if (eventResult.expReward != 0) {
+                outcomeText += $"\n\nGained {eventResult.expReward} experience points.";
+                _gameState.experience += eventResult.expReward;
+            }
 
-            _randomEventResolvedPopup.GetNode<Label>("Title").Text = _randomEvent.title;
+            _randomEventResolvedPopup.GetNode<Label>("Title").Text = _randomEventInstance.title;
             _randomEventResolvedPopup.GetNode<Label>("Text").Text = outcomeText;
 
             _randomEventPopup.Hide();
             _randomEventResolvedPopup.PopupCentered();
         }
 
-        _randomEvent = null;
+        _randomEventInstance = null;
+        _randomEventProto = null;
         UpdateUI();
     }
 
-    private void ExecuteEffect(RandomEvent.Effect effect) {
+    private void ExecuteEffect(AbstractMapEvent.Effect effect) {
         switch (effect.kind) {
-            case RandomEvent.EffectKind.AddTechnology:
+            case AbstractMapEvent.EffectKind.AddTechnology:
                 _gameState.technologiesResearched.Add((string)effect.value);
                 return;
 
-            case RandomEvent.EffectKind.AddVesselToFleet:
+            case AbstractMapEvent.EffectKind.AddVesselToFleet:
                 AddUnitMember((Vessel)effect.value);
                 ReorderUnitMembers();
                 _gameState.humanUnit.Get().fleet.Add(((Vessel)effect.value).GetRef());
                 return;
 
-            case RandomEvent.EffectKind.DeclareWar:
+            case AbstractMapEvent.EffectKind.DeclareWar:
                 if (_gameState.diplomaticStatuses[(Faction)effect.value] != DiplomaticStatus.War) {
                     _gameState.reputations[(Faction)effect.value] -= 5;
                 }
                 _gameState.diplomaticStatuses[(Faction)effect.value] = DiplomaticStatus.War;
                 return;
 
-            case RandomEvent.EffectKind.AddDrone:
+            case AbstractMapEvent.EffectKind.AddDrone:
                 _gameState.explorationDrones.Add((string)effect.value);
                 return;
 
-            case RandomEvent.EffectKind.AddCredits:
+            case AbstractMapEvent.EffectKind.AddPatch:
+                _gameState.humanUnit.Get().fleet[(int)effect.value].Get().patches.Add((string)effect.value2);
+                return;                
+
+            case AbstractMapEvent.EffectKind.AddCredits:
                 _gameState.credits += (int)effect.value;
                 return;
-            case RandomEvent.EffectKind.AddMinerals:
+            case AbstractMapEvent.EffectKind.AddMinerals:
                 _humanUnit.CargoAddMinerals((int)effect.value);
                 return;
-            case RandomEvent.EffectKind.AddOrganic:
+            case AbstractMapEvent.EffectKind.AddOrganic:
                 _humanUnit.CargoAddOrganic((int)effect.value);
                 return;
-            case RandomEvent.EffectKind.AddPower:
+            case AbstractMapEvent.EffectKind.AddPower:
                 _humanUnit.CargoAddPower((int)effect.value);
                 return;
-            case RandomEvent.EffectKind.AddFlagshipBackupEnergy:
+            case AbstractMapEvent.EffectKind.AddFlagshipBackupEnergy:
                 _humanUnit.fleet[0].Get().AddEnergy((float)effect.value);
                 return;
 
-            case RandomEvent.EffectKind.AddReputation:
+            case AbstractMapEvent.EffectKind.AddReputation:
                 _gameState.reputations[(Faction)effect.value2] += (int)effect.value2;
                 return;
 
-            case RandomEvent.EffectKind.SpendAnyVesselBackupEnergy:
+            case AbstractMapEvent.EffectKind.DestroyVessel:
+                RemoveHumanVessel((int)effect.value);
+                return;
+
+            case AbstractMapEvent.EffectKind.SpendAnyVesselBackupEnergy:
                 foreach (var v in _humanUnit.fleet) {
                     if (v.Get().energy >= (int)effect.value) {
                         v.Get().energy -= (int)effect.value;
@@ -649,10 +663,10 @@ public class MapView : Node2D {
                     }
                 }
                 return;
-            case RandomEvent.EffectKind.AddFuel:
+            case AbstractMapEvent.EffectKind.AddFuel:
                 RpgGameState.AddFuel((int)effect.value);
                 return;
-            case RandomEvent.EffectKind.AddFleetBackupEnergyPercentage: {
+            case AbstractMapEvent.EffectKind.AddFleetBackupEnergyPercentage: {
                     var randRange = (Vector2)effect.value;
                     foreach (var handle in _humanUnit.fleet) {
                         var v = handle.Get();
@@ -662,18 +676,18 @@ public class MapView : Node2D {
                     return;
                 }
 
-            case RandomEvent.EffectKind.AddKrigiaMaterial:
+            case AbstractMapEvent.EffectKind.AddKrigiaMaterial:
                 _gameState.researchMaterial.Add((int)effect.value, Faction.Krigia);
                 return;
 
-            case RandomEvent.EffectKind.DamageFlagshipPercentage: {
+            case AbstractMapEvent.EffectKind.DamageFlagshipPercentage: {
                 var randRange = (Vector2)effect.value;
                 var flagship = _humanUnit.fleet[0].Get();
                 flagship.hp -= flagship.hp * QRandom.FloatRange(randRange.x, randRange.y);
                 return;
             }
 
-            case RandomEvent.EffectKind.DamageFleetPercentage: {
+            case AbstractMapEvent.EffectKind.DamageFleetPercentage: {
                     var randRange = (Vector2)effect.value;
                     foreach (var handle in _humanUnit.fleet) {
                         var v = handle.Get();
@@ -685,27 +699,27 @@ public class MapView : Node2D {
                     }
                     return;
                 }
-            case RandomEvent.EffectKind.TeleportToSystem:
+            case AbstractMapEvent.EffectKind.TeleportToSystem:
                 var targetSys = (StarSystem)effect.value;
                 _humanUnit.pos = targetSys.pos;
                 _human.GlobalPosition = _humanUnit.pos;
                 _human.node.GlobalPosition = _humanUnit.pos;
                 EnterSystem(targetSys);
                 return;
-            case RandomEvent.EffectKind.ApplySlow:
+            case AbstractMapEvent.EffectKind.ApplySlow:
                 _gameState.travelSlowPoints += (int)effect.value;
                 return;
 
-            case RandomEvent.EffectKind.EnterTextQuest:
+            case AbstractMapEvent.EffectKind.EnterTextQuest:
                 RpgGameState.selectedTextQuest = (AbstractTQuest)effect.value;
                 _randomEventResolutionPostEffect = effect.kind;
                 return;
 
-            case RandomEvent.EffectKind.PrepareArenaSettings:
+            case AbstractMapEvent.EffectKind.PrepareArenaSettings:
                 SetArenaSettings(_currentSystem.sys, ConvertVesselList(_randomEventContext.spaceUnit.fleet), ConvertVesselList(_humanUnit.fleet));
                 return;
 
-            case RandomEvent.EffectKind.EnterArena: {
+            case AbstractMapEvent.EffectKind.EnterArena: {
                     var unit = (SpaceUnit)effect.value;
                     RpgGameState.arenaUnit1 = unit;
                     if (effect.value2 != null) {
@@ -732,8 +746,8 @@ public class MapView : Node2D {
         var unitMembers = GetNode<Label>("UI/UnitMembers");
         var box = unitMembers.GetNode<VBoxContainer>("Box");
 
-        var hpPercentage = QMath.Percantage(v.hp, v.Design().maxHp);
-        var energyPercentage = QMath.Percantage(v.energy, v.GetEnergySource().maxBackupEnergy);
+        var hpPercentage = QMath.Percantage(v.hp, v.MaxHp());
+        var energyPercentage = QMath.Percantage(v.energy, v.MaxBackupEnergy());
         var m = UnitMemberNode.New(v.pilotName, v.Design().Texture(), hpPercentage, energyPercentage);
         _unitMembers.Add(m);
         box.AddChild(m);
@@ -764,16 +778,21 @@ public class MapView : Node2D {
         return _currentSystem != null && _currentSystem.sys.starBase.id == 0;
     }
 
+    private void RemoveHumanVessel(int index) {
+        _humanUnit.fleet[index].Get().deleted = true;
+        _humanUnit.fleet.RemoveAt(index);
+        _unitMembers[index].QueueFree();
+        _unitMembers.RemoveAt(index);
+        ReorderUnitMembers();
+    }
+
     private void OnBuildNewBase() {
         var arkIndex = ArkVesselIndex();
         if (arkIndex == -1 || !CanBuildStarBase()) {
             return;
         }
 
-        _humanUnit.fleet.RemoveAt(arkIndex);
-        _unitMembers[arkIndex].QueueFree();
-        _unitMembers.RemoveAt(arkIndex);
-        ReorderUnitMembers();
+        RemoveHumanVessel(arkIndex);
 
         var starBase = _gameState.starBases.New();
         starBase.owner = Faction.Earthling;
@@ -1188,10 +1207,10 @@ public class MapView : Node2D {
         }
 
         if (sys.color == StarColor.Purple) {
-            var e = RandomEvent.eventByTitle["Purple System Visitor"];
+            var e = MapEventRegistry.eventByTitle["Purple System Visitor"];
             if (_gameState.randomEventsAvailable.Contains(e.title)) {
-                _randomEvent = e;
-                _gameState.randomEventsAvailable.Remove(_randomEvent.title);
+                _randomEventProto = e;
+                _gameState.randomEventsAvailable.Remove(_randomEventProto.title);
                 OpenRandomEvent(NewRandomEventContext());
                 return;
             }
@@ -1206,7 +1225,7 @@ public class MapView : Node2D {
                 }
             }
             if (rarilouUnit != null) {
-                _randomEvent = RandomEvent.rarilouEncounter;
+                _randomEventProto = new RarilouEncounterMapEvent();
                 var ctx = NewRandomEventContext();
                 ctx.spaceUnit = rarilouUnit;
                 RpgGameState.arenaUnit1 = rarilouUnit;
@@ -1231,13 +1250,13 @@ public class MapView : Node2D {
             return;
         }
 
-        var enterSystemEvents = new List<RandomEvent>();
+        var enterSystemEvents = new List<AbstractMapEvent>();
         foreach (var eventTitle in _gameState.randomEventsAvailable) {
-            var e = RandomEvent.eventByTitle[eventTitle];
-            if (e.trigger != RandomEvent.TriggerKind.OnSystemEntered) {
+            var e = MapEventRegistry.eventByTitle[eventTitle];
+            if (e.triggerKind != AbstractMapEvent.TriggerKind.OnSystemEntered) {
                 continue;
             }
-            if (!e.condition()) {
+            if (!e.Condition()) {
                 continue;
             }
             enterSystemEvents.Add(e);
@@ -1246,8 +1265,8 @@ public class MapView : Node2D {
             return;
         }
 
-        _randomEvent = QRandom.Element(enterSystemEvents);
-        _gameState.randomEventsAvailable.Remove(_randomEvent.title);
+        _randomEventProto = QRandom.Element(enterSystemEvents);
+        _gameState.randomEventsAvailable.Remove(_randomEventProto.title);
         OpenRandomEvent(NewRandomEventContext());
     }
 
@@ -1270,8 +1289,8 @@ public class MapView : Node2D {
 
         for (int i = 0; i < _unitMembers.Count; i++) {
             var p = _humanUnit.fleet[i].Get();
-            var hpPercentage = QMath.Percantage(p.hp, p.Design().maxHp);
-            var energyPercentage = QMath.Percantage(p.energy, p.GetEnergySource().maxBackupEnergy);
+            var hpPercentage = QMath.Percantage(p.hp, p.MaxHp());
+            var energyPercentage = QMath.Percantage(p.energy, p.MaxBackupEnergy());
             var unit = _unitMembers[i];
             unit.UpdateStatus(hpPercentage, energyPercentage);
         }
@@ -1331,7 +1350,7 @@ public class MapView : Node2D {
     private void RecoverFleetEnergy(List<Vessel.Ref> fleet) {
         foreach (var handle in fleet) {
             var v = handle.Get();
-            v.energy = v.GetEnergySource().maxBackupEnergy;
+            v.energy = v.MaxBackupEnergy();
         }
     }
 

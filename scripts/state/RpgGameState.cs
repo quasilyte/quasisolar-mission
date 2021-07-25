@@ -354,7 +354,6 @@ public class RpgGameState {
         v.isBot = true;
         v.faction = faction;
         v.designName = design.name;
-        v.hp = design.maxHp;
         return v;
     }
 

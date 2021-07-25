@@ -104,7 +104,8 @@ public class VesselNode : Node2D {
             State.energy = QMath.ClampMin(State.energy - 5, 0);
         }
         if (State.insideStarHazard) {
-            ApplyDamage(2, DamageKind.Thermal);
+            var damage = 2 + State.stats.starDamageReceived;
+            ApplyDamage(damage, DamageKind.Thermal);
             for (int i = 0; i < 4; i++) {
                 var flame = FireEffectNode.New();
                 AddChild(flame);
@@ -125,9 +126,9 @@ public class VesselNode : Node2D {
         shield.Process(State, delta);
 
         if (State.reactorDisabledTime == 0) {
-            State.energy += State.energyRegen * delta;
-            if (State.energy > State.maxEnergy) {
-                State.energy = State.maxEnergy;
+            State.energy += State.stats.energyRegen * delta;
+            if (State.energy > State.stats.maxEnergy) {
+                State.energy = State.stats.maxEnergy;
             }
         }
 
@@ -160,7 +161,7 @@ public class VesselNode : Node2D {
         var showContrail = false;
         var moving = false;
         var contrailLength = 0.2f;
-        if (_currentWaypoint != null && State.maxSpeed != 0) {
+        if (_currentWaypoint != null && State.stats.maxSpeed != 0) {
             var engineRotationSpeed = State.insidePurpleNebula ? State.rotationSpeed - 0.5f : State.rotationSpeed;
             var rotationSpeed = State.rotationCrippledTime != 0 ? 0.5f : engineRotationSpeed;
             rotationSpeed = Math.Max(rotationSpeed, 0.5f);
@@ -175,12 +176,12 @@ public class VesselNode : Node2D {
                 }
             } else {
                 Rotation = dstRotation;
-                var engineMaxSpeed = State.insidePurpleNebula ? State.maxSpeed / 2 : State.maxSpeed;
+                var engineMaxSpeed = State.insidePurpleNebula ? State.stats.maxSpeed / 2 : State.stats.maxSpeed;
                 float maxSpeed = engineMaxSpeed - State.speedPenalty;
                 if (CurrentWaypointDistance() < 150) {
                     var diff = QMath.RotationDiff(dstRotation, State.velocity.Angle());
                     if (Math.Abs(diff) > 0.7) {
-                        var speedDecrease = (State.maxSpeed * 0.5f) - (State.rotationSpeed * 2);
+                        var speedDecrease = (State.stats.maxSpeed * 0.5f) - (State.rotationSpeed * 2);
                         maxSpeed -= speedDecrease;
                         contrailLength = 0.1f;
                     }
@@ -285,12 +286,24 @@ public class VesselNode : Node2D {
             return;
         }
 
+        float delta = 0;
+        if (kind == DamageKind.Energy) {
+            delta = State.stats.energyDamageReceived;
+        } else if (kind == DamageKind.Kinetic) {
+            delta = State.stats.kineticDamageReceived;
+        } else if (kind == DamageKind.Thermal) {
+            delta = State.stats.thermalDamageReceived;
+        }
+        if (delta != 0) {
+            amount = QMath.ClampMin(amount + delta, 1);
+        }
+
         if (amount > 0) {
             var reducedAmount = QMath.ClampMin(shield.ReduceDamage(amount, kind), 1);
             var damageReduced = reducedAmount != amount;
 
             Color color;
-            var hpPercentage = State.hp / State.maxHp;
+            var hpPercentage = State.hp / State.stats.maxHp;
             if (hpPercentage >= 0.8) {
                 color = Color.Color8(0x47, 0xe5, 0x3f);
             } else if (hpPercentage >= 0.5) {

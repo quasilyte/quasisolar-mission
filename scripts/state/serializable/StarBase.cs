@@ -93,8 +93,12 @@ public class StarBase: AbstractPoolValue {
         return modules.Contains("Refuel Station") ? 1 : 3;
     }
 
-    public int RepairPrice(VesselDesign design) {
-        return 3 + (design.level * 2);
+    public int RepairPrice(Vessel v) {
+        int price = 3 + (v.Design().level * 2);
+        foreach (var patchName in v.patches) {
+            price += VesselPatch.patchByName[patchName].repairCost;
+        }
+        return price;
     }
 
     public PriceInfo DebrisSellPrice() {
