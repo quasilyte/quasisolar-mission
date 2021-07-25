@@ -1547,6 +1547,8 @@ public class MapView : Node2D {
             text += "New sentinel is available for production.\n\n";
         } else if (research.category == Research.Category.Upgrade) {
             text += "Upgrade is now active.\n\n";
+        } else if (research.category == Research.Category.NewExplorationDrone) {
+            text += "New exploration drone is available for production\n\n";
         }
         if (availableAfter.Count != 0) {
             text += "New research projects available:\n\n";
