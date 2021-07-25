@@ -7,9 +7,9 @@ public class InterceptedSignalMapEvent: AbstractMapEvent {
         triggerKind = TriggerKind.OnSystemEntered;
     }
 
-    // public override bool Condition() {
-    //     return AtKrigiaSystem();
-    // }
+    public override bool Condition() {
+        return AtKrigiaSystem();
+    }
 
     public override AbstractMapEvent Create(RandomEventContext ctx) {
         var e = new InterceptedSignalMapEvent();
