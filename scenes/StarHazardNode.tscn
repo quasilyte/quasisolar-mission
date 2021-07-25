@@ -7,9 +7,9 @@
 [node name="StarHazardNode" instance=ExtResource( 1 )]
 script = ExtResource( 3 )
 
-[node name="Sprite" parent="." index="0"]
-position = Vector2( 16, 0 )
-texture = ExtResource( 2 )
-
 [node name="CollisionShape2D" parent="Area2D" index="0"]
 scale = Vector2( 1.6, 1.6 )
+
+[node name="Sprite" parent="." index="1"]
+position = Vector2( 16, 0 )
+texture = ExtResource( 2 )
