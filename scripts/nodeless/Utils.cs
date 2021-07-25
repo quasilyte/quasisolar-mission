@@ -28,4 +28,29 @@ public static class Utils {
         }
         return sb.ToString();
     }
+
+    public static string FormatMultilineText(string text) {
+        var paragraphs = new List<string>();
+        string p = "";
+
+        foreach (var l in text.Split('\n')) {
+            var s = l.Trim();
+            if (string.IsNullOrEmpty(s)) {
+                if (!string.IsNullOrEmpty(p)) {
+                    paragraphs.Add(p);
+                }
+                p = "";
+                continue;
+            }
+            s = s.Replace("\\n", "\n");
+            if (string.IsNullOrEmpty(p)) {
+                p = s;
+            } else {
+                p += " " + s;
+            }
+        }
+
+        var resultString = string.Join("\n\n", paragraphs);
+        return resultString.Replace("\n ", "\n");;
+    }
 }

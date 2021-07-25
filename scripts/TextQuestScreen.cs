@@ -177,27 +177,6 @@ public class TextQuestScreen : Node2D {
     }
 
     private string FormatCardText(TQuestCard card) {
-        var paragraphs = new List<string>();
-        string p = "";
-
-        foreach (var l in card.text.Split('\n')) {
-            var s = l.Trim();
-            if (string.IsNullOrEmpty(s)) {
-                if (!string.IsNullOrEmpty(p)) {
-                    paragraphs.Add(p);
-                }
-                p = "";
-                continue;
-            }
-            s = s.Replace("\\n", "\n");
-            if (string.IsNullOrEmpty(p)) {
-                p = s;
-            } else {
-                p += " " + s;
-            }
-        }
-
-        var resultString = string.Join("\n\n", paragraphs);
-        return resultString.Replace("\n ", "\n");;
+        return Utils.FormatMultilineText(card.text);
     }
 }
