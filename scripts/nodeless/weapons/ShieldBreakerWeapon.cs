@@ -13,7 +13,7 @@ public class ShieldBreakerWeapon : IWeapon {
         technologiesNeeded = {"Shield Breaker"},
         cooldown = 2.8f,
         energyCost = 10,
-        range = 400.0f,
+        range = 475.0f,
         damage = 16.0f,
         damageKind = DamageKind.Energy,
         projectileSpeed = 225.0f,

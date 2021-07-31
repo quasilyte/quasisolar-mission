@@ -10,7 +10,7 @@ public class HurricaneWeapon : IWeapon {
         sellingPrice = 4800,
         technologiesNeeded = {"Hurricane"},
         cooldown = 3.0f,
-        range = 450.0f,
+        range = 425.0f,
         damage = 8.0f,
         damageKind = DamageKind.Thermal,
         projectileSpeed = 250.0f,
