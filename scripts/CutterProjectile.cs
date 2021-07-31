@@ -28,7 +28,7 @@ public class CutterProjectile : Node2D, IProjectile {
     }
 
     public override void _Ready() {
-        _hp = HarpoonWeapon.Design.range;
+        _hp = _design.range;
         if (_audioStream == null) {
             _audioStream = GD.Load<AudioStream>("res://audio/weapon/Cutter.wav");
         }

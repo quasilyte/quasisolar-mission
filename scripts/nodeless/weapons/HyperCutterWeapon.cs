@@ -10,7 +10,7 @@ public class HyperCutterWeapon : IWeapon {
         technologiesNeeded = {"Hyper Cutter"},
         cooldown = 1.25f,
         energyCost = 18,
-        range = 330,
+        range = 360,
         damage = 19,
         damageKind = DamageKind.Energy,
         projectileSpeed = 280,
