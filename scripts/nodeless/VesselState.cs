@@ -31,6 +31,8 @@ public class VesselState {
     public bool insideBlueNebula = false;
     public bool insideStarHazard = false;
 
+    public bool hasAsyncReloader = false;
+
     public int debris;
 
     public VesselDesign.Size vesselSize;

@@ -45,6 +45,8 @@ public class ArtifactDesign : IItem {
 
     public static void InitLists() {
         list = new ArtifactDesign[]{
+            LaserAbsorberArtifact.Design,
+            AsynchronousReloaderArtifact.Design,
             DivioryThrusterArtifact.Design,
             DroidArtifact.Design,
             EnergyConverterArtifact.Design,

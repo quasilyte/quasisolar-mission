@@ -300,7 +300,7 @@ class GenericBot : AbstractBot {
                 if (!CanReduceDamage(MjolnirWeapon.Design.damageKind)) {
                     continue;
                 }
-                dangerDistance = 45;
+                dangerDistance = 50;
                 shell = mjolnirProjectile;
                 
             }
@@ -311,13 +311,13 @@ class GenericBot : AbstractBot {
                 if (!CanReduceDamage(MjolnirWeapon.Design.damageKind)) {
                     continue;
                 }
-                dangerDistance = 35;
+                dangerDistance = 40;
                 shell = mortarProjectile;
             }
 
             if (shell != null) {
                 if (!CanUseForFree(_vessel.shield.GetDesign().energyCost)) {
-                    dangerDistance += 15;
+                    dangerDistance += 10;
                 }
 
                 if (_vessel.Position.DistanceTo(shell.Position) > dangerDistance) {

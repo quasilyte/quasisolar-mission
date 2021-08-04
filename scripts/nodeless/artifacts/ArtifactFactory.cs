@@ -7,6 +7,12 @@ public static class ArtifactFactory {
             return new EmptyArtifact();
         }
 
+        if (a == LaserAbsorberArtifact.Design) {
+            return new LaserAbsorberArtifact();
+        }
+        if (a == AsynchronousReloaderArtifact.Design) {
+            return new AsynchronousReloaderArtifact();
+        }
         if (a == EngineBoosterArtifact.Design) {
             return new EngineBoosterArtifact();
         }

@@ -518,6 +518,10 @@ public static class VesselFactory {
         v.specialWeaponName = MortarWeapon.Design.name;
 
         v.artifacts.Add(DroidArtifact.Design.name);
+        v.artifacts.Add(AsynchronousReloaderArtifact.Design.name);
+        v.artifacts.Add(LaserAbsorberArtifact.Design.name);
+        v.artifacts.Add(MissileTargeterArtifact.Design.name);
+        v.artifacts.Add(MagneticNegatorArtifact.Design.name);
 
         v.shieldName = AegisShield.Design.name;
     }

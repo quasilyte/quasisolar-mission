@@ -17,6 +17,7 @@ public class VesselNode : Node2D {
 
     private bool _hasMagneticNegator = false;
     private bool _hasImpulseDevourer = false;
+    private bool _hasLaserAbsorber = false;
 
     private bool _phasing = false;
     private bool _destroyed = false;
@@ -70,6 +71,12 @@ public class VesselNode : Node2D {
             }
             if (a is ImpulseDevourerArtifact) {
                 _hasImpulseDevourer = true;
+            }
+            if (a is LaserAbsorberArtifact) {
+                _hasLaserAbsorber = true;
+            }
+            if (a is AsynchronousReloaderArtifact) {
+                State.hasAsyncReloader = true;
             }
         }
 
@@ -284,6 +291,16 @@ public class VesselNode : Node2D {
     public void ApplyDamage(float amount, DamageKind kind) {
         if (_destroyed) {
             return;
+        }
+
+        if (_hasLaserAbsorber && kind == DamageKind.Energy) {
+            if (QRandom.Float() < LaserAbsorberArtifact.chance) {
+                var color = Color.Color8(0xff, 0xff, 0xff);
+                var score = DamageScoreNode.New(0, color, false);
+                score.Position = QMath.RandomizedLocation(Position, 8);
+                GetParent().AddChild(score);
+                return;
+            }
         }
 
         float delta = 0;
