@@ -9,7 +9,7 @@ public class SpectreMapEvent: AbstractMapEvent {
     }
 
     public override bool Condition() {
-        return GameState().day > 400 && AtNeutralSystem();
+        return GameState().day > 500 && AtNeutralSystem();
     }
 
     public override AbstractMapEvent Create(RandomEventContext ctx) {

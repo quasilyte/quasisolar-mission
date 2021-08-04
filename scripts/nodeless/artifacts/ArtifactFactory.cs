@@ -10,9 +10,6 @@ public static class ArtifactFactory {
         if (a == EngineBoosterArtifact.Design) {
             return new EngineBoosterArtifact();
         }
-        if (a == PhasingEngineModArtifact.Design) {
-            return new PhasingEngineModArtifact();
-        }
         if (a == MagneticNegatorArtifact.Design) {
             return new MagneticNegatorArtifact();
         }
@@ -21,9 +18,6 @@ public static class ArtifactFactory {
         }
         if (a == EnergyConverterArtifact.Design) {
             return new EnergyConverterArtifact();
-        }
-        if (a == CloakingDeviceArtifact.Design) {
-            return new CloakingDeviceArtifact();
         }
         if (a == MissileTargeterArtifact.Design) {
             return new MissileTargeterArtifact();

@@ -49,7 +49,7 @@ public class TorpedoLauncherWeapon : IWeapon {
         torpedo.GlobalTransform = _owner.Vessel.GlobalTransform;
         _activeProjectile = torpedo;
         var nearest = QMath.NearestEnemy(cursor, _owner);
-        if (nearest != null && !nearest.Vessel.artifacts.Exists(x => x is CloakingDeviceArtifact)) {
+        if (nearest != null) {
             torpedo.Start(nearest.Vessel);
         } else {
             torpedo.Start(null);

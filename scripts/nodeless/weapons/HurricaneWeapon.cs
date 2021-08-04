@@ -62,7 +62,7 @@ public class HurricaneWeapon : IWeapon {
     public void Fire(VesselState state, Vector2 cursor) {
         _cooldown += Design.cooldown;
         var nearest = QMath.NearestEnemy(cursor, _owner);
-        if (nearest != null && !nearest.Vessel.artifacts.Exists(x => x is CloakingDeviceArtifact)) {
+        if (nearest != null) {
             _burstTarget = nearest.Vessel;
         } else {
             _burstTarget = null;

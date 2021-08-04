@@ -357,16 +357,23 @@ public class RpgGameState {
         return v;
     }
 
+    public int StorageFreeSlot() {
+        for (int i = 0; i < 14; i++) {
+            if (instance.storage[i] == null) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public void PutItemToStorage(IItem item, int index) {
         instance.storage[index] = ItemInfo.Of(item);
     }
 
     public void PutItemToStorage(IItem item) {
-        for (int i = 0; i < 14; i++) {
-            if (instance.storage[i] == null) {
-                instance.storage[i] = ItemInfo.Of(item);
-                return;
-            }
+        int i = StorageFreeSlot();
+        if (i != -1) {
+            PutItemToStorage(item, i);
         }
     }
 }

@@ -95,8 +95,8 @@ public class StarBase: AbstractPoolValue {
 
     public int RepairPrice(Vessel v) {
         int price = 3 + (v.Design().level * 2);
-        foreach (var patchName in v.patches) {
-            price += VesselPatch.patchByName[patchName].repairCost;
+        foreach (var statusName in v.statusList) {
+            price += VesselStatus.statusByName[statusName].repairCost;
         }
         return price;
     }

@@ -45,14 +45,12 @@ public class ArtifactDesign : IItem {
 
     public static void InitLists() {
         list = new ArtifactDesign[]{
-            CloakingDeviceArtifact.Design,
             DivioryThrusterArtifact.Design,
             DroidArtifact.Design,
             EnergyConverterArtifact.Design,
             EngineBoosterArtifact.Design,
             MagneticNegatorArtifact.Design,
             MissileTargeterArtifact.Design,
-            PhasingEngineModArtifact.Design,
             ShivaRechargerArtifact.Design,
             ImpulseDevourerArtifact.Design,
             ShieldProlongerArtifact.Design,

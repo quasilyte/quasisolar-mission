@@ -765,8 +765,8 @@ public class NewGameScene : Node2D {
         };
         humanVessel.sentinelName = "Empty";
         humanVessel.specialWeaponName = EmptyWeapon.Design.name;
-        // humanVessel.patches.Add("Improved Cargo");
         VesselFactory.InitStats(humanVessel);
+        VesselFactory.RollUpgrades(humanVessel);
         fleet.Add(humanVessel.GetRef());
 
         for (int i = 0; i < OptionIntValue("StartingFleet"); i++) {
@@ -775,6 +775,7 @@ public class NewGameScene : Node2D {
             v.faction = Faction.Earthling;
             v.pilotName = PilotNames.UniqHumanName(config.usedNames);
             VesselFactory.Init(v, "Earthling Scout");
+            VesselFactory.RollUpgrades(v);
             fleet.Add(v.GetRef());
         }
 

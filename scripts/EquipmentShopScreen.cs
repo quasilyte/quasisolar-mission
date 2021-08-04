@@ -724,6 +724,7 @@ public class EquipmentShopScreen : Node2D {
 
     private void OnCargoDoneButton() {
         _cargoPopup.Hide();
+        UpdateUI();
         _lockControls = false;
     }
 

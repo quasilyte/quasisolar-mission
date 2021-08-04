@@ -117,23 +117,23 @@ public class Research {
 
         // Vessel tech.
 
-        new Research{
-            name = "Vessel Lab Branch",
-            researchTime = 45,
-        },
+        // new Research{
+        //     name = "Vessel Lab Branch",
+        //     researchTime = 45,
+        // },
 
         new Research{
             name = "Ark",
             category = Category.NewVesselDesign,
             researchTime = 50,
-            dependencies = {"Vessel Lab Branch"},
+            // dependencies = {"Vessel Lab Branch"},
         },
 
         new Research{
             name = "Interceptor",
             category = Category.NewVesselDesign,
             researchTime = 90,
-            dependencies = {"Vessel Lab Branch"},
+            // dependencies = {"Vessel Lab Branch"},
         },
 
         new Research{
@@ -373,15 +373,9 @@ public class Research {
         },
 
         new Research{
-            name = "Flak Weapons",
-            researchTime = 65,
-        },
-
-        new Research{
             name = "Reaper Cannon",
             category = Category.NewSpecialWeapon,
-            researchTime = 100,
-            dependencies = {"Flak Weapons"},
+            researchTime = 120,
         },
 
         new Research{

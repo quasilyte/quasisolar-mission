@@ -49,13 +49,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="SkillTree" type="Button" parent="."]
+[node name="VesselUpgrades" type="Button" parent="."]
 margin_left = 832.0
 margin_top = 592.0
 margin_right = 1088.0
 margin_bottom = 624.0
 theme = ExtResource( 2 )
-text = "Skill Tree"
+text = "Vessel Upgrades"
 __meta__ = {
 "_edit_use_anchors_": false
 }

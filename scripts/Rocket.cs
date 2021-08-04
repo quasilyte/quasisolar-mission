@@ -29,7 +29,7 @@ public class Rocket : Node2D, IProjectile {
         } else if (weapon == HurricaneWeapon.Design) {
             o._steer = 150;
         } else if (weapon == ShieldBreakerWeapon.Design) {
-            o._steer = 125;
+            o._steer = 200;
         }
         return o;
     }

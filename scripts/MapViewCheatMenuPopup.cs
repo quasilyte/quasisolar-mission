@@ -80,11 +80,16 @@ public class MapViewCheatMenuPopup : PopupDialog {
                 Log($"Map revealed");
                 return;
 
-            case "cheat.exp":
-                _gameState.experience = QMath.ClampMin(ParseInt(arg) + _gameState.experience, 0);
+            case "cheat.exp": {
+                var value = ParseInt(arg);
+                foreach (var vessel in _gameState.humanUnit.Get().fleet) {
+                    vessel.Get().exp = QMath.ClampMin(vessel.Get().exp + value, 0);
+                }
                 _command = new Command { kind = CommandKind.StatsChange };
-                Log($"Experience value changed");
+                Log($"Fleet vessels exp value changed");
                 return;
+            }
+
             case "cheat.credits":
                 _gameState.credits = QMath.ClampMin(ParseInt(arg) + _gameState.credits, 0);
                 _command = new Command { kind = CommandKind.StatsChange };

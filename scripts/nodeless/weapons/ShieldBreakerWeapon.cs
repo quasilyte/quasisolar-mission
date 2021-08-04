@@ -53,7 +53,7 @@ public class ShieldBreakerWeapon : IWeapon {
             rocket.Position += rocket.Transform.y * (float)(offset * i);
             rocket.Rotation += angle * (float)i;
             var nearest = QMath.NearestEnemy(cursor, _owner);
-            if (nearest != null && !nearest.Vessel.artifacts.Exists(x => x is CloakingDeviceArtifact)) {
+            if (nearest != null) {
                 rocket.Start(nearest.Vessel);
             } else {
                 rocket.Start(null);

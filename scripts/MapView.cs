@@ -627,9 +627,13 @@ public class MapView : Node2D {
                 _gameState.explorationDrones.Add((string)effect.value);
                 return;
 
-            case AbstractMapEvent.EffectKind.AddPatch:
-                _gameState.humanUnit.Get().fleet[(int)effect.value].Get().patches.Add((string)effect.value2);
-                return;                
+            case AbstractMapEvent.EffectKind.AddVesselStatus:
+                _gameState.humanUnit.Get().fleet[(int)effect.value].Get().statusList.Add((string)effect.value2);
+                return;
+
+            case AbstractMapEvent.EffectKind.AddItem:
+                _gameState.PutItemToStorage((IItem)effect.value);
+                return;
 
             case AbstractMapEvent.EffectKind.AddCredits:
                 _gameState.credits += (int)effect.value;

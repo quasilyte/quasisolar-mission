@@ -192,7 +192,7 @@ public class VesselNode : Node2D {
                 showContrail = true;
                 if (State.velocity.Length() < maxSpeed) {
                     moving = true;
-                    State.velocity += Transform.x * State.acceleration;
+                    State.velocity += Transform.x * State.stats.acceleration;
                     State.velocity = State.velocity.Clamped(maxSpeed);
                 }
             }

@@ -53,7 +53,7 @@ public class SwarmSpawnerWeapon : IWeapon {
         swarm.GlobalTransform = _owner.Vessel.GlobalTransform;
         _activeProjectiles.Add(swarm);
         var nearest = QMath.NearestEnemy(cursor, _owner);
-        if (nearest != null && !nearest.Vessel.artifacts.Exists(x => x is CloakingDeviceArtifact)) {
+        if (nearest != null) {
             swarm.Start(nearest.Vessel);
         } else {
             swarm.Start(null);

@@ -9,7 +9,7 @@ public abstract class AbstractMapEvent {
     }
 
     public enum EffectKind {
-        AddPatch,
+        AddVesselStatus,
         AddCredits,
         AddMinerals,
         AddOrganic,
@@ -21,6 +21,7 @@ public abstract class AbstractMapEvent {
         AddVesselToFleet,
         AddTechnology,
         AddReputation,
+        AddItem,
         DeclareWar,
         SpendAnyVesselBackupEnergy,
         ApplySlow,

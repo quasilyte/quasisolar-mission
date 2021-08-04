@@ -8,7 +8,7 @@ public class StarBaseScreen : Node2D {
         GetNode<Button>("EquipmentShop").Connect("pressed", this, nameof(OnEquipmentShopButton));
         GetNode<Button>("Shipyard").Connect("pressed", this, nameof(OnShipyardButton));
         GetNode<Button>("StarBaseModules").Connect("pressed", this, nameof(OnStarBaseModulesButton));
-        GetNode<Button>("SkillTree").Connect("pressed", this, nameof(OnSkillTreeButton));
+        GetNode<Button>("VesselUpgrades").Connect("pressed", this, nameof(OnVesselUpgradesButton));
         GetNode<Button>("LeaveBase").Connect("pressed", this, nameof(OnLeaveBaseButton));
     }
 
@@ -24,8 +24,8 @@ public class StarBaseScreen : Node2D {
         GetTree().ChangeScene("res://scenes/StarBaseModulesScreen.tscn");
     }
 
-    private void OnSkillTreeButton() {
-        GetTree().ChangeScene("res://scenes/SkillsScreen.tscn");
+    private void OnVesselUpgradesButton() {
+        GetTree().ChangeScene("res://scenes/VesselStatusScreen.tscn");
     }
 
     private void OnLeaveBaseButton() {

@@ -512,6 +512,7 @@ public class QuickBattleMenu : Node2D {
 
         v.designName = settings.vesselDesignName;
         v.energySourceName = settings.energySource.name;
+        v.statusList.Add("Alternative Cooling System");
 
         var artifacts = settings.artifacts;
         var weapons = settings.weapons;

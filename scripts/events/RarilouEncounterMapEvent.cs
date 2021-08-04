@@ -41,6 +41,7 @@ public class RarilouEncounterMapEvent: AbstractMapEvent {
                 };
             }
         });
+
         e.actions.Add(new Action{
             name = "Communicate",
             apply = () => {

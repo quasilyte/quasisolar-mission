@@ -4,6 +4,16 @@ using System.Collections.Generic;
 
 // TODO: rename this class.
 public static class VesselFactory {
+    public static void RollUpgrades(Vessel v) {
+        int numRolled = QRandom.IntRange(1, 3);
+        var rollable = new List<VesselStatus>(VesselStatus.rollableList);
+        for (int i = 0; i < numRolled; i++) {
+            var status = QRandom.Element(rollable);
+            rollable.Remove(status);
+            v.rolledUpgrades.Add(status.name);
+        }
+    }
+
     public static void PadEquipment(Vessel v) {
         v.energySourceName = "None";
         v.weapons = new List<string>{

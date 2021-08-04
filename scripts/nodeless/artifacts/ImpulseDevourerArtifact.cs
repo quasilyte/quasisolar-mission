@@ -4,7 +4,7 @@ public class ImpulseDevourerArtifact : IArtifact {
     public static ArtifactDesign Design = new ArtifactDesign{
         name = "Impulse Devourer",
         description = "TODO",
-        effect2 = "convert shield-blocked energy damage into energy",
+        effect = "convert shield-blocked energy damage into energy",
         sellingPrice = 1600,
     };
 

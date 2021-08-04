@@ -11,6 +11,6 @@ public class ShivaRechargerArtifact : IArtifact {
     public void Apply(VesselState state, float delta) {}
 
     public void Upgrade(VesselState state) {
-        state.shieldCooldownRate = 0.66f;
+        state.shieldCooldownRate *= 0.66f;
     }
 }

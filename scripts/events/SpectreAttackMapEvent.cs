@@ -9,7 +9,7 @@ public class SpectreAttackMapEvent: AbstractMapEvent {
     }
 
     public override bool Condition() {
-        if (GameState().day < 800 || !AtNeutralSystem()) {
+        if (GameState().day < 1200 || !AtNeutralSystem()) {
             return false;
         }
         if (!EventHappened("Spectre")) {

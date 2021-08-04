@@ -24,7 +24,8 @@ public class Vessel: AbstractPoolValue, IItem {
     public string energySourceName;
     public List<string> artifacts = new List<string>();
     public List<string> weapons = new List<string>();
-    public List<string> patches = new List<string>();
+    public List<string> statusList = new List<string>();
+    public List<string> rolledUpgrades = new List<string>();
     public string specialWeaponName = EmptyWeapon.Design.name;
     public string shieldName = EmptyShield.Design.name;
     public string sentinelName = "Empty";
@@ -56,8 +57,8 @@ public class Vessel: AbstractPoolValue, IItem {
 
     public int MaxCargo() { 
         float cargo = (float)Design().cargoSpace;
-        foreach (var patchName in patches) {
-            cargo *= VesselPatch.patchByName[patchName].cargoMultiplier;
+        foreach (var statusName in statusList) {
+            cargo *= VesselStatus.statusByName[statusName].cargoMultiplier;
         }
         return (int)cargo;
     }

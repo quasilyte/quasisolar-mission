@@ -28,10 +28,11 @@ public class MapEventRegistry {
             new SpaceNomadsMapEvent(),
             new AsteroidsMapEvent(),
             new RobotsColonyMapEvent(),
-            new NaturePresentMapEvent(),
             new InterceptedSignalMapEvent(),
             new TroubledLinerMapEvent(),
             new AbandonedVesselMapEvent(),
+            new DraklidShadowMarketMapEvent(),
+            new GuardianCrashSiteMapEvent(),
         };
 
         onSystemEnteredList = new List<AbstractMapEvent>();

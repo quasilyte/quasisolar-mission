@@ -6,7 +6,6 @@ public class VesselState {
 
     public VesselStats stats;
 
-    public float acceleration;
     public float rotationSpeed;
 
     public float initialHp;
@@ -39,7 +38,6 @@ public class VesselState {
     public VesselState(VesselStats vesselStats, VesselDesign design, EnergySource battery) {
         vesselLevel = design.level;
 
-        acceleration = design.acceleration;
         rotationSpeed = design.rotationSpeed;
 
         stats = vesselStats;

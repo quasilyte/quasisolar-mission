@@ -1,5 +1,5 @@
 // Calculated vessel stats.
-// Depends on the vessel design, equipment and patches.
+// Depends on the vessel design, equipment and statuses.
 public class VesselStats {
     public float maxEnergy;
     public float maxBackupEnergy;
@@ -11,6 +11,7 @@ public class VesselStats {
     public float starDamageReceived = 0;
 
     public float maxSpeed;
+    public float acceleration;
 
     public float maxHp;
 
@@ -23,16 +24,19 @@ public class VesselStats {
         var design = v.Design();
         maxHp = design.maxHp;
         maxSpeed = design.maxSpeed;
+        acceleration = design.acceleration;
 
-        foreach (var patchName in v.patches) {
-            var p = VesselPatch.patchByName[patchName];
+        foreach (var statusName in v.statusList) {
+            var p = VesselStatus.statusByName[statusName];
             maxHp += p.maxHp;
             maxSpeed += p.maxSpeed;
+            acceleration += p.acceleration;
             maxBackupEnergy += p.maxBackupEnergy;
             energyDamageReceived += p.energyDamageReceived;
             kineticDamageReceived += p.kineticDamageReceived;
             thermalDamageReceived += p.thermalDamageReceived;
             starDamageReceived += p.starDamageReceived;
+            energyRegen += p.energyRegen;
         }
     }
 }
