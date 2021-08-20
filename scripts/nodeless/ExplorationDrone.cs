@@ -5,6 +5,8 @@ public class ExplorationDrone {
 
     public int sellingPrice;
 
+    public string description;
+
     public int maxTemp;
     public int explorationRate;
     public bool canExploreGasGiants = false;
@@ -26,6 +28,7 @@ public class ExplorationDrone {
             sellingPrice = 800,
             maxTemp = 130,
             explorationRate = 5,
+            description = "Can only explor low-temp rocky worlds, but it's fast and cheap.",
         },
 
         new ExplorationDrone{
@@ -34,6 +37,7 @@ public class ExplorationDrone {
             maxTemp = 100,
             explorationRate = 3,
             canExploreGasGiants = true,
+            description = "A slower version of Curiosity that can explore gas giants.",
         },
 
         new ExplorationDrone{
@@ -42,6 +46,7 @@ public class ExplorationDrone {
             maxTemp = 270,
             explorationRate = 2,
             needsResearch = true,
+            description = "Very slow, but can tolerate high-temperature worlds.",
         },
 
         new ExplorationDrone{
@@ -50,6 +55,7 @@ public class ExplorationDrone {
             maxTemp = 190,
             explorationRate = 6,
             needsResearch = true,
+            description = "Improved Curiosity: faster and higher temperature tolerance.",
         },
 
         new ExplorationDrone{
@@ -59,6 +65,7 @@ public class ExplorationDrone {
             explorationRate = 7,
             canExploreGasGiants = true,
             needsResearch = true,
+            description = "A Seeker upgrade that can explore gas giants.",
         },
 
         new ExplorationDrone{
@@ -67,6 +74,7 @@ public class ExplorationDrone {
             maxTemp = 260,
             explorationRate = 15,
             needsResearch = true,
+            description = "The fastest exploration drone you can find.",
         },
 
         new ExplorationDrone{
@@ -75,6 +83,7 @@ public class ExplorationDrone {
             maxTemp = 500,
             explorationRate = 6,
             needsResearch = true,
+            description = "This drone can explore the hottest planets.",
         },
 
         new ExplorationDrone{
@@ -84,6 +93,7 @@ public class ExplorationDrone {
             explorationRate = 10,
             canExploreGasGiants = true,
             needsResearch = true,
+            description = "An all-around good drone that can't be replicated.",
         },
     };
 }

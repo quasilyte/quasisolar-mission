@@ -67,52 +67,36 @@ public class Research {
 
         new Research{
             name = "Utility Lab Branch",
-            researchTime = 90,
+            researchTime = 80,
         },
 
         new Research{
             name = "Flame Eater",
             category = Category.NewExplorationDrone,
-            researchTime = 70,
+            researchTime = 35,
             dependencies = {"Utility Lab Branch"},
         },
 
         new Research{
             name = "Seeker",
             category = Category.NewExplorationDrone,
-            researchTime = 50,
+            researchTime = 30,
             dependencies = {"Utility Lab Branch"},
         },
 
         new Research{
-            name = "Moon Shark",
+            name = "Fog Shark",
             category = Category.NewExplorationDrone,
-            researchTime = 80,
+            researchTime = 25,
             dependencies = {"Seeker"},
         },
 
         new Research{
             name = "Recycling",
             category = Category.Upgrade,
-            researchTime = 150,
+            researchTime = 70,
             effect = "when in idle mode, fuel gain is doubled",
             dependencies = {"Utility Lab Branch"},
-        },
-
-        new Research{
-            name = "Drone Capacity",
-            category = Category.Upgrade,
-            researchTime = 65,
-            effect = "drones resource capacity increased by 25",
-            dependencies = {"Utility Lab Branch"},
-        },
-
-        new Research{
-            name = "Drone Capacity II",
-            category = Category.Upgrade,
-            researchTime = 85,
-            effect = "drones resource capacity increased by 50",
-            dependencies = {"Drone Capacity II"},
         },
 
         // Vessel tech.
@@ -443,7 +427,7 @@ public class Research {
             name = "Ifrit",
             material = Faction.Zyth,
             category = Category.NewExplorationDrone,
-            researchTime = 80,
+            researchTime = 50,
         },
 
         new Research{
@@ -656,7 +640,7 @@ public class Research {
             name = "Stingray",
             material = Faction.Phaa,
             category = Category.NewExplorationDrone,
-            researchTime = 95,
+            researchTime = 45,
         },
 
         new Research{
