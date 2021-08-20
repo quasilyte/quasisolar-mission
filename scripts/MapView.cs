@@ -1359,18 +1359,17 @@ public class MapView : Node2D {
     }
 
     private float CalculateFleetSpeed() {
-        var travelSpeed = _gameState.travelSpeed;
+        float multiplier = 1.0f;
         if (_gameState.travelSlowPoints > 0) {
-            travelSpeed /= 2;
+            multiplier -= 0.5f;
         }
-        if (_gameState.skillsLearned.Contains("Navigation III")) {
-            travelSpeed += travelSpeed * 0.25f;
-        } else if (_gameState.skillsLearned.Contains("Navigation II")) {
-            travelSpeed += travelSpeed * 0.2f;
-        } else if (_gameState.skillsLearned.Contains("Navigation I")) {
-            travelSpeed += travelSpeed * 0.15f;
+        if (_gameState.technologiesResearched.Contains("Aligned Jumping")) {
+            multiplier += 0.1f;
         }
-        return travelSpeed;
+        if (_gameState.technologiesResearched.Contains("Rarilou Warping")) {
+            multiplier += 0.15f;
+        }
+        return _gameState.travelSpeed * multiplier;
     }
 
     private void ProcessDayEvents() {

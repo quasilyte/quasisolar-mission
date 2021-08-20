@@ -377,6 +377,13 @@ public class Research {
         // Upgrades.
 
         new Research{
+            name = "Aligned Jumping",
+            category = Category.Upgrade,
+            researchTime = 60,
+            effect = "+10% map travel speed",
+        },
+
+        new Research{
             name = "Gauss Production",
             category = Category.Upgrade,
             researchTime = 25,
@@ -401,7 +408,7 @@ public class Research {
         new Research{
             name = "Improved Fuel Tanks III",
             category = Category.Upgrade,
-            researchTime = 250,
+            researchTime = 75,
             dependencies = {"Improved Fuel Tanks II"},
             effect = "+20% fuel tank capacity",
         },
@@ -613,6 +620,14 @@ public class Research {
         },
 
         // Rarilou tech tree.
+
+        new Research{
+            name = "Rarilou Warping",
+            material = Faction.Rarilou,
+            category = Category.Upgrade,
+            researchTime = 70,
+            effect = "+15% map travel speed",
+        },
 
         new Research{
             name = "Rarilou Vessels",
