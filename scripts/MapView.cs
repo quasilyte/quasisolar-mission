@@ -1431,7 +1431,11 @@ public class MapView : Node2D {
                 droneSelect.AddItem("No drone deployed");
                 var droneSet = new HashSet<string>();
                 foreach (var drone in _gameState.explorationDrones) {
-                    if (ExplorationDrone.Find(drone).maxTemp < p.temperature) {
+                    var d = ExplorationDrone.Find(drone);
+                    if (d.maxTemp < p.temperature) {
+                        continue;
+                    }
+                    if (p.gasGiant && !d.canExploreGasGiants) {
                         continue;
                     }
                     if (droneSet.Contains(drone)) {
