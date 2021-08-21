@@ -14,7 +14,7 @@ public class NeedleGunWeapon : IWeapon {
         damageKind = DamageKind.Energy,
         energyCost = 10,
         projectileSpeed = 280.0f,
-        botHintSnipe = 0.2f,
+        botHintSnipe = 0.25f,
     };
     public WeaponDesign GetDesign() { return Design; }
     public void Ready() {}
