@@ -774,7 +774,7 @@ public class MapView : Node2D {
             return;
         }
         _humanUnit.cargo.power -= 5;
-        _gameState.fuel += 20;
+        _gameState.fuel += 15;
         UpdateUI();
     }
 
@@ -1616,6 +1616,10 @@ public class MapView : Node2D {
         if (starBase.id != 0) {
             if (starBase.Get().owner == Faction.Earthling) {
                 RecoverFleetEnergy(_humanUnit.fleet);
+                foreach (var handle in _humanUnit.fleet) {
+                    var v = handle.Get();
+                    v.hp = QMath.ClampMax(v.hp + 1, v.MaxHp());
+                }
             }
         }
 
