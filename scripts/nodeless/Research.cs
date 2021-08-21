@@ -384,13 +384,6 @@ public class Research {
         },
 
         new Research{
-            name = "Gauss Production",
-            category = Category.Upgrade,
-            researchTime = 25,
-            effect = "-20% needle gun production cost"
-        },
-
-        new Research{
             name = "Improved Fuel Tanks",
             category = Category.Upgrade,
             researchTime = 50,

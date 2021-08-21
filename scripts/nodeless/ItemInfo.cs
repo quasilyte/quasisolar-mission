@@ -95,9 +95,6 @@ public class ItemInfo {
 
     private static int ItemPrice(IItem item, bool selling) {
         if (item is WeaponDesign weapon) {
-            if (RpgGameState.instance != null && !selling && weapon == NeedleGunWeapon.Design && RpgGameState.instance.technologiesResearched.Contains("Gauss Production")) {
-                return (int)(weapon.sellingPrice * 0.8);
-            }
             return weapon.sellingPrice;
         } else if (item is EnergySource energySource) {
             return energySource.sellingPrice;
