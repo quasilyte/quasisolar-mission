@@ -625,7 +625,7 @@ public class EquipmentShopScreen : Node2D {
         GetNode<Label>("Status/CargoValue").Text = _humanUnit.CargoSize() + "/" + _humanUnit.CargoCapacity();
 
         GetNode<TextureProgress>("UnitMenu/HealthBar").Value = QMath.Percantage(_selectedVessel.hp, _selectedVessel.MaxHp());
-        GetNode<Label>("UnitMenu/HealthBar/Value").Text = _selectedVessel.hp +"/"+ _selectedVessel.MaxHp();
+        GetNode<Label>("UnitMenu/HealthBar/Value").Text = (int)_selectedVessel.hp +"/"+ (int)_selectedVessel.MaxHp();
 
         GetNode<Button>("UnitMenu/RepairButton").Disabled = _selectedVessel.hp == _selectedVessel.MaxHp();
 
