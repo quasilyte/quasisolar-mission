@@ -29,6 +29,7 @@ Weapons:
 Special weapons:
 
 * **Reaper Cannon**
+* Disintegrator
 
 ### Krigia
 
@@ -152,6 +153,7 @@ Special weapons:
 | Scythe | Krigia | Krigia |
 | Shockwave Caster | Vespion | Vespion |
 | Swarm Spawner | Vespion | Vespion |
+| Disintegrator | Earthlings | n/a |
 
 ### Level 2 weapons
 
