@@ -8,7 +8,6 @@ public class PhotonBurstCannonWeapon : IWeapon {
         extraDescription = "Fires 3 projectiles with a slight delay between the shots",
         targeting = "any direction, projectiles",
         sellingPrice = 1000,
-        technologiesNeeded = {"Photon Burst Cannon"},
         cooldown = 0.8f,
         energyCost = 6f,
         range = 200f,

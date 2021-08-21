@@ -4,6 +4,7 @@ public class SpreadGunWeapon : IWeapon {
     public static WeaponDesign Design = new WeaponDesign {
         name = "Spread Gun",
         level = 1,
+        researchRequired = false,
         description = "TODO",
         targeting = "forward-only, projectiles",
         sellingPrice = 350,

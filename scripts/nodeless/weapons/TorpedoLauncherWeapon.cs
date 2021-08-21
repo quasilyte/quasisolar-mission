@@ -9,7 +9,6 @@ public class TorpedoLauncherWeapon : IWeapon {
         targeting = "forward-only, homing missles",
         special = "torpedo can survive 1 hit from the point-defense",
         sellingPrice = 10000,
-        technologiesNeeded = {"Torpedo Launcher"},
         cooldown = 5.0f,
         range = 2500,
         damage = 45,

@@ -7,7 +7,6 @@ public class PlasmaEmitterWeapon : IWeapon {
         description = "Creates a super-heated aura of destruction around the ship",
         extraDescription = "Every collided enemy receives damage only once",
         targeting = "none, circular wave",
-        technologiesNeeded = {"Plasma Emitter"},
         sellingPrice = 10000,
         cooldown = 5.0f,
         energyCost = 20.0f,

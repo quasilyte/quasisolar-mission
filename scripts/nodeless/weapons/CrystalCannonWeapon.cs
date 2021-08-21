@@ -7,7 +7,6 @@ public class CrystalCannonWeapon : IWeapon {
         description = "TODO",
         targeting = "selected location, projectiles",
         sellingPrice = 4000,
-        technologiesNeeded = {"Crystal Cannon"},
         cooldown = 1.5f,
         energyCost = 10,
         range = 320,

@@ -8,7 +8,6 @@ public class ShockwaveCasterWeapon : IWeapon {
         extraDescription = "On hit, causes the knockback effect",
         targeting = "any direction, projectiles",
         sellingPrice = 5000,
-        technologiesNeeded = {"Shockwave Caster"},
         cooldown = 0.9f,
         energyCost = 7.0f,
         range = 270.0f,

@@ -8,7 +8,6 @@ public class TwinPhotonBurstCannonWeapon : IWeapon {
         extraDescription = "Fires two 2-projectile bursts with a slight delay between them",
         targeting = "any direction, projectiles",
         sellingPrice = 2100,
-        technologiesNeeded = {"Twin Photon Burst Cannon"},
         cooldown = 0.8f,
         energyCost = 8f,
         range = 200f,

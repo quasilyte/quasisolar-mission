@@ -8,7 +8,6 @@ public class RocketLauncherWeapon : IWeapon {
         extraDescription = "Launches 3 rockets at a time",
         targeting = "forward-only, homing missles",
         sellingPrice = 2650,
-        technologiesNeeded = {"Rocket Launcher"},
         cooldown = 1.4f,
         range = 450.0f,
         damage = 10.0f,

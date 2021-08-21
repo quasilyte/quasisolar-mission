@@ -8,7 +8,6 @@ public class HarpoonWeapon : IWeapon {
         extraDescription = "On hit, pulls victim towards the ship",
         targeting = "any direction, projectiles",
         sellingPrice = 2000,
-        technologiesNeeded = {"Harpoon"},
         cooldown = 1.2f,
         energyCost = 7.0f,
         range = 310.0f,

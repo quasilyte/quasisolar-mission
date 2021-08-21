@@ -8,7 +8,6 @@ public class StingerWeapon : IWeapon {
         special = "reduces target mobility for a short period of time",
         targeting = "any direction, projectiles",
         sellingPrice = 3500,
-        technologiesNeeded = {"Stinger"},
         cooldown = 0.6f,
         energyCost = 10.0f,
         range = 250.0f,

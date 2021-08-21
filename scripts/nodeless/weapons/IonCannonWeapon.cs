@@ -4,6 +4,7 @@ public class IonCannonWeapon : IWeapon {
     public static WeaponDesign Design = new WeaponDesign{
         name = "Ion Cannon",
         level = 1,
+        researchRequired = false,
         description = "A tactical weapon that can dry the target\nbattery up",
         targeting = "any direction, projectiles",
         sellingPrice = 1400,

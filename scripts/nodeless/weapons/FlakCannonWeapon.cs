@@ -7,7 +7,6 @@ public class FlakCannonWeapon : IWeapon {
         description = "TODO",
         targeting = "any direction, projectiles",
         sellingPrice = 5700,
-        technologiesNeeded = {"Flak Cannon"},
         cooldown = 0.2f,
         range = 460.0f,
         damage = 8.0f,

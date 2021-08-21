@@ -7,7 +7,6 @@ public class HellfireWeapon : IWeapon {
         description = "TODO",
         targeting = "forward-only, projectiles",
         sellingPrice = 3000,
-        technologiesNeeded = {"Hellfire"},
         cooldown = 0.6f,
         energyCost = 10.0f,
         range = 200.0f,

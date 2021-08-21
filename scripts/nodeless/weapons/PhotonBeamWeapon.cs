@@ -8,7 +8,6 @@ public class PhotonBeamWeapon : IWeapon {
         extraDescription = "Weapon needs charging, so there is a pre-fire delay",
         targeting = "any direction, instant hit",
         sellingPrice = 7500,
-        technologiesNeeded = {"Photon Beam"},
         cooldown = 2.8f,
         energyCost = 25f,
         range = 320f,

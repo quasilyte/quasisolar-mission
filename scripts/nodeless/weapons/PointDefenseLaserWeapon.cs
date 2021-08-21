@@ -8,7 +8,6 @@ public class PointDefenseLaserWeapon : IWeapon {
         extraDescription = "Can hit multiple targets",
         targeting = "automatic, instant hit",
         sellingPrice = 2000,
-        technologiesNeeded = {"Point-Defense Laser"},
         cooldown = 1.0f,
         energyCost = 11.0f,
         range = 175.0f,

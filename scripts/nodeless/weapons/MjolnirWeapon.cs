@@ -7,7 +7,6 @@ public class MjolnirWeapon : IWeapon {
         description = "TODO",
         targeting = "selected location, projectiles",
         sellingPrice = 10000,
-        technologiesNeeded = {"Mjolnir"},
         cooldown = 2.5f,
         energyCost = 17,
         range = 550,

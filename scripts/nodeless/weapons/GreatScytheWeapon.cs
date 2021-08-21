@@ -8,7 +8,6 @@ public class GreatScytheWeapon : IWeapon {
         extraDescription = "Launches 4 projectiles at a time",
         targeting = "front directions (120°), projectiles",
         sellingPrice = 2900,
-        technologiesNeeded = {"Great Scythe"},
         cooldown = 1.1f,
         range = 300,
         damage = 8,

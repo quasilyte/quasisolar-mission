@@ -31,6 +31,9 @@ public class ResearchScreen : Node2D {
 
         var projectsPanel = GetNode<VBoxContainer>("ProjectList/ScrollContainer/List");
         foreach (var r in _researchList) {
+            if (r.researchTime == 0) {
+                continue;
+            }
             if (_gameState.technologiesResearched.Contains(r.name)) {
                 continue;
             }

@@ -15,7 +15,7 @@ public class WeaponDesign : IItem {
     public int level;
 
     public int sellingPrice = 0;
-    public List<string> technologiesNeeded = new List<string>();
+    public bool researchRequired = true;
 
     public float cooldown = 0;
     public float energyCost = 0;

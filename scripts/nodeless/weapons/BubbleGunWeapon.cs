@@ -7,7 +7,6 @@ public class BubbleGunWeapon : IWeapon {
         description = "TODO",
         targeting = "backward-only, projectiles",
         sellingPrice = 3500,
-        technologiesNeeded = {"Bubble Gun"},
         cooldown = 0.45f,
         energyCost = 7.0f,
         range = -6,

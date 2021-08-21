@@ -4,6 +4,7 @@ public class NeedleGunWeapon : IWeapon {
     public static WeaponDesign Design = new WeaponDesign{
         name = "Needle Gun",
         level = 1,
+        researchRequired = false,
         description = "A rail gun that shots projectiles with high kinetic power",
         extraDescription = "Penetrates targets, can hit several targets on one line",
         targeting = "any direction, projectiles",

@@ -54,6 +54,29 @@ public class Research {
     }
 
     public static List<Research> list = new List<Research>{
+        // Unique (dummy) tech.
+        // Can't be researched normally.
+        // Marked with researchTime of 0.
+
+        new Research{
+            name = "Crystal Cannon",
+            category = Category.NewWeapon,
+            researchTime = 0,
+        },
+
+        new Research{
+            name = "Stormbringer",
+            category = Category.NewWeapon,
+            researchTime = 0,
+        },
+
+        // TODO: we should probably figure out what race tech tree this weapon belongs to.
+        new Research{
+            name = "Flak Cannon",
+            category = Category.NewWeapon,
+            researchTime = 0,
+        },
+
         // Science tech.
 
         new Research{
@@ -737,6 +760,14 @@ public class Research {
             category = Category.NewSpecialWeapon,
             researchTime = 130,
             dependencies = {"Krigia Weapons III", "Rocket Launcher"},
+        },
+
+        new Research{
+            name = "Mortar",
+            material = Faction.Krigia,
+            category = Category.NewSpecialWeapon,
+            researchTime = 150,
+            dependencies = {"Krigia Weapons III"},
         },
     };
 }

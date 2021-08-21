@@ -7,7 +7,6 @@ public class CutterWeapon : IWeapon {
         description = "TODO",
         targeting = "front directions (180°), projectiles",
         sellingPrice = 3900,
-        technologiesNeeded = {"Cutter"},
         cooldown = 1,
         energyCost = 13,
         range = 330,

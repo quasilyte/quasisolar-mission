@@ -8,7 +8,6 @@ public class DisruptorWeapon : AbstractWeapon {
         extraDescription = "On hit, temporarily disables energy regen",
         targeting = "any direction, homing projectiles",
         sellingPrice = 3400,
-        technologiesNeeded = { "Disruptor" },
         cooldown = 2,
         energyCost = 9.0f,
         range = 300.0f,

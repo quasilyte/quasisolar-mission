@@ -196,7 +196,7 @@ public class StarBase: AbstractPoolValue {
         var technologiesResearched = RpgGameState.instance.technologiesResearched;
 
         foreach (WeaponDesign weapon in WeaponDesign.list) {
-            if (!Research.IsAvailable(technologiesResearched, weapon.technologiesNeeded)) {
+            if (weapon.researchRequired && !technologiesResearched.Contains(weapon.name)) {
                 continue;
             }
             if (level < ItemInfo.MinStarBaseLevel(weapon)) {
@@ -206,7 +206,7 @@ public class StarBase: AbstractPoolValue {
         }
 
         foreach (WeaponDesign weapon in WeaponDesign.specialList) {
-            if (!Research.IsAvailable(technologiesResearched, weapon.technologiesNeeded)) {
+            if (!technologiesResearched.Contains(weapon.name)) {
                 continue;
             }
             if (level < ItemInfo.MinStarBaseLevel(weapon)) {

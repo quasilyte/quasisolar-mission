@@ -7,7 +7,6 @@ public class StormbringerWeapon : IWeapon {
         description = "TODO",
         targeting = "forward-only, homing projectiles",
         sellingPrice = 7000,
-        technologiesNeeded = {"Stormbringer"},
         cooldown = 1.2f,
         energyCost = 12,
         range = 450.0f,

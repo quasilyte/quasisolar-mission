@@ -8,7 +8,6 @@ public class HurricaneWeapon : IWeapon {
         extraDescription = "Every volley consists of 5 rockets",
         targeting = "forward-only, homing missles",
         sellingPrice = 4800,
-        technologiesNeeded = {"Hurricane"},
         cooldown = 3.0f,
         range = 425.0f,
         damage = 8.0f,

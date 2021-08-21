@@ -7,7 +7,6 @@ public class AssaultLaserWeapon : IWeapon {
         description = "TODO",
         targeting = "any direction, projectiles",
         sellingPrice = 4000,
-        technologiesNeeded = {"Assault Laser"},
         cooldown = 0.65f,
         energyCost = 9.0f,
         range = 260,

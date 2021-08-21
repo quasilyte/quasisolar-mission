@@ -8,7 +8,6 @@ public class RestructuringRayWeapon : IWeapon {
         extraDescription = "Repairs for 2 seconds, up to 6 hp is recovered",
         targeting = "any direction, instant hit (ally only)",
         sellingPrice = 6500,
-        technologiesNeeded = {"Restructuring Ray"},
         cooldown = 5.0f,
         energyCost = 12.0f,
         damage = -0.15f,

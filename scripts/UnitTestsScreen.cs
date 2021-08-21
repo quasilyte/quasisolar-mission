@@ -24,7 +24,7 @@ public class UnitTestsScreen : Node2D {
             } else {
                 write(className + ": " + result.err.message);
                 write(result.err.stackTrace);
-                write("[color=#af0000]<ERROR>[/color]" + className);
+                write("[color=#af0000]<ERROR>[/color] " + className);
             }
         }
     }

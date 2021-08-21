@@ -7,7 +7,6 @@ public class HyperCutterWeapon : IWeapon {
         description = "TODO",
         targeting = "front directions (180°), projectiles",
         sellingPrice = 4500,
-        technologiesNeeded = {"Hyper Cutter"},
         cooldown = 1.25f,
         energyCost = 18,
         range = 360,

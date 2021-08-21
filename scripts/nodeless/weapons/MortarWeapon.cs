@@ -7,7 +7,6 @@ public class MortarWeapon : IWeapon {
         description = "TODO",
         targeting = "selected location, projectiles",
         sellingPrice = 8500,
-        technologiesNeeded = {"Mortar"},
         cooldown = 1.5f,
         energyCost = 18.0f,
         range = 700,

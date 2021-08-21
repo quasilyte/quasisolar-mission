@@ -260,17 +260,22 @@ public static class VesselFactory {
             0.15, PulseLaserWeapon.Design.name,
             0.1, AssaultLaserWeapon.Design.name);
 
-        v.specialWeaponName = DisruptorWeapon.Design.name;
+        var specialRoll = QRandom.Float();
+        if (specialRoll < RankChance(v.rank, 0.3, 0.5, 1)) {
+            v.specialWeaponName = DisruptorWeapon.Design.name;
+        }
 
         SetShield(v, 0.5, IonCurtainShield.Design.name);
 
         // 40% - ion fighter
         // 20% - point-defense guard
-        var sentinelRoll = QRandom.Float();
-        if (sentinelRoll < 0.4) {
-            v.sentinelName = "Ion Fighter";
-        } else if (sentinelRoll < 0.6) {
-            v.sentinelName = "Point-Defense Guard";
+        if (v.rank >= 2) {
+            var sentinelRoll = QRandom.Float();
+            if (sentinelRoll < 0.4) {
+                v.sentinelName = "Ion Fighter";
+            } else if (sentinelRoll < 0.6) {
+                v.sentinelName = "Point-Defense Guard";
+            }
         }
     }
 
@@ -453,10 +458,23 @@ public static class VesselFactory {
             0.7, RocketLauncherWeapon.Design.name,
             0.3, ScytheWeapon.Design.name);
 
-        SetShield(v,
-            0.3, ReflectorShield.Design.name,
-            0.2, DispersionFieldShield.Design.name,
-            0.1, IonCurtainShield.Design.name);
+        if (v.rank == 3) {
+            var sentinelRoll = QRandom.Float();
+            if (sentinelRoll < 0.4) {
+                v.sentinelName = "Ion Curtain Guard";
+            } else if (sentinelRoll < 0.8) {
+                v.sentinelName = "Reflector Guard";
+            }
+            SetShield(v,
+                0.4, ReflectorShield.Design.name,
+                0.3, DispersionFieldShield.Design.name,
+                0.2, IonCurtainShield.Design.name);
+        } else {
+            SetShield(v,
+                0.3, ReflectorShield.Design.name,
+                0.2, DispersionFieldShield.Design.name,
+                0.1, IonCurtainShield.Design.name);
+        }
     }
 
     private static void InitKrigiaTusks(Vessel v) {
@@ -481,6 +499,10 @@ public static class VesselFactory {
             v.specialWeaponName = TorpedoLauncherWeapon.Design.name;
         }
 
+        if (QRandom.Float() < RankChance(v.rank, 0, 0.5, 0.9)) {
+            v.sentinelName = "Reflector Guard";
+        }
+
         SetShield(v,
             0.3, IonCurtainShield.Design.name,
             0.2, DispersionFieldShield.Design.name,
@@ -489,7 +511,11 @@ public static class VesselFactory {
 
     private static void InitKrigiaHorns(Vessel v) {
         v.designName = "Horns";
-        v.energySourceName = "Graviton Generator";
+        if (v.rank == 1) {
+            v.energySourceName = "Cryogenic Block";
+        } else {
+            v.energySourceName = "Graviton Generator";
+        }
 
         AddWeapon(v,
             0.5, PulseLaserWeapon.Design.name,
@@ -500,6 +526,15 @@ public static class VesselFactory {
         SetSpecialWeapon(v,
             0.6, MortarWeapon.Design.name,
             0.4, TorpedoLauncherWeapon.Design.name);
+
+        if (v.rank == 3) {
+            var sentinelRoll = QRandom.Float();
+            if (sentinelRoll < 0.7) {
+                v.sentinelName = "Ion Fighter";
+            } else {
+                v.sentinelName = "Ion Curtain Guard";
+            }
+        }
 
         SetShield(v,
             0.5, DispersionFieldShield.Design.name,
@@ -522,6 +557,8 @@ public static class VesselFactory {
         v.artifacts.Add(LaserAbsorberArtifact.Design.name);
         v.artifacts.Add(MissileTargeterArtifact.Design.name);
         v.artifacts.Add(MagneticNegatorArtifact.Design.name);
+
+        v.sentinelName = "Point-Defense Guard";
 
         v.shieldName = AegisShield.Design.name;
     }
@@ -581,6 +618,10 @@ public static class VesselFactory {
             0.3, ShieldBreakerWeapon.Design.name);
 
         v.specialWeaponName = RestructuringRayWeapon.Design.name;
+
+        if (v.rank == 3) {
+            v.sentinelName = "Photon Fighter";
+        }
 
         SetShield(v, 0.4, HeatScreenShield.Design.name);
     }

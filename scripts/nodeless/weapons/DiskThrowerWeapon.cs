@@ -8,7 +8,6 @@ public class DiskThrowerWeapon : IWeapon {
         extraDescription = "Disks do not disappear if missed and serve as space mines",
         targeting = "selected location, projectiles",
         sellingPrice = 6800,
-        technologiesNeeded = {"Disk Thrower"},
         cooldown = 1.10f,
         energyCost = 6.0f,
         range = 375.0f,

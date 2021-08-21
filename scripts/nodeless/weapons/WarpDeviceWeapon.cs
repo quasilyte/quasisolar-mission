@@ -8,7 +8,6 @@ public class WarpDeviceWeapon : IWeapon {
         extraDescription = "Clears all waypoints when used",
         targeting = "selected location",
         sellingPrice = 6200,
-        technologiesNeeded = {"Warp Device"},
         cooldown = 0.75f,
         energyCost = 20.0f,
         range = 400.0f,

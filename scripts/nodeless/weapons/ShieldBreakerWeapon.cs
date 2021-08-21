@@ -10,7 +10,6 @@ public class ShieldBreakerWeapon : IWeapon {
         special2 = "missiles can't be targeted by the point-defense",
         targeting = "forward-only, homing missles",
         sellingPrice = 4600,
-        technologiesNeeded = {"Shield Breaker"},
         cooldown = 2.8f,
         energyCost = 10,
         range = 475.0f,

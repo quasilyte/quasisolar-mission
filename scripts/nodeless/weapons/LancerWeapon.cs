@@ -7,7 +7,6 @@ public class LancerWeapon : IWeapon {
         description = "TODO",
         targeting = "any direction, projectiles",
         sellingPrice = 20000,
-        technologiesNeeded = {"Lancer"},
         cooldown = 1.7f,
         energyCost = 19.0f,
         range = 380.0f,

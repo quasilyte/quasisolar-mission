@@ -8,7 +8,6 @@ public class ReaperCannonWeapon : IWeapon {
         extraDescription = "The recoil is so high it pulls the ship away",
         targeting = "front directions (60°), projectiles",
         sellingPrice = 7000,
-        technologiesNeeded = {"Reaper Cannon"},
         cooldown = 1.0f,
         range = 480,
         damage = 18,

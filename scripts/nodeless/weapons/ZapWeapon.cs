@@ -7,7 +7,6 @@ public class ZapWeapon : IWeapon {
         description = "TODO",
         targeting = "any direction, projectiles",
         sellingPrice = 2800,
-        technologiesNeeded = {"Zap"},
         cooldown = 1.1f,
         energyCost = 15,
         range = 220,
