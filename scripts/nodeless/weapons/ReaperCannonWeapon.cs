@@ -12,7 +12,7 @@ public class ReaperCannonWeapon : IWeapon {
         cooldown = 1.0f,
         range = 480,
         damage = 18,
-        damageKind = DamageKind.None,
+        damageKind = DamageKind.Kinetic,
         projectileSpeed = 350,
         botHintSnipe = 0.45f,
         botHintScatter = 0.25f,
