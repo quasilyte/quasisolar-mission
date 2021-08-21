@@ -20,7 +20,8 @@ public class SentinelDesign: IItem {
     public int sellingPrice = 0;
 
     public float attackCooldown;
-    public WeaponDesign weapon;
+    public WeaponDesign weapon = null;
+    public ShieldDesign shield = null;
 
     public ItemKind GetItemKind() { return ItemKind.Sentinel; }
 
@@ -90,14 +91,35 @@ public class SentinelDesign: IItem {
         },
 
         new SentinelDesign{
+            name = "Ion Curtain Guard",
+            description = "TODO",
+            kind = Kind.Defense,
+            hp = 30,
+            shield = IonCurtainShield.Design,
+            attackCooldown = 3.0f,
+            sellingPrice = 3700,
+        },
+
+        new SentinelDesign{
             researchRequired = true,
             name = "Point-Defense Guard",
             description = "TODO",
             kind = Kind.Defense,
-            hp = 45,
+            hp = 50,
             sellingPrice = 4200,
             weapon = PointDefenseLaserWeapon.Design,
-            attackCooldown = 2,
+            attackCooldown = 1.4f,
+        },
+
+        new SentinelDesign{
+            researchRequired = true,
+            name = "Reflector Guard",
+            description = "TODO",
+            kind = Kind.Defense,
+            hp = 40,
+            shield = ReflectorShield.Design,
+            attackCooldown = 3.5f,
+            sellingPrice = 6000,
         },
 
         new SentinelDesign{

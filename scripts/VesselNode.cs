@@ -12,6 +12,8 @@ public class VesselNode : Node2D {
 
     public WaypointLineNode waypointLine;
 
+    private SentinelNode _sentinel = null;
+
     private Queue<Waypoint> _waypoints = new Queue<Waypoint>();
     private Waypoint _currentWaypoint;
 
@@ -93,6 +95,10 @@ public class VesselNode : Node2D {
         State.draggedBy = null;
     }
 
+    public void SetSentinel(SentinelNode sentinel) {
+        _sentinel = sentinel;
+    }
+
     public void EnablePhasing(float duration) {
         _phasing = true;
         State.phasingTime = duration;
@@ -123,6 +129,10 @@ public class VesselNode : Node2D {
     }
 
     public override void _Process(float delta) {
+        if (!IsInstanceValid(_sentinel)) {
+            _sentinel = null;
+        }
+
         foreach (var a in artifacts) {
             a.Apply(State, delta);
         }
@@ -318,6 +328,12 @@ public class VesselNode : Node2D {
         if (amount > 0) {
             var reducedAmount = QMath.ClampMin(shield.ReduceDamage(amount, kind), 1);
             var damageReduced = reducedAmount != amount;
+            if (_sentinel != null && !damageReduced && !shield.IsActive()) {
+                if (_sentinel is ShieldSentinelNode shieldSentinel) {
+                    reducedAmount = QMath.ClampMin(shieldSentinel.ReduceDamage(amount, kind), 1);
+                    damageReduced = reducedAmount != amount;
+                }
+            }
 
             Color color;
             var hpPercentage = State.hp / State.stats.maxHp;

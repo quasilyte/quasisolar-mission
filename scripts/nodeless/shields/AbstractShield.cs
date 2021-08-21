@@ -45,11 +45,11 @@ public abstract class AbstractShield : IShield {
         _cooldown = QMath.ClampMin(_cooldown - delta, 0);
     }
 
-    public float ReduceDamage(float damage, DamageKind kind) {
-        if (_activation <= 0) {
-            return damage;
-        }
-        var design = GetDesign();
+    public bool IsActive() {
+        return _activation > 0;
+    }
+
+    public static float CalculateReducedDamage(ShieldDesign design, float damage, DamageKind kind) {
         if (kind == DamageKind.Energy) {
             return damage * design.activeEnergyDamageReceive;
         } else if (kind == DamageKind.Kinetic) {
@@ -58,5 +58,13 @@ public abstract class AbstractShield : IShield {
             return damage * design.activeThermalDamageReceive;
         }
         return damage;
+    }
+
+    public float ReduceDamage(float damage, DamageKind kind) {
+        if (_activation <= 0) {
+            return damage;
+        }
+        var design = GetDesign();
+        return CalculateReducedDamage(design, damage, kind);
     }
 }

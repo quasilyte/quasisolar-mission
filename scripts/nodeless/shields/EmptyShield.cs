@@ -4,6 +4,7 @@ public class EmptyShield : IShield {
     };
     public ShieldDesign GetDesign() { return Design; }
 
+    public bool IsActive() { return false; }
     public bool CanActivate(VesselState state) { return false; }
     public void Activate(VesselState state) {}
     public void Deactivate() {}
