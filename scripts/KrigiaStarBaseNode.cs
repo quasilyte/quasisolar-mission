@@ -20,10 +20,6 @@ public class KrigiaStarBaseNode : StarBaseNode {
         base._Ready();
     }
 
-    public override void _Draw() {
-        DrawUtils.DrawDashedCircle(this, InfluenceRadius(), Color.Color8(160, 80, 80));
-    }
-
     public override void ProcessDay() {
         base.ProcessDay();
 
@@ -174,7 +170,7 @@ public class KrigiaStarBaseNode : StarBaseNode {
         starBase.productionQueue.Enqueue(ChooseVesselToProduce());
     }
 
-    private float InfluenceRadius() {
+    public override float InfluenceRadius() {
         return 256;
     }
 }

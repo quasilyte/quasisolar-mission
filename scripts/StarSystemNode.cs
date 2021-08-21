@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class StarSystemNode : Node2D {
     public StarSystem sys;
 
+    private bool focused = false;
+
     private StarBaseNode _starBase;
 
     [Signal]
@@ -185,10 +187,34 @@ public class StarSystemNode : Node2D {
 
     private void OnMouseEnter() {
         MapItemInfoNode.instance.Pin(this, new Vector2(0, -64), GetKnownInfo());
+        focused = true;
+        Update();
     }
 
     private void OnMouseExited() {
         MapItemInfoNode.instance.Unpin(this);
+        focused = false;
+        Update();
+    }
+
+    public override void _Draw() {
+        if (!focused || sys.intel == null || sys.starBase.id == 0) {
+            return;
+        }
+        var radius = _starBase.InfluenceRadius();
+        if (radius == 0) {
+            return;
+        }
+        var starBase = sys.starBase.Get();
+        Color color = default(Color);
+        if (starBase.owner == Faction.Krigia) {
+            color = Color.Color8(0xca, 0x30, 0x4d);
+        } else if (starBase.owner == Faction.Wertu) {
+            color = Color.Color8(0x16, 0x4b, 0xb6);
+        }
+        if (color != default) {
+            DrawUtils.DrawDashedCircle(this, radius, color);
+        }
     }
 
     private void SetStarBaseColor() {

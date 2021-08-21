@@ -98,4 +98,6 @@ public class StarBaseNode : Node2D {
 
         return vessel;
     }
+
+    public virtual float InfluenceRadius() { return 0; }
 }
