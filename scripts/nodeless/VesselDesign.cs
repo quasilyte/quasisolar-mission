@@ -312,7 +312,7 @@ public class VesselDesign: IItem {
             level = 6,
             name = "Einherjar",
             affiliation = Faction.Earthling,
-            description = "Wertu-based cruiser design",
+            description = "Krigia-based cruiser design",
             sellingPrice = 24500,
             debris = 160,
             productionTime = 180,

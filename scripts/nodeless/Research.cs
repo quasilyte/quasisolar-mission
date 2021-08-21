@@ -495,7 +495,10 @@ public class Research {
             material = Faction.Draklid,
             category = Category.NewWeapon,
             researchTime = 100,
-            dependencies = {"Draklid Weapons"},
+            dependencies = {
+                "Draklid Weapons",
+                "Pulse Laser",
+            },
         },
 
         // Wertu tech tree.
