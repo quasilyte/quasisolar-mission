@@ -763,11 +763,31 @@ public class NewGameScene : Node2D {
             IonCannonWeapon.Design.name,
             EmptyWeapon.Design.name,
         };
-        humanVessel.sentinelName = "Empty";
-        humanVessel.specialWeaponName = EmptyWeapon.Design.name;
         VesselFactory.InitStats(humanVessel);
         VesselFactory.RollUpgrades(humanVessel);
         fleet.Add(humanVessel.GetRef());
+
+        var defender = config.vessels.New();
+        defender.isBot = true;
+        defender.faction = Faction.Earthling;
+        defender.pilotName = PilotNames.UniqHumanName(config.usedNames);
+        VesselFactory.PadEquipment(defender);
+        defender.artifacts = new List<string>{
+            EmptyArtifact.Design.name,
+            EmptyArtifact.Design.name,
+            EmptyArtifact.Design.name,
+            EmptyArtifact.Design.name,
+            EmptyArtifact.Design.name,
+        };
+        defender.weapons = new List<string>{
+            NeedleGunWeapon.Design.name,
+            IonCannonWeapon.Design.name,
+        };
+        defender.designName = "Fighter";
+        defender.energySourceName = "Power Generator";
+        VesselFactory.InitStats(defender);
+        VesselFactory.RollUpgrades(defender);
+        startingStarBase.garrison.Add(defender.GetRef());
 
         for (int i = 0; i < OptionIntValue("StartingFleet"); i++) {
             var v = config.vessels.New();
