@@ -28,7 +28,7 @@ public class DevastatedHomeworldMapEvent: AbstractMapEvent {
         e.actions.Add(new Action{
             name = "Search the planet",
             apply = () => {
-                var bounty = HasSalvagingSkill() ? 200 : 150;
+                var bounty = 175;
                 return new Result {
                     text = MultilineText($@"
                         Your flagship took a lot of damage, but it was worth it.

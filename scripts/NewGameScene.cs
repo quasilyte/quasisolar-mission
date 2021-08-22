@@ -12,27 +12,6 @@ public class NewGameScene : Node2D {
 
     private Dictionary<string, Option[]> options = new Dictionary<string, Option[]> {
         {
-            "StartingSkill",
-            new Option[]{
-                new Option{text = "Salvaging", value = "Salvaging", score = 0},
-                new Option{text = "Fighter", value = "Fighter", score = 0},
-                new Option{text = "Siege Mastery", value = "Siege Mastery", score = 0},
-                new Option{text = "Luck", value = "Luck", score = 0, selected = true},
-                new Option{text = "No bonus skill", value = "", score = 10},
-            }
-        },
-
-        {
-            "StartingFleet",
-            new Option[]{
-                new Option{text = "4 vessels", value = "3", score = -10},
-                new Option{text = "3 vessels", value = "2", score = -3},
-                new Option{text = "2 vessels", value = "1", score = 0, selected = true},
-                new Option{text = "Only flagship", value = "0", score = 10},
-            }
-        },
-
-        {
             "FlagshipDesign",
             new Option[]{
                 new Option{text = "Fighter (level 3)", value = "Fighter", score = -15},
@@ -252,12 +231,6 @@ public class NewGameScene : Node2D {
             maxFuel = 500,
         };
 
-        var skills = new HashSet<string>();
-        var startingSkill = OptionValue("StartingSkill");
-        if (!startingSkill.Empty()) {
-            skills.Add(startingSkill);
-        }
-
         var randomEvents = new HashSet<string>();
         foreach (var e in MapEventRegistry.list) {
             randomEvents.Add(e.title);
@@ -273,7 +246,6 @@ public class NewGameScene : Node2D {
 
             gameSeed = gameSeed,
 
-            skills = skills,
             randomEvents = randomEvents,
 
             missionDeadline = OptionIntValue("MissionDeadline"),
@@ -789,7 +761,8 @@ public class NewGameScene : Node2D {
         VesselFactory.RollUpgrades(defender);
         startingStarBase.garrison.Add(defender.GetRef());
 
-        for (int i = 0; i < OptionIntValue("StartingFleet"); i++) {
+        var numScoutsEscort = 1;
+        for (int i = 0; i < numScoutsEscort; i++) {
             var v = config.vessels.New();
             v.isBot = true;
             v.faction = Faction.Earthling;

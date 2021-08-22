@@ -24,15 +24,10 @@ public class TreasureVaultMapEvent: AbstractMapEvent {
             Are you playing safe or taking a risk in order to get it all?
         ");
 
-        double bountyMultiplier = 1.0;
-        if (HasSalvagingSkill()) {
-            bountyMultiplier = 1.3;
-        }
-
         e.actions.Add(new Action{
             name = "Play it safe",
             apply = () => {
-                var bounty = QMath.IntAdjust(1500, bountyMultiplier) + QRandom.IntRange(0, 300);
+                var bounty = 2000 + QRandom.IntRange(0, 300);
                 return new Result{
                     text = MultilineText($@"
                         You harvested all the resources that were reachable through the open areas.
@@ -67,7 +62,7 @@ public class TreasureVaultMapEvent: AbstractMapEvent {
                         "),
                     };
                 }
-                var bounty = QMath.IntAdjust(3000, bountyMultiplier) + QRandom.IntRange(0, 600);
+                var bounty = 4000 + QRandom.IntRange(0, 600);
                 return new Result{
                     text = MultilineText($@"
                         The door took a few shots before it finally gave up.

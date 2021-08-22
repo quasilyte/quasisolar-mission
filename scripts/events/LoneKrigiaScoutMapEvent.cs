@@ -25,13 +25,9 @@ public class LoneKrigiaScoutMapEvent: AbstractMapEvent {
                 var v = VesselFactory.NewVessel(Faction.Krigia, "Talons");
                 var spaceUnit = NewSpaceUnit(Faction.RandomEventHostile, v);
                 if (ctx.roll > 0.5) {
-                    spaceUnit.cargo.minerals = (int)(ctx.roll * 20);
+                    spaceUnit.cargo.minerals = (int)(ctx.roll * 50);
                 }
-                spaceUnit.cargo.power = (int)(ctx.roll * 15);
-                if (HasLuckSkill()) {
-                    spaceUnit.cargo.minerals *= 2;
-                    spaceUnit.cargo.power *= 2;
-                }
+                spaceUnit.cargo.power = (int)(ctx.roll * 40);
 
                 return new Result {
                     text = MultilineText(@"

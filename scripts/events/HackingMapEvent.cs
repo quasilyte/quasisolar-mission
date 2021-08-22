@@ -29,10 +29,7 @@ public class HackingMapEvent: AbstractMapEvent {
                 var v1 = VesselFactory.NewVessel(Faction.Neutral, "Explorer");
                 var v2 = VesselFactory.NewVessel(Faction.Neutral, "Explorer");
                 var unit = NewSpaceUnit(Faction.RandomEventHostile, v1, v2);
-                unit.cargo.minerals = (int)(ctx.roll * 40) + 10;
-                if (HasLuckSkill()) {
-                    unit.cargo.minerals *= 2;
-                }
+                unit.cargo.minerals = (int)(ctx.roll * 90) + 10;
                 return new Result{
                     expReward = 5,
                     text = MultilineText(@"

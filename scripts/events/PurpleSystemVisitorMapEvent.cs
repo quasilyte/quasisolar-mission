@@ -25,10 +25,7 @@ public class PurpleSystemVisitorMapEvent: AbstractMapEvent {
             apply = () => {
                 var v = VesselFactory.NewVessel(Faction.Neutral, "Visitor");
                 var spaceUnit = NewSpaceUnit(Faction.RandomEventHostile, v);
-                spaceUnit.cargo.power = (int)(ctx.roll * 50);
-                if (RpgGameState.instance.skillsLearned.Contains("Luck")) {
-                    spaceUnit.cargo.power *= 3;
-                }
+                spaceUnit.cargo.power = (int)(ctx.roll * 120);
                 return new Result {
                     text = MultilineText(@"
                         This thing doesn't respond to your communication attempts.

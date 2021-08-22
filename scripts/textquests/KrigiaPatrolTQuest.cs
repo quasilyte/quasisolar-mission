@@ -117,7 +117,7 @@ public class KrigiaPatrolTQuest : AbstractTQuest {
     }
 
     private TQuestCard Intimidate() {
-        bool hasIntimidation = RpgGameState.instance.skillsLearned.Contains("Intimidation");
+        bool hasIntimidation = false;
         float failChance = hasIntimidation ? 0.05f : 0.35f;
         if (QRandom.Float() < failChance) {
             return IntimidationFailure();
@@ -173,7 +173,7 @@ public class KrigiaPatrolTQuest : AbstractTQuest {
     }
 
     private TQuestCard Bribe() {
-        bool hasSpeaking = RpgGameState.instance.skillsLearned.Contains("Speaking");
+        bool hasSpeaking = false;
         float failChance = hasSpeaking ? 0.1f : 0.2f;
         if (QRandom.Float() < failChance) {
             return BribeFailure();

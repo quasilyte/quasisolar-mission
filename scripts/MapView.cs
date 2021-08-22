@@ -303,9 +303,6 @@ public class MapView : Node2D {
     }
 
     private float RetreatFuelCost() {
-        if (_gameState.skillsLearned.Contains("Escape Tactics")) {
-            return 35;
-        }
         return 70;
     }
 
@@ -1472,10 +1469,6 @@ public class MapView : Node2D {
         }
 
         var researchTime = research.researchTime;
-        if (_gameState.skillsLearned.Contains("Scholar")) {
-            researchTime -= 10;
-        }
-
         if ((int)_gameState.researchProgress >= researchTime) {
             ResearchCompleted();
         }
@@ -1778,13 +1771,10 @@ public class MapView : Node2D {
             }
             
             _gameState.fuel -= 1;
-            if (starBase.garrison.Count != 0 && !_gameState.skillsLearned.Contains("Siege Mastery")) {
+            if (starBase.garrison.Count != 0) {
                 return;
             }
             var damage = _humanUnit.fleet.Count;
-            if (_gameState.skillsLearned.Contains("Siege Mastery")) {
-                damage *= 2;
-            }
             starBase.hp -= damage;
             if (starBase.hp <= 0) {
                 SetUnitMode(UnitMode.Idle);

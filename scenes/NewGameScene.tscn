@@ -47,49 +47,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="StartingFleet" type="OptionButton" parent="."]
-margin_left = 256.0
-margin_top = 416.0
-margin_right = 512.0
-margin_bottom = 448.0
-theme = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="StartingFleet"]
-margin_left = 272.0
-margin_right = 448.0
-margin_bottom = 32.0
-theme = ExtResource( 2 )
-text = "Starting Fleet"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="StartingSkill" type="OptionButton" parent="."]
-margin_left = 256.0
-margin_top = 480.0
-margin_right = 512.0
-margin_bottom = 512.0
-focus_mode = 0
-theme = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="StartingSkill"]
-margin_left = 272.0
-margin_right = 448.0
-margin_bottom = 32.0
-theme = ExtResource( 2 )
-text = "Starting Skill"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="PlanetResources" type="OptionButton" parent="."]
 margin_left = 800.0
 margin_top = 288.0

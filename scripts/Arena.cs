@@ -356,19 +356,19 @@ public class Arena : Node2D {
             var vessel = _vesselByPilot[p];
             if (p.Active) {
                 var hpLoss = vessel.hp - p.Vessel.State.hp;
-                if (vessel.faction == Faction.Earthling) {
-                    if (_gameState.skillsLearned.Contains("Repair II")) {
-                        hpLoss *= 0.8f;
-                    } else if (_gameState.skillsLearned.Contains("Repair I")) {
-                        hpLoss *= 0.9f;
-                    }
-                }
+                // if (vessel.faction == Faction.Earthling) {
+                //     if (_gameState.skillsLearned.Contains("Repair II")) {
+                //         hpLoss *= 0.8f;
+                //     } else if (_gameState.skillsLearned.Contains("Repair I")) {
+                //         hpLoss *= 0.9f;
+                //     }
+                // }
                 var energyLoss = vessel.energy - p.Vessel.State.backupEnergy;
-                if (vessel.faction == Faction.Earthling) {
-                    if (_gameState.skillsLearned.Contains("Repair II")) {
-                        energyLoss *= 0.75f;
-                    }
-                }
+                // if (vessel.faction == Faction.Earthling) {
+                //     if (_gameState.skillsLearned.Contains("Repair II")) {
+                //         energyLoss *= 0.75f;
+                //     }
+                // }
                 vessel.hp -= hpLoss;
                 vessel.energy -= energyLoss;
                 survivors.Add(p);
@@ -388,10 +388,10 @@ public class Arena : Node2D {
 
         if (QRandom.Float() < 0.8) {
             result.fuel = QRandom.IntRange(10, 40);
-            // +20% fuel.
-            if (_gameState.skillsLearned.Contains("Salvaging")) {
-                result.fuel = QMath.IntAdjust(result.fuel, 1.20);
-            }
+            // // +20% fuel.
+            // if (_gameState.skillsLearned.Contains("Salvaging")) {
+            //     result.fuel = QMath.IntAdjust(result.fuel, 1.20);
+            // }
         }
 
         // alliances should contain only 1 element,
@@ -429,17 +429,17 @@ public class Arena : Node2D {
             RpgGameState.transition = RpgGameState.MapTransition.EnemyBaseAttackRepelled;
         }
 
-        if (_gameState.skillsLearned.Contains("Salvaging")) {
-            // +5% debris.
-            result.debris.Update((x, kind) => {
-                return QMath.IntAdjust(x, 1.05);
-            });
-        }
+        // if (_gameState.skillsLearned.Contains("Salvaging")) {
+        //     // +5% debris.
+        //     result.debris.Update((x, kind) => {
+        //         return QMath.IntAdjust(x, 1.05);
+        //     });
+        // }
 
         if (_flagshipPilot != null) {
-            if (_gameState.skillsLearned.Contains("Fighter")) {
-                result.exp = QMath.IntAdjust(result.exp, 1.33);
-            }
+            // if (_gameState.skillsLearned.Contains("Fighter")) {
+            //     result.exp = QMath.IntAdjust(result.exp, 1.33);
+            // }
             // TODO: check for the cargo overflow.
             RpgGameState.lastBattleResult = result;
         }
@@ -468,16 +468,15 @@ public class Arena : Node2D {
             return;
         }
 
-        if (_gameState.skillsLearned.Contains("Salvaging")) {
-            // Collect 80% of cargo instead of 50%.
-            result.minerals += QMath.IntAdjust(unit.cargo.minerals, 0.8);
-            result.organic += QMath.IntAdjust(unit.cargo.organic, 0.8);
-            result.power += QMath.IntAdjust(unit.cargo.power, 0.8);
-        } else {
-            result.minerals += unit.cargo.minerals / 2;
-            result.organic += unit.cargo.organic / 2;
-            result.power += unit.cargo.power / 2;
-        }
+        // if (_gameState.skillsLearned.Contains("Salvaging")) {
+        //     // Collect 80% of cargo instead of 50%.
+        //     result.minerals += QMath.IntAdjust(unit.cargo.minerals, 0.8);
+        //     result.organic += QMath.IntAdjust(unit.cargo.organic, 0.8);
+        //     result.power += QMath.IntAdjust(unit.cargo.power, 0.8);
+        // }
+        result.minerals += unit.cargo.minerals / 2;
+        result.organic += unit.cargo.organic / 2;
+        result.power += unit.cargo.power / 2;
     }
 
     private void ChangeScene(string name) {

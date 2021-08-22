@@ -149,22 +149,6 @@ public class MapViewCheatMenuPopup : PopupDialog {
                     return;
                 }
 
-            case "cheat.skill":
-                var skill = FindSkill(arg);
-                if (skill == null) {
-                    throw new Exception($"skill {arg} not found");
-                }
-                if (!skill.IsAvailable()) {
-                    throw new Exception($"{skill.name} skill requirements are not satisfied");
-                }
-                if (_gameState.skillsLearned.Contains(skill.name)) {
-                    throw new Exception($"{skill.name} is already learned");
-                }
-                _gameState.skillsLearned.Add(skill.name);
-                Log($"Learned {skill.name} skill");
-                _command = new Command { kind = CommandKind.StatsChange };
-                return;
-
             default:
                 throw new Exception($"unknown command {op}");
         }
@@ -178,16 +162,6 @@ public class MapViewCheatMenuPopup : PopupDialog {
         } catch (Exception) {
             return 0;
         }
-    }
-
-    public Skill FindSkill(string name) {
-        name = name.ToLower();
-        foreach (var s in Skill.list) {
-            if (s.name.ToLower() == name) {
-                return s;
-            }
-        }
-        return null;
     }
 
     public AbstractMapEvent FindRandomEvent(string name) {

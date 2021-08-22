@@ -46,8 +46,6 @@ public class RpgGameState {
 
         public HashSet<string> randomEvents;
 
-        public HashSet<string> skills;
-
         public HashSet<string> usedNames = new HashSet<string>();
 
         public GameLimits limits;
@@ -193,8 +191,6 @@ public class RpgGameState {
         o.randomEventCooldown = c.randomEventCooldown;
         o.randomEventsAvailable = c.randomEvents;
 
-        o.skillsLearned = c.skills;
-
         o.missionDeadline = c.missionDeadline;
         
         return o;
@@ -267,8 +263,6 @@ public class RpgGameState {
 
     public int scienceFunds = 0;
     
-    public HashSet<string> skillsLearned;
-
     public HashSet<string> usedNames;
 
     public ObjectPool<SpaceUnit> spaceUnits;

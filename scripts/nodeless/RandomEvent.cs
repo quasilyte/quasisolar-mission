@@ -2,6 +2,9 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
+// TODO:
+// - duel event; when you have 1 vessel
+
 /*
 Possible negative effects:
 - race relation points loss

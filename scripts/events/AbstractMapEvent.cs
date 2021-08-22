@@ -79,10 +79,6 @@ public abstract class AbstractMapEvent {
     protected static SpaceUnit PlayerSpaceUnit() { return GameState().humanUnit.Get(); }
     protected static string MultilineText(string s) { return Utils.FormatMultilineText(s); }
 
-    protected static bool HasLuckSkill() { return GameState().skillsLearned.Contains("Luck"); }
-    protected static bool HasSalvagingSkill() { return GameState().skillsLearned.Contains("Salvaging"); }
-    protected static bool HasSpeakingSkill() { return GameState().skillsLearned.Contains("Speaking"); }
-
     protected static bool HasWeapon(WeaponDesign w) {
         foreach (var u in PlayerSpaceUnit().fleet) {
             foreach (var weaponName in u.Get().weapons) {

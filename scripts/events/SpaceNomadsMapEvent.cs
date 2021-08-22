@@ -21,11 +21,7 @@ public class SpaceNomadsMapEvent: AbstractMapEvent {
         var nomadDesign = VesselDesign.Find("Nomad");
 
         Func<int> vesselPrice = () => {
-            var price = (int)(nomadDesign.sellingPrice * 0.7);
-            if (HasSpeakingSkill()) {
-                price = (int)(price * 0.8);
-            }
-            return price;
+            return (int)(nomadDesign.sellingPrice * 0.65);
         };
 
         var text = (@"
@@ -37,9 +33,6 @@ public class SpaceNomadsMapEvent: AbstractMapEvent {
 
             Their broadcast claims that they're willing to sell one of their Nomad class vessels.
         ");
-        if (HasSpeakingSkill()) {
-            text += "\n(Speaking) Your speaking skills earned you a 20% discount.";
-        }
         e.text = MultilineText(text);
 
         e.actions.Add(new Action {
@@ -107,10 +100,7 @@ public class SpaceNomadsMapEvent: AbstractMapEvent {
                 var v2 = VesselFactory.NewVessel(Faction.Neutral, "Nomad");
                 var v3 = VesselFactory.NewVessel(Faction.Neutral, "Nomad");
                 var spaceUnit = NewSpaceUnit(Faction.RandomEventHostile, v1, v2, v3);
-                spaceUnit.cargo.minerals = (int)(ctx.roll * 70);
-                if (RpgGameState.instance.skillsLearned.Contains("Luck")) {
-                    spaceUnit.cargo.minerals *= 3;
-                }
+                spaceUnit.cargo.minerals = (int)(ctx.roll * 140);
                 return new Result {
                     text = "You decided to attack the nomads group.",
                     effects = {
