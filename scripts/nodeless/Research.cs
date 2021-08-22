@@ -208,7 +208,7 @@ public class Research {
         new Research{
             name = "Point-Defense Guard",
             category = Category.NewSentinel,
-            researchTime = 60,
+            researchTime = 50,
             dependencies = {"Point-Defense Laser"},
         },
 
@@ -226,6 +226,13 @@ public class Research {
             category = Category.NewSentinel,
             researchTime = 90,
             dependencies = {"Restructuring Ray"},
+        },
+
+        new Research{
+            name = "Reflector Guard",
+            category = Category.NewSentinel,
+            researchTime = 75,
+            dependencies = {"Reflector"},
         },
 
         // Shield tech.

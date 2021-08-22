@@ -15,6 +15,11 @@ public class TestResearch : AbstractTest {
                 Error($"Missing a research for {w.name} special weapon");
             }
         }
+        foreach (var sentinel in SentinelDesign.list) {
+            if (sentinel.researchRequired && !Research.researchByName.ContainsKey(sentinel.name)) {
+                Error($"Missing a research for {sentinel.name} sentinel");
+            }
+        }
     }
 
     private void TestResearchDependencies() {
