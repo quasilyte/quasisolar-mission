@@ -31,6 +31,13 @@ public class PlayerInput {
         return Input.IsActionJustPressed(action + "/2");
     }
 
+    public bool IsActionJustReleased(string action) {
+        if (_deviceId == 0) {
+            return Input.IsActionJustReleased(action);
+        }
+        return Input.IsActionJustReleased(action + "/2");
+    }
+
     public float GetJoyAxis(JoystickList axis) {
         return Input.GetJoyAxis(_deviceId, (int)axis);
     }
