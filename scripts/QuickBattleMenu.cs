@@ -377,6 +377,7 @@ public class QuickBattleMenu : Node2D {
         cost += PlayerSettings().energySource.sellingPrice;
         cost += VesselDesign.Find(PlayerSettings().vesselDesignName).sellingPrice;
         cost += PlayerSettings().shield.sellingPrice;
+        cost += PlayerSettings().sentinel.sellingPrice;
         return cost;
     }
 
