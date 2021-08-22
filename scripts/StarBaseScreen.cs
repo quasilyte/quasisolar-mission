@@ -3,7 +3,7 @@ using System;
 
 public class StarBaseScreen : Node2D {
     public override void _Ready() {
-        GetNode<BackgroundMusic>("/root/BackgroundMusic").PlayShipyardMusic();
+        // GetNode<BackgroundMusic>("/root/BackgroundMusic").PlayShipyardMusic();
 
         GetNode<Button>("EquipmentShop").Connect("pressed", this, nameof(OnEquipmentShopButton));
         GetNode<Button>("Shipyard").Connect("pressed", this, nameof(OnShipyardButton));
