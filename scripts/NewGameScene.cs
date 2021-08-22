@@ -445,7 +445,7 @@ public class NewGameScene : Node2D {
         public Rect2 rect;
     }
 
-    const int numMapCols = 4;
+    const int numMapCols = 3;
     const int numMapRows = 2;
 
     private VesselTemplate[] _draklidTemplates = new VesselTemplate[]{
@@ -540,15 +540,16 @@ public class NewGameScene : Node2D {
 
     private void DeployBases(RpgGameState.Config config, Faction faction, int numBases, Sector[] sectors, VesselTemplate[] templates) {
         while (numBases > 0) {
-            var col = QRandom.IntRange(1, numMapCols - 1);
+            var col = QRandom.Bool() ? 0 : 2;
             var row = QRandom.IntRange(0, 1);
             var i = row * numMapCols + col;
             var sector = sectors[i];
             var j = QRandom.IntRange(0, sector.systems.Count - 1);
             if (sector.systems[j].starBase.id == 0 && sector.systems[j].color != StarColor.Purple) {
-                var fleetRollBonus = (float)col * 20;
+                // var fleetRollBonus = (float)col * 20;
+                var fleetRollBonus = 0.0f;
                 var fleetRoll = QRandom.FloatRange(40, 80) + fleetRollBonus;
-                var baseLevel = col + QRandom.IntRange(1, 2);
+                var baseLevel = QRandom.IntRange(1, 4);
                 
                 var starBase = NewStarBase(config, faction, baseLevel);
                 InitFleet(config, starBase, templates, fleetRoll);
@@ -598,8 +599,8 @@ public class NewGameScene : Node2D {
     }
 
     private void GenerateWorld(RpgGameState.Config config) {
-        // Player always starts in the left part of the map.
-        var startingCol = 0;
+        // Player always starts in the middle of the map.
+        var startingCol = 1;
         var startingRow = QRandom.IntRange(0, 1);
         var startingSector = startingCol + startingRow * numMapCols;
 
@@ -617,11 +618,8 @@ public class NewGameScene : Node2D {
                 var color = RandomStarSystemColor();
                 sector.systems.Add(NewStarSystem(config, starSystenNames, RandomizedLocation(middle, 120), col));
 
-                var minSystems = 2;
+                var minSystems = 3;
                 var maxSystems = 4;
-                if (col == startingCol && row == startingRow) {
-                    minSystems = 3;
-                }
                 var numSystems = QRandom.IntRange(minSystems, maxSystems);
                 for (int j = 0; j < numSystems; j++) {
                     sector.systems.Add(NewStarSystem(config, starSystenNames, RandomStarSystemPosition(sector), col));
@@ -665,13 +663,13 @@ public class NewGameScene : Node2D {
         } else if (OptionValue("DraklidPresence") == "minimal") {
             numDraklidBases--;
         }
-        var numKrigiaBases = QRandom.IntRange(7, 10);
+        var numKrigiaBases = 5;
         if (OptionValue("KrigiaPresence") == "high") {
-            numKrigiaBases += 2;
+            numKrigiaBases++;
         } else if (OptionValue("KrigiaPresence") == "minimal") {
-            numKrigiaBases -= 2;
+            numKrigiaBases--;
         }
-        var numWertuBases = QRandom.IntRange(3, 4);
+        var numWertuBases = 3;
         var numZythBases = 2;
         GD.Print($"deployed {numKrigiaBases} Krigia bases");
         GD.Print($"deployed {numWertuBases} Wertu bases");
@@ -686,7 +684,9 @@ public class NewGameScene : Node2D {
             numKrigiaBases--;
         }
         {
-            var secondSector = startingRow == 0 ? numMapCols : 0;
+            var secondRow = startingRow == 0 ? 1 : 0;
+            var secondCol = 1;
+            var secondSector = secondCol + secondRow * numMapCols;
             var sector = sectors[secondSector];
             var roll = QRandom.FloatRange(35, 55);
 

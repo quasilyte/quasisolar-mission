@@ -19,6 +19,7 @@ public class TorpedoLauncherWeapon : IWeapon {
     };
     public WeaponDesign GetDesign() { return Design; }
     public void Ready() {}
+    public void Charge(float delta) {}
 
     private float _cooldown;
     private Pilot _owner;

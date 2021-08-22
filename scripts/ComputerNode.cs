@@ -73,7 +73,7 @@ public class ComputerNode : Node2D {
     }
 
     public override void _Process(float delta) {
-        RunActions(_bot.Act(delta, _botEvents));
+        RunActions(delta, _bot.Act(delta, _botEvents));
         
         if (_botEvents.closeRangeCollisions.Count != 0) {
             _botEvents.closeRangeCollisions.Clear();
@@ -84,9 +84,9 @@ public class ComputerNode : Node2D {
         _botEvents.targetedByZap = false;
     }
 
-    private void RunActions(List<IPilotAction> actions) {
+    private void RunActions(float delta, List<IPilotAction> actions) {
         foreach (var a in actions) {
-            if (!DoAction(a)) {
+            if (!DoAction(delta, a)) {
                 var msg = $"{pilot.name}: action failed: {a.DebugString()}";
                 GD.Print(msg);
                 throw new Exception(msg);
@@ -94,12 +94,14 @@ public class ComputerNode : Node2D {
         }
     }
 
-    private bool DoAction(IPilotAction a) {
+    private bool DoAction(float delta, IPilotAction a) {
         switch (a) {
             case AddWaypointAction addWaypoint:
                 return DoAddWaypoint(addWaypoint);
             case FireAction fireAction:
                 return DoFireAction(fireAction);
+            case ChargeWeaponAction chargeWeaponAction:
+                return DoChargeWeaponAction(delta, chargeWeaponAction);
             case SpecialAction specialAction:
                 return DoSpecialAction(specialAction);
             case ChangeWaypointAction changeWaypoint:
@@ -125,6 +127,12 @@ public class ComputerNode : Node2D {
         GetParent().AddChild(wp);
         wp.GlobalPosition = new Vector2(a.pos);
         pilot.Vessel.AddWaypoint(wp);
+        return true;
+    }
+
+    private bool DoChargeWeaponAction(float delta, ChargeWeaponAction a) {
+        var vessel = pilot.Vessel;
+        vessel.specialWeapon.Charge(delta);
         return true;
     }
 

@@ -97,6 +97,9 @@ public static class WeaponFactory {
             return new FlakCannonWeapon(p);
         }
 
+        if (w == DisintegratorWeapon.Design) {
+            return new DisintegratorWeapon(p);
+        }
         if (w == WarpDeviceWeapon.Design) {
             return new WarpDeviceWeapon(p);
         }

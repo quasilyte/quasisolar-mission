@@ -6,6 +6,7 @@ public class EmptyWeapon : IWeapon {
     };
     public WeaponDesign GetDesign() { return Design; }
     public void Ready() {}
+    public void Charge(float delta) {}
 
     public bool CanFire(VesselState state, Vector2 cursor) {
         return false;

@@ -23,6 +23,10 @@ class GenericBot : AbstractBot {
 
     private bool _followingAlly = false;
 
+    private bool _chargingWeapon = false;
+    private float _weaponCharge = 0;
+    private float _chargeGoal = 0;
+
     public GenericBot(VesselNode vessel) : base(vessel) {
         Func<IWeapon, bool> isLongRangeWeapon = (IWeapon w) => {
             return w is TorpedoLauncherWeapon ||
@@ -35,7 +39,8 @@ class GenericBot : AbstractBot {
                 w is SwarmSpawnerWeapon ||
                 w is BubbleGunWeapon ||
                 w is FlakCannonWeapon ||
-                w is ReaperCannonWeapon;
+                w is ReaperCannonWeapon ||
+                w is DisintegratorWeapon;
         };
 
         for (int i = 0; i < vessel.weapons.Count; i++) {
@@ -98,7 +103,7 @@ class GenericBot : AbstractBot {
 
         ActMove();
         ActDefense(events);
-        ActFight();
+        ActFight(delta);
     }
 
     protected void SetTarget(Pilot target) {
@@ -462,19 +467,47 @@ class GenericBot : AbstractBot {
         }
     }
 
-    private void ActFight() {
+    private void ActFight(float delta) {
         if (_currentTarget == null) {
             return;
         }
 
         UseSpecialWeapon();
         UseNormalWeapons();
+
+        MaybeChargeWeapon(delta);
+    }
+
+    private void MaybeChargeWeapon(float delta) {
+        if (!_vessel.specialWeapon.GetDesign().chargable) {
+            return;
+        }
+        if (!_chargingWeapon) {
+            // TODO: this goal should vary among the weapon.
+            _chargeGoal = QRandom.FloatRange(1.2f, 3.2f);
+            _chargingWeapon = true;
+        }
+        _actions.ChargeWeaponAction();
+        _weaponCharge += delta;
     }
 
     protected virtual void UseSpecialWeapon() {
         var design = _vessel.specialWeapon.GetDesign();
 
         if (design == EmptyWeapon.Design) {
+            return;
+        }
+
+        if (design == DisintegratorWeapon.Design) {
+            if (_weaponCharge < _chargeGoal) {
+                return;
+            }
+            var targetCursor = CalculateFireTarget(_vessel.specialWeapon);
+            if (targetCursor != Vector2.Zero) {
+                FireSpecial(targetCursor);
+                _weaponCharge = 0;
+                _chargingWeapon = false;
+            }
             return;
         }
 

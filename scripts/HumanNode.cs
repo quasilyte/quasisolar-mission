@@ -47,7 +47,7 @@ public class HumanNode : Node2D {
     }
 
     public override void _Process(float delta) {
-        HandleInput();
+        HandleInput(delta);
         if (!playerInput.IsGamepadControlled()) {
             _cursor.GlobalPosition = GetGlobalMousePosition();
         }
@@ -60,7 +60,7 @@ public class HumanNode : Node2D {
         _hud.UpdateBackupEnergyPercentage(QMath.Percantage(state.backupEnergy, state.stats.maxBackupEnergy));
     }
 
-    private void HandleInput() {
+    private void HandleInput(float delta) {
         Vector2 cursor;
         if (!playerInput.IsGamepadControlled()) {
             cursor = GetGlobalMousePosition();
@@ -103,15 +103,27 @@ public class HumanNode : Node2D {
             }
         }
 
-        if (playerInput.IsActionPressed("weapon2")) {
-            if (pilot.Vessel.CanFire(2, cursor)) {
-                pilot.Vessel.Fire(2, cursor);
-            }
-        }
+        // TODO: remove?
+        // if (playerInput.IsActionPressed("weapon2")) {
+        //     if (pilot.Vessel.CanFire(2, cursor)) {
+        //         pilot.Vessel.Fire(2, cursor);
+        //     }
+        // }
 
         if (playerInput.IsActionPressed("special")) {
-            if (pilot.Vessel.specialWeapon.CanFire(pilot.Vessel.State, cursor)) {
-                pilot.Vessel.specialWeapon.Fire(pilot.Vessel.State, cursor);
+            var special = pilot.Vessel.specialWeapon;
+            if (special.CanFire(pilot.Vessel.State, cursor)) {
+                if (special.GetDesign().chargable) {
+                    special.Charge(delta);
+                } else {
+                    special.Fire(pilot.Vessel.State, cursor);
+                }
+            }
+        }
+        if (playerInput.IsActionJustReleased("special")) {
+            var special = pilot.Vessel.specialWeapon;
+            if (special.GetDesign().chargable && special.CanFire(pilot.Vessel.State, cursor)) {
+                special.Fire(pilot.Vessel.State, cursor);
             }
         }
 

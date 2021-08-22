@@ -46,5 +46,7 @@ public abstract class AbstractWeapon: IWeapon {
         _cooldown = QMath.ClampMin(_cooldown - delta, 0);
     }
 
+    public virtual void Charge(float delta) {}
+
     protected abstract void CreateProjectile(Vector2 cursor);
 }

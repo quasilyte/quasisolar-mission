@@ -23,4 +23,8 @@ public class PilotActionList {
     public void ShieldAction() {
         list.Add(new ShieldAction{});
     }
+
+    public void ChargeWeaponAction() {
+        list.Add(new ChargeWeaponAction{});
+    }
 }

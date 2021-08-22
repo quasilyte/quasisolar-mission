@@ -16,6 +16,7 @@ public class ZapWeapon : IWeapon {
         botHintSnipe = 0,
     };
     public WeaponDesign GetDesign() { return Design; }
+    public void Charge(float delta) {}
     
     private float _cooldown;
     private Pilot _owner;

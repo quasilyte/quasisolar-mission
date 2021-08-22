@@ -16,6 +16,7 @@ public class WeaponDesign : IItem {
 
     public int sellingPrice = 0;
     public bool researchRequired = true;
+    public bool chargable = false;
 
     public float cooldown = 0;
     public float energyCost = 0;
@@ -139,6 +140,7 @@ public class WeaponDesign : IItem {
 
         specialList = new WeaponDesign[]{
             HarpoonWeapon.Design,
+            DisintegratorWeapon.Design,
             ReaperCannonWeapon.Design,
             TorpedoLauncherWeapon.Design,
             PhotonBeamWeapon.Design,

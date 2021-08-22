@@ -458,6 +458,10 @@ public static class VesselFactory {
             0.7, RocketLauncherWeapon.Design.name,
             0.3, ScytheWeapon.Design.name);
 
+        if (QRandom.Float() < RankChance(v.rank, 0, 0.2, 0.5)) {
+            v.specialWeaponName = DisintegratorWeapon.Design.name;
+        }
+
         if (v.rank == 3) {
             var sentinelRoll = QRandom.Float();
             if (sentinelRoll < 0.4) {
@@ -497,6 +501,8 @@ public static class VesselFactory {
         var specialRoll = QRandom.Float();
         if (specialRoll < RankChance(v.rank, 0.2, 0.4, 0.8)) {
             v.specialWeaponName = TorpedoLauncherWeapon.Design.name;
+        } else {
+            v.specialWeaponName = DisintegratorWeapon.Design.name;
         }
 
         if (QRandom.Float() < RankChance(v.rank, 0, 0.5, 0.9)) {
