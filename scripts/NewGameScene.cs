@@ -10,96 +10,8 @@ public class NewGameScene : Node2D {
         public bool selected;
     }
 
-    private Dictionary<string, Option[]> options = new Dictionary<string, Option[]> {
-        {
-            "FlagshipDesign",
-            new Option[]{
-                new Option{text = "Fighter (level 3)", value = "Fighter", score = -15},
-                new Option{text = "Freighter (level 3)", value = "Freighter", score = -10},
-                new Option{text = "Explorer (level 2)", value = "Explorer", score = 0, selected = true},
-                new Option{text = "Scout (level 1)", value = "Scout", score = 5},
-            }
-        },
-
-        {
-            "StartingCredits",
-            new Option[]{
-                new Option{text = "12500", score = -25},
-                new Option{text = "4000", score = -10},
-                new Option{text = "1500", score = 0, selected = true},
-                new Option{text = "0", score = 5},
-            }
-        },
-
-        {
-            "Artifacts",
-            new Option[]{
-                new Option{text = "Excessive", value = "20", score = -40},
-                new Option{text = "Normal", value = "15", score = 0, selected = true},
-                new Option{text = "Rare", value = "12", score = 10},
-                new Option{text = "Barely Enough", value = "10", score = 30},
-            }
-        },
-
-        {
-            "PlanetResources",
-            new Option[]{
-                new Option{text = "Rich", value = "2", score = -45},
-                new Option{text = "Normal", value = "1", score = 0, selected = true},
-                new Option{text = "Poor", value = "0", score = 15},
-            }
-        },
-
-        {
-            "KrigiaPresence",
-            new Option[]{
-                new Option{text = "Minimal", value = "minimal", score = -20},
-                new Option{text = "Normal", value = "normal", score = 0, selected = true},
-                new Option{text = "High", value = "high", score = 25},
-            }
-        },
-
-        {
-            "DraklidPresence",
-            new Option[]{
-                new Option{text = "Minimal", score = -15},
-                new Option{text = "Normal", score = 0, selected = true},
-                new Option{text = "High", score = 10},
-            }
-        },
-
-        {
-            "MissionDeadline",
-            new Option[]{
-                new Option{text = "8000 days", value = "8000", score = -20},
-                new Option{text = "4000 days", value = "4000", score = 0, selected = true},
-                new Option{text = "3000 days", value = "3000", score = 10},
-                new Option{text = "2500 days", value = "2500", score = 30},
-            }
-        },
-
-        {
-            "RandomEvents",
-            new Option[]{
-                new Option{text = "Very Rare", score = 0},
-                new Option{text = "Occasional", score = 0, selected = true},
-                new Option{text = "Usual", score = 0},
-            }
-        },
-
-        {
-            "Asteroids",
-            new Option[]{
-                new Option{text = "None", score = 0},
-                new Option{text = "Few", score = 0, selected = true},
-                new Option{text = "Average", score = 0},
-                new Option{text = "Many", score = 0},
-            }
-        },
-    };
-
-    private int _scoreMultiplier;
     private Label _scoreMultiplierLabel;
+    private NewGameOptions _options;
 
     private Dictionary<string, int> _planetSprites = new Dictionary<string, int>{
         {"alpine", 6}, // Organic with normal climate
@@ -119,16 +31,15 @@ public class NewGameScene : Node2D {
     public override void _Ready() {
         _scoreMultiplierLabel = GetNode<Label>("ScoreMultiplier");
 
-        foreach (var kv in options) {
+        _options = new NewGameOptions();
+
+        foreach (var kv in _options.byName) {
             var id = kv.Key;
             var button = GetNode<OptionButton>(id);
             var selected = 1;
             for (int i = 0; i < kv.Value.Length; i++) {
                 if (kv.Value[i].selected) {
                     selected = i;
-                }
-                if (String.IsNullOrEmpty(kv.Value[i].value)) {
-                    kv.Value[i].value = kv.Value[i].text;
                 }
                 button.AddItem(kv.Value[i].text, i);
             }
@@ -146,9 +57,9 @@ public class NewGameScene : Node2D {
 
     private int CalculateScoreMultiplier() {
         var score = 200;
-        foreach (var kv in options) {
+        foreach (var kv in _options.byName) {
             var button = GetNode<OptionButton>(kv.Key);
-            score += options[kv.Key][button.Selected].score;
+            score += _options.byName[kv.Key][button.Selected].score;
         }
         return score;
     }
@@ -162,11 +73,11 @@ public class NewGameScene : Node2D {
     }
 
     private string OptionValue(string name) {
-        return options[name][GetNode<OptionButton>(name).Selected].value;
+        return (string)_options.byName[name][GetNode<OptionButton>(name).Selected].value;
     }
 
     private int OptionIntValue(string name) {
-        return (int)Int64.Parse(OptionValue(name));
+        return (int)_options.byName[name][GetNode<OptionButton>(name).Selected].value;;
     }
 
     public void OnStartButtonPressed() {
@@ -722,7 +633,7 @@ public class NewGameScene : Node2D {
         humanVessel.isGamepad = GameControls.preferGamepad;
         humanVessel.faction = Faction.Earthling;
         humanVessel.pilotName = PilotNames.UniqHumanName(config.usedNames);
-        humanVessel.designName = OptionValue("FlagshipDesign");
+        humanVessel.designName = "Explorer";
         humanVessel.energySourceName = "Power Generator";
         humanVessel.artifacts = new List<string>{
             EmptyArtifact.Design.name,

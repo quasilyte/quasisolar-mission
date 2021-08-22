@@ -68,27 +68,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Artifacts" type="OptionButton" parent="."]
-margin_left = 800.0
-margin_top = 224.0
-margin_right = 1056.0
-margin_bottom = 256.0
-theme = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="Artifacts"]
-margin_left = 272.0
-margin_right = 496.0
-margin_bottom = 32.0
-theme = ExtResource( 2 )
-text = "Artifacts"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="KrigiaPresence" type="OptionButton" parent="."]
 margin_left = 800.0
 margin_top = 352.0
@@ -147,27 +126,6 @@ margin_right = 496.0
 margin_bottom = 32.0
 theme = ExtResource( 2 )
 text = "Mission Deadline"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="FlagshipDesign" type="OptionButton" parent="."]
-margin_left = 256.0
-margin_top = 288.0
-margin_right = 512.0
-margin_bottom = 320.0
-theme = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="FlagshipDesign"]
-margin_left = 272.0
-margin_right = 464.0
-margin_bottom = 32.0
-theme = ExtResource( 2 )
-text = "Flagship"
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
