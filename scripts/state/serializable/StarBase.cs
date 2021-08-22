@@ -206,7 +206,7 @@ public class StarBase: AbstractPoolValue {
         }
 
         foreach (WeaponDesign weapon in WeaponDesign.specialList) {
-            if (!technologiesResearched.Contains(weapon.name)) {
+            if (weapon.researchRequired && !technologiesResearched.Contains(weapon.name)) {
                 continue;
             }
             if (level < ItemInfo.MinStarBaseLevel(weapon)) {
