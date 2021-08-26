@@ -1,6 +1,6 @@
 using Godot;
 
-public abstract class AbstractWeapon: IWeapon {
+public abstract class AbstractWeapon : IWeapon {
     protected WeaponDesign _design;
     protected float _cooldown = 0;
     protected Pilot _owner;
