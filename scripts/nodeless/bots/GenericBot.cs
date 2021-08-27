@@ -17,6 +17,7 @@ class GenericBot : AbstractBot {
 
     private bool _hasAfterburner = false;
     private float _afterburnedEvasionCooldown = 0;
+    private float _afterburnerChargeCooldown = 0;
 
     private bool _hasShield = false;
     private ShieldDesign _shield;
@@ -97,6 +98,7 @@ class GenericBot : AbstractBot {
         _attackCooldown = QMath.ClampMin(_attackCooldown - delta, 0);
         _fleeDelay = QMath.ClampMin(_fleeDelay - delta, 0);
         _afterburnedEvasionCooldown = QMath.ClampMin(_afterburnedEvasionCooldown - delta, 0);
+        _afterburnerChargeCooldown = QMath.ClampMin(_afterburnerChargeCooldown - delta, 0);
 
         _energyUsed = false;
 
@@ -556,11 +558,24 @@ class GenericBot : AbstractBot {
 
         var targetDistance = TargetDistance();
 
-        if (design == AfterburnerWeapon.Design && targetDistance < 160) {
+        if (design == AfterburnerWeapon.Design) {
             if (!_vessel.specialWeapon.CanFire(_vessel.State, _vessel.Position)) {
                 return;
             }
             var cursor = TargetPosition();
+            // If enemy is in front and we want to close the distance,
+            // use afterburner to pursue the target.
+            if (_afterburnerChargeCooldown == 0 && targetDistance >= 300 && targetDistance <= 500 && !_preferLongRange && CanUseForFree(AfterburnerWeapon.Design.energyCost)) {
+                if (Math.Abs(QMath.RotationDiff(cursor.AngleToPoint(_vessel.Position), _vessel.Rotation)) <= 0.4f) {
+                    _afterburnerChargeCooldown = 3 + QRandom.FloatRange(0.5f, 2.5f);
+                    FireSpecial(_vessel.Position);
+                    return;
+                }
+            }
+            if (targetDistance > 160) {
+                return;
+            }
+            // If enemy is behind - use afterburner to inflict some damage.
             bool shouldFire = false;
             if (targetDistance < 40 && !_preferCloseRange) {
                 shouldFire = true;

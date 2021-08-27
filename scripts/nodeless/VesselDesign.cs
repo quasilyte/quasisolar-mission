@@ -454,8 +454,8 @@ public class VesselDesign: IItem {
             maxShieldLevel = 1,
 
             maxSpeed = 100,
-            acceleration = 3,
-            rotationSpeed = 2.5f,
+            acceleration = 3.5f,
+            rotationSpeed = 3,
 
             sentinelSlot = true,
             specialSlot = true,
