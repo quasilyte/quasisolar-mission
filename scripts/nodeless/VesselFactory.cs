@@ -470,7 +470,7 @@ public static class VesselFactory {
 
         AddWeapon(v,
             0.5, RocketLauncherWeapon.Design.name,
-            0.4, ScytheWeapon.Design.name);
+            0.4, v.rank < 3 ? ScytheWeapon.Design.name : GreatScytheWeapon.Design.name);
 
         if (QRandom.Float() < RankChance(v.rank, 0.2, 0.3, 0.7)) {
             v.shieldName = IonCurtainShield.Design.name;
@@ -489,9 +489,10 @@ public static class VesselFactory {
             0.6, PulseLaserWeapon.Design.name,
             0.2, AssaultLaserWeapon.Design.name,
             0.2, StingerWeapon.Design.name);
+
         AddWeapon(v,
             0.7, RocketLauncherWeapon.Design.name,
-            0.3, ScytheWeapon.Design.name);
+            0.3, v.rank < 3 ? ScytheWeapon.Design.name : GreatScytheWeapon.Design.name);
 
         if (QRandom.Float() < RankChance(v.rank, 0, 0.2, 0.5)) {
             v.specialWeaponName = DisintegratorWeapon.Design.name;

@@ -135,7 +135,8 @@ Weapons:
 
 Special weapons:
 
-* Disruptor
+* **Disruptor**
+* **Afterburner**
 
 ### Level 1 weapons
 
@@ -166,13 +167,14 @@ Special weapons:
 | Flak Cannon | Vespion, Rarilou | Vespion |
 | Cutter | Earthlings, Wertu, Vespion | n/a |
 | Hyper Cutter | Vespion | Vespion |
-| Assault Laser | Krigia, Zyth, Draklid | Draklid |
+| Assault Laser | Krigia, Zyth, Draklid | n/a |
 | Great Scythe | Krigia | Krigia |
 | Twin Proton Burst Cannon | Wertu, Rarilou | Wertu |
 | Hurricane | Krigia, Phaa | Krigia |
 | Shield Breaker | Wertu | Wertu |
 | Restructuring Ray | Wertu | Wertu |
 | Stinger | Earthling, Krigia, Zyth, Draklid | n/a |
+| Afterburner | Draklid | Draklid |
 | Crystal Cannon | ? | ? |
 
 ### Level 3 weapons
