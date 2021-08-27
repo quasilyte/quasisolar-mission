@@ -602,7 +602,7 @@ public static class VesselFactory {
 
         v.sentinelName = "Point-Defense Guard";
 
-        v.shieldName = AegisShield.Design.name;
+        v.shieldName = DiffuserShield.Design.name;
     }
 
     private static void InitWertuProbe(Vessel v) {
@@ -750,9 +750,11 @@ public static class VesselFactory {
                 0.3, HurricaneWeapon.Design.name);
         }
 
-        SetShield(v,
-            0.6, DiffuserShield.Design.name,
-            0.3, AegisShield.Design.name);
+        if (QRandom.Float() < RankChance(v.rank, 0.2, 0.4, 0.8)) {
+            v.shieldName = AegisShield.Design.name;
+        } else {
+            v.shieldName = DiffuserShield.Design.name;
+        }
     }
 
     private static void InitRarilouLeviathan(Vessel v) {

@@ -265,15 +265,8 @@ public class Research {
 
         new Research{
             name = "Level 3 Shields",
-            researchTime = 200,
-            dependencies = {"Level 2 Shields"},
-        },
-
-        new Research{
-            name = "Diffuser",
-            category = Category.NewShield,
             researchTime = 100,
-            dependencies = {"Level 3 Shields"},
+            dependencies = {"Level 2 Shields"},
         },
 
         new Research{
@@ -283,12 +276,7 @@ public class Research {
             dependencies = {"Level 3 Shields"},
         },
 
-        new Research{
-            name = "Aegis",
-            category = Category.NewShield,
-            researchTime = 110,
-            dependencies = {"Level 3 Shields"},
-        },
+        
 
         // Energy sources tech.
 
@@ -480,7 +468,7 @@ public class Research {
         new Research{
             name = "Zyth Weapons II",
             material = Faction.Zyth,
-            researchTime = 90,
+            researchTime = 30,
             dependencies = {"Zyth Weapons I"},
         },
 
@@ -495,7 +483,7 @@ public class Research {
         new Research{
             name = "Zyth Weapons III",
             material = Faction.Zyth,
-            researchTime = 100,
+            researchTime = 50,
             dependencies = {"Zyth Weapons II"},
         },
 
@@ -510,7 +498,7 @@ public class Research {
         // Draklid tech tree.
 
         new Research{
-            name = "Draklid Weapons",
+            name = "Draklid Weapons I",
             material = Faction.Draklid,
             researchTime = 75,
         },
@@ -524,11 +512,18 @@ public class Research {
         },
 
         new Research{
+            name = "Draklid Weapons II",
+            material = Faction.Draklid,
+            researchTime = 40,
+            dependencies = {"Draklid Weapons I"},
+        },
+
+        new Research{
             name = "Afterburner",
             material = Faction.Draklid,
             category = Category.NewSpecialWeapon,
-            researchTime = 70,
-            dependencies = {"Draklid Weapons"},
+            researchTime = 60,
+            dependencies = {"Draklid Weapons II"},
         },
 
         // Wertu tech tree.
@@ -682,6 +677,13 @@ public class Research {
             material = Faction.Phaa,
             category = Category.NewExplorationDrone,
             researchTime = 45,
+        },
+
+        new Research{
+            name = "Aegis",
+            category = Category.NewShield,
+            researchTime = 110,
+            dependencies = {"Level 3 Shields"},
         },
 
         new Research{
