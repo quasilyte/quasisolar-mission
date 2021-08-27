@@ -13,7 +13,7 @@ public class ShockwaveCasterWeapon : IWeapon {
         range = 270.0f,
         damage = 7.0f,
         damageKind = DamageKind.Kinetic,
-        projectileSpeed = 450,
+        projectileSpeed = 500,
         botHintSnipe = 0.55f,
         isSpecial = true,
     };

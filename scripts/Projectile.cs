@@ -74,6 +74,7 @@ public class Projectile : Node2D, IProjectile {
         } else if (_weapon == ShockwaveCasterWeapon.Design) {
             InitShockwaveCaster();
         }
+
         _sprite = GetNode<Sprite>("Sprite");
         _sprite.Texture = _texture;
 

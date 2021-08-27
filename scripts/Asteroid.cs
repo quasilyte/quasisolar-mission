@@ -46,8 +46,15 @@ public class Asteroid : Node2D {
             if (design.ignoresAsteroids) {
                 return;
             }
+            var damage = projectile.GetWeaponDesign().damage;
+            if (design == ShockwaveCasterWeapon.Design) {
+                var p = (Projectile)projectile;
+                _velocity += p.Transform.x * 100;
+                Position += p.Transform.x * 10;
+                damage = 1;
+            }
             projectile.OnImpact();
-            ApplyDamage(projectile.GetWeaponDesign().damage);
+            ApplyDamage(damage);
             return;
         }
     }

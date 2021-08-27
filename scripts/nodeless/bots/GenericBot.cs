@@ -52,6 +52,7 @@ class GenericBot : AbstractBot {
         for (int i = 0; i < vessel.weapons.Count; i++) {
             var w = vessel.weapons[i];
 
+            // TODO: make it possible to use Shockwave Caster as AA.
             int aaRating = AntiAsteroidRating(w);
             if (aaRating != 0) {
                 if (_antiAsteroid == null || aaRating > AntiAsteroidRating(_antiAsteroid)) {
@@ -592,6 +593,24 @@ class GenericBot : AbstractBot {
             return;
         }
 
+        if (design == ShockwaveCasterWeapon.Design) {
+            if (targetDistance > 350 && targetDistance < 600 && _vessel.specialWeapon.CanFire(_vessel.State, _vessel.Position)) {
+                foreach (var n in _vessel.GetTree().GetNodesInGroup("asteroids")) {
+                    var a = (Asteroid)n;
+                    var dist = _vessel.Position.DistanceTo(a.Position);
+                    if (dist > 250) {
+                        continue;
+                    }
+                    var targetDist = TargetPosition().DistanceTo(a.Position);
+                    if (targetDist > 200) {
+                        continue;
+                    }
+                    FireSpecial(a.Position);
+                    return;
+                }
+            }
+        }
+
         if (design == MortarWeapon.Design || design == MjolnirWeapon.Design || design == ReaperCannonWeapon.Design || design == HarpoonWeapon.Design || design == DisruptorWeapon.Design || design == ShockwaveCasterWeapon.Design || design == SwarmSpawnerWeapon.Design) {
             var targetCursor = CalculateFireTarget(_vessel.specialWeapon);
             if (targetCursor != Vector2.Zero) {
@@ -764,6 +783,9 @@ class GenericBot : AbstractBot {
         }
         if (w is NeedleGunWeapon || w is PhotonBurstCannonWeapon || w is TwinPhotonBurstCannonWeapon || w is PulseLaserWeapon || w is AssaultLaserWeapon) {
             return 3;
+        }
+        if (w is ShockwaveCasterWeapon) {
+            return 4;
         }
         return 0;
     }
