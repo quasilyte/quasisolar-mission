@@ -19,8 +19,8 @@ public enum Faction {
     Wertu,
     Krigia,
     Zyth,
-    Phaa,
     Draklid,
+    Phaa,
     Vespion,
     Rarilou,
 }

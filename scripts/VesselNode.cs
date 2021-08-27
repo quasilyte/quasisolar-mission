@@ -421,6 +421,8 @@ public class VesselNode : Node2D {
             } else if (design == ShockwaveCasterWeapon.Design) {
                 var p = (Projectile)projectile;
                 State.velocity += p.Transform.x * 75;
+            } else if (design == SwarmSpawnerWeapon.Design) {
+                State.rotationCrippledTime += 1;
             }
 
             return;

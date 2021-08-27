@@ -125,7 +125,7 @@ class GenericBot : AbstractBot {
         }
     }
 
-    private void ChooseTarget() {
+    private Pilot GetRandomEnemy() {
         var offset = QRandom.IntRange(0, _pilot.Enemies.Count - 1);
         var numTried = 0;
         for (int i = offset; numTried < _pilot.Enemies.Count; i++, numTried++) {
@@ -134,10 +134,14 @@ class GenericBot : AbstractBot {
             }
             var e = _pilot.Enemies[i];
             if (e.Active) {
-                SetTarget(e);
-                break;
+                return e;
             }
         }
+        return null;
+    }
+
+    private void ChooseTarget() {
+        SetTarget(GetRandomEnemy());
     }
 
     private Vector2 FleeWaypoint(Vector2 danger, float distance = 256) {
@@ -593,6 +597,14 @@ class GenericBot : AbstractBot {
             return;
         }
 
+        if (design == SwarmSpawnerWeapon.Design) {
+            var swarmTarget = GetRandomEnemy();
+            if (swarmTarget != null && _vessel.specialWeapon.CanFire(_vessel.State, swarmTarget.Vessel.Position)) {
+                FireSpecial(swarmTarget.Vessel.Position);
+            }
+            return;
+        }
+
         if (design == ShockwaveCasterWeapon.Design) {
             if (targetDistance > 350 && targetDistance < 600 && _vessel.specialWeapon.CanFire(_vessel.State, _vessel.Position)) {
                 foreach (var n in _vessel.GetTree().GetNodesInGroup("asteroids")) {
@@ -611,7 +623,7 @@ class GenericBot : AbstractBot {
             }
         }
 
-        if (design == MortarWeapon.Design || design == MjolnirWeapon.Design || design == ReaperCannonWeapon.Design || design == HarpoonWeapon.Design || design == DisruptorWeapon.Design || design == ShockwaveCasterWeapon.Design || design == SwarmSpawnerWeapon.Design) {
+        if (design == MortarWeapon.Design || design == MjolnirWeapon.Design || design == ReaperCannonWeapon.Design || design == HarpoonWeapon.Design || design == DisruptorWeapon.Design || design == ShockwaveCasterWeapon.Design) {
             var targetCursor = CalculateFireTarget(_vessel.specialWeapon);
             if (targetCursor != Vector2.Zero) {
                 FireSpecial(targetCursor);
