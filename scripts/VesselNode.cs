@@ -149,6 +149,10 @@ public class VesselNode : Node2D {
             }
         }
 
+        if (State.speedBonus != 0) {
+            State.speedBonus = QMath.ClampMin(State.speedBonus - delta*5, 0);
+        }
+
         State.speedPenalty -= delta;
         if (State.speedPenalty < 0) {
             State.speedPenalty = 0;
@@ -183,18 +187,14 @@ public class VesselNode : Node2D {
             var rotationSpeed = State.rotationCrippledTime != 0 ? 0.5f : engineRotationSpeed;
             rotationSpeed = Math.Max(rotationSpeed, 0.5f);
             var dstRotation = _currentWaypoint.Position.AngleToPoint(Position);
-            var rotationDiff = QMath.RotationDiff(dstRotation, Rotation);
+            // var rotationDiff = QMath.RotationDiff(dstRotation, Rotation);
             var rotationAmount = rotationSpeed * delta;
-            if (Math.Abs(rotationDiff) >= rotationAmount) {
-                if (rotationDiff < 0) {
-                    Rotation += rotationAmount;
-                } else {
-                    Rotation -= rotationAmount;
-                }
-            } else {
-                Rotation = dstRotation;
+            var newRotation = QMath.RotateTo(dstRotation, Rotation, rotationAmount);
+            var isRotating = newRotation != dstRotation;
+            Rotation = newRotation;
+            if (!isRotating) {
                 var engineMaxSpeed = State.insidePurpleNebula ? State.stats.maxSpeed / 2 : State.stats.maxSpeed;
-                float maxSpeed = engineMaxSpeed - State.speedPenalty;
+                float maxSpeed = engineMaxSpeed - State.speedPenalty + State.speedBonus;
                 if (CurrentWaypointDistance() < 150) {
                     var diff = QMath.RotationDiff(dstRotation, State.velocity.Angle());
                     if (Math.Abs(diff) > 0.7) {

@@ -3,30 +3,8 @@ using System;
 using System.Collections.Generic;
 
 public class NewGameScene : Node2D {
-    class Option {
-        public string text;
-        public string value;
-        public int score;
-        public bool selected;
-    }
-
     private Label _scoreMultiplierLabel;
     private NewGameOptions _options;
-
-    private Dictionary<string, int> _planetSprites = new Dictionary<string, int>{
-        {"alpine", 6}, // Organic with normal climate
-        {"oceanic", 12}, // Organic with normal climate
-        {"fungal", 6}, // Organic with bad climate
-        {"savannah", 6}, // Organic with bad climate
-        {"dry", 7}, // Minerals-only
-        {"rock", 5}, // Minerals-only
-        {"venusian", 6}, // Minerals-only
-        {"gas", 6}, // Power-only
-        {"ice", 6}, // Cold planets
-        {"volcanic", 6}, // Hot planets
-        {"primordial", 6}, // Fallback kind
-        {"martian", 8}, // Fallback kind
-    };
 
     public override void _Ready() {
         _scoreMultiplierLabel = GetNode<Label>("ScoreMultiplier");
@@ -172,20 +150,20 @@ public class NewGameScene : Node2D {
         return new Vector2(x, y);
     }
 
-    private Vector2 RandomStarSystemPosition(Sector sector) {
+    private Vector2 RandomStarSystemPosition(WorldTemplate.Sector sector) {
         var attempts = 0;
         var result = Vector2.Zero;
         while (true) {
             attempts++;
             var dist = QRandom.FloatRange(175, 500);
             var toBeConnected = QRandom.Element(sector.systems);
-            var candidate = RandomizedLocation(toBeConnected.pos, dist);
+            var candidate = RandomizedLocation(toBeConnected.data.pos, dist);
             if (!sector.rect.HasPoint(candidate)) {
                 continue;
             }
             var retry = false;
             foreach (var sys in sector.systems) {
-                if (sys.pos.DistanceTo(candidate) < 170) {
+                if (sys.data.pos.DistanceTo(candidate) < 170) {
                     retry = true;
                     break;
                 }
@@ -202,130 +180,9 @@ public class NewGameScene : Node2D {
         return result;
     }
 
-    private string PickPlanetSprite(string kind, HashSet<string> picked) {
-        var numChoices = _planetSprites[kind];
-        while (true) {
-            var i = QRandom.IntRange(1, numChoices);
-            var spriteName = $"{kind}{i}";
-            if (picked.Contains(spriteName)) {
-                continue;
-            }
-            return spriteName;
-        }
-    }
-
-    private ResourcePlanet NewResourcePlanet(float budget, int level, HashSet<string> planetSprites) {
-        int minerals = 0;
-        int organic = 0;
-        int power = 0;
-
-        const float mineralCost = 0.08f;
-        const float organicCost = 0.15f;
-        const float powerCost = 0.21f;
-
-        while (budget >= mineralCost) {
-            var resourceType = QRandom.IntRange(0, 2);
-            if (resourceType == 2 && budget >= powerCost) {
-                budget -= powerCost;
-                power++;
-            } else if (resourceType == 1 && budget >= organicCost) {
-                budget -= organicCost;
-                organic++;
-            } else {
-                budget -= mineralCost;
-                minerals++;
-            }
-        }
-
-        if (minerals == 0 && organic == 0 && power == 0) {
-            minerals = 1;
-        }
-
-        var planet = new ResourcePlanet(minerals, organic, power);
-
-        var explorationBonus = QRandom.IntRange(3000, 6000);
-        explorationBonus += level * QRandom.IntRange(2500, 3000);
-
-        // 20% - cold
-        // 25% - normal
-        // 25% - hot
-        // 30% - very hot
-        var temperatureClassRoll = QRandom.Float();
-        if (temperatureClassRoll < 0.2) {
-            planet.temperature = QRandom.IntRange(-240, -20);
-            explorationBonus = QMath.IntAdjust(explorationBonus, 0.9);
-        } else if (temperatureClassRoll < 0.45) {
-            planet.temperature = QRandom.IntRange(-70, 100);
-        } else if (temperatureClassRoll < 0.7) {
-            planet.temperature = QRandom.IntRange(100, 260);
-            explorationBonus = QMath.IntAdjust(explorationBonus, 1.1);
-        } else {
-            planet.temperature = QRandom.IntRange(150, 495);
-            explorationBonus = QMath.IntAdjust(explorationBonus, 1.3);
-        }
-
-        planet.explorationUnits = QRandom.IntRange(70, 240) + (level * 10);
-
-        if (QRandom.Float() < 0.25) {
-            explorationBonus = QMath.IntAdjust(explorationBonus, 1.5);
-        }
-
-        if (planet.powerPerDay != 0 && planet.mineralsPerDay == 0 && planet.organicPerDay == 0) {
-            planet.textureName = PickPlanetSprite("gas", planetSprites);
-            planet.gasGiant = true;
-            planet.explorationUnits = QMath.IntAdjust(planet.explorationUnits, 1.25);
-        } else if (planet.temperature > 200) {
-            planet.textureName = PickPlanetSprite("volcanic", planetSprites);
-        } else if (planet.temperature < -70) {
-            planet.textureName = PickPlanetSprite("ice", planetSprites);
-        } else if (planet.powerPerDay == 0 && planet.mineralsPerDay != 0 && planet.organicPerDay == 0) {
-            var roll = QRandom.Float();
-            if (roll < 0.33) {
-                planet.textureName = PickPlanetSprite("dry", planetSprites);
-            } else if (roll < 0.66) {
-                planet.textureName = PickPlanetSprite("rock", planetSprites);
-            } else {
-                planet.textureName = PickPlanetSprite("venusian", planetSprites);
-            }
-        } else if (planet.organicPerDay != 0) {
-            if (planet.temperature < 120) {
-                if (QRandom.Bool()) {
-                    planet.textureName = PickPlanetSprite("oceanic", planetSprites);
-                } else {
-                    planet.textureName = PickPlanetSprite("alpine", planetSprites);
-                }
-            } else {
-                if (QRandom.Bool()) {
-                    planet.textureName = PickPlanetSprite("savannah", planetSprites);
-                } else {
-                    planet.textureName = PickPlanetSprite("fungal", planetSprites);
-                }
-            }
-        } else {
-            if (QRandom.Bool()) {
-                planet.textureName = PickPlanetSprite("martian", planetSprites);
-            } else {
-                planet.textureName = PickPlanetSprite("primordial", planetSprites);
-            }
-        }
-
-        if (planet.gasGiant) {
-            planet.temperature = QMath.ClampMax(planet.temperature, 205);
-        }
-
-        planet.explorationBonus = explorationBonus;
-
-        return planet;
-    }
-
     class VesselTemplate {
         public VesselDesign design;
         public float roll;
-    }
-
-    class Sector {
-        public List<StarSystem> systems = new List<StarSystem>();
-        public Rect2 rect;
     }
 
     const int numMapCols = 3;
@@ -333,7 +190,8 @@ public class NewGameScene : Node2D {
 
     private VesselTemplate[] _draklidTemplates = new VesselTemplate[]{
         new VesselTemplate{design = VesselDesign.Find("Raider"), roll = 0},
-        new VesselTemplate{design = VesselDesign.Find("Marauder"), roll = 0.65f},
+        new VesselTemplate{design = VesselDesign.Find("Marauder"), roll = 0.6f},
+        new VesselTemplate{design = VesselDesign.Find("Plunderer"), roll = 0.85f},
     };
 
     private VesselTemplate[] _phaaTemplates = new VesselTemplate[]{
@@ -421,14 +279,15 @@ public class NewGameScene : Node2D {
         return starBase;
     }
 
-    private void DeployBases(RpgGameState.Config config, Faction faction, int numBases, Sector[] sectors, VesselTemplate[] templates) {
+    private void DeployBases(WorldTemplate world, Faction faction, int numBases, VesselTemplate[] templates) {
+        var config = world.config;
         while (numBases > 0) {
             var col = QRandom.Bool() ? 0 : 2;
             var row = QRandom.IntRange(0, 1);
             var i = row * numMapCols + col;
-            var sector = sectors[i];
+            var sector = world.sectors[i];
             var j = QRandom.IntRange(0, sector.systems.Count - 1);
-            if (sector.systems[j].starBase.id == 0 && sector.systems[j].color != StarColor.Purple) {
+            if (sector.systems[j].data.starBase.id == 0 && sector.systems[j].data.color != StarColor.Purple) {
                 // var fleetRollBonus = (float)col * 20;
                 var fleetRollBonus = 0.0f;
                 var fleetRoll = QRandom.FloatRange(40, 80) + fleetRollBonus;
@@ -436,7 +295,7 @@ public class NewGameScene : Node2D {
                 
                 var starBase = NewStarBase(config, faction, baseLevel);
                 InitFleet(config, starBase, templates, fleetRoll);
-                BindStarBase(starBase, sector.systems[j]);
+                BindStarBase(starBase, sector.systems[j].data);
                 numBases--;
             }
         }
@@ -447,38 +306,21 @@ public class NewGameScene : Node2D {
         starBase.system = system.GetRef();
     }
 
-    private StarSystem NewStarSystem(RpgGameState.Config config, HashSet<string> starSystenNames, Vector2 pos, int level) {
-        var sys = config.starSystems.New();
-        sys.name = StarSystemNames.UniqStarSystemName(starSystenNames);
+    private WorldTemplate.System NewStarSystem(WorldTemplate.Sector sector, Vector2 pos) {
+        var world = sector.world;
+        var sys = world.config.starSystems.New();
+        sys.name = StarSystemNames.UniqStarSystemName(world.starSystenNames);
         sys.color = RandomStarSystemColor();
         sys.pos = pos;
 
-        var planetSprites = new HashSet<string>();
+        var worldSys = new WorldTemplate.System{
+            sector = sector,
+            data = sys,
+        };
 
-        var planetsRollBonus = (float)OptionIntValue("PlanetResources") * 0.20f;
-        var planetsBudget = QRandom.FloatRange(0, 0.6f) + planetsRollBonus;
-        if (planetsBudget < 0.1) {
-            sys.resourcePlanets = new List<ResourcePlanet>{
-                NewResourcePlanet(planetsBudget, level, planetSprites),
-            };
-        } else {
-            while (planetsBudget >= 0.1) {
-                if (sys.resourcePlanets.Count == 2) {
-                    sys.resourcePlanets.Add(NewResourcePlanet(planetsBudget, level, planetSprites));
-                    break;
-                }
-                var toSpend = QRandom.FloatRange(0.1f, planetsBudget);
-                if (toSpend > 0.6) {
-                    var change = toSpend - 0.6f;
-                    planetsBudget += change;
-                    toSpend = 0.6f;
-                }
-                planetsBudget -= toSpend;
-                sys.resourcePlanets.Add(NewResourcePlanet(toSpend, level, planetSprites));
-            }
-        }
+        PlanetGenerator.GeneratePlanets(worldSys);
 
-        return sys;
+        return worldSys;
     }
 
     private void GenerateWorld(RpgGameState.Config config) {
@@ -487,25 +329,34 @@ public class NewGameScene : Node2D {
         var startingRow = QRandom.IntRange(0, 1);
         var startingSector = startingCol + startingRow * numMapCols;
 
-        var sectors = new Sector[8];
+        var sectors = new List<WorldTemplate.Sector>();
+        var world = new WorldTemplate{
+            config = config,
+            sectors = sectors,
+        };
+        for (int i = 0; i < 6; i++) {
+            sectors.Add(null);
+        }
 
         var starSystenNames = new HashSet<string>();
-        for (int row = 0; row < 2; row++) {
-            for (int col = 0; col < numMapCols; col++) {
+        for (int col = 0; col < numMapCols; col++) {
+            for (int row = 0; row < 2; row++) {
                 var i = row * numMapCols + col;
-                var sector = new Sector();
+                var sector = new WorldTemplate.Sector();
+                sector.world = world;
+                sector.level = col; // FIXME
                 sector.rect = new Rect2(new Vector2(col * 685 + 550, row * 450 + 150), 650, 400);
                 sectors[i] = sector;
                 var middle = sector.rect.Position + sector.rect.Size / 2;
 
                 var color = RandomStarSystemColor();
-                sector.systems.Add(NewStarSystem(config, starSystenNames, RandomizedLocation(middle, 120), col));
+                sector.systems.Add(NewStarSystem(sector, RandomizedLocation(middle, 120)));
 
                 var minSystems = 3;
                 var maxSystems = 4;
                 var numSystems = QRandom.IntRange(minSystems, maxSystems);
                 for (int j = 0; j < numSystems; j++) {
-                    sector.systems.Add(NewStarSystem(config, starSystenNames, RandomStarSystemPosition(sector), col));
+                    sector.systems.Add(NewStarSystem(sector, RandomStarSystemPosition(sector)));
                 }
             }
         }
@@ -522,22 +373,25 @@ public class NewGameScene : Node2D {
             anomalySystem.color = StarColor.Purple;
             anomalySystem.pos = RandomStarSystemPosition(sector);
 
-            sector.systems.Add(anomalySystem);
+            sector.systems.Add(new WorldTemplate.System{
+                data = anomalySystem,
+                sector = sector,
+            });
         }
 
         var startingStarBase = NewStarBase(config, Faction.Earthling, 1);
 
-        var startingSystem = sectors[startingSector].systems[0];
+        var startingSystem = sectors[startingSector].systems[0].data;
         startingSystem.name = "Quasisol";
         startingSystem.color = StarColor.Yellow;
         BindStarBase(startingStarBase, startingSystem);
         var solPlanetsHash = new HashSet<string>();
-        var solPlanet = NewResourcePlanet(0.05f, 1, solPlanetsHash);
+        var solPlanet = PlanetGenerator.NewResourcePlanet(0.05f, 1, solPlanetsHash);
         solPlanet.temperature = QRandom.IntRange(30, 70);
-        solPlanet.textureName = PickPlanetSprite("dry", solPlanetsHash);
+        solPlanet.textureName = PlanetGenerator.PickPlanetSprite("dry", solPlanetsHash);
         startingSystem.resourcePlanets = new List<ResourcePlanet>{
             solPlanet,
-            NewResourcePlanet(0.3f, 1, solPlanetsHash),
+            PlanetGenerator.NewResourcePlanet(0.3f, 1, solPlanetsHash),
         };
 
         var numDraklidBases = 2;
@@ -562,7 +416,7 @@ public class NewGameScene : Node2D {
         if (OptionValue("KrigiaPresence") != "minimal") {
             var sector = sectors[startingSector];
             var starBase = NewStarBase(config, Faction.Krigia, 2);
-            BindStarBase(starBase, sector.systems[1]);
+            BindStarBase(starBase, sector.systems[1].data);
             InitKrigiaFleet(config, starBase, 25);
             numKrigiaBases--;
         }
@@ -574,22 +428,22 @@ public class NewGameScene : Node2D {
             var roll = QRandom.FloatRange(35, 55);
 
             var base0 = NewStarBase(config, Faction.Krigia, 2);
-            BindStarBase(base0, sector.systems[0]);
+            BindStarBase(base0, sector.systems[0].data);
             InitKrigiaFleet(config, base0, roll);
             numKrigiaBases--;
 
             var base1 = NewStarBase(config, Faction.Draklid, 2);
-            BindStarBase(base1, sector.systems[1]);
+            BindStarBase(base1, sector.systems[1].data);
             InitDraklidFleet(config, base1, roll);
             numDraklidBases--;
         }
 
         // Second step: fill everything else.
-        DeployBases(config, Faction.Krigia, numKrigiaBases, sectors, _krigiaTemplates);
-        DeployBases(config, Faction.Wertu, numWertuBases, sectors, _wertuTemplates);
-        DeployBases(config, Faction.Zyth, numZythBases, sectors, _zythTemplates);
-        DeployBases(config, Faction.Draklid, numDraklidBases, sectors, _draklidTemplates);
-        DeployBases(config, Faction.Phaa, 1, sectors, _phaaTemplates);
+        DeployBases(world, Faction.Krigia, numKrigiaBases, _krigiaTemplates);
+        DeployBases(world, Faction.Wertu, numWertuBases, _wertuTemplates);
+        DeployBases(world, Faction.Zyth, numZythBases, _zythTemplates);
+        DeployBases(world, Faction.Draklid, numDraklidBases, _draklidTemplates);
+        DeployBases(world, Faction.Phaa, 1, _phaaTemplates);
 
         config.startingSystemID = startingSystem.id;
 
@@ -655,13 +509,6 @@ public class NewGameScene : Node2D {
         defender.faction = Faction.Earthling;
         defender.pilotName = PilotNames.UniqHumanName(config.usedNames);
         VesselFactory.PadEquipment(defender);
-        defender.artifacts = new List<string>{
-            EmptyArtifact.Design.name,
-            EmptyArtifact.Design.name,
-            EmptyArtifact.Design.name,
-            EmptyArtifact.Design.name,
-            EmptyArtifact.Design.name,
-        };
         defender.weapons = new List<string>{
             NeedleGunWeapon.Design.name,
             IonCannonWeapon.Design.name,

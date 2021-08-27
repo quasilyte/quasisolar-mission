@@ -132,6 +132,7 @@ public class QuickBattleMenu : Node2D {
             "Vespion Hornet",
             "Draklid Raider",
             "Draklid Marauder",
+            "Draklid Plunderer",
             "Krigia Talons",
             "Krigia Claws",
             "Krigia Fangs",

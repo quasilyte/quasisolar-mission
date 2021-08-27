@@ -466,6 +466,31 @@ public class VesselDesign: IItem {
             size = Size.Normal,
         },
 
+        new VesselDesign{
+            level = 5,
+            name = "Plunderer",
+            affiliation = Faction.Draklid,
+            description = "TODO",
+            sellingPrice = 15000,
+            debris = 130,
+            productionTime = 120,
+
+            maxHp = 290,
+            maxShieldLevel = 2,
+
+            maxSpeed = 85,
+            acceleration = 3,
+            rotationSpeed = 2,
+
+            sentinelSlot = true,
+            specialSlot = true,
+            weaponSlots = 1,
+            artifactSlots = 4,
+
+            cargoSpace = 220,
+            size = Size.Large,
+        },
+
         // Krigia designs.
 
         new VesselDesign{

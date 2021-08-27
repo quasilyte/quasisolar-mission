@@ -15,6 +15,9 @@ class GenericBot : AbstractBot {
     private bool _preferLongRange = false;
     private bool _energyUsed = false;
 
+    private bool _hasAfterburner = false;
+    private float _afterburnedEvasionCooldown = 0;
+
     private bool _hasShield = false;
     private ShieldDesign _shield;
 
@@ -38,10 +41,13 @@ class GenericBot : AbstractBot {
                 w is DiskThrowerWeapon ||
                 w is SwarmSpawnerWeapon ||
                 w is BubbleGunWeapon ||
-                w is FlakCannonWeapon ||
                 w is ReaperCannonWeapon ||
                 w is DisintegratorWeapon;
         };
+
+        if (vessel.specialWeapon.GetDesign() == AfterburnerWeapon.Design) {
+            _hasAfterburner = true;
+        }
 
         for (int i = 0; i < vessel.weapons.Count; i++) {
             var w = vessel.weapons[i];
@@ -89,6 +95,7 @@ class GenericBot : AbstractBot {
     protected override void ActImpl(float delta, BotEvents events) {
         _attackCooldown = QMath.ClampMin(_attackCooldown - delta, 0);
         _fleeDelay = QMath.ClampMin(_fleeDelay - delta, 0);
+        _afterburnedEvasionCooldown = QMath.ClampMin(_afterburnedEvasionCooldown - delta, 0);
 
         _energyUsed = false;
 
@@ -283,15 +290,55 @@ class GenericBot : AbstractBot {
         return false;
     }
 
-    private void MaybeUseShield(BotEvents events) {
-        if (!_hasShield || _energyUsed || !_vessel.shield.CanActivate(_vessel.State)) {
+    private void MaybeDoAfterburnerEvasion(BotEvents events) {
+        if (_afterburnedEvasionCooldown != 0) {
             return;
+        }
+        if (!CanUseForFree(AfterburnerWeapon.Design.energyCost)) {
+            return;
+        }
+        if (!_vessel.specialWeapon.CanFire(_vessel.State, _vessel.Position)) {
+            return;
+        }
+
+        foreach (Area2D other in events.closeRangeCollisions) {
+            if (!IsInstanceValid(other)) {
+                continue;
+            }
+
+            if (other.GetParent() is IProjectile projectile) {
+                var firedBy = projectile.FiredBy();
+                if (firedBy.alliance == _pilot.alliance) {
+                    continue;
+                }
+                var weaponDesign = projectile.GetWeaponDesign();
+                var canDodge = weaponDesign == IonCannonWeapon.Design ||
+                               weaponDesign == NeedleGunWeapon.Design ||
+                               weaponDesign == PulseLaserWeapon.Design ||
+                               weaponDesign == DiskThrowerWeapon.Design ||
+                               weaponDesign == CrystalCannonWeapon.Design ||
+                               weaponDesign == DisintegratorWeapon.Design ||
+                               weaponDesign == MortarWeapon.Design ||
+                               weaponDesign == MjolnirWeapon.Design;
+                if (!canDodge) {
+                    continue;
+                }
+                _afterburnedEvasionCooldown = 4;
+                FireSpecial(_vessel.Position);
+                return;
+            }
+        }
+    }
+
+    private bool MaybeUseShield(BotEvents events) {
+        if (!_hasShield || _energyUsed || !_vessel.shield.CanActivate(_vessel.State)) {
+            return false;
         }
 
         if (events.targetedByZap) {
             if (_shield.activeEnergyDamageReceive != 1) {
                 Shield();
-                return;
+                return true;
             }
         }
 
@@ -332,7 +379,7 @@ class GenericBot : AbstractBot {
                     continue;
                 }
                 Shield();
-                return;
+                return true;
             }
         }
 
@@ -350,13 +397,17 @@ class GenericBot : AbstractBot {
                     continue;
                 }
                 Shield();
-                return;
+                return true;
             }
         }
+
+        return false;
     }
 
     private void ActDefense(BotEvents events) {
-        MaybeUseShield(events);
+        if (!MaybeUseShield(events) && _hasAfterburner) {
+            MaybeDoAfterburnerEvasion(events);
+        }
 
         if (_pointDefense != null) {
             MaybeBlockRockets();
@@ -498,6 +549,29 @@ class GenericBot : AbstractBot {
             return;
         }
 
+        var targetDistance = TargetDistance();
+
+        if (design == AfterburnerWeapon.Design && targetDistance < 160) {
+            if (!_vessel.specialWeapon.CanFire(_vessel.State, _vessel.Position)) {
+                return;
+            }
+            var cursor = TargetPosition();
+            bool shouldFire = false;
+            if (targetDistance < 40 && !_preferCloseRange) {
+                shouldFire = true;
+            } else {
+                var dstRotation = cursor.AngleToPoint(_vessel.Position);
+                var calculatedAngle = 0.6f + Mathf.Pi/2;
+                if (Math.Abs(QMath.RotationDiff(dstRotation, _vessel.Rotation)) >= calculatedAngle) {
+                    shouldFire = true;
+                }
+            }
+            if (shouldFire) {
+                FireSpecial(_vessel.Position);
+                return;
+            }
+        }
+
         if (design == DisintegratorWeapon.Design) {
             if (_weaponCharge < _chargeGoal) {
                 return;
@@ -512,7 +586,7 @@ class GenericBot : AbstractBot {
         }
 
         if (design == TorpedoLauncherWeapon.Design) {
-            if (TargetDistance() < 750 && _vessel.specialWeapon.CanFire(_vessel.State, TargetPosition())) {
+            if (targetDistance < 750 && _vessel.specialWeapon.CanFire(_vessel.State, TargetPosition())) {
                 FireSpecial(TargetPosition());
             }
             return;

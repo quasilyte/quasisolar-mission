@@ -34,6 +34,18 @@ static class QMath {
         return rotationDiff;
     }
 
+    public static float RotateTo(float dstRotation, float rotation, float amount) {
+        var rotationDiff = QMath.RotationDiff(dstRotation, rotation);
+        if (Math.Abs(rotationDiff) >= amount) {
+            if (rotationDiff < 0) {
+                return rotation + amount;
+            } else {
+                return rotation - amount;
+            }
+        }
+        return dstRotation;
+    }
+
     public static Vector2 RandomizedLocation(Vector2 loc, float size) {
         float x = loc.x + QRandom.FloatRange(-size, size);
         float y = loc.y + QRandom.FloatRange(-size, size);

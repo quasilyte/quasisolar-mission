@@ -113,6 +113,8 @@ public static class VesselFactory {
             InitDraklidRaider(v);
         } else if (kind == "Draklid Marauder") {
             InitDraklidMarauder(v);
+        } else if (kind == "Draklid Plunderer") {
+            InitDraklidPlunderer(v);
         } else if (kind == "Phaa Mantis") {
             InitPhaaMantis(v);
         } else if (kind == "Rarilou Leviathan") {
@@ -246,7 +248,9 @@ public static class VesselFactory {
             0.2, PointDefenseLaserWeapon.Design.name,
             0.1, SpreadGunWeapon.Design.name);
 
-        SetShield(v, 0.3, IonCurtainShield.Design.name);
+        if (QRandom.Float() < RankChance(v.rank, 0.1, 0.3, 0.8)) {
+            v.shieldName = IonCurtainShield.Design.name;
+        }
     }
 
     private static void InitDraklidMarauder(Vessel v) {
@@ -261,11 +265,15 @@ public static class VesselFactory {
             0.1, AssaultLaserWeapon.Design.name);
 
         var specialRoll = QRandom.Float();
-        if (specialRoll < RankChance(v.rank, 0.3, 0.5, 1)) {
+        if (specialRoll < RankChance(v.rank, 0.2, 0.3, 0.5)) {
             v.specialWeaponName = DisruptorWeapon.Design.name;
+        } else {
+            v.specialWeaponName = AfterburnerWeapon.Design.name;
         }
 
-        SetShield(v, 0.5, IonCurtainShield.Design.name);
+        if (QRandom.Float() < RankChance(v.rank, 0.2, 0.5, 0.9)) {
+            v.shieldName = IonCurtainShield.Design.name;
+        }
 
         // 40% - ion fighter
         // 20% - point-defense guard
@@ -276,6 +284,33 @@ public static class VesselFactory {
             } else if (sentinelRoll < 0.6) {
                 v.sentinelName = "Point-Defense Guard";
             }
+        }
+    }
+
+    private static void InitDraklidPlunderer(Vessel v) {
+        v.designName = "Plunderer";
+        if (v.rank == 3) {
+            v.energySourceName = "Cryogenic Block";
+        } else {
+            v.energySourceName = "Vortex Battery";
+        }
+
+        AddWeapon(v,
+            0.4, PulseLaserWeapon.Design.name,
+            0.4, AssaultLaserWeapon.Design.name,
+            0.2, StingerWeapon.Design.name);
+
+        v.specialWeaponName = DisruptorWeapon.Design.name;
+
+        SetShield(v, 0.5, IonCurtainShield.Design.name);
+        if (QRandom.Float() < RankChance(v.rank, 0.6, 0.8, 1)) {
+            v.shieldName = LaserPerimeterShield.Design.name;
+        } else {
+            v.shieldName = IonCurtainShield.Design.name;
+        }
+
+        if (QRandom.Float() < RankChance(v.rank, 0.6, 0.7, 1)) {
+            v.sentinelName = "Ion Curtain Guard";
         }
     }
 
@@ -725,8 +760,7 @@ public static class VesselFactory {
 
         AddWeapon(v,
             0.5, TwinPhotonBurstCannonWeapon.Design.name,
-            0.3, PhotonBurstCannonWeapon.Design.name,
-            0.2, FlakCannonWeapon.Design.name);
+            0.5, PhotonBurstCannonWeapon.Design.name);
 
         if (QRandom.Float() < 0.6) {
             v.specialWeaponName = MjolnirWeapon.Design.name;
@@ -763,11 +797,11 @@ public static class VesselFactory {
             v.weapons.Add(CutterWeapon.Design.name);
             v.specialWeaponName = ShockwaveCasterWeapon.Design.name;
         } else if (weaponSetRoll < 0.7) {
-            v.weapons.Add(FlakCannonWeapon.Design.name);
+            // v.weapons.Add(FlakCannonWeapon.Design.name);
             v.specialWeaponName = ShockwaveCasterWeapon.Design.name;
         } else {
             if (QRandom.Bool()) {
-                v.weapons.Add(FlakCannonWeapon.Design.name);
+                // v.weapons.Add(FlakCannonWeapon.Design.name);
             } else {
                 v.weapons.Add(IonCannonWeapon.Design.name);
             }

@@ -60,7 +60,7 @@ public class DisintegratorWeapon : AbstractWeapon {
     protected override void CreateProjectile(Vector2 cursor) {
         var projectile = EnergyBoltNode.New(_owner);
         projectile.chargeLevel = _powerLevel;
-        projectile.Position = _owner.Vessel.Position + new Vector2(30, 0);
+        projectile.Position = _owner.Vessel.Position;
         projectile.Position += _owner.Vessel.Transform.x * 10;
         projectile.Rotation = (cursor - _owner.Vessel.Position).Normalized().Angle();
 

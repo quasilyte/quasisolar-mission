@@ -70,13 +70,6 @@ public class Research {
             researchTime = 0,
         },
 
-        // TODO: we should probably figure out what race tech tree this weapon belongs to.
-        new Research{
-            name = "Flak Cannon",
-            category = Category.NewWeapon,
-            researchTime = 0,
-        },
-
         // Science tech.
 
         new Research{
@@ -361,6 +354,16 @@ public class Research {
         },
 
         new Research{
+            name = "Assault Laser",
+            material = Faction.Draklid,
+            category = Category.NewWeapon,
+            researchTime = 100,
+            dependencies = {
+                "Pulse Laser",
+            },
+        },
+
+        new Research{
             name = "Zap",
             category = Category.NewWeapon,
             researchTime = 50,
@@ -521,14 +524,11 @@ public class Research {
         },
 
         new Research{
-            name = "Assault Laser",
+            name = "Afterburner",
             material = Faction.Draklid,
-            category = Category.NewWeapon,
-            researchTime = 100,
-            dependencies = {
-                "Draklid Weapons",
-                "Pulse Laser",
-            },
+            category = Category.NewSpecialWeapon,
+            researchTime = 70,
+            dependencies = {"Draklid Weapons"},
         },
 
         // Wertu tech tree.

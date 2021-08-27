@@ -1,6 +1,6 @@
 using Godot;
 
-public class CutterWeapon : IWeapon {
+public class CutterWeapon : AbstractWeapon {
     public static WeaponDesign Design = new WeaponDesign {
         name = "Cutter",
         level = 2,
@@ -14,40 +14,18 @@ public class CutterWeapon : IWeapon {
         damageKind = DamageKind.Energy,
         projectileSpeed = 280,
         botHintSnipe = 0.2f,
+        botHintEffectiveAngle = 1.6f,
     };
-    public WeaponDesign GetDesign() { return Design; }
-    public void Ready() {}
-    public void Charge(float delta) {}
 
-    private float _cooldown;
-    private Pilot _owner;
+    public CutterWeapon(Pilot owner): base(Design, owner) {}
 
-    public CutterWeapon(Pilot owner) {
-        _owner = owner;
-    }
-
-    public bool CanFire(VesselState state, Vector2 cursor) {
-        if (_cooldown != 0 || !state.CanConsumeEnergy(Design.energyCost)) {
-            return false;
-        }
+    protected override void CreateProjectile(Vector2 cursor) {
         var dstRotation = cursor.AngleToPoint(_owner.Vessel.Position);
-        return Mathf.Abs(QMath.RotationDiff(dstRotation, _owner.Vessel.Rotation)) <= 1.57;
-    }
-
-    public void Process(VesselState state, float delta) {
-        _cooldown -= delta;
-        if (_cooldown < 0) {
-            _cooldown = 0;
-        }
-    }
-
-    public void Fire(VesselState state, Vector2 cursor) {
-        _cooldown += Design.cooldown;
-        state.ConsumeEnergy(Design.energyCost);
+        var projectileRotation = QMath.RotateTo(dstRotation, _owner.Vessel.Rotation, 1.6f);
 
         var projectile = CutterProjectile.New(_owner, Design);
         projectile.Position = _owner.Vessel.Position;
-        projectile.Rotation = (cursor - _owner.Vessel.Position).Normalized().Angle();
+        projectile.Rotation = projectileRotation;
         _owner.Vessel.GetParent().AddChild(projectile);
     }
 }

@@ -114,7 +114,6 @@ public class WeaponDesign : IItem {
             PhotonBurstCannonWeapon.Design,
             IonCannonWeapon.Design,
             HellfireWeapon.Design,
-            FlakCannonWeapon.Design,
             PulseLaserWeapon.Design,
             AssaultLaserWeapon.Design,
             RocketLauncherWeapon.Design,
@@ -152,6 +151,7 @@ public class WeaponDesign : IItem {
             ShockwaveCasterWeapon.Design,
             SwarmSpawnerWeapon.Design,
             HyperCutterWeapon.Design,
+            AfterburnerWeapon.Design,
         };
         Array.Sort(specialList, (x, y) => x.sellingPrice.CompareTo(y.sellingPrice));
         foreach (var w in specialList) {

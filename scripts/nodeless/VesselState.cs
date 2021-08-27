@@ -15,6 +15,7 @@ public class VesselState {
 
     public float rotationCrippledTime = 0;
     public float reactorDisabledTime = 0;
+    public float afterburnerSpeedupTime = 0;
     
     public float phasingTime = 0;
 
@@ -22,6 +23,7 @@ public class VesselState {
     public float shieldDurationRate = 1;
 
     public float speedPenalty = 0;
+    public float speedBonus = 0;
     public Vector2 velocity = Vector2.Zero;
 
     public Node2D draggedBy = null;

@@ -93,9 +93,6 @@ public static class WeaponFactory {
         if (w == BubbleGunWeapon.Design) {
             return new BubbleGunWeapon(p);
         }
-        if (w == FlakCannonWeapon.Design) {
-            return new FlakCannonWeapon(p);
-        }
 
         if (w == DisintegratorWeapon.Design) {
             return new DisintegratorWeapon(p);
@@ -117,6 +114,9 @@ public static class WeaponFactory {
         }
         if (w == HyperCutterWeapon.Design) {
             return new HyperCutterWeapon(p);
+        }
+        if (w == AfterburnerWeapon.Design) {
+            return new AfterburnerWeapon(p);
         }
 
         if (w == null) {
