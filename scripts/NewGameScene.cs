@@ -114,11 +114,6 @@ public class NewGameScene : Node2D {
         return config;
     }
 
-    class VesselTemplate {
-        public VesselDesign design;
-        public float roll;
-    }
-
     const int numMapCols = 3;
     const int numMapRows = 2;
 
