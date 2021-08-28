@@ -68,9 +68,12 @@ public class VesselDesign: IItem {
 
     public ItemKind GetItemKind() { return ItemKind.VesselDesign; }
 
-    public string RenderHelp() {
+    public string RenderHelp(int price = 0) {
+        if (price == 0) {
+            price = sellingPrice;
+        }
         var parts = new List<string>();
-        parts.Add(affiliation + " " + name + " (" + sellingPrice.ToString() + ")");
+        parts.Add(affiliation + " " + name + " (" + price.ToString() + ")");
         parts.Add("");
         parts.Add(description + ".");
         if (extraDescription != "") {

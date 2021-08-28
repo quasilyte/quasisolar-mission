@@ -30,6 +30,8 @@ public class WeaponDesign : IItem {
 
     public bool ignoresAsteroids = false;
 
+    public float maskScale = 1;
+
     public float botHintRange = 0;
     public float botHintEffectiveAngle = 0;
     public float botHintSnipe = 0;

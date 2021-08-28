@@ -1,6 +1,15 @@
 using Godot;
 
 public class NeedleGunWeapon : IWeapon {
+    public static WeaponDesign TurretDesign = new WeaponDesign{
+        damage = 22,
+        range = 2000,
+        projectileSpeed = 500,
+        damageKind = DamageKind.Energy,
+        ignoresAsteroids = true,
+        maskScale = 2.5f,
+    };
+
     public static WeaponDesign Design = new WeaponDesign{
         name = "Needle Gun",
         level = 1,

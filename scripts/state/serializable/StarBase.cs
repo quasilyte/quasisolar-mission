@@ -65,7 +65,7 @@ public class StarBase: AbstractPoolValue {
     }
 
     public int StorageCapacity() {
-        return modules.Contains("Warehouse") ? 1500 : 750;
+        return 750;
     }
 
     public void AddMinerals(int amount) {
@@ -89,8 +89,12 @@ public class StarBase: AbstractPoolValue {
         return new Vessel.Ref{id = 0};
     }
 
+    public int VesselProductionPrice(VesselDesign design) {
+        return modules.Contains("Production Module") ? QMath.IntAdjust(design.sellingPrice, 0.85) : design.sellingPrice;
+    }
+
     public int FuelPrice() {
-        return modules.Contains("Refuel Station") ? 1 : 3;
+        return modules.Contains("Refuel Module") ? 1 : 5;
     }
 
     public int RepairPrice(Vessel v) {
@@ -103,7 +107,7 @@ public class StarBase: AbstractPoolValue {
 
     public PriceInfo DebrisSellPrice() {
         if (modules.Contains("Debris Rectifier")) {
-            return new PriceInfo{value = 21, multiplier = 1};
+            return new PriceInfo{value = 22, multiplier = 1};
         }
         return new PriceInfo{value = 18, multiplier = 1};
     }

@@ -51,7 +51,7 @@ public class ShipyardScreen : Node2D {
         GetNode<ButtonNode>("Status/ArkButton").Disabled = !CanTurnIntoArk();
 
         GetNode<Button>("VesselProduction/StartProduction").Disabled = _selectedMerchandise.sprite == null ||
-            ItemInfo.BuyingPrice(_selectedMerchandise.item) > _gameState.credits ||
+            _starBase.VesselProductionPrice(_selectedMerchandise.item) > _gameState.credits ||
             _starBase.productionQueue.Count >= 4;
 
         {
@@ -221,7 +221,7 @@ public class ShipyardScreen : Node2D {
     }
 
     private void OnStartProductionButton() {
-        if (_gameState.credits < ItemInfo.BuyingPrice(_selectedMerchandise.item)) {
+        if (_gameState.credits < _starBase.VesselProductionPrice(_selectedMerchandise.item)) {
             return;
         }
         var starBase = RpgGameState.enteredBase;
@@ -232,7 +232,7 @@ public class ShipyardScreen : Node2D {
             return;
         }
 
-        _gameState.credits -= ItemInfo.BuyingPrice(_selectedMerchandise.item);
+        _gameState.credits -= _starBase.VesselProductionPrice(_selectedMerchandise.item);
         if (starBase.productionQueue.Count == 0) {
             GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/production_started.wav"));
         }
@@ -250,7 +250,7 @@ public class ShipyardScreen : Node2D {
         _selectedMerchandise.item = item;
         _selectedMerchandise.sprite.Frame = 2;
 
-        GetNode<Label>("VesselInfo/InfoBox/Body").Text = item.RenderHelp();
+        GetNode<Label>("VesselInfo/InfoBox/Body").Text = item.RenderHelp(_starBase.VesselProductionPrice(item));
 
         UpdateUI();
     }

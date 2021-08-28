@@ -61,6 +61,8 @@ public class Projectile : Node2D, IProjectile {
             InitPhotonBurstCannon();
         } else if (_weapon == NeedleGunWeapon.Design) {
             InitNeedleGun();
+        } else if (_weapon == NeedleGunWeapon.TurretDesign) {
+            InitNeedleGunTurret();
         } else if (_weapon == SpreadGunWeapon.Design) {
             InitSpreadGun();
         } else if (_weapon == ReaperCannonWeapon.Design) {
@@ -73,6 +75,10 @@ public class Projectile : Node2D, IProjectile {
             InitAssaultLaser();
         } else if (_weapon == ShockwaveCasterWeapon.Design) {
             InitShockwaveCaster();
+        }
+
+        if (_weapon.maskScale != 1) {
+            GetNode<CollisionShape2D>("Area2D/CollisionShape2D").Scale = new Vector2(_weapon.maskScale, _weapon.maskScale);
         }
 
         _sprite = GetNode<Sprite>("Sprite");
@@ -152,6 +158,11 @@ public class Projectile : Node2D, IProjectile {
         }
         _texture = _shockwaveCasterTexture;
         _audioStream = _shockwaveCasterAudioStream;
+    }
+
+    private void InitNeedleGunTurret() {
+        _hp = NeedleGunWeapon.TurretDesign.range;
+        _texture = GD.Load<Texture>("res://images/ammo/Gauss_Defense.png");
     }
 
     private void InitNeedleGun() {
@@ -242,12 +253,16 @@ public class Projectile : Node2D, IProjectile {
     }
 
     public void OnImpact() {
-        if (_weapon == NeedleGunWeapon.Design) {
+        if (_weapon == NeedleGunWeapon.Design || _weapon == NeedleGunWeapon.TurretDesign) {
             _hp += 125;
             var explosion = Explosion.New();
             explosion.Modulate = Color.Color8(100, 255, 100);
             explosion.Position = Position;
-            explosion.Scale = new Vector2(0.8f, 0.8f);
+            if (_weapon == NeedleGunWeapon.TurretDesign) {
+                explosion.Scale = new Vector2(1.2f, 1.2f);
+            } else {
+                explosion.Scale = new Vector2(0.8f, 0.8f);
+            }
             GetParent().AddChild(explosion);
             if (_needleImpactAudioStream == null) {
                 _needleImpactAudioStream = GD.Load<AudioStream>("res://audio/weapon/Needle_Gun_Impact.wav");

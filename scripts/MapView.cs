@@ -1549,7 +1549,10 @@ public class MapView : Node2D {
             text += "Upgrade is now active.\n\n";
         } else if (research.category == Research.Category.NewExplorationDrone) {
             text += "New exploration drone is available for production\n\n";
+        } else if (research.category == Research.Category.NewBaseModule) {
+            text += "New base module is available for construction\n\n";
         }
+
         if (availableAfter.Count != 0) {
             text += "New research projects available:\n\n";
             foreach (var r in availableAfter) {
@@ -1881,6 +1884,21 @@ public class MapView : Node2D {
             ArenaSettings.combatants.Add(v);
             if (!v.isBot) {
                 v.isGamepad = GameControls.preferGamepad;
+            }
+        }
+
+        if (location.starBase.id != 0) {
+            // For now, only player-controlled bases can have defensive
+            // structures, so we don't really care with setting the
+            // proper alliance number here (since it's always 0).
+            var starBase = location.starBase.Get();
+            if (starBase.modules.Contains("Gauss Turret")) {
+                ArenaSettings.defensiveTurretAlliance = 0;
+                ArenaSettings.defensiveTurret = NeedleGunWeapon.TurretDesign;
+                ArenaSettings.defensiveTurretShots = 3;
+                if (_gameState.technologiesResearched.Contains("Gauss Turret Capacity")) {
+                    ArenaSettings.defensiveTurretShots++;
+                }
             }
         }
     }

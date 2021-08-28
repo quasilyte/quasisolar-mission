@@ -655,9 +655,7 @@ class GenericBot : AbstractBot {
     }
 
     private Vector2 CalculateSnipeShot(IWeapon w, Vector2 targetPos, Vector2 targetVelocity) {
-        var dist = targetPos.DistanceTo(_vessel.Position);
-        var predictedPos = targetPos + _currentTarget.Vessel.State.velocity * (dist / w.GetDesign().projectileSpeed);
-        return predictedPos;
+        return QMath.CalculateSnipeShot(w.GetDesign(), _vessel.Position, targetPos, _currentTarget.Vessel.State.velocity);
     }
 
     private Vector2 CalculateFireTarget(IWeapon w) {

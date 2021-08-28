@@ -22,18 +22,38 @@ public class StarBaseModule {
 
     public static StarBaseModule[] list = new StarBaseModule[]{
         new StarBaseModule{
-            name = "Refuel Station",
-            effect = "buy fuel at the cost of 1 RU instead of 3 at this base",
+            name = "Debris Rectifier",
+            effect = "20% more RU when selling debris at this base",
+            sellingPrice = 1500,
+            buildTime = 60,
+        },
+
+        // Defensive structures.
+
+        new StarBaseModule{
+            name = "Gauss Turret",
+            sellingPrice = 1500,
+            effect = "shoots the attackers during the star base defense battles",
+            buildTime = 20,
+        },
+
+        // Discounts.
+
+        new StarBaseModule{
+            name = "Production Module",
+            effect = "producing vessels is 15% cheaper at this base",
+            sellingPrice = 4000,
+            buildTime = 90,
+        },
+
+        new StarBaseModule{
+            name = "Refuel Module",
+            effect = "buy fuel at the cost of 1 RU instead of 5 at this base",
             sellingPrice = 2000,
             buildTime = 70,
         },
 
-        new StarBaseModule{
-            name = "Debris Rectifier",
-            effect = "15% more RU when selling debris at this base",
-            sellingPrice = 1500,
-            buildTime = 60,
-        },
+        // Resources-related.
 
         new StarBaseModule{
             name = "Minerals Collector",
@@ -78,26 +98,6 @@ public class StarBaseModule {
             effect = "collected power is turned into RU",
             sellingPrice = 8000,
             buildTime = 80,
-        },
-
-        new StarBaseModule{
-            name = "Defensive Turrets",
-            sellingPrice = 3000,
-            buildTime = 20,
-        },
-
-        new StarBaseModule{
-            name = "Warehouse",
-            effect = "increases star base maximum resource capacity",
-            sellingPrice = 4000,
-            buildTime = 50,
-        },
-
-        new StarBaseModule{
-            name = "Vessel Factory",
-            effect = "increases vessel production speed",
-            sellingPrice = 5000,
-            buildTime = 90,
         },
     };
 }

@@ -23,6 +23,10 @@ public class ArenaSettings {
     public static StarColor starColor;
     public static EnvDanger envDanger;
 
+    public static int defensiveTurretAlliance;
+    public static int defensiveTurretShots;
+    public static WeaponDesign defensiveTurret;
+
     // How many asteroids will fly around.
     // 0 is valid option here.
     public static int numAsteroids;
@@ -35,6 +39,10 @@ public class ArenaSettings {
 
     public static void Reset() {
         isQuickBattle = false;
+
+        defensiveTurretAlliance = 0;
+        defensiveTurretShots = 0;
+        defensiveTurret = null;
 
         combatants = new List<Vessel>();
         alliances = new Dictionary<Vessel, int>();

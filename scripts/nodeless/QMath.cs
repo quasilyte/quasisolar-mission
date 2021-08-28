@@ -46,6 +46,12 @@ static class QMath {
         return dstRotation;
     }
 
+    public static Vector2 CalculateSnipeShot(WeaponDesign w, Vector2 fireFrom, Vector2 targetPos, Vector2 targetVelocity) {
+        var dist = targetPos.DistanceTo(fireFrom);
+        var predictedPos = targetPos + targetVelocity * (dist / w.projectileSpeed);
+        return predictedPos;
+    }
+
     public static Vector2 RandomizedLocation(Vector2 loc, float radius) {
         float x = loc.x + QRandom.FloatRange(-radius, radius);
         float y = loc.y + QRandom.FloatRange(-radius, radius);

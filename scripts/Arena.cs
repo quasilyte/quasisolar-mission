@@ -37,6 +37,10 @@ public class Arena : Node2D {
     private Pilot _flagshipPilot;
     private bool _battleIsOver = false;
 
+    private int _defensiveTurretShots = 0;
+    private float _turretShotDelay = 0;
+    private Vector2 _turretsShotLocation;
+
     private RpgGameState _gameState;
 
     private float _envHazardTick = 0;
@@ -247,6 +251,12 @@ public class Arena : Node2D {
             }
         }
 
+        if (ArenaSettings.defensiveTurret != null) {
+            _defensiveTurretShots = ArenaSettings.defensiveTurretShots;
+            _turretShotDelay = QRandom.FloatRange(2, 6);
+            _turretsShotLocation = new Vector2(0, 200 + QRandom.FloatRange(0, 400));
+        }
+
         switch (ArenaSettings.envDanger) {
         case ArenaSettings.EnvDanger.Star: {
                 var starHarard = StarHazardNode.New(ArenaSettings.starColor);
@@ -284,7 +294,41 @@ public class Arena : Node2D {
         return new Vector2(x, y);
     }
 
+    private void FireTurrets() {
+        var potentialTargets = new List<Pilot>();
+        foreach (var p in _pilots) {
+            if (!p.Active) {
+                continue;
+            }
+            if (p.alliance == ArenaSettings.defensiveTurretAlliance) {
+                continue;
+            }
+            potentialTargets.Add(p);
+        }
+        if (potentialTargets.Count == 0) {
+            _defensiveTurretShots = 0;
+            return;
+        }
+
+        var target = QRandom.Element(potentialTargets);
+        if (ArenaSettings.defensiveTurret == NeedleGunWeapon.TurretDesign) {
+            var turretNode = GaussDefenseNode.New(ArenaSettings.defensiveTurretAlliance, target);
+            turretNode.Position = _turretsShotLocation;
+            turretNode.Rotation = (target.Vessel.Position - _turretsShotLocation).Normalized().Angle();
+            AddChild(turretNode);
+        }
+    }
+
     public override void _Process(float delta) {
+        if (_defensiveTurretShots != 0) {
+            _turretShotDelay = QMath.ClampMin(_turretShotDelay - delta, 0);
+            if (_turretShotDelay == 0) {
+                FireTurrets();
+                _turretShotDelay = QRandom.FloatRange(8, 10);
+                _defensiveTurretShots--;
+            }
+        }
+
         _envHazardTick += delta;
         if (_envHazardTick >= 1) {
             var nodes = GetTree().GetNodesInGroup("affectedByEnvHazard");

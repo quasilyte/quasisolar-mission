@@ -13,6 +13,7 @@ public class Research {
         NewVesselDesign,
         NewSentinel,
         NewExplorationDrone,
+        NewBaseModule,
     }
 
     public string name;
@@ -68,6 +69,15 @@ public class Research {
             name = "Stormbringer",
             category = Category.NewWeapon,
             researchTime = 0,
+        },
+
+        // Star base modules tech.
+
+        new Research{
+            name = "Gauss Turret Capacity",
+            category = Category.Upgrade,
+            researchTime = 30,
+            effect = "extra 1 shot for the Gauss Turret defenses",
         },
 
         // Science tech.
