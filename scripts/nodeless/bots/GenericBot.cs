@@ -638,7 +638,7 @@ class GenericBot : AbstractBot {
             }
         }
 
-        if (design == MortarWeapon.Design || design == MjolnirWeapon.Design || design == ReaperCannonWeapon.Design || design == HarpoonWeapon.Design || design == DisruptorWeapon.Design || design == ShockwaveCasterWeapon.Design) {
+        if (design == HyperCutterWeapon.Design || design == MortarWeapon.Design || design == MjolnirWeapon.Design || design == ReaperCannonWeapon.Design || design == HarpoonWeapon.Design || design == DisruptorWeapon.Design || design == ShockwaveCasterWeapon.Design) {
             var targetCursor = CalculateFireTarget(_vessel.specialWeapon);
             if (targetCursor != Vector2.Zero) {
                 FireSpecial(targetCursor);
