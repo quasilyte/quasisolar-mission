@@ -188,87 +188,6 @@ public class NewGameScene : Node2D {
     const int numMapCols = 3;
     const int numMapRows = 2;
 
-    private VesselTemplate[] _draklidTemplates = new VesselTemplate[]{
-        new VesselTemplate{design = VesselDesign.Find("Raider"), roll = 0},
-        new VesselTemplate{design = VesselDesign.Find("Marauder"), roll = 0.6f},
-        new VesselTemplate{design = VesselDesign.Find("Plunderer"), roll = 0.85f},
-    };
-
-    private VesselTemplate[] _phaaTemplates = new VesselTemplate[]{
-        new VesselTemplate{design = VesselDesign.Find("Mantis"), roll = 0},
-    };
-
-    private VesselTemplate[] _krigiaTemplates = new VesselTemplate[]{
-        new VesselTemplate{design = VesselDesign.Find("Talons"), roll = 0},
-        new VesselTemplate{design = VesselDesign.Find("Claws"), roll = 0.3f},
-        new VesselTemplate{design = VesselDesign.Find("Fangs"), roll = 0.55f},
-        new VesselTemplate{design = VesselDesign.Find("Tusks"), roll = 0.75f},
-        new VesselTemplate{design = VesselDesign.Find("Horns"), roll = 0.90f},
-    };
-
-    private VesselTemplate[] _wertuTemplates = new VesselTemplate[]{
-        new VesselTemplate{design = VesselDesign.Find("Probe"), roll = 0},
-        new VesselTemplate{design = VesselDesign.Find("Guardian"), roll = 0.3f},
-        new VesselTemplate{design = VesselDesign.Find("Angel"), roll = 0.70f},
-        new VesselTemplate{design = VesselDesign.Find("Dominator"), roll = 0.85f},
-    };
-
-    private VesselTemplate[] _zythTemplates = new VesselTemplate[]{
-        new VesselTemplate{design = VesselDesign.Find("Hunter"), roll = 0},
-        new VesselTemplate{design = VesselDesign.Find("Invader"), roll = 0.65f},
-    };
-
-    private void InitFleet(RpgGameState.Config config, StarBase starBase, VesselTemplate[] templates, float budget) {
-        var fleet = new List<Vessel.Ref> { };
-        var cheapest = (float)templates[0].design.sellingPrice / 1000;
-
-        while (budget >= cheapest) {
-            if (fleet.Count == StarBase.maxGarrisonSize) {
-                break; // FIXME: do a better job at spending the budget
-            }
-            var roll = QRandom.Float();
-            for (int i = templates.Length - 1; i >= 0; i--) {
-                var _template = templates[i];
-                if (roll < _template.roll) {
-                    continue;
-                }
-                var cost = (float)_template.design.sellingPrice / 1000;
-                if (budget < cost) {
-                    continue;
-                }
-                var v = config.vessels.New();
-                v.isBot = true;
-                v.pilotName = starBase.owner.ToString(); // FIXME
-                v.faction = starBase.owner;
-                v.rank = starBase.VesselRank(QRandom.Float());
-                VesselFactory.Init(v, _template.design);
-                fleet.Add(v.GetRef());
-                budget -= cost;
-                break;
-            }
-        }
-
-        starBase.garrison = fleet;
-
-        GD.Print("fleet = " + fleet.Count);
-    }
-
-    private void InitPhaaFleet(RpgGameState.Config config, StarBase starBase, float budget) {
-        InitFleet(config, starBase, _phaaTemplates, budget);
-    }
-
-    private void InitKrigiaFleet(RpgGameState.Config config, StarBase starBase, float budget) {
-        InitFleet(config, starBase, _krigiaTemplates, budget);
-    }
-
-    private void InitWertuFleet(RpgGameState.Config config, StarBase starBase, float budget) {
-        InitFleet(config, starBase, _wertuTemplates, budget);
-    }
-
-    private void InitDraklidFleet(RpgGameState.Config config, StarBase starBase, float budget) {
-        InitFleet(config, starBase, _draklidTemplates, budget);
-    }
-
     private StarBase NewStarBase(RpgGameState.Config config, Faction owner, int level) {
         var starBase = config.starBases.New();
         starBase.level = level;
@@ -279,7 +198,7 @@ public class NewGameScene : Node2D {
         return starBase;
     }
 
-    private void DeployBases(WorldTemplate world, Faction faction, int numBases, VesselTemplate[] templates) {
+    private void DeployBases(WorldTemplate world, Faction faction, int numBases) {
         var config = world.config;
         while (numBases > 0) {
             var col = QRandom.Bool() ? 0 : 2;
@@ -294,7 +213,7 @@ public class NewGameScene : Node2D {
                 var baseLevel = QRandom.IntRange(1, 4);
                 
                 var starBase = NewStarBase(config, faction, baseLevel);
-                InitFleet(config, starBase, templates, fleetRoll);
+                NewGameFleetGen.InitFleet(config, starBase, faction, fleetRoll);
                 BindStarBase(starBase, sector.systems[j].data);
                 numBases--;
             }
@@ -417,7 +336,7 @@ public class NewGameScene : Node2D {
             var sector = sectors[startingSector];
             var starBase = NewStarBase(config, Faction.Krigia, 2);
             BindStarBase(starBase, sector.systems[1].data);
-            InitKrigiaFleet(config, starBase, 25);
+            NewGameFleetGen.InitFleet(config, starBase, Faction.Krigia, 25);
             numKrigiaBases--;
         }
         {
@@ -429,21 +348,20 @@ public class NewGameScene : Node2D {
 
             var base0 = NewStarBase(config, Faction.Krigia, 2);
             BindStarBase(base0, sector.systems[0].data);
-            InitKrigiaFleet(config, base0, roll);
-            numKrigiaBases--;
+            NewGameFleetGen.InitFleet(config, base0, Faction.Krigia, roll);
 
             var base1 = NewStarBase(config, Faction.Draklid, 2);
             BindStarBase(base1, sector.systems[1].data);
-            InitDraklidFleet(config, base1, roll);
+            NewGameFleetGen.InitFleet(config, base1, Faction.Draklid, roll);
             numDraklidBases--;
         }
 
         // Second step: fill everything else.
-        DeployBases(world, Faction.Krigia, numKrigiaBases, _krigiaTemplates);
-        DeployBases(world, Faction.Wertu, numWertuBases, _wertuTemplates);
-        DeployBases(world, Faction.Zyth, numZythBases, _zythTemplates);
-        DeployBases(world, Faction.Draklid, numDraklidBases, _draklidTemplates);
-        DeployBases(world, Faction.Phaa, 1, _phaaTemplates);
+        DeployBases(world, Faction.Krigia, numKrigiaBases);
+        DeployBases(world, Faction.Wertu, numWertuBases);
+        DeployBases(world, Faction.Zyth, numZythBases);
+        DeployBases(world, Faction.Draklid, numDraklidBases);
+        DeployBases(world, Faction.Phaa, 1);
 
         config.startingSystemID = startingSystem.id;
 
