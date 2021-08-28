@@ -46,9 +46,9 @@ static class QMath {
         return dstRotation;
     }
 
-    public static Vector2 RandomizedLocation(Vector2 loc, float size) {
-        float x = loc.x + QRandom.FloatRange(-size, size);
-        float y = loc.y + QRandom.FloatRange(-size, size);
+    public static Vector2 RandomizedLocation(Vector2 loc, float radius) {
+        float x = loc.x + QRandom.FloatRange(-radius, radius);
+        float y = loc.y + QRandom.FloatRange(-radius, radius);
         return new Vector2(x, y);
     }
 

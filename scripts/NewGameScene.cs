@@ -98,23 +98,6 @@ public class NewGameScene : Node2D {
         return new string(stringChars);
     }
 
-    private StarColor RandomStarSystemColor() {
-        var colorRoll = QRandom.IntRange(0, 5);
-        if (colorRoll == 0) {
-            return StarColor.Blue;
-        } else if (colorRoll == 1) {
-            return StarColor.Green;
-        } else if (colorRoll == 2) {
-            return StarColor.Yellow;
-        } else if (colorRoll == 3) {
-            return StarColor.Orange;
-        } else if (colorRoll == 4) {
-            return StarColor.Red;
-        } else {
-            return StarColor.White;
-        }
-    }
-
     private RpgGameState.Config NewGameConfig(ulong gameSeed) {
         var limits = new RpgGameState.GameLimits {
             maxFuel = 500,
@@ -141,43 +124,6 @@ public class NewGameScene : Node2D {
         };
 
         return config;
-    }
-
-    private static Vector2 RandomizedLocation(Vector2 loc, float size) {
-        var halfSize = size / 2;
-        float x = loc.x + QRandom.FloatRange(-halfSize, halfSize);
-        float y = loc.y + QRandom.FloatRange(-halfSize, halfSize);
-        return new Vector2(x, y);
-    }
-
-    private Vector2 RandomStarSystemPosition(WorldTemplate.Sector sector) {
-        var attempts = 0;
-        var result = Vector2.Zero;
-        while (true) {
-            attempts++;
-            var dist = QRandom.FloatRange(175, 500);
-            var toBeConnected = QRandom.Element(sector.systems);
-            var candidate = RandomizedLocation(toBeConnected.data.pos, dist);
-            if (!sector.rect.HasPoint(candidate)) {
-                continue;
-            }
-            var retry = false;
-            foreach (var sys in sector.systems) {
-                if (sys.data.pos.DistanceTo(candidate) < 170) {
-                    retry = true;
-                    break;
-                }
-            }
-            if (retry) {
-                continue;
-            }
-            result = candidate;
-            break;
-        }
-        if (attempts > 10) {
-            GD.Print($"used {attempts} attempts to find a star system spot");
-        }
-        return result;
     }
 
     class VesselTemplate {
@@ -225,23 +171,6 @@ public class NewGameScene : Node2D {
         starBase.system = system.GetRef();
     }
 
-    private WorldTemplate.System NewStarSystem(WorldTemplate.Sector sector, Vector2 pos) {
-        var world = sector.world;
-        var sys = world.config.starSystems.New();
-        sys.name = StarSystemNames.UniqStarSystemName(world.starSystenNames);
-        sys.color = RandomStarSystemColor();
-        sys.pos = pos;
-
-        var worldSys = new WorldTemplate.System{
-            sector = sector,
-            data = sys,
-        };
-
-        PlanetGenerator.GeneratePlanets(worldSys);
-
-        return worldSys;
-    }
-
     private void GenerateWorld(RpgGameState.Config config) {
         // Player always starts in the middle of the map.
         var startingCol = 1;
@@ -268,14 +197,14 @@ public class NewGameScene : Node2D {
                 sectors[i] = sector;
                 var middle = sector.rect.Position + sector.rect.Size / 2;
 
-                var color = RandomStarSystemColor();
-                sector.systems.Add(NewStarSystem(sector, RandomizedLocation(middle, 120)));
+                sector.systems.Add(NewGameSysGen.NewStarSystem(sector, QMath.RandomizedLocation(middle, 240)));
 
                 var minSystems = 3;
                 var maxSystems = 4;
                 var numSystems = QRandom.IntRange(minSystems, maxSystems);
                 for (int j = 0; j < numSystems; j++) {
-                    sector.systems.Add(NewStarSystem(sector, RandomStarSystemPosition(sector)));
+                    var pos = NewGameSysGen.PickStarSystemPos(sector);
+                    sector.systems.Add(NewGameSysGen.NewStarSystem(sector, pos));
                 }
             }
         }
@@ -290,7 +219,7 @@ public class NewGameScene : Node2D {
 
             anomalySystem.name = "Eth";
             anomalySystem.color = StarColor.Purple;
-            anomalySystem.pos = RandomStarSystemPosition(sector);
+            anomalySystem.pos = NewGameSysGen.PickStarSystemPos(sector);
 
             sector.systems.Add(new WorldTemplate.System{
                 data = anomalySystem,
