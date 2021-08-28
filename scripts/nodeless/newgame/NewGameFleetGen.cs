@@ -84,7 +84,5 @@ public class NewGameFleetGen {
         }
 
         starBase.garrison = fleet;
-
-        GD.Print("fleet = " + fleet.Count);
     }
 }
