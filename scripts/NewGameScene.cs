@@ -28,7 +28,7 @@ public class NewGameScene : Node2D {
 
         GetNode<Button>("Start").Connect("pressed", this, nameof(OnStartButtonPressed));
 
-        GetNode<LineEdit>("GameSeed").Text = RandomGameSeed();
+        GetNode<LineEdit>("GameSeed").Text = NewGameSeed.Generate();
 
         UpdateScoreMiltiplier();
     }
@@ -81,21 +81,9 @@ public class NewGameScene : Node2D {
     private ulong GameSeed() {
         var s = GetNode<LineEdit>("GameSeed").Text;
         if (string.IsNullOrEmpty(s)) {
-            s = RandomGameSeed();
+            s = NewGameSeed.Generate();
         }
         return (ulong)s.GetHashCode();
-    }
-
-    private string RandomGameSeed() {
-        var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        var stringChars = new char[10];
-        var random = new Random();
-
-        for (int i = 0; i < stringChars.Length; i++) {
-            stringChars[i] = alphabet[random.Next(alphabet.Length)];
-        }
-
-        return new string(stringChars);
     }
 
     private RpgGameState.Config NewGameConfig(ulong gameSeed) {
