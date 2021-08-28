@@ -52,6 +52,8 @@ public class Asteroid : Node2D {
                 _velocity += p.Transform.x * 100;
                 Position += p.Transform.x * 10;
                 damage = 1;
+            } else if (projectile is EnergyBoltNode energyBolt) {
+                damage += 4 * energyBolt.chargeLevel;
             }
             projectile.OnImpact();
             ApplyDamage(damage);

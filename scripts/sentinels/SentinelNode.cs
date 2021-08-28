@@ -74,7 +74,11 @@ public abstract class SentinelNode : Node2D {
             }
             var design = projectile.GetWeaponDesign();
             projectile.OnImpact();
-            ApplyDamage(design.damage, design.damageKind);
+            var damage = design.damage;
+            if (projectile is EnergyBoltNode energyBolt) {
+                damage += 4 * energyBolt.chargeLevel;
+            }
+            ApplyDamage(damage, design.damageKind);
 
             return;
         }
