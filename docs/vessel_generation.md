@@ -100,8 +100,8 @@ Special Weapons:
 
 Weapons:
 
+* Spread Laser
 * Ion Cannon
-* Flak Cannon
 
 Special weapons:
 
@@ -115,7 +115,7 @@ Special weapons:
 
 Weapons:
 
-* Needle Gun
+* Spread Laser
 * Rocket Launcher
 * Hurricane
 * **Bubble Gun**
@@ -143,8 +143,9 @@ Special weapons:
 | Weapon | Used by | Research matetial |
 |---|---|---|
 | Spread Gun | Earthlings, Draklid | n/a |
+| Spread Laser | Vespion, Phaa | Phaa |
 | Ion Cannon | Earthlings, Krigia, Vespion | n/a |
-| Needle Gun | Earthlings, Zyth, Phaa, Draklid | n/a |
+| Needle Gun | Earthlings, Zyth, Draklid | n/a |
 | Harpoon | Zyth | Zyth |
 | Disruptor | Zyth, Draklid | Draklid |
 | Photon Burst Cannon | Wertu, Rarilou | Wertu |
