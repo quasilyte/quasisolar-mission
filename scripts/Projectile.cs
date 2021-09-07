@@ -36,6 +36,7 @@ public class Projectile : Node2D, IProjectile {
 
     public WeaponDesign GetWeaponDesign() { return _weapon; }
     public Pilot FiredBy() { return _firedBy; }
+    public Node2D GetProjectileNode() { return this; }
 
     private static PackedScene _scene = null;
     public static Projectile New(WeaponDesign design, Pilot owner) {
@@ -65,6 +66,8 @@ public class Projectile : Node2D, IProjectile {
             InitNeedleGunTurret();
         } else if (_weapon == SpreadGunWeapon.Design) {
             InitSpreadGun();
+        } else if (_weapon == SpreadLaserWeapon.Design) {
+            InitSpreadLaser();
         } else if (_weapon == ReaperCannonWeapon.Design) {
             InitReaperCannon();
         } else if (_weapon == HellfireWeapon.Design) {
@@ -119,6 +122,14 @@ public class Projectile : Node2D, IProjectile {
         _hp = SpreadGunWeapon.Design.range;
         if (_spreadGunTexture == null) {
             _spreadGunTexture = GD.Load<Texture>("res://images/ammo/Spread_Gun.png");
+        }
+        _texture = _spreadGunTexture;
+    }
+
+    private void InitSpreadLaser() {
+        _hp = SpreadLaserWeapon.Design.range;
+        if (_spreadGunTexture == null) {
+            _spreadGunTexture = GD.Load<Texture>("res://images/ammo/Spread_Laser.png");
         }
         _texture = _spreadGunTexture;
     }
