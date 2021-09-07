@@ -12,6 +12,9 @@ public static class WeaponFactory {
         if (w == SpreadGunWeapon.Design) {
             return new SpreadGunWeapon(p);
         }
+        if (w == SpreadLaserWeapon.Design) {
+            return new SpreadLaserWeapon(p);
+        }
         if (w == NeedleGunWeapon.Design) {
             return new NeedleGunWeapon(p);
         }
@@ -117,6 +120,9 @@ public static class WeaponFactory {
         }
         if (w == AfterburnerWeapon.Design) {
             return new AfterburnerWeapon(p);
+        }
+        if (w == TempestWeapon.Design) {
+            return new TempestWeapon(p);
         }
 
         if (w == null) {
