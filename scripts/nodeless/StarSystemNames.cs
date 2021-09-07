@@ -99,7 +99,6 @@ public static class StarSystemNames {
         "Orion",
         "Kaia",
         "Kali",
-        "Kalliope",
         "Castor",
 
         "Nereida",
