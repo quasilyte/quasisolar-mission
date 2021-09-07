@@ -34,6 +34,11 @@ public class ResearchScreen : Node2D {
             if (r.researchTime == 0) {
                 continue;
             }
+            if (r.quest != "") {
+                if (_gameState.activeQuests.Find((x) => x.name == r.quest) == null) {
+                    continue;
+                }
+            }
             if (_gameState.technologiesResearched.Contains(r.name)) {
                 continue;
             }
@@ -114,6 +119,9 @@ public class ResearchScreen : Node2D {
         }
         if (category == Research.Category.NewExplorationDrone) {
             return "new drone";
+        }
+        if (category == Research.Category.NewBaseModule) {
+            return "new base module";
         }
         throw new Exception("unexpected research category: " + category.ToString());
     }
