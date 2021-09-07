@@ -51,14 +51,14 @@ public class ShieldSentinelNode : SentinelNode {
             return true;
         }
 
-        if (damageKind == DamageKind.Energy) {
-            return shield.activeEnergyDamageReceive != 1;
+        if (damageKind == DamageKind.Thermal) {
+            return shield.activeThermalDamageReceive != 1;
         }
         if (damageKind == DamageKind.Kinetic) {
             return shield.activeKineticDamageReceive != 1;
         }
-        if (damageKind == DamageKind.Thermal) {
-            return shield.activeThermalDamageReceive != 1;
+        if (damageKind == DamageKind.Explosive) {
+            return shield.activeExplosiveDamageReceive != 1;
         }
         return false;
     }
