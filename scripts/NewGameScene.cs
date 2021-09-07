@@ -320,6 +320,7 @@ public class NewGameScene : Node2D {
             DeployBases(neutralSystems, Faction.Zyth, numZythBases);
             DeployBases(neutralSystems, Faction.Draklid, numDraklidBases);
             DeployBases(neutralSystems, Faction.Phaa, 1);
+            DeployBases(neutralSystems, Faction.Vespion, 1);
         }
 
         config.startingSystemID = world.startingSystem.data.id;
@@ -385,6 +386,43 @@ public class NewGameScene : Node2D {
             unit.fleet = fleet;
             unit.pos = world.startingSystem.data.pos;
             config.humanUnit = unit.GetRef();
+        }
+
+        // Make sure that there is at least 1 gas giant planet.
+        {
+            var gasGiantsNum = 0;
+            var starSystems = new List<StarSystem>(config.starSystems.objects.Values);
+            foreach (var sys in starSystems) {
+                foreach (var p in sys.resourcePlanets) {
+                    if (p.gasGiant) {
+                        gasGiantsNum++;
+                        GD.Print("gas giant at " + sys.name);
+                    }
+                }
+            }
+            if (gasGiantsNum == 0) {
+                while (true) {
+                    var sys = QRandom.Element(starSystems);
+                    if (sys.resourcePlanets.Count == 3) {
+                        continue;
+                    }
+                    if (sys.color == StarColor.Purple) {
+                        continue;
+                    }
+                    var hashSet = new HashSet<string>();
+                    var p = PlanetGenerator.NewResourcePlanet(0.05f, 1, hashSet);
+                    p.gasGiant = true;
+                    p.mineralsPerDay = 0;
+                    p.organicPerDay = 0;
+                    p.powerPerDay = 1;
+                    p.temperature = QRandom.IntRange(-20, 20);
+                    p.textureName = PlanetGenerator.PickPlanetSprite("gas", hashSet);
+                    sys.resourcePlanets.Add(p);
+                    gasGiantsNum = 1;
+                    GD.Print("gas giant at " + sys.name);
+                    break;
+                }
+            }
         }
     }
 }

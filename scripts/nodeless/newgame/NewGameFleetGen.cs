@@ -37,6 +37,12 @@ public class NewGameFleetGen {
         new VesselTemplate{design = VesselDesign.Find("Invader"), roll = 0.65f},
     };
 
+    private static VesselTemplate[] _vespionTemplates = new VesselTemplate[]{
+        new VesselTemplate{design = VesselDesign.Find("Larva"), roll = 0},
+        new VesselTemplate{design = VesselDesign.Find("Hornet"), roll = 0.5f},
+        new VesselTemplate{design = VesselDesign.Find("Queen"), roll = 0.8f},
+    };
+
     public static void InitFleet(RpgGameState.Config config, StarBase starBase, Faction faction, float budget) {
         if (faction == Faction.Draklid) {
             InitFleet(config, starBase, _draklidTemplates, budget);
@@ -48,6 +54,8 @@ public class NewGameFleetGen {
             InitFleet(config, starBase, _krigiaTemplates, budget);
         } else if (faction == Faction.Zyth) {
             InitFleet(config, starBase, _zythTemplates, budget);
+        } else if (faction == Faction.Vespion) {
+            InitFleet(config, starBase, _vespionTemplates, budget);
         } else {
             throw new System.Exception("can't init fleet for " + faction.ToString());
         }
