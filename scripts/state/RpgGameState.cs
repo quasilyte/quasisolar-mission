@@ -10,8 +10,10 @@ public class RpgGameState {
     public static List<StarSystem> starSystemList;
     public static Dictionary<StarSystem, List<StarSystem>> starSystemConnections;
     public static Dictionary<Vector2, StarSystem> starSystemByPos;
+    public static Dictionary<string, StarSystem> starSystemByName;
     public static HashSet<StarBase> humanBases;
     public static StarBase phaaBase;
+    public static StarBase vespionBase;
 
     public static int enemyBaseNumAttackers = 0;
     public static SpaceUnit arenaUnit1;
@@ -62,6 +64,7 @@ public class RpgGameState {
         LoadGame,
         ExitStarBase,
         ExitResearchScreen,
+        ExitQuestLogScreen,
         UnitDestroyed,
         BaseAttackSimulation,
         EnemyUnitDestroyed,
@@ -118,11 +121,17 @@ public class RpgGameState {
                 phaaBase = starBases.Get(sys.starBase.id);
                 continue;
             }
+            if (starBase.owner == Faction.Vespion) {
+                vespionBase = starBases.Get(sys.starBase.id);
+                continue;
+            }
         }
 
         starSystemByPos = new Dictionary<Vector2, StarSystem>();
+        starSystemByName = new Dictionary<string, StarSystem>();
         foreach (var sys in starSystemList) {
             starSystemByPos[sys.pos] = sys;
+            starSystemByName[sys.name] = sys;
         }
 
         // TODO: do it more efficiently than O(n^2)?
@@ -192,6 +201,10 @@ public class RpgGameState {
         o.randomEventsAvailable = c.randomEvents;
 
         o.missionDeadline = c.missionDeadline;
+
+        foreach (var kv in o.reputations) {
+            o.alienCurrency[kv.Key] = 0;
+        }
         
         return o;
     }
@@ -217,6 +230,19 @@ public class RpgGameState {
         {Faction.Phaa, 0},
         {Faction.Draklid, -5},
         {Faction.Rarilou, 0},
+    };
+
+    public Dictionary<Faction, int> alienCurrency = new Dictionary<Faction, int>{};
+
+    // TODO: move somewhere else?
+    public static Dictionary<Faction, string> alienCurrencyNames = new Dictionary<Faction, string>{
+        {Faction.Krigia, "?"},
+        {Faction.Wertu, "Plasmoids"},
+        {Faction.Zyth, "?"},
+        {Faction.Vespion, "Perfect Combs"},
+        {Faction.Phaa, "Pure Scales"},
+        {Faction.Draklid, "?"},
+        {Faction.Rarilou, "Rosy Crystals"},
     };
 
     public Dictionary<Faction, DiplomaticStatus> diplomaticStatuses = new Dictionary<Faction, DiplomaticStatus>{
@@ -248,6 +274,10 @@ public class RpgGameState {
 
     public int travelSlowPoints = 0;
     public float travelSpeed;
+
+    public List<Quest.Data> activeQuests = new List<Quest.Data>();
+    public HashSet<string> completedQuests = new HashSet<string>();
+    public HashSet<string> issuedQuests = new HashSet<string>();
 
     public MapState mapState = new MapState();
 
