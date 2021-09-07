@@ -8,7 +8,7 @@ public class IonCannonWeapon : IWeapon {
         description = "A tactical weapon that can dry the target\nbattery up",
         targeting = "any direction, projectiles",
         sellingPrice = 1400,
-        cooldown = 0.25f,
+        cooldown = 0.3f,
         energyCost = 4.0f,
         range = 250.0f,
         damage = 5.0f,

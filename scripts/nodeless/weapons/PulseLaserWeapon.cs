@@ -7,7 +7,7 @@ public class PulseLaserWeapon : IWeapon {
         description = "A fierce weapon for a close-ranged combat",
         targeting = "any direction, projectiles",
         sellingPrice = 2400,
-        cooldown = 0.15f,
+        cooldown = 0.2f,
         energyCost = 5.0f,
         range = 200.0f,
         damage = 8.0f,
