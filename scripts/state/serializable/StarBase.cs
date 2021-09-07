@@ -60,6 +60,14 @@ public class StarBase: AbstractPoolValue {
 
     public StarBase() {}
 
+    public int GarrisonCost() {
+        var cost = 0;
+        foreach (var v in garrison) {
+            cost += v.Get().TotalCost();
+        }
+        return cost;
+    }
+
     public int StorageFreeSpace() {
         return StorageCapacity() - mineralsStock - organicStock - powerStock;
     }
