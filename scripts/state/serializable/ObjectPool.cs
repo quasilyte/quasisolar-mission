@@ -44,6 +44,10 @@ public class ObjectPool<T> where T : AbstractPoolValue, new() {
         if (id == 0) {
             throw new Exception("getting an object with id=0");
         }
-        return (T)objects[id];
+        var obj = (T)objects[id];
+        if (obj.deleted) {
+            throw new Exception("getting deleted object");
+        }
+        return obj;
     }
 }
