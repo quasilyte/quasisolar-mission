@@ -21,6 +21,7 @@ public class WeaponDesign : IItem {
     public float cooldown = 0;
     public float energyCost = 0;
     public float range = 0;
+    public float duration = 0;
     public float minRange = 0;
     public DamageKind damageKind;
     public float damage = 0;
@@ -110,6 +111,7 @@ public class WeaponDesign : IItem {
     public static void InitLists() {
         list = new WeaponDesign[]{
             SpreadGunWeapon.Design,
+            SpreadLaserWeapon.Design,
             ZapWeapon.Design,
             NeedleGunWeapon.Design,
             ScytheWeapon.Design,
@@ -154,6 +156,7 @@ public class WeaponDesign : IItem {
             SwarmSpawnerWeapon.Design,
             HyperCutterWeapon.Design,
             AfterburnerWeapon.Design,
+            TempestWeapon.Design,
         };
         Array.Sort(specialList, (x, y) => x.sellingPrice.CompareTo(y.sellingPrice));
         foreach (var w in specialList) {
