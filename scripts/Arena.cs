@@ -37,6 +37,7 @@ public class Arena : Node2D {
     private Pilot _flagshipPilot;
     private bool _battleIsOver = false;
 
+    private Pilot _defensiveTurretPilot = null;
     private int _defensiveTurretShots = 0;
     private float _turretShotDelay = 0;
     private Vector2 _turretsShotLocation;
@@ -132,6 +133,13 @@ public class Arena : Node2D {
     public void Run(List<ArenaViewport> viewports) {
         _pilotByVessel = new Dictionary<Vessel, Pilot>();
         _vesselByPilot = new Dictionary<Pilot, Vessel>();
+
+        Action<Pilot, Vessel> addPilot = (Pilot pilot, Vessel vessel) => {
+            _pilots.Add(pilot);
+            _pilotByVessel[vessel] = pilot;
+            _vesselByPilot[pilot] = vessel;
+        };
+
         _pilots = new List<Pilot>();
         for (int i = 0; i < ArenaSettings.combatants.Count; i++) {
             var vessel = ArenaSettings.combatants[i];
@@ -147,9 +155,16 @@ public class Arena : Node2D {
                     alliance = ArenaSettings.alliances[vessel],
                 };
             }
-            _pilots.Add(pilot);
-            _pilotByVessel[vessel] = pilot;
-            _vesselByPilot[pilot] = vessel;
+            addPilot(pilot, vessel);
+        }
+        if (ArenaSettings.defensiveTurret != null) {
+            _defensiveTurretPilot = new Pilot{
+                name = "star base",
+                alliance = ArenaSettings.defensiveTurretAlliance,
+            };
+            _defensiveTurretShots = ArenaSettings.defensiveTurretShots;
+            _turretShotDelay = QRandom.FloatRange(2, 6);
+            _turretsShotLocation = new Vector2(0, 200 + QRandom.FloatRange(0, 400));
         }
 
         VesselNode humanVessel = null;
@@ -213,6 +228,16 @@ public class Arena : Node2D {
                 }
             }
         }
+        if (_defensiveTurretPilot != null) {
+            foreach (Pilot y in _pilots) {
+                var x = _defensiveTurretPilot;
+                if (x.alliance != y.alliance) {
+                    x.Enemies.Add(y);
+                } else {
+                    x.Allies.Add(y);
+                }
+            }
+        }
 
         if (humanVessel != null) {
             GetNode<DebugUi>("CanvasLayer/DebugUi").ObserveVessel(humanVessel);
@@ -249,12 +274,6 @@ public class Arena : Node2D {
             } else {
                 Engine.TimeScale = 2.00f;
             }
-        }
-
-        if (ArenaSettings.defensiveTurret != null) {
-            _defensiveTurretShots = ArenaSettings.defensiveTurretShots;
-            _turretShotDelay = QRandom.FloatRange(2, 6);
-            _turretsShotLocation = new Vector2(0, 200 + QRandom.FloatRange(0, 400));
         }
 
         switch (ArenaSettings.envDanger) {
@@ -312,7 +331,12 @@ public class Arena : Node2D {
 
         var target = QRandom.Element(potentialTargets);
         if (ArenaSettings.defensiveTurret == NeedleGunWeapon.TurretDesign) {
-            var turretNode = GaussDefenseNode.New(ArenaSettings.defensiveTurretAlliance, target);
+            var turretNode = GaussDefenseNode.New(_defensiveTurretPilot, target);
+            turretNode.Position = _turretsShotLocation;
+            turretNode.Rotation = (target.Vessel.Position - _turretsShotLocation).Normalized().Angle();
+            AddChild(turretNode);
+        } else if (ArenaSettings.defensiveTurret == RocketLauncherWeapon.TurretDesign) {
+            var turretNode = MissileDefenseNode.New(_defensiveTurretPilot, target);
             turretNode.Position = _turretsShotLocation;
             turretNode.Rotation = (target.Vessel.Position - _turretsShotLocation).Normalized().Angle();
             AddChild(turretNode);

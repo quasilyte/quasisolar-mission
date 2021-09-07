@@ -143,14 +143,13 @@ public class MapView : Node2D {
         modeAttackToggle.Connect("pressed", this, nameof(OnModeTogglePressed),
             new Godot.Collections.Array { UnitMode.Attack });
 
-        var modeSearchToggle = GetNode<TextureButton>("UI/Modes/SearchModeToggle");
-        modeSearchToggle.Connect("pressed", this, nameof(OnModeTogglePressed),
-            new Godot.Collections.Array { UnitMode.Search });
+        // var modeSearchToggle = GetNode<TextureButton>("UI/Modes/SearchModeToggle");
+        // modeSearchToggle.Connect("pressed", this, nameof(OnModeTogglePressed),
+        //     new Godot.Collections.Array { UnitMode.Search });
 
         _modeToggles = new Dictionary<UnitMode, TextureButton>{
             {UnitMode.Idle, modeIdleToggle},
             {UnitMode.Attack, modeAttackToggle},
-            {UnitMode.Search, modeSearchToggle},
         };
 
         _modeToggled = _modeToggles[_gameState.mapState.mode];
@@ -162,6 +161,7 @@ public class MapView : Node2D {
         GetNode<TextureButton>("UI/MiningButton").Connect("pressed", this, nameof(OnPlanetsButton));
         GetNode<TextureButton>("UI/ActionMenuButton").Connect("pressed", this, nameof(OnActionMenuButton));
         GetNode<TextureButton>("UI/ResearchButton").Connect("pressed", this, nameof(OnResearchButton));
+        GetNode<TextureButton>("UI/QuestLogButton").Connect("pressed", this, nameof(OnQuestLogButton));
 
         _patrolReachesBasePopup = GetNode<PopupNode>("UI/PatrolReachesBasePopup");
         _patrolReachesBasePopup.GetNode<ButtonNode>("AttackButton").Connect("pressed", this, nameof(OnPatrolReachesBaseAttackButton));
@@ -771,7 +771,11 @@ public class MapView : Node2D {
             return;
         }
         _humanUnit.cargo.power -= 5;
-        _gameState.fuel += 15;
+        if (_gameState.technologiesResearched.Contains("Improved Power Conversion")) {
+            _gameState.fuel += 20;
+        } else {
+            _gameState.fuel += 15;
+        }
         UpdateUI();
     }
 
@@ -829,7 +833,12 @@ public class MapView : Node2D {
 
     private void OnResearchButton() {
         StopMovement();
-        GetTree().ChangeScene("res://scenes/ResearchScreen.tscn");
+        GetTree().ChangeScene("res://scenes/screens/ResearchScreen.tscn");
+    }
+
+    private void OnQuestLogButton() {
+        StopMovement();
+        GetTree().ChangeScene("res://scenes/screens/QuestLogScreen.tscn");
     }
 
     private void OnPlanetSendDroneButton(int i) {
@@ -992,6 +1001,13 @@ public class MapView : Node2D {
             OpenCheats();
         }
 
+
+        _human.node.ProcessTick(delta);
+        foreach (var u in _spaceUnits) {
+            u.ProcessTick(delta);
+        }
+        _spaceUnits.RemoveWhere((x) => x.unit.deleted || !IsInstanceValid(x));
+
         if (_gameState.mapState.movementEnabled) {
             if (_currentSystem != null && _human.node.GlobalPosition != _currentSystem.GlobalPosition) {
                 LeaveSystem();
@@ -1048,7 +1064,7 @@ public class MapView : Node2D {
     }
 
     private void OnSpaceUnitRemoved(SpaceUnitNode unitNode) {
-        _spaceUnits.Remove(unitNode);
+        unitNode.unit.deleted = true;
     }
 
     private void MarkStarBaseAsDiscovered(StarBase starBase) {
@@ -1219,9 +1235,9 @@ public class MapView : Node2D {
 
         if (sys.starBase.id == 0) {
             SpaceUnit rarilouUnit = null;
-            foreach (var x in _gameState.spaceUnits.objects.Values) {
-                if (x.pos == sys.pos && x.owner == Faction.Rarilou) {
-                    rarilouUnit = x;
+            foreach (var x in _spaceUnits) {
+                if (x.unit.pos == sys.pos && x.unit.owner == Faction.Rarilou) {
+                    rarilouUnit = x.unit;
                     break;
                 }
             }
@@ -1230,6 +1246,7 @@ public class MapView : Node2D {
                 var ctx = NewRandomEventContext();
                 ctx.spaceUnit = rarilouUnit;
                 RpgGameState.arenaUnit1 = rarilouUnit;
+                rarilouUnit.botProgram = SpaceUnit.Program.RarilouFree;
                 OpenRandomEvent(ctx);
                 return;
             }
@@ -1899,6 +1916,13 @@ public class MapView : Node2D {
                 if (_gameState.technologiesResearched.Contains("Gauss Turret Capacity")) {
                     ArenaSettings.defensiveTurretShots++;
                 }
+            } else if (starBase.modules.Contains("Missile Turret")) {
+                ArenaSettings.defensiveTurretAlliance = 0;
+                ArenaSettings.defensiveTurret = RocketLauncherWeapon.TurretDesign;
+                ArenaSettings.defensiveTurretShots = 3;
+                if (_gameState.technologiesResearched.Contains("Missile Turret Capacity")) {
+                    ArenaSettings.defensiveTurretShots++;
+                }
             }
         }
     }
@@ -1997,8 +2021,8 @@ public class MapView : Node2D {
         }
 
         var numUnits = 0;
-        foreach (var u in _gameState.spaceUnits.objects.Values) {
-            if (u.owner == Faction.Rarilou) {
+        foreach (var u in _spaceUnits) {
+            if (u.unit.owner == Faction.Rarilou) {
                 numUnits++;
             }
         }
@@ -2006,7 +2030,7 @@ public class MapView : Node2D {
             return;
         }
 
-        _gameState.rarilouPlans.unitSpawnDelay = QRandom.IntRange(400, 900);
+        _gameState.rarilouPlans.unitSpawnDelay = QRandom.IntRange(350, 700);
 
         var fleetSize = QRandom.IntRange(1, 3);
         var fleet = new List<Vessel.Ref>();

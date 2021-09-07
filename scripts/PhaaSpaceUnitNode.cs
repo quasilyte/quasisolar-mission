@@ -88,7 +88,6 @@ public class PhaaSpaceUnitNode : SpaceUnitNode {
             GD.Print("WARNING: can't board all the ships");
         }
         starBase.units.Remove(unit.GetRef());
-        unit.deleted = true;
         EmitSignal(nameof(Removed));
         QueueFree();
     }

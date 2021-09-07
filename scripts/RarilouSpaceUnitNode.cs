@@ -54,6 +54,15 @@ public class RarilouSpaceUnitNode : SpaceUnitNode {
         _canBeDetected = true;
     }
 
+    public override void ProcessTick(float delta) {
+        base.ProcessTick(delta);
+        if (unit.botProgram == SpaceUnit.Program.RarilouFree) {
+            PickNewWaypoint();
+            unit.botProgram = SpaceUnit.Program.GenericBehavior;
+            return;
+        }
+    }
+
     public override void ProcessDay() {
         base.ProcessDay();
 

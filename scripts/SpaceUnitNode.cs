@@ -62,7 +62,7 @@ public abstract class SpaceUnitNode : Node2D {
         GetNode<Area2D>("Area2D").Connect("mouse_exited", this, nameof(OnMouseExited));
     }
 
-    public override void _Process(float delta) {
+    public virtual void ProcessTick(float delta) {
         if (_gameState.mapState.movementEnabled) {
             Move(delta);
         }

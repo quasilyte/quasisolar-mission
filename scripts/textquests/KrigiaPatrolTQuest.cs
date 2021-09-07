@@ -26,9 +26,6 @@ public class KrigiaPatrolTQuest : AbstractTQuest {
         if (status == DiplomaticStatus.NonAttackPact) {
             return "non-aggression pact";
         }
-        if (status == DiplomaticStatus.TradingAgreement) {
-            return "trading agreement";
-        }
         return "unspecified";
     }
 

@@ -11,6 +11,7 @@ public class Vessel: AbstractPoolValue, IItem {
     public Faction faction;
 
     public bool isBot;
+    public bool isMercenary = false;
 
     public int deviceId;
     public bool isGamepad;
@@ -77,6 +78,7 @@ public class Vessel: AbstractPoolValue, IItem {
         cost += GetEnergySource().sellingPrice;
         cost += Design().sellingPrice;
         cost += Shield().sellingPrice;
+        cost += Sentinel().sellingPrice;
         return cost;
     }
 }

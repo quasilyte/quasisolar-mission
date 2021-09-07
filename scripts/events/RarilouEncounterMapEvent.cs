@@ -11,7 +11,7 @@ public class RarilouEncounterMapEvent: AbstractMapEvent {
         var e = new RarilouEncounterMapEvent();
 
         e.text = MultilineText(@"
-            It's a rare occasion to meet a Rarilou fleet in space.
+            You've encountered a Rarilou fleet.
             
             They're already trying to leave this system,
             so if you have any business with them,
