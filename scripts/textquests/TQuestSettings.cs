@@ -1,3 +1,3 @@
 public static class TQuestSettings {
-    public static bool showUnavailable = false;
+    public static bool showUnavailable = true;
 }
