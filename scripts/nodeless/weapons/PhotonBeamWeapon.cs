@@ -12,7 +12,7 @@ public class PhotonBeamWeapon : IWeapon {
         energyCost = 25f,
         range = 320f,
         damage = 24f,
-        damageKind = DamageKind.Energy,
+        damageKind = DamageKind.Electromagnetic,
         isSpecial = true,
     };
     public WeaponDesign GetDesign() { return Design; }

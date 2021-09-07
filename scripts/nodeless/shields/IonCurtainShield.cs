@@ -6,7 +6,7 @@ public class IonCurtainShield : AbstractShield {
         description = "TODO",
         level = 1,
 
-        activeEnergyDamageReceive = 0.60f,
+        activeElectromagneticDamageReceive = 0.60f,
         activeKineticDamageReceive = 1,
         activeThermalDamageReceive = 1,
 

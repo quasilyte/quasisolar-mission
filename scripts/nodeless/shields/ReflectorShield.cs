@@ -6,7 +6,7 @@ public class ReflectorShield : AbstractShield {
         description = "TODO",
         level = 2,
 
-        activeEnergyDamageReceive = 1,
+        activeElectromagneticDamageReceive = 1,
         activeKineticDamageReceive = 0.6f,
         activeThermalDamageReceive = 0.4f,
 

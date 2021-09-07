@@ -11,7 +11,7 @@ public class BubbleGunWeapon : AbstractWeapon {
         energyCost = 5.0f,
         range = -7,
         damage = 11.0f,
-        damageKind = DamageKind.Energy,
+        damageKind = DamageKind.Electromagnetic,
         projectileSpeed = 130.0f,
         botHintSnipe = 0,
         // botHintEffectiveAngle = -0.8f,

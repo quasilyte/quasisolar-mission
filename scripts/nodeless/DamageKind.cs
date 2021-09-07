@@ -1,7 +1,7 @@
 public enum DamageKind {
     None,
 
-    Energy,
+    Electromagnetic,
     Kinetic,
     Thermal,
 }

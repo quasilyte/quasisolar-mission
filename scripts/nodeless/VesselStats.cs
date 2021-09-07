@@ -5,7 +5,7 @@ public class VesselStats {
     public float maxBackupEnergy;
     public float energyRegen;
 
-    public float energyDamageReceived = 0;
+    public float electromagneticDamageReceived = 0;
     public float kineticDamageReceived = 0;
     public float thermalDamageReceived = 0;
     public float starDamageReceived = 0;
@@ -32,7 +32,7 @@ public class VesselStats {
             maxSpeed += p.maxSpeed;
             acceleration += p.acceleration;
             maxBackupEnergy += p.maxBackupEnergy;
-            energyDamageReceived += p.energyDamageReceived;
+            electromagneticDamageReceived += p.electromagneticDamageReceived;
             kineticDamageReceived += p.kineticDamageReceived;
             thermalDamageReceived += p.thermalDamageReceived;
             starDamageReceived += p.starDamageReceived;

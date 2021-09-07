@@ -12,7 +12,7 @@ public class IonCannonWeapon : IWeapon {
         energyCost = 4.0f,
         range = 250.0f,
         damage = 5.0f,
-        damageKind = DamageKind.Energy,
+        damageKind = DamageKind.Electromagnetic,
         energyDamage = 12.0f,
         projectileSpeed = 320.0f,
         botHintSnipe = 0.3f,

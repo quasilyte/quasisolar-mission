@@ -6,7 +6,7 @@ public class PhaserShield : AbstractShield {
         description = "TODO",
         level = 3,
 
-        activeEnergyDamageReceive = 1,
+        activeElectromagneticDamageReceive = 1,
         activeKineticDamageReceive = 1,
         activeThermalDamageReceive = 1,
 

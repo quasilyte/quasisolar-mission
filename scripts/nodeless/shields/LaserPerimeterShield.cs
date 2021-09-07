@@ -6,7 +6,7 @@ public class LaserPerimeterShield : AbstractShield {
         description = "TODO",
         level = 2,
 
-        activeEnergyDamageReceive = 0.3f,
+        activeElectromagneticDamageReceive = 0.3f,
         activeKineticDamageReceive = 1,
         activeThermalDamageReceive = 1,
 

@@ -6,7 +6,7 @@ public class AegisShield : AbstractShield {
         description = "TODO",
         level = 3,
 
-        activeEnergyDamageReceive = 0.25f,
+        activeElectromagneticDamageReceive = 0.25f,
         activeKineticDamageReceive = 0.3f,
         activeThermalDamageReceive = 0.5f,
 

@@ -6,7 +6,7 @@ public class DispersionFieldShield : AbstractShield {
         description = "TODO",
         level = 2,
 
-        activeEnergyDamageReceive = 0.7f,
+        activeElectromagneticDamageReceive = 0.7f,
         activeKineticDamageReceive = 0.8f,
         activeThermalDamageReceive = 1,
 

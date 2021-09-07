@@ -13,7 +13,7 @@ public class MjolnirWeapon : IWeapon {
         minRange = 250,
         damage = 20,
         energyDamage = 25,
-        damageKind = DamageKind.Energy,
+        damageKind = DamageKind.Electromagnetic,
         projectileSpeed = 320,
         botHintSnipe = 0.8f,
         isSpecial = true,

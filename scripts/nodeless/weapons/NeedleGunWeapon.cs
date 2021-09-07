@@ -5,7 +5,7 @@ public class NeedleGunWeapon : IWeapon {
         damage = 22,
         range = 2000,
         projectileSpeed = 500,
-        damageKind = DamageKind.Energy,
+        damageKind = DamageKind.Electromagnetic,
         ignoresAsteroids = true,
         maskScale = 2.5f,
     };
@@ -21,7 +21,7 @@ public class NeedleGunWeapon : IWeapon {
         cooldown = 1.8f,
         range = 270.0f,
         damage = 11.0f,
-        damageKind = DamageKind.Energy,
+        damageKind = DamageKind.Electromagnetic,
         energyCost = 10,
         projectileSpeed = 280.0f,
         botHintSnipe = 0.25f,

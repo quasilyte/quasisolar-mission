@@ -13,7 +13,7 @@ public class DisintegratorWeapon : AbstractWeapon {
         energyCost = 0,
         range = 350.0f,
         damage = 4,
-        damageKind = DamageKind.Energy,
+        damageKind = DamageKind.Electromagnetic,
         projectileSpeed = 250.0f,
         botHintSnipe = 0.6f,
         isSpecial = true,

@@ -11,7 +11,7 @@ public class PulseLaserWeapon : IWeapon {
         energyCost = 5.0f,
         range = 200.0f,
         damage = 8.0f,
-        damageKind = DamageKind.Energy,
+        damageKind = DamageKind.Electromagnetic,
         projectileSpeed = 300.0f,
         botHintSnipe = 0.15f,
     };

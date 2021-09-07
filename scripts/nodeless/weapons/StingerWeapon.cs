@@ -12,7 +12,7 @@ public class StingerWeapon : IWeapon {
         energyCost = 10.0f,
         range = 250.0f,
         damage = 6.0f,
-        damageKind = DamageKind.Energy,
+        damageKind = DamageKind.Kinetic,
         projectileSpeed = 380.0f,
         botHintSnipe = 0.3f,
     };

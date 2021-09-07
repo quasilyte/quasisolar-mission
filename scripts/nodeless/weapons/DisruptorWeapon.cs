@@ -12,7 +12,7 @@ public class DisruptorWeapon : AbstractWeapon {
         energyCost = 9.0f,
         range = 300.0f,
         damage = 12,
-        damageKind = DamageKind.Energy,
+        damageKind = DamageKind.Electromagnetic,
         projectileSpeed = 280.0f,
         botHintSnipe = 0.45f,
         isSpecial = true,

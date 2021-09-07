@@ -12,7 +12,7 @@ public class PointDefenseLaserWeapon : IWeapon {
         energyCost = 11.0f,
         range = 175.0f,
         damage = 4.0f,
-        damageKind = DamageKind.Energy,
+        damageKind = DamageKind.Electromagnetic,
     };
     public WeaponDesign GetDesign() { return Design; }
     public void Ready() {}

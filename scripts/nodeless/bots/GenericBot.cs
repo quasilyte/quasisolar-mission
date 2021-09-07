@@ -295,8 +295,8 @@ class GenericBot : AbstractBot {
             return true;
         }
 
-        if (damageKind == DamageKind.Energy) {
-            return _shield.activeEnergyDamageReceive != 1;
+        if (damageKind == DamageKind.Electromagnetic) {
+            return _shield.activeElectromagneticDamageReceive != 1;
         }
         if (damageKind == DamageKind.Kinetic) {
             return _shield.activeKineticDamageReceive != 1;
@@ -383,7 +383,7 @@ class GenericBot : AbstractBot {
         }
 
         if (events.targetedByZap) {
-            if (_shield.activeEnergyDamageReceive != 1) {
+            if (_shield.activeElectromagneticDamageReceive != 1) {
                 Shield();
                 return true;
             }

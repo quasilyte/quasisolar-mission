@@ -50,8 +50,8 @@ public abstract class AbstractShield : IShield {
     }
 
     public static float CalculateReducedDamage(ShieldDesign design, float damage, DamageKind kind) {
-        if (kind == DamageKind.Energy) {
-            return damage * design.activeEnergyDamageReceive;
+        if (kind == DamageKind.Electromagnetic) {
+            return damage * design.activeElectromagneticDamageReceive;
         } else if (kind == DamageKind.Kinetic) {
             return damage * design.activeKineticDamageReceive;
         } else if (kind == DamageKind.Thermal) {

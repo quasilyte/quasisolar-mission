@@ -69,7 +69,7 @@ public class WeaponDesign : IItem {
             parts.Add("Damage: " + damage.ToString());
         }
         if (energyDamage != 0) {
-            parts.Add("Energy damage: " + energyDamage.ToString());
+            parts.Add("Electromagnetic damage: " + energyDamage.ToString());
         }
         if (minRange != 0) {
             parts.Add("Min range: " + minRange.ToString());

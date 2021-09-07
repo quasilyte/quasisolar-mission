@@ -12,7 +12,7 @@ public class PhotonBurstCannonWeapon : IWeapon {
         energyCost = 6f,
         range = 200f,
         damage = 5f,
-        damageKind = DamageKind.Energy,
+        damageKind = DamageKind.Electromagnetic,
         projectileSpeed = 400.0f,
         botHintSnipe = 0.3f,
     };

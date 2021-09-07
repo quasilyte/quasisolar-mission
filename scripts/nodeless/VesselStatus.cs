@@ -20,7 +20,7 @@ public class VesselStatus {
     public int maxSpeed = 0;
     public int repairCost = 0;
     public int maxBackupEnergy = 0;
-    public int energyDamageReceived = 0;
+    public int electromagneticDamageReceived = 0;
     public int kineticDamageReceived = 0;
     public int thermalDamageReceived = 0;
     public int starDamageReceived = 0;
@@ -93,7 +93,7 @@ public class VesselStatus {
             level = 2,
             expCost = 20,
             name = "Energy Deviator",
-            energyDamageReceived = -3,
+            electromagneticDamageReceived = -3,
             kineticDamageReceived = +1,
         },
 
@@ -132,7 +132,7 @@ public class VesselStatus {
             level = 3,
             expCost = 25,
             name = "Anti-Laser Coating",
-            energyDamageReceived = -2,
+            electromagneticDamageReceived = -2,
             maxBackupEnergy = -10,
         },
 

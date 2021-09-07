@@ -11,7 +11,7 @@ public class AssaultLaserWeapon : IWeapon {
         energyCost = 9.0f,
         range = 260,
         damage = 7.0f,
-        damageKind = DamageKind.Energy,
+        damageKind = DamageKind.Electromagnetic,
         projectileSpeed = 340.0f,
         botHintSnipe = 0.25f,
     };

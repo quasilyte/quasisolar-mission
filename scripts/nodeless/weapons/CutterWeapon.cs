@@ -11,7 +11,7 @@ public class CutterWeapon : AbstractWeapon {
         energyCost = 13,
         range = 330,
         damage = 15,
-        damageKind = DamageKind.Energy,
+        damageKind = DamageKind.Electromagnetic,
         projectileSpeed = 280,
         botHintSnipe = 0.2f,
         botHintEffectiveAngle = 1.6f,

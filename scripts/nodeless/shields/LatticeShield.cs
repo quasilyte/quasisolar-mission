@@ -6,7 +6,7 @@ public class LatticeShield : AbstractShield {
         description = "TODO",
         level = 2,
 
-        activeEnergyDamageReceive = 0.70f,
+        activeElectromagneticDamageReceive = 0.70f,
         activeKineticDamageReceive = 0.80f,
         activeThermalDamageReceive = 0.90f,
 

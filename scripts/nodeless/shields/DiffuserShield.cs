@@ -6,7 +6,7 @@ public class DiffuserShield : AbstractShield {
         description = "TODO",
         level = 3,
 
-        activeEnergyDamageReceive = 0.1f,
+        activeElectromagneticDamageReceive = 0.1f,
         activeKineticDamageReceive = 1,
         activeThermalDamageReceive = 1,
 

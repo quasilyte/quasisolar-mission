@@ -11,7 +11,7 @@ public class ZapWeapon : IWeapon {
         energyCost = 15,
         range = 220,
         damage = 3,
-        damageKind = DamageKind.Energy,
+        damageKind = DamageKind.Electromagnetic,
         projectileSpeed = 1000.0f,
         botHintSnipe = 0,
     };

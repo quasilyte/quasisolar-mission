@@ -11,7 +11,7 @@ public class HyperCutterWeapon : IWeapon {
         energyCost = 18,
         range = 360,
         damage = 19,
-        damageKind = DamageKind.Energy,
+        damageKind = DamageKind.Electromagnetic,
         projectileSpeed = 280,
         botHintSnipe = 0.3f,
         isSpecial = true,

@@ -6,7 +6,7 @@ public class HeatScreenShield : AbstractShield {
         description = "TODO",
         level = 1,
 
-        activeEnergyDamageReceive = 0.8f,
+        activeElectromagneticDamageReceive = 0.8f,
         activeKineticDamageReceive = 1,
         activeThermalDamageReceive = 0.8f,
 

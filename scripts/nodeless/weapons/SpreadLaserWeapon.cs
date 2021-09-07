@@ -11,7 +11,7 @@ public class SpreadLaserWeapon : AbstractWeapon {
         energyCost = 3,
         range = 190.0f,
         damage = 6.0f,
-        damageKind = DamageKind.Energy,
+        damageKind = DamageKind.Electromagnetic,
         projectileSpeed = 450.0f,
         botHintEffectiveAngle = 0.6f,
     };

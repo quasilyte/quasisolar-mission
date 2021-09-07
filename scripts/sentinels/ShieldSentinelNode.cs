@@ -57,8 +57,8 @@ public class ShieldSentinelNode : SentinelNode {
         if (damageKind == DamageKind.Kinetic) {
             return shield.activeKineticDamageReceive != 1;
         }
-        if (damageKind == DamageKind.Explosive) {
-            return shield.activeExplosiveDamageReceive != 1;
+        if (damageKind == DamageKind.Electromagnetic) {
+            return shield.activeElectromagneticDamageReceive != 1;
         }
         return false;
     }

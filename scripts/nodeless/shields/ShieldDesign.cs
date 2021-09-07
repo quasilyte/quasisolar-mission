@@ -11,7 +11,7 @@ public class ShieldDesign : IItem {
     public int level;
     public List<string> technologiesNeeded = new List<string>();
     
-    public float activeEnergyDamageReceive = 1;
+    public float activeElectromagneticDamageReceive = 1;
     public float activeKineticDamageReceive = 1;
     public float activeThermalDamageReceive = 1;
 
@@ -48,8 +48,8 @@ public class ShieldDesign : IItem {
         }
         parts.Add("");
         parts.Add("Level: " + level.ToString());
-        if (activeEnergyDamageReceive != 1) {
-            parts.Add("Energy damage reduction: " + (int)Math.Round(100 * (1.0 - activeEnergyDamageReceive)) + "%");
+        if (activeElectromagneticDamageReceive != 1) {
+            parts.Add("Electromagnetic damage reduction: " + (int)Math.Round(100 * (1.0 - activeElectromagneticDamageReceive)) + "%");
         }
         if (activeKineticDamageReceive != 1) {
             parts.Add("Kinetic damage reduction: " + (int)Math.Round(100 * (1.0 - activeKineticDamageReceive)) + "%");

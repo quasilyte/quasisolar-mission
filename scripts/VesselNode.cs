@@ -303,7 +303,7 @@ public class VesselNode : Node2D {
             return;
         }
 
-        if (_hasLaserAbsorber && kind == DamageKind.Energy) {
+        if (_hasLaserAbsorber && kind == DamageKind.Electromagnetic) {
             if (QRandom.Float() < LaserAbsorberArtifact.chance) {
                 var color = Color.Color8(0xff, 0xff, 0xff);
                 var score = DamageScoreNode.New(0, color, false);
@@ -314,8 +314,8 @@ public class VesselNode : Node2D {
         }
 
         float delta = 0;
-        if (kind == DamageKind.Energy) {
-            delta = State.stats.energyDamageReceived;
+        if (kind == DamageKind.Electromagnetic) {
+            delta = State.stats.electromagneticDamageReceived;
         } else if (kind == DamageKind.Kinetic) {
             delta = State.stats.kineticDamageReceived;
         } else if (kind == DamageKind.Thermal) {

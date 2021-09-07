@@ -12,7 +12,7 @@ public class HarpoonWeapon : IWeapon {
         energyCost = 7.0f,
         range = 310.0f,
         damage = 11.0f,
-        damageKind = DamageKind.Energy,
+        damageKind = DamageKind.Electromagnetic,
         projectileSpeed = 350.0f,
         botHintSnipe = 0.5f,
         botHintScatter = 0.5f,
