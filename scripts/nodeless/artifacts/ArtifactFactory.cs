@@ -40,6 +40,9 @@ public static class ArtifactFactory {
         if (a == ShieldProlongerArtifact.Design) {
             return new ShieldProlongerArtifact();
         }
+        if (a == SentinelControllerArtifact.Design) {
+            return new SentinelControllerArtifact();
+        }
 
         throw new Exception("invalid ArtifactDesign argument");
     }

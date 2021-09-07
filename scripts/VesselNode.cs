@@ -21,6 +21,8 @@ public class VesselNode : Node2D {
     private bool _hasImpulseDevourer = false;
     private bool _hasLaserAbsorber = false;
 
+    public bool hasSentinelController = false;
+
     private bool _phasing = false;
     private bool _destroyed = false;
 
@@ -76,6 +78,9 @@ public class VesselNode : Node2D {
             }
             if (a is LaserAbsorberArtifact) {
                 _hasLaserAbsorber = true;
+            }
+            if (a is SentinelControllerArtifact) {
+                hasSentinelController = true;
             }
             if (a is AsynchronousReloaderArtifact) {
                 State.hasAsyncReloader = true;

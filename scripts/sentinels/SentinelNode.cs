@@ -26,6 +26,9 @@ public abstract class SentinelNode : Node2D {
 
     public override void _Ready() {
         _hp = _design.hp;
+        if (_vessel.hasSentinelController) {
+            _hp *= 1.5f;
+        }
 
         var area = GetNode<Area2D>("Pivot/Sprite/Area2D");
         area.Connect("area_entered", this, nameof(OnCollision));

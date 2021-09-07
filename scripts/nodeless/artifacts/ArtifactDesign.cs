@@ -56,6 +56,7 @@ public class ArtifactDesign : IItem {
             ShivaRechargerArtifact.Design,
             ImpulseDevourerArtifact.Design,
             ShieldProlongerArtifact.Design,
+            SentinelControllerArtifact.Design,
         };
         Array.Sort(list, (x, y) => x.sellingPrice.CompareTo(y.sellingPrice));
 
