@@ -2,35 +2,41 @@ using System.Collections.Generic;
 using Godot;
 
 public static class PilotNames {
-    public static string UniqHumanName(HashSet<string> alreadyUsed) {
-        var name = PeekHumanName(alreadyUsed);
+    public static string UniqRarilouName(HashSet<string> alreadyUsed) {
+        var name = PickName(rarilouNames, rarilouNamePrefix, rarilouNameSuffix, alreadyUsed);
         alreadyUsed.Add(name);
         return name;
     }
 
-    public static string PeekHumanName(HashSet<string> alreadyUsed = null) {
-        var i = QRandom.PositiveInt() % humanNames.Length;
+    public static string UniqHumanName(HashSet<string> alreadyUsed) {
+        var name = PickName(humanNames, humanNamePrefix, humanNameSuffix, alreadyUsed);
+        alreadyUsed.Add(name);
+        return name;
+    }
+
+    public static string PickName(string[] names, string[] prefixes, string[] suffixes, HashSet<string> alreadyUsed = null) {
+        var i = QRandom.PositiveInt() % names.Length;
         for (int attempt = 0; attempt < 5; attempt++) {
-            var name = humanNames[i];
+            var name = names[i];
             if (alreadyUsed == null || !alreadyUsed.Contains(name)) {
                 return name;
             }
-            foreach (string prefix in humanNamePrefix) {
+            foreach (string prefix in prefixes) {
                 if (!alreadyUsed.Contains($"{prefix} {name}")) {
                     return $"{prefix} {name}";
                 }
             }
-            foreach (string suffix in humanNameSuffix) {
+            foreach (string suffix in suffixes) {
                 if (!alreadyUsed.Contains($"{name} {suffix}")) {
                     return $"{suffix} {name}";
                 }
             }
             i++;
-            if (i >= humanNames.Length) {
+            if (i >= names.Length) {
                 i = 0;
             }
         }
-        return humanNames[i] + "#" + alreadyUsed.Count;
+        return names[i] + "#" + alreadyUsed.Count;
     }
 
     private static string[] humanNamePrefix = {
@@ -43,6 +49,27 @@ public static class PilotNames {
     private static string[] humanNameSuffix = {
         "Junior",
         "Senior",
+    };
+
+    private static string[] rarilouNamePrefix = {};
+
+    private static string[] rarilouNameSuffix = {
+        "I",
+        "II",
+        "III",
+        "IV",
+        "V",
+    };
+
+    private static string[] rarilouNames = {
+        "Rala",
+        "Ralu",
+        "Raali",
+        "Rakka",
+        "Rilu",
+        "Rila",
+        "Riakka",
+        "Rikala",
     };
 
     private static string[] humanNames = {
