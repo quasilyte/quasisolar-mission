@@ -25,6 +25,9 @@ public class StarBaseModulesScreen : Node2D {
 
         var modulesAvailable = new List<StarBaseModule>();
         foreach (var module in StarBaseModule.list) {
+            if (module.researchRequired && !_gameState.technologiesResearched.Contains(module.name)) {
+                continue;
+            }
             modulesAvailable.Add(module);
         }
 
@@ -118,16 +121,30 @@ public class StarBaseModulesScreen : Node2D {
         GetNode<Label>("ProductionMenu/ModeName").Text = produtionLabelText;
     }
 
+    private bool CanBuildModule(StarBaseModule module) {
+        if (module.isTurret) {
+            var hasTurret = _starBase.modules.Find((x) => StarBaseModule.Find(x).isTurret) != null;
+            if (hasTurret) {
+                return false;
+            }
+        }
+        if (module.requires != "") {
+            if (!_starBase.modules.Contains(module.requires)) {
+                return false;
+            }
+        }
+        return _starBase.constructionTarget == "" &&
+                _gameState.credits >= module.sellingPrice &&
+                _starBase.modules.Count != 4 &&
+                !_starBase.modules.Contains(module.name);
+    }
+
     private void UpdateUI() {
         GetNode<Label>("Status/Credits/Value").Text = _gameState.credits.ToString();
 
         for (int i = 0; i < _moduleNodes.Count; i++) {
             var module = _moduleNodes[i];
-            module.button.Disabled = _starBase.constructionTarget != "" ||
-                _gameState.credits < module.value.sellingPrice ||
-                _starBase.modules.Count == 4 ||
-                _starBase.modules.Contains(module.value.name) ||
-                (module.value.requires != "" && !_starBase.modules.Contains(module.value.requires));
+            module.button.Disabled = !CanBuildModule(module.value);
             module.label.AddColorOverride("font_color", Color.Color8(255, 255, 255));
             if (module.value.name == _starBase.constructionTarget) {
                 module.label.AddColorOverride("font_color", Color.Color8(0x34, 0x8c, 0x2b));

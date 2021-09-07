@@ -11,6 +11,10 @@ public class StarBaseModule {
 
     public string requires = ""; 
 
+    public bool researchRequired = false;
+
+    public bool isTurret = false;
+
     public static StarBaseModule Find(string name) {
         foreach (var mod in list) {
             if (mod.name == name) {
@@ -35,6 +39,16 @@ public class StarBaseModule {
             sellingPrice = 1500,
             effect = "shoots the attackers during the star base defense battles",
             buildTime = 20,
+            isTurret = true,
+        },
+
+        new StarBaseModule{
+            name = "Missile Turret",
+            sellingPrice = 7000,
+            effect = "shoots the attackers during the star base defense battles",
+            buildTime = 100,
+            researchRequired = true,
+            isTurret = true,
         },
 
         // Discounts.

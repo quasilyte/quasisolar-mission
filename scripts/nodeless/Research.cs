@@ -22,6 +22,7 @@ public class Research {
     public int researchTime;
     public string effect = "";
     public string effect2 = "";
+    public string quest = "";
     public List<string> dependencies = new List<string>();
 
     public static bool IsAvailable(HashSet<string> researched, List<string> requirements) {
@@ -71,6 +72,21 @@ public class Research {
             researchTime = 0,
         },
 
+        new Research{
+            name = "Improved Power Conversion",
+            category = Category.Upgrade,
+            researchTime = 0,
+        },
+
+        // Quest-related researches.
+
+        new Research{
+            name = "Rarilou Energy Conversion",
+            quest = "Energy Conversion Research",
+            category = Category.Fundamental,
+            researchTime = 150,
+        },
+
         // Star base modules tech.
 
         new Research{
@@ -78,6 +94,21 @@ public class Research {
             category = Category.Upgrade,
             researchTime = 30,
             effect = "extra 1 shot for the Gauss Turret defenses",
+        },
+
+        new Research{
+            name = "Missile Turret",
+            category = Category.NewBaseModule,
+            researchTime = 100,
+            dependencies = {"Rocket Launcher"},
+        },
+
+        new Research{
+            name = "Missile Turret Capacity",
+            category = Category.Upgrade,
+            researchTime = 60,
+            effect = "extra 1 shot for the Missile Turret defenses",
+            dependencies = {"Missile Turret"},
         },
 
         // Science tech.
@@ -127,23 +158,16 @@ public class Research {
 
         // Vessel tech.
 
-        // new Research{
-        //     name = "Vessel Lab Branch",
-        //     researchTime = 45,
-        // },
-
         new Research{
             name = "Ark",
             category = Category.NewVesselDesign,
             researchTime = 50,
-            // dependencies = {"Vessel Lab Branch"},
         },
 
         new Research{
             name = "Interceptor",
             category = Category.NewVesselDesign,
             researchTime = 90,
-            // dependencies = {"Vessel Lab Branch"},
         },
 
         new Research{
@@ -152,7 +176,6 @@ public class Research {
             researchTime = 160,
             dependencies = {
                 "Interceptor",
-                "Alien Tech Lab",
             },
         },
 
@@ -699,14 +722,22 @@ public class Research {
         new Research{
             name = "Phaa Weapons",
             material = Faction.Phaa,
-            researchTime = 100,
+            researchTime = 70,
         },
 
         new Research{
             name = "Bubble Gun",
             material = Faction.Phaa,
             category = Category.NewWeapon,
-            researchTime = 85,
+            researchTime = 65,
+            dependencies = {"Phaa Weapons"},
+        },
+
+        new Research{
+            name = "Spread Laser",
+            material = Faction.Phaa,
+            category = Category.NewWeapon,
+            researchTime = 30,
             dependencies = {"Phaa Weapons"},
         },
 
