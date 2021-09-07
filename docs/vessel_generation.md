@@ -90,7 +90,6 @@ Weapons:
 
 * Photon Burst Cannon
 * Twin Photon Burst Cannon
-* Flak Cannon
 
 Special Weapons:
 
