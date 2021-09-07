@@ -52,11 +52,14 @@ public class ArtifactDesign : IItem {
             EnergyConverterArtifact.Design,
             EngineBoosterArtifact.Design,
             MagneticNegatorArtifact.Design,
+            MissileCoordinatorArtifact.Design,
             MissileTargeterArtifact.Design,
             ShivaRechargerArtifact.Design,
             ImpulseDevourerArtifact.Design,
             ShieldProlongerArtifact.Design,
             SentinelControllerArtifact.Design,
+            SentinelLinkArtifact.Design,
+            KineticAcceleratorArtifact.Design,
         };
         Array.Sort(list, (x, y) => x.sellingPrice.CompareTo(y.sellingPrice));
 

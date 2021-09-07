@@ -82,9 +82,6 @@ public class VesselNode : Node2D {
             if (a is SentinelControllerArtifact) {
                 hasSentinelController = true;
             }
-            if (a is AsynchronousReloaderArtifact) {
-                State.hasAsyncReloader = true;
-            }
         }
 
         foreach (var w in weapons) {
@@ -303,7 +300,7 @@ public class VesselNode : Node2D {
         EmitSignal(nameof(TargetedByZap));
     }
 
-    public void ApplyDamage(float amount, DamageKind kind) {
+    public void ApplyDamage(float amount, DamageKind kind, bool critical = false) {
         if (_destroyed) {
             return;
         }
@@ -311,7 +308,7 @@ public class VesselNode : Node2D {
         if (_hasLaserAbsorber && kind == DamageKind.Electromagnetic) {
             if (QRandom.Float() < LaserAbsorberArtifact.chance) {
                 var color = Color.Color8(0xff, 0xff, 0xff);
-                var score = DamageScoreNode.New(0, color, false);
+                var score = DamageScoreNode.New(0, color, false, false);
                 score.Position = QMath.RandomizedLocation(Position, 8);
                 GetParent().AddChild(score);
                 return;
@@ -354,7 +351,13 @@ public class VesselNode : Node2D {
             if (damageReduced) {
                 amount = reducedAmount;
             }
-            var score = DamageScoreNode.New((int)amount, color, damageReduced);
+
+            if (_sentinel != null && State.hasSentinelLink && amount >= 2) {
+                amount /= 2;
+                _sentinel.ApplyDamage(amount, kind, critical);
+            }
+
+            var score = DamageScoreNode.New((int)amount, color, damageReduced, critical);
             score.Position = QMath.RandomizedLocation(Position, 8);
             GetParent().AddChild(score);
         }
@@ -400,7 +403,14 @@ public class VesselNode : Node2D {
             if (projectile is EnergyBoltNode energyBolt) {
                 damage += 4 * energyBolt.chargeLevel;
             }
-            ApplyDamage(damage, design.damageKind);
+            bool critical = false;
+            if (design.damageKind == DamageKind.Kinetic && firedBy.Vessel.State.hasKineticAccelerator) {
+                if (QRandom.Float() < KineticAcceleratorArtifact.chance) {
+                    damage *= 2;
+                    critical = true;
+                }
+            }
+            ApplyDamage(damage, design.damageKind, critical);
             if (design.energyDamage != 0) {
                 ApplyEnergyDamage(design.energyDamage);
             }

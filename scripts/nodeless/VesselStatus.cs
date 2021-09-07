@@ -31,6 +31,7 @@ public class VesselStatus {
     // TODO.
     public int postBattleHpRecovery = 0;
     public int postBattleEnergyRecovery = 0;
+    // TODO: reduced asteroid damage
 
     public static Dictionary<string, VesselStatus> statusByName;
 

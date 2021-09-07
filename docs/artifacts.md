@@ -11,6 +11,9 @@
 | Laser Absorber | 15% chance to block incoming electromagnetic damage |
 | Magnetic Negator | 50% energy damage reduction, 50% stinger resistance |
 | Missile Targeter | +15% rocket weapon range, +10% rockets speed |
+| Missile Coordinator | +30% missile homing |
 | Shield Prolonger | +15% shield activation duration |
 | Shiva Recharger | -33% shield cooldown time |
 | Sentinel Controller | +50% sentinel max hp |
+| Sentinel Link | transfer 50% of received damage to the sentinel |
+| Kinetic Accelerator | 25% chance to deal x2 damage with kinetic weapons |

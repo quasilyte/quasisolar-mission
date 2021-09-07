@@ -5,9 +5,10 @@ public class DamageScoreNode : Node2D {
     private Color _color;
     private int _damage;
     private bool _damageReduced;
+    private bool _critical;
 
     private static PackedScene _scene = null;
-    public static DamageScoreNode New(int damage, Color color, bool damageReduced) {
+    public static DamageScoreNode New(int damage, Color color, bool damageReduced, bool critical) {
         if (_scene == null) {
             _scene = GD.Load<PackedScene>("res://scenes/DamageScoreNode.tscn");
         }
@@ -15,12 +16,17 @@ public class DamageScoreNode : Node2D {
         o._color = color;
         o._damage = damage;
         o._damageReduced = damageReduced;
+        o._critical = critical;
         return o;
     }
 
     public override void _Ready() {
         Modulate = _color;
-        GetNode<Label>("Value").Text = _damage.ToString();
+        var text = _damage.ToString();
+        if (_critical) {
+            text += "!";
+        }
+        GetNode<Label>("Value").Text = text;
         if (_damageReduced) {
             GetNode<Sprite>("Shield").Visible = true;
         }

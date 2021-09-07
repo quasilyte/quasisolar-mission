@@ -28,6 +28,9 @@ public static class ArtifactFactory {
         if (a == MissileTargeterArtifact.Design) {
             return new MissileTargeterArtifact();
         }
+        if (a == MissileCoordinatorArtifact.Design) {
+            return new MissileCoordinatorArtifact();
+        }
         if (a == DivioryThrusterArtifact.Design) {
             return new DivioryThrusterArtifact();
         }
@@ -42,6 +45,12 @@ public static class ArtifactFactory {
         }
         if (a == SentinelControllerArtifact.Design) {
             return new SentinelControllerArtifact();
+        }
+        if (a == SentinelLinkArtifact.Design) {
+            return new SentinelLinkArtifact();
+        }
+        if (a == KineticAcceleratorArtifact.Design) {
+            return new KineticAcceleratorArtifact();
         }
 
         throw new Exception("invalid ArtifactDesign argument");

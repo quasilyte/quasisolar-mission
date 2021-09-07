@@ -66,7 +66,7 @@ public abstract class SentinelNode : Node2D {
             if (plasmaAura.FiredBy.alliance == pilot.alliance) {
                 return;
             }
-            ApplyDamage(PlasmaEmitterWeapon.Design.damage, PlasmaEmitterWeapon.Design.damageKind);
+            ApplyDamage(PlasmaEmitterWeapon.Design.damage, PlasmaEmitterWeapon.Design.damageKind, false);
             return;
         }
 
@@ -75,19 +75,26 @@ public abstract class SentinelNode : Node2D {
             if (firedBy.alliance == pilot.alliance) {
                 return;
             }
+            // TODO: damage calculation is copied from a vessel node.
             var design = projectile.GetWeaponDesign();
             projectile.OnImpact();
             var damage = design.damage;
             if (projectile is EnergyBoltNode energyBolt) {
                 damage += 4 * energyBolt.chargeLevel;
             }
-            ApplyDamage(damage, design.damageKind);
-
+            bool critical = false;
+            if (design.damageKind == DamageKind.Kinetic && firedBy.Vessel.State.hasKineticAccelerator) {
+                if (QRandom.Float() < KineticAcceleratorArtifact.chance) {
+                    damage *= 2;
+                    critical = true;
+                }
+            }
+            ApplyDamage(damage, design.damageKind, critical);
             return;
         }
     }
 
-    public void ApplyDamage(float amount, DamageKind kind) {
+    public void ApplyDamage(float amount, DamageKind kind, bool critical) {
         if (amount > 0) {
             Color color;
             var hpPercentage = _hp / _design.hp;
@@ -100,7 +107,7 @@ public abstract class SentinelNode : Node2D {
             } else {
                 color = Color.Color8(0xff, 0x73, 0x47);
             }
-            var score = DamageScoreNode.New((int)amount, color, false);
+            var score = DamageScoreNode.New((int)amount, color, false, critical);
             GetParent().AddChild(score);
             score.GlobalPosition = QMath.RandomizedLocation(_sprite.GlobalPosition, 8);
         }

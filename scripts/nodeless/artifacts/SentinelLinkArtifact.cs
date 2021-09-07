@@ -1,16 +1,16 @@
 using Godot;
 
-public class AsynchronousReloaderArtifact : IArtifact {
+public class SentinelLinkArtifact : IArtifact {
     public static ArtifactDesign Design = new ArtifactDesign{
-        name = "Asynchronous Reloader",
+        name = "Sentinel Link",
         description = "TODO",
-        effect = "-10% special weapon cooldown",
-        sellingPrice = 3500,
+        effect = "transfer 50% received damage to the sentinel",
+        sellingPrice = 2500,
     };
 
     public void Apply(VesselState state, float delta) {}
 
     public void Upgrade(VesselState state) {
-        state.hasAsyncReloader = true;
+        state.hasSentinelLink = true;
     }
 }

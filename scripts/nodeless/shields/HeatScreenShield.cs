@@ -6,15 +6,15 @@ public class HeatScreenShield : AbstractShield {
         description = "TODO",
         level = 1,
 
-        activeElectromagneticDamageReceive = 0.8f,
+        activeElectromagneticDamageReceive = 0.75f,
         activeKineticDamageReceive = 1,
         activeThermalDamageReceive = 0.8f,
 
-        duration = 0.8f,
+        duration = 0.9f,
         cooldown = 5,
         energyCost = 8,
 
-        sellingPrice = 1750,
+        sellingPrice = 1400,
 
         visualAuraRotates = true,
     };

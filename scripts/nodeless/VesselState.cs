@@ -34,6 +34,10 @@ public class VesselState {
     public bool insideStarHazard = false;
 
     public bool hasAsyncReloader = false;
+    public bool hasKineticAccelerator = false;
+    public bool hasMissleTargeter = false;
+    public bool hasMissleCoordinator = false;
+    public bool hasSentinelLink = false;
 
     public int debris;
 

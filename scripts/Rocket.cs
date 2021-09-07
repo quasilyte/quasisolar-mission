@@ -51,9 +51,14 @@ public class Rocket : Node2D, IProjectile {
     public void Start(Node2D target) {
         _hp = weapon.range;
         _speed = weapon.projectileSpeed;
-        if (IsInstanceValid(_firedBy.Vessel) && _firedBy.Vessel.artifacts.Exists(x => x is MissileTargeterArtifact)) {
-            _hp *= 1.15f;
-            _speed *= 1.1f;
+        if (IsInstanceValid(_firedBy.Vessel)) {
+            if (_firedBy.Vessel.State.hasMissleTargeter) {
+                _hp *= 1.15f;
+                _speed *= 1.1f;
+            }
+            if (_firedBy.Vessel.State.hasMissleCoordinator) {
+                _steer *= MissileCoordinatorArtifact.multiplier;
+            }
         }
         _target = target;
         _velocity = Transform.x * _speed;

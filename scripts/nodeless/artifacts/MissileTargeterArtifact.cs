@@ -11,5 +11,7 @@ public class MissileTargeterArtifact : IArtifact {
 
     public void Apply(VesselState state, float delta) {}
 
-    public void Upgrade(VesselState state) {}
+    public void Upgrade(VesselState state) {
+        state.hasMissleTargeter = true;
+    }
 }

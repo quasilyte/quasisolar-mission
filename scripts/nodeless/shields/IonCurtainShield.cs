@@ -14,7 +14,7 @@ public class IonCurtainShield : AbstractShield {
         cooldown = 6,
         energyCost = 10,
 
-        sellingPrice = 1400,
+        sellingPrice = 1700,
     };
     public override ShieldDesign GetDesign() { return Design; }
 

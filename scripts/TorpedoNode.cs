@@ -36,9 +36,12 @@ public class TorpedoNode : Node2D, IProjectile {
         _hp = 6;
         _range = TorpedoLauncherWeapon.Design.range;
         _speed = TorpedoLauncherWeapon.Design.projectileSpeed;
-        if (_firedBy.Vessel.artifacts.Exists(x => x is MissileTargeterArtifact)) {
+        if (_firedBy.Vessel.State.hasMissleTargeter) {
             _range *= 1.15f;
             _speed *= 1.1f;
+        }
+        if (_firedBy.Vessel.State.hasMissleCoordinator) {
+            _steer *= MissileCoordinatorArtifact.multiplier;
         }
         _target = target;
         _velocity = Transform.x * _speed;
