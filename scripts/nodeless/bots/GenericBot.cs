@@ -19,6 +19,9 @@ class GenericBot : AbstractBot {
     private float _afterburnedEvasionCooldown = 0;
     private float _afterburnerChargeCooldown = 0;
 
+    private bool _hasTempest = false;
+    private float _tempestDuration = 0;
+
     private bool _hasShield = false;
     private ShieldDesign _shield;
 
@@ -48,6 +51,8 @@ class GenericBot : AbstractBot {
 
         if (vessel.specialWeapon.GetDesign() == AfterburnerWeapon.Design) {
             _hasAfterburner = true;
+        } else if (vessel.specialWeapon.GetDesign() == TempestWeapon.Design) {
+            _hasTempest = true;
         }
 
         for (int i = 0; i < vessel.weapons.Count; i++) {
@@ -69,6 +74,10 @@ class GenericBot : AbstractBot {
             }
 
             if (w is SpreadGunWeapon) {
+                _preferCloseRange = true;
+                continue;
+            }
+            if (w is SpreadLaserWeapon) {
                 _preferCloseRange = true;
                 continue;
             }
@@ -99,6 +108,7 @@ class GenericBot : AbstractBot {
         _fleeDelay = QMath.ClampMin(_fleeDelay - delta, 0);
         _afterburnedEvasionCooldown = QMath.ClampMin(_afterburnedEvasionCooldown - delta, 0);
         _afterburnerChargeCooldown = QMath.ClampMin(_afterburnerChargeCooldown - delta, 0);
+        _tempestDuration = QMath.ClampMin(_tempestDuration - delta, 0);
 
         _energyUsed = false;
 
@@ -337,6 +347,36 @@ class GenericBot : AbstractBot {
         }
     }
 
+    private bool MaybeGuardWithTempest(BotEvents events) {
+        if (!_hasTempest || _tempestDuration != 0) {
+            return false;
+        }
+
+        if (!_vessel.specialWeapon.CanFire(_vessel.State, _vessel.Position)) {
+            return false;
+        }
+
+        foreach (Area2D other in events.midRangeCollisions) {
+            if (!IsInstanceValid(other)) {
+                continue;
+            }
+
+            if (other.GetParent() is IProjectile projectile) {
+                var firedBy = projectile.FiredBy();
+                if (firedBy.alliance == _pilot.alliance) {
+                    continue;
+                }
+                if (!TempestWeapon.canBlock.Contains(projectile.GetWeaponDesign())) {
+                    continue;
+                }
+                UseTempest();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private bool MaybeUseShield(BotEvents events) {
         if (!_hasShield || _energyUsed || !_vessel.shield.CanActivate(_vessel.State)) {
             return false;
@@ -412,11 +452,15 @@ class GenericBot : AbstractBot {
     }
 
     private void ActDefense(BotEvents events) {
-        if (!MaybeUseShield(events) && _hasAfterburner) {
-            MaybeDoAfterburnerEvasion(events);
+        if (!MaybeGuardWithTempest(events)) {
+            if (!MaybeUseShield(events)) {
+                if (_hasAfterburner) {
+                    MaybeDoAfterburnerEvasion(events);
+                }
+            }
         }
 
-        if (_pointDefense != null) {
+        if (_pointDefense != null && _tempestDuration == 0) {
             MaybeBlockRockets();
         }
 
@@ -536,6 +580,11 @@ class GenericBot : AbstractBot {
         MaybeChargeWeapon(delta);
     }
 
+    private void UseTempest() {
+        _tempestDuration = TempestWeapon.Design.duration;
+        FireSpecial(_vessel.Position);
+    }
+
     private void MaybeChargeWeapon(float delta) {
         if (!_vessel.specialWeapon.GetDesign().chargable) {
             return;
@@ -557,6 +606,17 @@ class GenericBot : AbstractBot {
         }
 
         var targetDistance = TargetDistance();
+
+        if (design == TempestWeapon.Design) {
+            if (targetDistance > 120 || _tempestDuration != 0) {
+                return;
+            }
+            if (!_vessel.specialWeapon.CanFire(_vessel.State, _vessel.Position)) {
+                return;
+            }
+            UseTempest();
+            return;
+        }
 
         if (design == AfterburnerWeapon.Design) {
             if (!_vessel.specialWeapon.CanFire(_vessel.State, _vessel.Position)) {
