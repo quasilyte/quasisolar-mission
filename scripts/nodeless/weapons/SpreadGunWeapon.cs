@@ -13,7 +13,7 @@ public class SpreadGunWeapon : IWeapon {
         damage = 3.0f,
         damageKind = DamageKind.Kinetic,
         projectileSpeed = 400.0f,
-        botHintEffectiveAngle = 0.8f,
+        botHintEffectiveAngle = 0.7f,
     };
     public WeaponDesign GetDesign() { return Design; }
     public void Ready() {}
