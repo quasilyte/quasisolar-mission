@@ -105,6 +105,8 @@ public static class VesselFactory {
             InitVespionLarva(v);
         } else if (kind == "Vespion Hornet") {
             InitVespionHornet(v);
+        } else if (kind == "Vespion Queen") {
+            InitVespionQueen(v);
         } else if (kind == "Neutral Spectre") {
             InitUniqueSpectre(v);
         } else if (kind == "Neutral Visitor") {
@@ -733,18 +735,19 @@ public static class VesselFactory {
         float setRoll = QRandom.Float();
 
         if (setRoll < 0.35) {
-            v.weapons.Add(NeedleGunWeapon.Design.name);
+            v.weapons.Add(SpreadLaserWeapon.Design.name);
             v.weapons.Add(BubbleGunWeapon.Design.name);
         } else if (setRoll < 0.45) {
-            v.weapons.Add(NeedleGunWeapon.Design.name);
-            v.weapons.Add(NeedleGunWeapon.Design.name);
+            v.energySourceName = "Vortex Battery";
+            v.weapons.Add(BubbleGunWeapon.Design.name);
+            v.weapons.Add(BubbleGunWeapon.Design.name);
         } else if (setRoll < 0.55) {
             v.weapons.Add(RocketLauncherWeapon.Design.name);
             v.weapons.Add(RocketLauncherWeapon.Design.name);
         } else {
             AddWeapon(v,
                 0.7, BubbleGunWeapon.Design.name,
-                0.3, NeedleGunWeapon.Design.name);
+                0.3, SpreadLaserWeapon.Design.name);
             AddWeapon(v,
                 0.7, RocketLauncherWeapon.Design.name,
                 0.3, HurricaneWeapon.Design.name);
@@ -800,11 +803,40 @@ public static class VesselFactory {
             v.weapons.Add(CutterWeapon.Design.name);
             v.specialWeaponName = ShockwaveCasterWeapon.Design.name;
         } else if (weaponSetRoll < 0.7) {
-            // v.weapons.Add(FlakCannonWeapon.Design.name);
+            v.weapons.Add(SpreadLaserWeapon.Design.name);
             v.specialWeaponName = ShockwaveCasterWeapon.Design.name;
         } else {
             if (QRandom.Bool()) {
-                // v.weapons.Add(FlakCannonWeapon.Design.name);
+                v.weapons.Add(SpreadLaserWeapon.Design.name);
+            } else {
+                v.weapons.Add(IonCannonWeapon.Design.name);
+            }
+            v.specialWeaponName = HyperCutterWeapon.Design.name;
+        }
+
+        SetShield(v,
+            0.4, HeatScreenShield.Design.name,
+            0.4, LaserPerimeterShield.Design.name);
+    }
+
+    private static void InitVespionQueen(Vessel v) {
+        v.designName = "Queen";
+        if (v.rank == 1) {
+            v.energySourceName = "Vortex Battery";
+        } else {
+            v.energySourceName = "Cryogenic Block";
+        }
+
+        var weaponSetRoll = QRandom.Float();
+        if (weaponSetRoll < 0.4) {
+            v.weapons.Add(CutterWeapon.Design.name);
+            v.specialWeaponName = ShockwaveCasterWeapon.Design.name;
+        } else if (weaponSetRoll < 0.7) {
+            v.weapons.Add(SpreadLaserWeapon.Design.name);
+            v.specialWeaponName = ShockwaveCasterWeapon.Design.name;
+        } else {
+            if (QRandom.Bool()) {
+                v.weapons.Add(SpreadLaserWeapon.Design.name);
             } else {
                 v.weapons.Add(IonCannonWeapon.Design.name);
             }
