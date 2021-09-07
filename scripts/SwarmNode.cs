@@ -16,6 +16,7 @@ public class SwarmNode : Node2D, IProjectile {
 
     public WeaponDesign GetWeaponDesign() { return SwarmSpawnerWeapon.Design; }
     public Pilot FiredBy() { return _firedBy; }
+    public Node2D GetProjectileNode() { return this; }
 
     private static PackedScene _scene = null;
     public static SwarmNode New(Pilot owner) {

@@ -14,6 +14,7 @@ public class AfterburnerFlameNode : Node2D, IProjectile {
 
     public WeaponDesign GetWeaponDesign() { return AfterburnerWeapon.Design; }
     public Pilot FiredBy() { return _firedBy; }
+    public Node2D GetProjectileNode() { return this; }
 
     private static PackedScene _scene = null;
     public static AfterburnerFlameNode New(Pilot owner) {

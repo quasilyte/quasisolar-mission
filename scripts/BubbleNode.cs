@@ -12,6 +12,7 @@ public class BubbleNode : Node2D, IProjectile {
 
     public WeaponDesign GetWeaponDesign() { return BubbleGunWeapon.Design; }
     public Pilot FiredBy() { return _firedBy; }
+    public Node2D GetProjectileNode() { return this; }
 
     private static PackedScene _scene = null;
     public static BubbleNode New(Pilot owner) {

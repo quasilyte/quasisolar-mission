@@ -15,6 +15,7 @@ public class TorpedoNode : Node2D, IProjectile {
 
     public WeaponDesign GetWeaponDesign() { return TorpedoLauncherWeapon.Design; }
     public Pilot FiredBy() { return _firedBy; }
+    public Node2D GetProjectileNode() { return this; }
 
     private static PackedScene _scene = null;
     public static TorpedoNode New(Pilot owner) {
@@ -93,7 +94,7 @@ public class TorpedoNode : Node2D, IProjectile {
 
     public void Explode() {
         var explosion = Explosion.New();
-        explosion.Scale = new Vector2(1.4f, 1.4f);
+        explosion.Scale = new Vector2(1.5f, 1.5f);
         explosion.Position = Position;
         GetParent().AddChild(explosion);
         QueueFree();

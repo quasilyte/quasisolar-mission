@@ -15,6 +15,7 @@ public class CutterProjectile : Node2D, IProjectile {
 
     public WeaponDesign GetWeaponDesign() { return _design; }
     public Pilot FiredBy() { return _firedBy; }
+    public Node2D GetProjectileNode() { return this; }
 
     private static PackedScene _scene = null;
     public static CutterProjectile New(Pilot owner, WeaponDesign design) {

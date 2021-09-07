@@ -15,6 +15,7 @@ public class Rocket : Node2D, IProjectile {
 
     public WeaponDesign GetWeaponDesign() { return weapon; }
     public Pilot FiredBy() { return _firedBy; }
+    public Node2D GetProjectileNode() { return this; }
 
     private static PackedScene _scene = null;
     public static Rocket New(Pilot owner, WeaponDesign weapon) {
@@ -24,7 +25,9 @@ public class Rocket : Node2D, IProjectile {
         var o = (Rocket)_scene.Instance();
         o._firedBy = owner;
         o.weapon = weapon;
-        if (weapon == RocketLauncherWeapon.Design) {
+        if (weapon == RocketLauncherWeapon.TurretDesign) {
+            o._steer = 50;
+        } else if (weapon == RocketLauncherWeapon.Design) {
             o._steer = 100;
         } else if (weapon == HurricaneWeapon.Design) {
             o._steer = 150;
@@ -40,13 +43,15 @@ public class Rocket : Node2D, IProjectile {
             GetNode<Sprite>("Sprite").Texture = GD.Load<Texture>("res://images/ammo/hurricane_rocket.png");
         } else if (weapon == ShieldBreakerWeapon.Design) {
             GetNode<Sprite>("Sprite").Texture = GD.Load<Texture>("res://images/ammo/Shield_Breaker.png");
+        } else if (weapon == RocketLauncherWeapon.TurretDesign) {
+            GetNode<Sprite>("Sprite").Texture = GD.Load<Texture>("res://images/rocket_turret.png");
         }
     }
 
     public void Start(Node2D target) {
         _hp = weapon.range;
         _speed = weapon.projectileSpeed;
-        if (_firedBy.Vessel.artifacts.Exists(x => x is MissileTargeterArtifact)) {
+        if (IsInstanceValid(_firedBy.Vessel) && _firedBy.Vessel.artifacts.Exists(x => x is MissileTargeterArtifact)) {
             _hp *= 1.15f;
             _speed *= 1.1f;
         }
@@ -72,6 +77,9 @@ public class Rocket : Node2D, IProjectile {
         acceleration += seek();
         _velocity += acceleration * delta;
         _velocity = _velocity.Clamped(_speed);
+        if (weapon == RocketLauncherWeapon.TurretDesign) {
+            _velocity = _velocity.Rotated(QRandom.FloatRange(-0.03f, 0.03f));
+        }
         Rotation = _velocity.Angle();
         Position += _velocity * delta;
     }
@@ -102,6 +110,8 @@ public class Rocket : Node2D, IProjectile {
         } else if (weapon == ShieldBreakerWeapon.Design) {
             explosion.Scale = new Vector2(1.2f, 1.2f);
             explosion.Modulate = Color.Color8(50, 120, 255);
+        } else if (weapon == RocketLauncherWeapon.TurretDesign) {
+            explosion.Scale = new Vector2(1.3f, 1.3f);
         }
         explosion.Position = Position;
         GetParent().AddChild(explosion);

@@ -6,7 +6,7 @@
 [ext_resource path="res://scenes/ButtonNode.tscn" type="PackedScene" id=4]
 [ext_resource path="res://images/spacemap/health_bar_purple.png" type="Texture" id=5]
 [ext_resource path="res://styles/text_box.tres" type="StyleBox" id=6]
-[ext_resource path="res://scripts/ResearchScreen.cs" type="Script" id=7]
+[ext_resource path="res://scripts/screens/ResearchScreen.cs" type="Script" id=7]
 
 [node name="ResearchScreen" type="Node2D"]
 script = ExtResource( 7 )

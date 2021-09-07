@@ -12,6 +12,7 @@ public class EnergyBoltNode : Node2D, IProjectile {
 
     public WeaponDesign GetWeaponDesign() { return DisintegratorWeapon.Design; }
     public Pilot FiredBy() { return _firedBy; }
+    public Node2D GetProjectileNode() { return this; }
 
     private static PackedScene _scene = null;
     public static EnergyBoltNode New(Pilot owner) {

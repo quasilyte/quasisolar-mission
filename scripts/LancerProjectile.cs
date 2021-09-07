@@ -20,6 +20,7 @@ public class LancerProjectile : Node2D, IProjectile {
 
     public WeaponDesign GetWeaponDesign() { return LancerWeapon.Design; }
     public Pilot FiredBy() { return _firedBy; }
+    public Node2D GetProjectileNode() { return this; }
 
     public void OnImpact() {
     }

@@ -19,6 +19,7 @@ public class DiskProjectile : Node2D, IProjectile {
 
     public WeaponDesign GetWeaponDesign() { return DiskThrowerWeapon.Design; }
     public Pilot FiredBy() { return _firedBy; }
+    public Node2D GetProjectileNode() { return this; }
 
     private static PackedScene _scene = null;
     public static DiskProjectile New(Pilot owner, Vector2 target) {

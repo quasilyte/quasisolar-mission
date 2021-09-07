@@ -14,6 +14,7 @@ public class LightningProjectile : Node2D, IProjectile {
 
     public WeaponDesign GetWeaponDesign() { return StormbringerWeapon.Design; }
     public Pilot FiredBy() { return _firedBy; }
+    public Node2D GetProjectileNode() { return this; }
 
     private static PackedScene _scene = null;
     public static LightningProjectile New(LightningLine line, Pilot owner, Node2D target) {

@@ -10,6 +10,7 @@ public class DisruptorProjectileNode : Node2D, IProjectile {
 
     public WeaponDesign GetWeaponDesign() { return DisruptorWeapon.Design; }
     public Pilot FiredBy() { return _firedBy; }
+    public Node2D GetProjectileNode() { return this; }
 
     private static PackedScene _scene = null;
     public static DisruptorProjectileNode New(Pilot owner, Node2D target) {
