@@ -135,7 +135,9 @@ public class TextQuestScreen : Node2D {
 
         _card = card;
 
-        GetNode<RichTextLabel>("TextPanel/TextBackground/Content").BbcodeText = FormatCardText(_card);
+        if (_card.text != null) {
+            GetNode<RichTextLabel>("TextPanel/TextBackground/Content").BbcodeText = FormatCardText(_card);
+        }
 
         for (int i = 0; i < TQuestCard.MAX_ACTIONS; i++) {
             _actionLabels[i].node.Visible = false;
