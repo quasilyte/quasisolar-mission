@@ -1,6 +1,15 @@
 using Godot;
 
 public class RocketLauncherWeapon : IWeapon {
+    public static WeaponDesign TurretDesign = new WeaponDesign{
+        damage = 16,
+        range = 1800,
+        projectileSpeed = 380,
+        damageKind = DamageKind.Thermal,
+        ignoresAsteroids = true,
+        maskScale = 1.5f,
+    };
+
     public static WeaponDesign Design = new WeaponDesign {
         name = "Rocket Launcher",
         level = 1,
