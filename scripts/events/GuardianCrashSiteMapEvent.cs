@@ -7,12 +7,12 @@ public class GuardianCrashSiteMapEvent : AbstractMapEvent {
         triggerKind = TriggerKind.OnSystemEntered;
     }
 
-    // public override bool Condition() {
-    //     return IsFirstSystemVisit() &&
-    //         AtNeutralSystem() &&
-    //         GameState().day > 200 &&
-    //         GameState().StorageFreeSlot() != -1;
-    // }
+    public override bool Condition() {
+        return IsFirstSystemVisit() &&
+            AtNeutralSystem() &&
+            GameState().day > 200 &&
+            GameState().StorageFreeSlot() != -1;
+    }
 
     public override AbstractMapEvent Create(RandomEventContext ctx) {
         var e = new GuardianCrashSiteMapEvent();
