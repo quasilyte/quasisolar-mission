@@ -90,7 +90,9 @@ public class Arena : Node2D {
         }
         vesselNode.shield = ShieldFactory.New(v.Shield(), pilot);
 
-        ApplyAllianceColor(vesselNode.GetNode<Sprite>("Sprite"), pilot.alliance);
+        if (ArenaSettings.isQuickBattle) {
+            ApplyAllianceColor(vesselNode.GetNode<Sprite>("Sprite"), pilot.alliance);
+        }
 
         return vesselNode;
     }
