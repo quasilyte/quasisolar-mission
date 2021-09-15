@@ -38,7 +38,7 @@ public class StarSystemNode : Node2D {
         GetNode<Area2D>("Area2D").Connect("mouse_exited", this, nameof(OnMouseExited));
         GetNode<Area2D>("Area2D").Connect("input_event", this, nameof(OnAreaInput));
 
-        if (sys.intel != null) {
+        if (sys.Visited()) {
             ShowStarBase();
         }
     }
@@ -71,19 +71,25 @@ public class StarSystemNode : Node2D {
         var explosion = Explosion.New();
         explosion.Position = Position;
         GetParent().AddChild(explosion);
-
-        UpdateInfo();
     }
 
     public void OnPlayerEnter(Faction faction) {
-        sys.visitsNum++;
-        if (sys.intel == null) {
+        if (!sys.Visited()) {
             OnFirstPlayerEnter(faction);
         }
-        UpdateInfo();
+        sys.visitsNum++;
     }
 
-    public void UpdateInfo() {
+    public List<string> GetKnownInfo() {
+        if (!sys.Visited()) {
+            return new List<string>{"Unvisited System"};
+        }
+
+        var lines = new List<string>();
+
+        var hasBase = sys.starBase.id != 0;
+        var starBase = hasBase ? sys.starBase.Get() : null;
+
         var numPlanets = sys.resourcePlanets.Count;
         int numExplored = 0;
         foreach (var planet in sys.resourcePlanets) {
@@ -91,98 +97,30 @@ public class StarSystemNode : Node2D {
                 numExplored++;
             }
         }
-        sys.intel = new StarSystemIntel{
-            hasArtifact = sys.HasArtifact(),
-            hasBase = sys.starBase.id != 0,
-            numResourcePlanets = numPlanets,
-            numExplored = numExplored,
-        };
-        if (sys.starBase.id != 0) {
-            var starBase = sys.starBase.Get();
-            sys.intel.baseOwner = starBase.owner;
-            sys.intel.garrisonSize = starBase.garrison.Count;
-            sys.intel.baseLevel = starBase.level;
-            sys.intel.baseHp = starBase.hp;
-        }
-    }
 
-    public List<string> GetKnownInfo() {
-        if (sys.intel == null) {
-            return new List<string>{"Unvisited System"};
-        }
-
-        var info = sys.intel;
-
-        var lines = new List<string>();
-
-        var owner = info.hasBase ? info.baseOwner.ToString() : "Neutral";
+        var owner = hasBase ? starBase.owner.ToString() : "Neutral";
         lines.Add(owner + " System");
 
-        if (info.hasBase) {
-            var numShips = info.garrisonSize;
+        if (hasBase) {
+            var numShips = starBase.garrison.Count;
             var pluralSuffix = numShips == 1 ? "" : "s";
-            var level = Utils.IntToRoman(info.baseLevel);
-            lines.Add($"Base {level}: {info.baseHp}% HP, {numShips} ship" + pluralSuffix);
+            var level = Utils.IntToRoman(starBase.level);
+            lines.Add($"Base {level}: {starBase.hp}% HP, {numShips} ship" + pluralSuffix);
         }
 
-        if (info.hasArtifact) {
+        if (sys.HasArtifact()) {
             lines.Add("Artifact Detected");
         }
 
-        if (info.numResourcePlanets != 0) {
-            if (info.numExplored == 0) {
-                lines.Add($"Planets: {info.numResourcePlanets}");
+        if (numPlanets != 0) {
+            if (numExplored == 0) {
+                lines.Add($"Planets: {numPlanets}");
             } else {
-                lines.Add($"Planets: {info.numResourcePlanets} ({info.numExplored} explored)");
+                lines.Add($"Planets: {numPlanets} ({numExplored} explored)");
             }
         }
 
         return lines;
-
-        // if (info.hasBase) {
-        //     Label baseLabel;
-        //     if (box.HasNode("Base")) {
-        //         baseLabel = box.GetNode<Label>("Base");
-        //     } else {
-        //         baseLabel = CreateLabel("Base");
-        //         box.AddChild(baseLabel);
-        //     }
-        //     var numShips = info.garrisonSize;
-        //     var pluralSuffix = numShips == 1 ? "" : "s";
-        //     var level = Utils.IntToRoman(info.baseLevel);
-        //     baseLabel.Text = $"Base {level}: {info.baseHp}% HP, {numShips} ship" + pluralSuffix;
-        // } else {
-        //     if (box.HasNode("Base")) {
-        //         box.GetNode<Label>("Base").QueueFree();
-        //     }
-        // }
-
-        // if (info.hasArtifact) {
-        //     Label artifactLabel;
-        //     if (box.HasNode("Artifact")) {
-        //         artifactLabel = box.GetNode<Label>("Artifact");
-        //     } else {
-        //         artifactLabel = CreateLabel("Artifact");
-        //         box.AddChild(artifactLabel);
-        //     }
-        //     artifactLabel.Text = "Artifact Detected";
-        // }
-
-        // if (info.numResourcePlanets != 0) {
-        //     Label resourcePlanetsLabel;
-        //     if (box.HasNode("ResourcePlanets")) {
-        //         resourcePlanetsLabel = box.GetNode<Label>("ResourcePlanets");
-        //     } else {
-        //         resourcePlanetsLabel = CreateLabel("ResourcePlanets");
-        //         box.AddChild(resourcePlanetsLabel);
-        //     }
-        //     if (info.numMines == 0) {
-        //         resourcePlanetsLabel.Text = $"Resource planets: {info.numResourcePlanets}";
-        //     } else {
-        //         var pluralSuffix = info.numMines == 1 ? "" : "s";
-        //         resourcePlanetsLabel.Text = $"Resource planets: {info.numResourcePlanets} ({info.numMines} mine{pluralSuffix})";
-        //     }
-        // }
     }
 
     private void OnMouseEnter() {
@@ -198,7 +136,7 @@ public class StarSystemNode : Node2D {
     }
 
     public override void _Draw() {
-        if (!focused || sys.intel == null || sys.starBase.id == 0) {
+        if (!focused || !sys.Visited() || sys.starBase.id == 0) {
             return;
         }
         var radius = _starBase.InfluenceRadius();
@@ -206,15 +144,8 @@ public class StarSystemNode : Node2D {
             return;
         }
         var starBase = sys.starBase.Get();
-        Color color = default(Color);
-        if (starBase.owner == Faction.Krigia) {
-            color = Color.Color8(0xca, 0x30, 0x4d);
-        } else if (starBase.owner == Faction.Wertu) {
-            color = Color.Color8(0x16, 0x4b, 0xb6);
-        }
-        if (color != default) {
-            DrawUtils.DrawDashedCircle(this, radius, color);
-        }
+        Color color = Utils.FactionColor(starBase.owner);
+        DrawUtils.DrawDashedCircle(this, radius, color);
     }
 
     private void SetStarBaseColor() {

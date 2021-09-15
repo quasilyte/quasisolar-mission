@@ -158,12 +158,12 @@ public static class Quest {
         }
 
         if (req.kind == RequirementKind.FindVespionSystem) {
-            return RpgGameState.vespionBase.system.Get().intel != null;
+            return RpgGameState.vespionBase.system.Get().Visited();
         }
         if (req.kind == RequirementKind.FindTwoWertuSystems) {
             var num = 0;
             foreach (var sys in RpgGameState.starSystemList) {
-                if (sys.intel == null) {
+                if (!sys.Visited()) {
                     continue;
                 }
                 if (sys.starBase.id != 0 && sys.starBase.Get().owner == Faction.Wertu) {
@@ -185,7 +185,7 @@ public static class Quest {
         if (req.kind == RequirementKind.FindGasGiant) {
             string systemName = null;
             foreach (var sys in gameState.starSystems.objects.Values) {
-                if (sys.intel == null) {
+                if (!sys.Visited()) {
                     continue;
                 }
                 foreach (var p in sys.resourcePlanets) {

@@ -475,7 +475,6 @@ public class MapView : Node2D {
         switch (command.kind) {
             case CheatCommandKind.RevealMap:
                 foreach (var sys in _starSystemNodes) {
-                    sys.UpdateInfo();
                     sys.ShowStarBase();
                 }
                 return;
@@ -813,7 +812,6 @@ public class MapView : Node2D {
         AddChild(starBaseNode);
         _currentSystem.AddStarBase(starBaseNode);
         starBaseNode.Visible = true;
-        _currentSystem.UpdateInfo();
         GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/construction_completed.wav"));
 
         UpdateUI();
@@ -1607,7 +1605,6 @@ public class MapView : Node2D {
                 var notification = MapNotificationNode.New("Artifact recovered");
                 _currentSystem.AddChild(notification);
                 GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/artifact_recovered.wav"));
-                _currentSystem.UpdateInfo();
                 StopMovement();
             }
 
@@ -1635,8 +1632,6 @@ public class MapView : Node2D {
                 }
             }
         }
-
-        _currentSystem.UpdateInfo();
 
         foreach (var u in _spaceUnits) {
             if (u.unit.pos == _currentSystem.sys.pos) {

@@ -14,10 +14,6 @@ public class StarSystem: AbstractPoolValue {
 
     public int randomEventCooldown = 0;
 
-    // If intel is null, this system is not visited at all.
-    // Non-null intelligence records the latest known information about the system.
-    public StarSystemIntel intel = null;
-
     public int visitsNum = 0;
 
     public List<ResourcePlanet> resourcePlanets = new List<ResourcePlanet>{};
@@ -27,4 +23,6 @@ public class StarSystem: AbstractPoolValue {
     public bool HasArtifact() {
         return resourcePlanets.Find((x) => x.artifact != "") != null;
     }
+
+    public bool Visited() { return visitsNum != 0; }
 }
