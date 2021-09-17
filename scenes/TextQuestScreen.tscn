@@ -139,6 +139,7 @@ mouse_filter = 0
 text = "(1) Action one;
 Some Actions may span across multiple lines."
 valign = 1
+autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -151,6 +152,7 @@ margin_bottom = 144.0
 mouse_filter = 0
 text = "(2) Action two; or it can be a single-line text."
 valign = 1
+autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -163,6 +165,7 @@ margin_bottom = 208.0
 mouse_filter = 0
 text = "(3) Another option."
 valign = 1
+autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -175,6 +178,7 @@ margin_bottom = 272.0
 mouse_filter = 0
 text = "(4) And another."
 valign = 1
+autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -187,6 +191,7 @@ margin_bottom = 336.0
 mouse_filter = 0
 text = "(5) Five is a max number of options per state."
 valign = 1
+autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
