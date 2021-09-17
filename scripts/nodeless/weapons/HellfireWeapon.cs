@@ -9,7 +9,7 @@ public class HellfireWeapon : IWeapon {
         sellingPrice = 3000,
         cooldown = 0.6f,
         energyCost = 10.0f,
-        range = 200.0f,
+        range = 180.0f,
         damage = 3.0f,
         damageKind = DamageKind.Thermal,
         projectileSpeed = 400.0f,
