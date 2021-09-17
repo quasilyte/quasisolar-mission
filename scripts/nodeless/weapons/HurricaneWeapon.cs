@@ -11,6 +11,7 @@ public class HurricaneWeapon : IWeapon {
         cooldown = 3.0f,
         range = 425.0f,
         damage = 8.0f,
+        burst = 5,
         damageKind = DamageKind.Thermal,
         projectileSpeed = 250.0f,
         botHintEffectiveAngle = 1,
@@ -67,7 +68,7 @@ public class HurricaneWeapon : IWeapon {
         } else {
             _burstTarget = null;
         }
-        _burst = 5;
+        _burst = Design.burst;
         var sfx = SoundEffectNode.New(GD.Load<AudioStream>("res://audio/weapon/Hurricane.wav"));
         _owner.Vessel.GetParent().AddChild(sfx);
     }

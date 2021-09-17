@@ -11,6 +11,7 @@ public class ZapWeapon : IWeapon {
         energyCost = 15,
         range = 220,
         damage = 3,
+        burst = 5,
         damageKind = DamageKind.Electromagnetic,
         projectileSpeed = 1000.0f,
         botHintSnipe = 0,
@@ -112,7 +113,7 @@ public class ZapWeapon : IWeapon {
         _cooldown += Design.cooldown;
         state.ConsumeEnergy(Design.energyCost);
 
-        _burst = 5;
+        _burst = Design.burst;
         _burstTarget = cursor;
 
         CreateZap(cursor);

@@ -12,6 +12,7 @@ public class TwinPhotonBurstCannonWeapon : IWeapon {
         energyCost = 8f,
         range = 200f,
         damage = 5f,
+        burst = 4,
         damageKind = DamageKind.Electromagnetic,
         projectileSpeed = 400.0f,
         botHintSnipe = 0.3f,

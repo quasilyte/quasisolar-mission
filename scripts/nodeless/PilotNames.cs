@@ -2,6 +2,12 @@ using System.Collections.Generic;
 using Godot;
 
 public static class PilotNames {
+    public static string UniqPhaaName(HashSet<string> alreadyUsed) {
+        var name = PickName(phaaNames, phaaNamePrefix, phaaNameSuffix, alreadyUsed);
+        alreadyUsed.Add(name);
+        return name;
+    }
+
     public static string UniqRarilouName(HashSet<string> alreadyUsed) {
         var name = PickName(rarilouNames, rarilouNamePrefix, rarilouNameSuffix, alreadyUsed);
         alreadyUsed.Add(name);
@@ -49,6 +55,22 @@ public static class PilotNames {
     private static string[] humanNameSuffix = {
         "Junior",
         "Senior",
+    };
+
+    private static string[] phaaNamePrefix = {
+        "Ab",
+        "Ub",
+        "Bi",
+    };
+
+    private static string[] phaaNameSuffix = {};
+
+    private static string[] phaaNames = {
+        "Urblob",
+        "Mibulb",
+        "Kublub",
+        "Arkbub",
+        "Kiblab",
     };
 
     private static string[] rarilouNamePrefix = {};

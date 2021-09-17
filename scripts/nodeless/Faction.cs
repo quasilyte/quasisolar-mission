@@ -15,6 +15,7 @@ public enum Faction {
     Neutral,
     Pirate,
 
+    // Major campaign factions.
     Earthling,
     Wertu,
     Krigia,
@@ -23,4 +24,7 @@ public enum Faction {
     Phaa,
     Vespion,
     Rarilou,
+
+    // Minor campaign factions.
+    PhaaRebel,
 }

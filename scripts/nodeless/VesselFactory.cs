@@ -119,6 +119,8 @@ public static class VesselFactory {
             InitDraklidPlunderer(v);
         } else if (kind == "Phaa Mantis") {
             InitPhaaMantis(v);
+        } else if (kind == "Phaa Spacehopper") {
+            InitPhaaSpacehopper(v);
         } else if (kind == "Rarilou Leviathan") {
             InitRarilouLeviathan(v);
         } else {
@@ -726,6 +728,11 @@ public static class VesselFactory {
         SetShield(v,
             0.65, ReflectorShield.Design.name,
             0.35, DispersionFieldShield.Design.name);
+    }
+
+    private static void InitPhaaSpacehopper(Vessel v) {
+        InitPhaaMantis(v);
+        v.designName = "Spacehopper";
     }
 
     private static void InitPhaaMantis(Vessel v) {

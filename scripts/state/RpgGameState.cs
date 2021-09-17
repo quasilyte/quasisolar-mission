@@ -84,6 +84,7 @@ public class RpgGameState {
 
     public class PhaaPlans {
         public int transitionDelay = 5;
+        public bool visited = false;
     }
 
     public class RarilouPlans {
@@ -215,6 +216,7 @@ public class RpgGameState {
         if (x == Faction.Earthling && y == Faction.RandomEventAlly) {
             return false;
         }
+
         return x != y;
     }
 
@@ -224,7 +226,7 @@ public class RpgGameState {
 
     public Dictionary<Faction, int> reputations = new Dictionary<Faction, int>{
         {Faction.Krigia, -25},
-        {Faction.Wertu, 10},
+        {Faction.Wertu, 5},
         {Faction.Zyth, -10},
         {Faction.Vespion, 0},
         {Faction.Phaa, 0},
@@ -251,7 +253,7 @@ public class RpgGameState {
         {Faction.Zyth, DiplomaticStatus.Unspecified},
         {Faction.Vespion, DiplomaticStatus.Unspecified},
         {Faction.Phaa, DiplomaticStatus.Unspecified},
-        {Faction.Draklid, DiplomaticStatus.Unspecified},
+        {Faction.Draklid, DiplomaticStatus.War},
         {Faction.Rarilou, DiplomaticStatus.Unspecified},
     };
 

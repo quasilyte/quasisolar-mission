@@ -860,6 +860,32 @@ public class VesselDesign: IItem {
 
         new VesselDesign{
             level = 3,
+            name = "Spacehopper",
+            affiliation = Faction.PhaaRebel,
+            description = "TODO",
+            sellingPrice = 4900,
+            debris = 55,
+            productionTime = 85,
+            availability = ProductionAvailability.Never,
+
+            maxHp = 160,
+            maxShieldLevel = 3,
+
+            maxSpeed = 90,
+            acceleration = 2.2f,
+            rotationSpeed = 2,
+
+            sentinelSlot = false,
+            specialSlot = false,
+            weaponSlots = 2,
+            artifactSlots = 0,
+
+            cargoSpace = 40,
+            size = Size.Normal,
+        },
+
+        new VesselDesign{
+            level = 3,
             name = "Mantis",
             affiliation = Faction.Phaa,
             description = "TODO",

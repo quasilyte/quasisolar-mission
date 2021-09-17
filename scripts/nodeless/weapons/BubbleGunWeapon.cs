@@ -9,7 +9,7 @@ public class BubbleGunWeapon : AbstractWeapon {
         sellingPrice = 3500,
         cooldown = 0.45f,
         energyCost = 5.0f,
-        range = -7,
+        duration = 7,
         damage = 11.0f,
         damageKind = DamageKind.Electromagnetic,
         projectileSpeed = 130.0f,

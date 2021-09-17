@@ -14,6 +14,8 @@ public class TempestWeapon : IWeapon {
         range = 70.0f,
         duration = 5,
         damage = 16,
+        burst = 15,
+        damageScoreMultiplier = 4,
         damageKind = DamageKind.Kinetic,
         botHintRange = 150,
         isSpecial = true,

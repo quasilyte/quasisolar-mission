@@ -12,6 +12,7 @@ public class PhotonBurstCannonWeapon : IWeapon {
         energyCost = 6f,
         range = 200f,
         damage = 5f,
+        burst = 3,
         damageKind = DamageKind.Electromagnetic,
         projectileSpeed = 400.0f,
         botHintSnipe = 0.3f,
@@ -60,7 +61,7 @@ public class PhotonBurstCannonWeapon : IWeapon {
     public void Fire(VesselState state, Vector2 cursor) {
         _cooldown += Design.cooldown;
         state.ConsumeEnergy(Design.energyCost);
-        _burst = 3;
+        _burst = Design.burst;
         _burstTarget = cursor;
     }
 }

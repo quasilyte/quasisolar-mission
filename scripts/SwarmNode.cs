@@ -6,7 +6,7 @@ public class SwarmNode : Node2D, IProjectile {
     private float _range;
     private float _speed;
 
-    private int _numHits = 5;
+    private int _numHits;
     private bool _comingBack = false;
 
     private Node2D _target;
@@ -25,6 +25,7 @@ public class SwarmNode : Node2D, IProjectile {
         }
         var o = (SwarmNode)_scene.Instance();
         o._firedBy = owner;
+        o._numHits = SwarmSpawnerWeapon.Design.burst;
         return o;
     }
 

@@ -14,6 +14,7 @@ public class ShieldBreakerWeapon : IWeapon {
         energyCost = 10,
         range = 475.0f,
         damage = 16.0f,
+        burst = 2,
         damageKind = DamageKind.Electromagnetic,
         projectileSpeed = 225.0f,
         botHintEffectiveAngle = 1.2f,

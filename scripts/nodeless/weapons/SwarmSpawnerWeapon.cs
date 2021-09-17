@@ -13,6 +13,7 @@ public class SwarmSpawnerWeapon : IWeapon {
         energyCost = 20,
         range = 3000,
         damage = 2,
+        burst = 5,
         damageKind = DamageKind.Kinetic,
         projectileSpeed = 160,
         isSpecial = true,

@@ -18,10 +18,10 @@ public class TempestAuraNode : Node2D {
 
     public override void _Ready() {
         _hp = TempestWeapon.Design.duration;
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < TempestWeapon.Design.burst; i++) {
             var projectile = TempestProjectileNode.New(_firedBy);
             projectile.Position = Position;
-            projectile.RotationDegrees = i * 24;
+            projectile.RotationDegrees = i * (360 / TempestWeapon.Design.burst);
             AddChild(projectile);
         }
     }

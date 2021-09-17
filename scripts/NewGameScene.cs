@@ -149,6 +149,7 @@ public class NewGameScene : Node2D {
             var starBase = NewStarBase(config, faction, baseLevel);
             NewGameFleetGen.InitFleet(config, starBase, faction, fleetRoll);
             BindStarBase(starBase, sys.data);
+            GD.Print($"deploy {faction} base at {sys.data.name}");
             neutralSystems.Remove(sys);
             numBases--;
         }

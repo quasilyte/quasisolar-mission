@@ -9,8 +9,10 @@ public class AfterburnerWeapon : IWeapon {
         sellingPrice = 5000,
         cooldown = 0.7f,
         energyCost = 10.0f,
-        range = -6,
+        duration = 6,
         damage = 4,
+        burst = 4,
+        damageScoreMultiplier = 2,
         damageKind = DamageKind.Thermal,
         isSpecial = true,
     };
@@ -64,6 +66,6 @@ public class AfterburnerWeapon : IWeapon {
         _cooldown += Design.cooldown;
         state.ConsumeEnergy(Design.energyCost);
 
-        _burst = 4;
+        _burst = Design.burst;
     }
 }

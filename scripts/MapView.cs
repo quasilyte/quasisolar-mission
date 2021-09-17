@@ -825,8 +825,13 @@ public class MapView : Node2D {
 
     private void OnEnterBaseButton() {
         var starBase = _currentSystem.sys.starBase.Get();
-        RpgGameState.enteredBase = starBase;
-        GetTree().ChangeScene("res://scenes/StarBaseScreen.tscn");
+        if (starBase.owner == Faction.Earthling) {
+            RpgGameState.enteredBase = starBase;
+            GetTree().ChangeScene("res://scenes/StarBaseScreen.tscn");
+        } else if (starBase.owner == Faction.Phaa) {
+            _randomEventProto = new PhaaBaseMapEvent();
+            OpenRandomEvent(NewRandomEventContext());
+        }
     }
 
     private void OnResearchButton() {
@@ -1323,7 +1328,7 @@ public class MapView : Node2D {
         UpdateCargoValue();
         if (_currentSystem != null) {
             GetNode<Label>("UI/LocationValue").Text = _currentSystem.sys.name;
-            if (_currentSystem.sys.starBase.id != 0 && _currentSystem.sys.starBase.Get().owner == Faction.Earthling) {
+            if (_currentSystem.sys.starBase.id != 0) {
                 enterBase.Disabled = false;
             }
             // Can mine only in own or neutral systems.
@@ -1641,8 +1646,8 @@ public class MapView : Node2D {
             }
         }
 
-        if (starBase.id != 0) {
-            if (_gameState.FactionsAtWar(starBase.Get().owner, Faction.Earthling)) {
+        if (starBase.id != 0 && starBase.Get().owner != Faction.Earthling) {
+            if (_gameState.diplomaticStatuses[starBase.Get().owner] <= DiplomaticStatus.Unspecified) {
                 RollFleetAttack();
             }
         }

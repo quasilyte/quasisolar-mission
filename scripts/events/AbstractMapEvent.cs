@@ -76,6 +76,7 @@ public abstract class AbstractMapEvent {
 
     protected static Vessel Flagship() { return PlayerSpaceUnit().fleet[0].Get(); }
     protected static RpgGameState GameState() { return RpgGameState.instance; }
+    protected static StarSystem CurrentStarSystem() { return RpgGameState.starSystemByPos[PlayerSpaceUnit().pos]; }
     protected static SpaceUnit PlayerSpaceUnit() { return GameState().humanUnit.Get(); }
     protected static string MultilineText(string s) { return Utils.FormatMultilineText(s); }
 
@@ -91,21 +92,21 @@ public abstract class AbstractMapEvent {
     }
 
     protected static bool AtPlayerSystem() {
-        var starSystem = RpgGameState.starSystemByPos[RpgGameState.instance.humanUnit.Get().pos];
+        var starSystem = CurrentStarSystem();
         return starSystem.starBase.id != 0 && starSystem.starBase.Get().owner == Faction.Earthling;
     }
 
     protected static bool AtKrigiaSystem() {
-        var starSystem = RpgGameState.starSystemByPos[PlayerSpaceUnit().pos];
+        var starSystem = CurrentStarSystem();
         return starSystem.starBase.id != 0 && starSystem.starBase.Get().owner == Faction.Krigia;
     }
 
     protected static bool AtNeutralSystem() {
-        return RpgGameState.starSystemByPos[PlayerSpaceUnit().pos].starBase.id == 0;
+        return CurrentStarSystem().starBase.id == 0;
     }
 
     protected static bool IsFirstSystemVisit() {
-        return RpgGameState.starSystemByPos[PlayerSpaceUnit().pos].visitsNum == 1;
+        return CurrentStarSystem().visitsNum == 1;
     }
 
     protected static SpaceUnit NewSpaceUnit(Faction faction, params Vessel[] fleet) {

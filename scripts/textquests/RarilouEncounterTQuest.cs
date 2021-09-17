@@ -248,7 +248,7 @@ public class RarilouEncounterTQuest : AbstractTQuest {
     private TQuestCard BuyVessel() {
         _gameState.alienCurrency[Faction.Rarilou] -= 70;
         
-        var leviathan = RpgGameState.instance.NewVessel(Faction.Earthling, VesselDesign.Find("Scout"));
+        var leviathan = RpgGameState.instance.NewVessel(Faction.Earthling, VesselDesign.Find("Leviathan"));
         leviathan.pilotName = PilotNames.UniqRarilouName(RpgGameState.instance.usedNames);
         VesselFactory.Init(leviathan, "Rarilou Leviathan");
         leviathan.isMercenary = true;

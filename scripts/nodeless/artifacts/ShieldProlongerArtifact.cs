@@ -4,7 +4,7 @@ public class ShieldProlongerArtifact : IArtifact {
     public static ArtifactDesign Design = new ArtifactDesign{
         name = "Shield Prolonger",
         description = "TODO",
-        effect2 = "+15% shield activation duration",
+        effect = "+15% shield activation duration",
         sellingPrice = 4800,
     };
 

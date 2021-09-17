@@ -27,7 +27,7 @@ public class AfterburnerFlameNode : Node2D, IProjectile {
     }
 
     public override void _Ready() {
-        _hp = -AfterburnerWeapon.Design.range;
+        _hp = AfterburnerWeapon.Design.duration;
     }
 
     public override void _Process(float delta) {

@@ -11,6 +11,8 @@ public class GreatScytheWeapon : IWeapon {
         cooldown = 1.1f,
         range = 300,
         damage = 8,
+        burst = 6,
+        damageScoreMultiplier = 3,
         damageKind = DamageKind.Kinetic,
         projectileSpeed = 320,
         botHintSnipe = 0.2f,

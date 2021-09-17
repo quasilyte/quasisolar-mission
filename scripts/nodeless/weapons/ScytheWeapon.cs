@@ -11,6 +11,7 @@ public class ScytheWeapon : IWeapon {
         cooldown = 0.75f,
         range = 300,
         damage = 8,
+        burst = 2,
         damageKind = DamageKind.Kinetic,
         projectileSpeed = 320,
         botHintSnipe = 0.2f,

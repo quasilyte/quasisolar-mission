@@ -11,6 +11,7 @@ public class HellfireWeapon : IWeapon {
         energyCost = 10.0f,
         range = 180.0f,
         damage = 3.0f,
+        burst = 7,
         damageKind = DamageKind.Thermal,
         projectileSpeed = 400.0f,
         botHintEffectiveAngle = 0.6f,
@@ -58,7 +59,7 @@ public class HellfireWeapon : IWeapon {
     public void Fire(VesselState state, Vector2 cursor) {
         _cooldown += Design.cooldown;
         state.ConsumeEnergy(Design.energyCost);
-        _burst = 7;
+        _burst = Design.burst;
         var sfx = SoundEffectNode.New(GD.Load<AudioStream>("res://audio/weapon/Hellfire.wav"));
         _owner.Vessel.GetParent().AddChild(sfx);
     }

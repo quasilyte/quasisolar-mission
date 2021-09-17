@@ -20,6 +20,7 @@ public class RocketLauncherWeapon : IWeapon {
         cooldown = 1.4f,
         range = 450.0f,
         damage = 10.0f,
+        burst = 3,
         damageKind = DamageKind.Thermal,
         projectileSpeed = 200.0f,
         botHintEffectiveAngle = 1,

@@ -11,6 +11,8 @@ public class CrystalCannonWeapon : AbstractWeapon {
         energyCost = 10,
         range = 320,
         damage = 15,
+        burst = 9,
+        damageScoreMultiplier = 3,
         damageKind = DamageKind.Kinetic,
         projectileSpeed = 250,
         botHintSnipe = 0.5f,

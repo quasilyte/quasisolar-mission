@@ -20,12 +20,16 @@ public class WeaponDesign : IItem {
 
     public float cooldown = 0;
     public float energyCost = 0;
+    public string energyConstHint = "";
     public float range = 0;
     public float duration = 0;
     public float minRange = 0;
     public DamageKind damageKind;
     public float damage = 0;
+    public float maxDamageHint = 0;
+    public double damageScoreMultiplier = 0;
     public float energyDamage = 0;
+    public int burst = 1;
 
     public bool isSpecial = false;
 
@@ -66,17 +70,37 @@ public class WeaponDesign : IItem {
             parts.Add("Damage type: " + damageKind.ToString().ToLower());
         }
         if (damage > 0) {
-            parts.Add("Damage: " + damage.ToString());
+            var avgDamage = damage;
+            if (maxDamageHint != 0) {
+                avgDamage = damage + maxDamageHint / 2;
+            }
+            var mult = damageScoreMultiplier == 0 ? burst : damageScoreMultiplier;
+            var perSec = (int)((double)(avgDamage * mult) / (double)cooldown);
+            var damageString = damage.ToString();
+            if (maxDamageHint != 0) {
+                damageString += "-" + maxDamageHint.ToString();
+            }
+            if (burst != 1) {
+                damageString += "*" + burst.ToString();
+            }
+            parts.Add("Damage: " + damageString + " (" + perSec.ToString() + "/sec)");
         }
         if (energyDamage != 0) {
-            parts.Add("Electromagnetic damage: " + energyDamage.ToString());
+            parts.Add("Energy damage: " + energyDamage.ToString());
         }
         if (minRange != 0) {
             parts.Add("Min range: " + minRange.ToString());
         }
-        parts.Add("Range: " + range.ToString());
+        if (range != 0) {
+            parts.Add("Range: " + range.ToString());
+        }
+        if (duration != 0) {
+            parts.Add("Duration: " + duration.ToString());
+        }
         parts.Add("Rate of fire: " + rateOfFireText());
-        if (energyCost != 0) {
+        if (energyConstHint != "") {
+            parts.Add("Energy cost: " + energyConstHint);
+        } else if (energyCost != 0) {
             parts.Add("Energy cost: " + energyCost.ToString());
         }
         parts.Add("Targeting: " + targeting);

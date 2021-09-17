@@ -25,7 +25,7 @@ public class BubbleNode : Node2D, IProjectile {
     }
 
     public override void _Ready() {
-        _hp = -GetWeaponDesign().range;
+        _hp = GetWeaponDesign().duration;
         _velocity = RandomVelocity();
         Rotation = QRandom.Angle();
         _velocityTicks = 2;
