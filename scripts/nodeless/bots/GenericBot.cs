@@ -128,13 +128,6 @@ class GenericBot : AbstractBot {
 
     protected void SetTarget(Pilot target) {
         _currentTarget = target;
-        if (_currentTarget != null) {
-            foreach (var w in _vessel.weapons) {
-                if (w is ZapWeapon zapGun) {
-                    zapGun.SetTargetLock(_currentTarget.Vessel);
-                }
-            }
-        }
     }
 
     private Pilot GetRandomEnemy() {
