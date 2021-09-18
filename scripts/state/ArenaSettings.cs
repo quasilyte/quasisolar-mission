@@ -17,6 +17,7 @@ public class ArenaSettings {
     }
 
     public static bool isQuickBattle;
+    public static bool isStarBaseBattle;
 
     public static BattleSpeed speed;
 
@@ -39,6 +40,7 @@ public class ArenaSettings {
 
     public static void Reset() {
         isQuickBattle = false;
+        isStarBaseBattle = false;
 
         defensiveTurretAlliance = 0;
         defensiveTurretShots = 0;

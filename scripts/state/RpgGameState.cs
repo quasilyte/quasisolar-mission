@@ -221,6 +221,8 @@ public class RpgGameState {
         return x != y;
     }
 
+    public bool rpgMode = false;
+
     public KrigiaPlans krigiaPlans = new KrigiaPlans();
     public PhaaPlans phaaPlans = new PhaaPlans();
     public RarilouPlans rarilouPlans = new RarilouPlans();

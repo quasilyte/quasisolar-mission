@@ -126,7 +126,7 @@ public static class ArenaManager {
         ArenaSettings.starColor = location.color;
 
         foreach (var v in vessels) {
-            if (v.id == humanUnit.fleet[0].id) {
+            if (v.id == humanUnit.fleet[0].id && gameState.rpgMode) {
                 ArenaSettings.flagship = v;
             }
 

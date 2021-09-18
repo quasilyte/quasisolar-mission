@@ -209,11 +209,15 @@ public class Arena : Node2D {
             if (combatant.isBot) {
                 AddBotCombatant(combatant, pilot);
             } else {
-                var v = viewports[combatant.deviceId];
-                v.used = true;
-                AddHumanCombatant(v, pilot, combatant);
-                if (humanVessel == null) {
-                    humanVessel = vesselNode;
+                if (ArenaSettings.isQuickBattle || _gameState.rpgMode) {
+                    var v = viewports[combatant.deviceId];
+                    v.used = true;
+                    AddHumanCombatant(v, pilot, combatant);
+                    if (humanVessel == null) {
+                        humanVessel = vesselNode;
+                    }
+                } else {
+                    AddBotCombatant(combatant, pilot);
                 }
             }
         }
@@ -473,9 +477,11 @@ public class Arena : Node2D {
     }
 
     private void HandleVictory(List<Pilot> survivors, int alliance, BattleResult result) {
+        bool isHumanBaseBattle = ArenaSettings.isStarBaseBattle;
+
         // In campaign, alliance=0 is a human-allied side.
         if (alliance != 0) {
-            if (_flagshipPilot != null) {
+            if (!isHumanBaseBattle) {
                 TriggerDefeat();
                 return;
             }
@@ -490,7 +496,7 @@ public class Arena : Node2D {
                 CollectUnitCargo(RpgGameState.arenaUnit2, result);
             }
 
-            if (_flagshipPilot == null) {
+            if (isHumanBaseBattle) {
                 RpgGameState.transition = RpgGameState.MapTransition.BaseAttackSimulation;
             } else {
                 RpgGameState.transition = RpgGameState.MapTransition.EnemyUnitDestroyed;
@@ -506,7 +512,7 @@ public class Arena : Node2D {
         //     });
         // }
 
-        if (_flagshipPilot != null) {
+        if (!isHumanBaseBattle) {
             // if (_gameState.skillsLearned.Contains("Fighter")) {
             //     result.exp = QMath.IntAdjust(result.exp, 1.33);
             // }
