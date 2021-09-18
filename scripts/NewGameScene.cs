@@ -97,6 +97,7 @@ public class NewGameScene : Node2D {
         }
 
         var config = new RpgGameState.Config{
+            rpgMode = OptionValue("GameMode") == "RPG",
             limits = limits,
             exodusPrice = 5000,
             startingCredits = OptionIntValue("StartingCredits"),

@@ -10,6 +10,14 @@ public class NewGameOptions {
 
     public Dictionary<string, Option[]> byName = new Dictionary<string, Option[]> {
         {
+            "GameMode",
+            new Option[]{
+                new Option{text = "RPG", value = "RPG", score = 0, selected = true},
+                new Option{text = "Strategy", value = "Strategy", score = 0},
+            }
+        },
+
+        {
             "StartingCredits",
             new Option[]{
                 new Option{text = "12500", value = 12500, score = -5},

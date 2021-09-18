@@ -27,6 +27,8 @@ public class RpgGameState {
     public class Config {
         public ulong gameSeed;
 
+        public bool rpgMode;
+
         public RandomNumberGenerator rng;
 
         public ObjectPool<SpaceUnit> spaceUnits = new ObjectPool<SpaceUnit>();
@@ -178,6 +180,8 @@ public class RpgGameState {
         var o = new RpgGameState();
 
         o.seed = c.gameSeed;
+
+        o.rpgMode = c.rpgMode;
 
         o.exodusPrice = c.exodusPrice;
 

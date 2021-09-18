@@ -133,9 +133,9 @@ __meta__ = {
 
 [node name="StartingCredits" type="OptionButton" parent="."]
 margin_left = 256.0
-margin_top = 352.0
+margin_top = 288.0
 margin_right = 512.0
-margin_bottom = 384.0
+margin_bottom = 320.0
 theme = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -147,6 +147,27 @@ margin_right = 464.0
 margin_bottom = 32.0
 theme = ExtResource( 2 )
 text = "Starting Credits"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GameMode" type="OptionButton" parent="."]
+margin_left = 256.0
+margin_top = 96.0
+margin_right = 512.0
+margin_bottom = 128.0
+theme = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="GameMode"]
+margin_left = 272.0
+margin_right = 464.0
+margin_bottom = 32.0
+theme = ExtResource( 2 )
+text = "Game Mode"
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -189,30 +210,6 @@ margin_right = 496.0
 margin_bottom = 32.0
 theme = ExtResource( 2 )
 text = "Asteroids"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="PlayerName" type="LineEdit" parent="."]
-margin_left = 256.0
-margin_top = 96.0
-margin_right = 512.0
-margin_bottom = 128.0
-focus_mode = 1
-theme = ExtResource( 2 )
-text = "Vindicator"
-max_length = 18
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="PlayerName"]
-margin_left = 272.0
-margin_right = 464.0
-margin_bottom = 32.0
-theme = ExtResource( 2 )
-text = "Player Name"
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
