@@ -73,6 +73,12 @@ public class Research {
         },
 
         new Research{
+            name = "Tempest",
+            category = Category.NewSpecialWeapon,
+            researchTime = 0,
+        },
+
+        new Research{
             name = "Improved Power Conversion",
             category = Category.Upgrade,
             researchTime = 0,
@@ -123,28 +129,21 @@ public class Research {
         // Utility tech.
 
         new Research{
-            name = "Utility Lab Branch",
-            researchTime = 80,
-        },
-
-        new Research{
             name = "Flame Eater",
             category = Category.NewExplorationDrone,
-            researchTime = 35,
-            dependencies = {"Utility Lab Branch"},
+            researchTime = 70,
         },
 
         new Research{
             name = "Seeker",
             category = Category.NewExplorationDrone,
             researchTime = 30,
-            dependencies = {"Utility Lab Branch"},
         },
 
         new Research{
             name = "Fog Shark",
             category = Category.NewExplorationDrone,
-            researchTime = 25,
+            researchTime = 50,
             dependencies = {"Seeker"},
         },
 
@@ -153,7 +152,6 @@ public class Research {
             category = Category.Upgrade,
             researchTime = 70,
             effect = "when in idle mode, fuel gain is doubled",
-            dependencies = {"Utility Lab Branch"},
         },
 
         // Vessel tech.
@@ -541,7 +539,7 @@ public class Research {
             material = Faction.Draklid,
             category = Category.NewSpecialWeapon,
             researchTime = 90,
-            dependencies = {"Draklid Weapons"},
+            dependencies = {"Draklid Weapons I"},
         },
 
         new Research{
