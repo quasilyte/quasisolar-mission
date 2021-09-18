@@ -116,7 +116,7 @@ public class HumanStarBaseNode : StarBaseNode {
             } else if (moduleName == "Power Refinery") {
                 if (starBase.powerStock > 150) {
                     _gameState.credits += 5 * 25;
-                    starBase.organicStock -= 5;
+                    starBase.powerStock -= 5;
                 }
             } else if (moduleName == "Minerals Collector") {
                 foreach (var planet in sys.resourcePlanets) {
