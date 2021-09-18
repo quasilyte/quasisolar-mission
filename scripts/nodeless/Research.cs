@@ -45,7 +45,7 @@ public class Research {
             list.Add(new Research{
                 name = artifact.name,
                 category = Research.Category.NewArtifact,
-                researchTime = 40,
+                researchTime = 30,
             });
         }
 
