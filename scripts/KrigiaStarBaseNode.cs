@@ -52,7 +52,7 @@ public class KrigiaStarBaseNode : StarBaseNode {
         if (starBase.units.Count != 0) {
             return;
         }
-        if (starBase.garrison.Count == 0) {
+        if (starBase.garrison.Count <= 5) {
             return;
         }
         if (starBase.botPatrolDelay != 0) {
