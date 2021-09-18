@@ -88,7 +88,7 @@ public class PlanetGenerator {
         var planet = new ResourcePlanet(minerals, organic, power);
 
         var explorationBonus = QRandom.IntRange(3000, 6000);
-        explorationBonus += level * QRandom.IntRange(2500, 3000);
+        explorationBonus += level * QRandom.IntRange(3000, 3500);
 
         // 20% - cold
         // 25% - normal
@@ -118,7 +118,7 @@ public class PlanetGenerator {
             planet.textureName = PickPlanetSprite("gas", planetSprites);
             planet.gasGiant = true;
             planet.explorationUnits = QMath.IntAdjust(planet.explorationUnits, 1.25);
-        } else if (planet.temperature > 200) {
+        } else if (planet.temperature > 250) {
             planet.textureName = PickPlanetSprite("volcanic", planetSprites);
         } else if (planet.temperature < -70) {
             planet.textureName = PickPlanetSprite("ice", planetSprites);
