@@ -152,7 +152,7 @@ public class RarilouQuests {
             "),
             logEntryText = (Quest.Data q) => ($@"
                 Rarilou are interested in finding the unknown alien
-                attackers that were seen at [u]{VespionSystem().name}[/u] some
+                attackers that were seen at {VespionSystemNeighbor()} some
                 months ago.
             "),
             completionPhrase = (Quest.CompletionData c) => $"I have the information about the unidentified attackers.",
@@ -418,6 +418,10 @@ public class RarilouQuests {
         foreach (var sys in RpgGameState.starSystemConnections[vespionSys]) {
             if (closest == null || sys.pos.DistanceTo(vespionSys.pos) < closest.pos.DistanceTo(vespionSys.pos)) {
                 closest = sys;
+            }
+            // Prefer non-earthling systems.
+            if (sys.starBase.id != 0 && sys.starBase.Get().owner == Faction.Earthling) {
+                continue;
             }
             if (firstCloseEnough == null && sys.pos.DistanceTo(vespionSys.pos) <= 300) {
                 firstCloseEnough = sys;
