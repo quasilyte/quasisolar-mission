@@ -1451,13 +1451,17 @@ public class MapView : Node2D {
                 planetRow.GetNode<Label>("Organic").Text = p.organicPerDay.ToString();
                 planetRow.GetNode<Label>("Power").Text = p.powerPerDay.ToString();
                 planetRow.GetNode<ButtonNode>("SendDroneButton").Disabled = true;
+                planetRow.GetNode<ButtonNode>("SendDroneButton").Visible = false;
                 droneSelect.Disabled = true;
+                droneSelect.Visible = false;
             } else {
                 planetRow.GetNode<Label>("Minerals").Text = "?";
                 planetRow.GetNode<Label>("Organic").Text = "?";
                 planetRow.GetNode<Label>("Power").Text = "?";
                 planetRow.GetNode<ButtonNode>("SendDroneButton").Disabled = p.IsExplored() || p.activeDrone != "" || _gameState.explorationDrones.Count == 0;
+                planetRow.GetNode<ButtonNode>("SendDroneButton").Visible = true;
                 droneSelect.Disabled = p.activeDrone != "" || p.IsExplored() || _gameState.explorationDrones.Count == 0;
+                droneSelect.Visible = true;
             }
 
             if (!droneSelect.Disabled) {
