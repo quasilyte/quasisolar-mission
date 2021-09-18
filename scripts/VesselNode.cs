@@ -54,6 +54,7 @@ public class VesselNode : Node2D {
 
     public override void _Ready() {
         var area = GetNode<Area2D>("Area2D");
+        var mask = area.GetNode<CollisionShape2D>("CollisionShape2D");
         area.Connect("area_entered", this, nameof(OnCollision));
         area.Connect("area_exited", this, nameof(OnAreaExited));
 
@@ -65,8 +66,10 @@ public class VesselNode : Node2D {
         _contrail.Emitting = false;
         if (State.vesselSize == VesselDesign.Size.Normal) {
             _contrail.Scale = new Vector2(1.6f, 1.6f);
+            mask.Scale = new Vector2(1.1f, 1.1f);
         } else if (State.vesselSize == VesselDesign.Size.Large) {
             _contrail.Scale = new Vector2(1.8f, 1.8f);
+            mask.Scale = new Vector2(1.3f, 1.3f);
         }
 
         foreach (IArtifact a in artifacts) {
