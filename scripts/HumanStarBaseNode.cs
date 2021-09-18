@@ -74,7 +74,7 @@ public class HumanStarBaseNode : StarBaseNode {
             break;
 
         case StarBase.Mode.ProduceRU:
-            _gameState.credits += 4 + (starBase.level * 2);
+            _gameState.credits += 4 + (starBase.level * 3);
             break;
         }
     }
@@ -103,38 +103,41 @@ public class HumanStarBaseNode : StarBaseNode {
     private void ProcessModules() {
         var sys = starBase.system.Get();
         foreach (var moduleName in starBase.modules) {
-            if (moduleName == "Minerals Collector") {
+            if (moduleName == "Minerals Refinery") {
+                if (starBase.mineralsStock > 200) {
+                    _gameState.credits += 5 * 15;
+                    starBase.mineralsStock -= 5;
+                }
+            } else if (moduleName == "Organic Refinery") {
+                if (starBase.organicStock > 100) {
+                    _gameState.credits += 5 * 22;
+                    starBase.organicStock -= 5;
+                }
+            } else if (moduleName == "Power Refinery") {
+                if (starBase.powerStock > 150) {
+                    _gameState.credits += 5 * 25;
+                    starBase.organicStock -= 5;
+                }
+            } else if (moduleName == "Minerals Collector") {
                 foreach (var planet in sys.resourcePlanets) {
                     if (!planet.IsExplored()) {
                         continue;
                     }
-                    if (starBase.modules.Contains("Minerals Refinery") && starBase.mineralsStock > 200) {
-                        _gameState.credits += planet.mineralsPerDay * 14;
-                    } else {
-                        starBase.AddMinerals(planet.mineralsPerDay);
-                    }
+                    starBase.AddMinerals(planet.mineralsPerDay);
                 }
             } else if (moduleName == "Organic Collector") {
                 foreach (var planet in sys.resourcePlanets) {
                     if (!planet.IsExplored()) {
                         continue;
                     }
-                    if (starBase.modules.Contains("Organic Refinery") && starBase.organicStock > 100) {
-                        _gameState.credits += planet.organicPerDay * 20;
-                    } else {
-                        starBase.AddOrganic(planet.organicPerDay);
-                    }
+                    starBase.AddOrganic(planet.organicPerDay);
                 }
             } else if (moduleName == "Power Collector") {
                 foreach (var planet in sys.resourcePlanets) {
                     if (!planet.IsExplored()) {
                         continue;
                     }
-                    if (starBase.modules.Contains("Power Refinery") && starBase.powerStock > 150) {
-                        _gameState.credits += planet.powerPerDay * 22;
-                    } else {
-                        starBase.AddPower(planet.powerPerDay);
-                    }
+                    starBase.AddPower(planet.powerPerDay);
                 }
             }
         }
