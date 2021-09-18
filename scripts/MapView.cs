@@ -1231,6 +1231,7 @@ public class MapView : Node2D {
             if (_gameState.randomEventsAvailable.Contains(e.title)) {
                 _randomEventProto = e;
                 _gameState.randomEventsAvailable.Remove(_randomEventProto.title);
+                _gameState.eventsResolved.Add(_randomEventProto.title);
                 OpenRandomEvent(NewRandomEventContext());
                 return;
             }
@@ -1249,8 +1250,18 @@ public class MapView : Node2D {
                 var ctx = NewRandomEventContext();
                 ctx.spaceUnit = rarilouUnit;
                 RpgGameState.arenaUnit1 = rarilouUnit;
-                rarilouUnit.botProgram = SpaceUnit.Program.RarilouFree;
+                rarilouUnit.botProgram = SpaceUnit.Program.RarilouFlee;
                 OpenRandomEvent(ctx);
+                return;
+            }
+        }
+
+        foreach (var q in _gameState.activeQuests) {
+            if (q.name == "Phaa Rebels") {
+                _randomEventProto = new PhaaRebelsMapEvent();
+                if (_randomEventProto.Condition()) {
+                    OpenRandomEvent(NewRandomEventContext());
+                }
                 return;
             }
         }
@@ -1288,6 +1299,7 @@ public class MapView : Node2D {
 
         _randomEventProto = QRandom.Element(enterSystemEvents);
         _gameState.randomEventsAvailable.Remove(_randomEventProto.title);
+        _gameState.eventsResolved.Add(_randomEventProto.title);
         OpenRandomEvent(NewRandomEventContext());
     }
 
