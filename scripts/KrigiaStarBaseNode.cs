@@ -123,7 +123,7 @@ public class KrigiaStarBaseNode : StarBaseNode {
 
     private string ChooseVesselToProduce() {
         string design = "";
-        if (_gameState.day < 1000) {
+        if (_gameState.day < 1600) {
             while (true) {
                 var roll = QRandom.Float();
                 if (roll < 0.3) {
