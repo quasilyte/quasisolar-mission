@@ -119,7 +119,7 @@ public static class VesselFactory {
             InitDraklidPlunderer(v);
         } else if (kind == "Phaa Mantis") {
             InitPhaaMantis(v);
-        } else if (kind == "Phaa Spacehopper") {
+        } else if (kind == "PhaaRebel Spacehopper") {
             InitPhaaSpacehopper(v);
         } else if (kind == "Rarilou Leviathan") {
             InitRarilouLeviathan(v);

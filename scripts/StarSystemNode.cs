@@ -98,8 +98,17 @@ public class StarSystemNode : Node2D {
             }
         }
 
-        var owner = hasBase ? starBase.owner.ToString() : "Neutral";
-        lines.Add(owner + " System");
+        if (hasBase) {
+            var owner = starBase.owner.ToString();
+            if (starBase.owner != Faction.Earthling) {
+                var status = Utils.DiplomaticStatusString(RpgGameState.instance.diplomaticStatuses[starBase.owner]);
+                lines.Add(owner + " System (" + status + ")");
+            } else {
+                lines.Add(owner + " System");    
+            }
+        } else {
+            lines.Add("Neutral System");
+        }
 
         if (hasBase) {
             var numShips = starBase.garrison.Count;

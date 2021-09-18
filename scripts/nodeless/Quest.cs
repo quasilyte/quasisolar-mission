@@ -55,6 +55,7 @@ public static class Quest {
     }
 
     public enum RequirementKind {
+        ResolveEvent,
         GiveMinerals,
         GiveOrganic,
         GivePower,
@@ -98,6 +99,13 @@ public static class Quest {
             kind = rewardKind;
             value = rewardValue;
         }
+
+        public int IntValue() {
+            if (value is int intval) {
+                return intval;
+            }
+            return (int)((Int64)value);
+        }
     }
 
     public static CompletionData CheckRequirements(RpgGameState gameState, Data q) {
@@ -123,11 +131,11 @@ public static class Quest {
 
     private static void ApplyOneReward(RpgGameState gameState, Data q, Reward reward) {
         if (reward.kind == RewardKind.GetReputation) {
-            gameState.reputations[q.faction] += (int)reward.value;
+            gameState.reputations[q.faction] += reward.IntValue();
         } else if (reward.kind == RewardKind.GetRU) {
-            gameState.credits += (int)reward.value;
+            gameState.credits += reward.IntValue();
         } else if (reward.kind == RewardKind.GetAlienCurrency) {
-            gameState.alienCurrency[q.faction] += (int)reward.value;
+            gameState.alienCurrency[q.faction] += reward.IntValue();
         } else if (reward.kind == RewardKind.GetTechnology) {
             gameState.technologiesResearched.Add((string)reward.value);
         } else {
@@ -138,6 +146,10 @@ public static class Quest {
     private static bool CheckOneRequirement(RpgGameState gameState, CompletionData completion, Requirement req) {
         var unit = gameState.humanUnit.Get();
         var cargo = unit.cargo;
+
+        if (req.kind == RequirementKind.ResolveEvent) {
+            return gameState.eventsResolved.Contains((string)req.value);
+        }
 
         if (req.kind == RequirementKind.GiveMinerals) {
             completion.requirementResolvers.Add(() => unit.CargoAddMinerals(-(int)req.value));

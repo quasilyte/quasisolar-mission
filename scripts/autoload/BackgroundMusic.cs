@@ -26,7 +26,7 @@ public class BackgroundMusic : AudioStreamPlayer {
             _mainMenuMusic = GD.Load<AudioStream>("res://audio/music/main_menu.ogg");
         }
         Stream = _mainMenuMusic;
-        VolumeDb = -20 + (volumeSetting * 10);
+        VolumeDb = -20 + (volumeSetting * 5);
         Play();
     }
 
@@ -42,7 +42,7 @@ public class BackgroundMusic : AudioStreamPlayer {
             _outfitMusic = GD.Load<AudioStream>("res://audio/music/outfit.ogg");
         }
         Stream = _outfitMusic;
-        VolumeDb = -15 + (volumeSetting * 10);
+        VolumeDb = -15 + (volumeSetting * 5);
         Play();
     }
 
@@ -58,7 +58,7 @@ public class BackgroundMusic : AudioStreamPlayer {
             _shipyardMusic = GD.Load<AudioStream>("res://audio/music/shipyard.ogg");
         }
         Stream = _shipyardMusic;
-        VolumeDb = -20 + (volumeSetting * 10);
+        VolumeDb = -20 + (volumeSetting * 5);
         Play();
     }
 
@@ -78,7 +78,7 @@ public class BackgroundMusic : AudioStreamPlayer {
             _mapMusic = GD.Load<AudioStream>("res://audio/music/map.ogg");
         }
         Stream = _mapMusic;
-        VolumeDb = -30 + (volumeSetting * 10);
+        VolumeDb = -30 + (volumeSetting * 5);
         Play();
     }
 
@@ -94,7 +94,7 @@ public class BackgroundMusic : AudioStreamPlayer {
             _mapMusic2 = GD.Load<AudioStream>("res://audio/music/map2.ogg");
         }
         Stream = _mapMusic2;
-        VolumeDb = -25 + (volumeSetting * 10);
+        VolumeDb = -25 + (volumeSetting * 5);
         Play();
     }
 
@@ -109,7 +109,7 @@ public class BackgroundMusic : AudioStreamPlayer {
         if (_battleMusic == null) {
             _battleMusic = GD.Load<AudioStream>("res://audio/music/battle.ogg");
         }
-        VolumeDb = -10 + (volumeSetting * 10);
+        VolumeDb = -10 + (volumeSetting * 5);
         Stream = _battleMusic;
         Play();
     }
@@ -125,7 +125,7 @@ public class BackgroundMusic : AudioStreamPlayer {
         if (_battleMusic2 == null) {
             _battleMusic2 = GD.Load<AudioStream>("res://audio/music/battle2.ogg");
         }
-        VolumeDb = -20 + (volumeSetting * 10);
+        VolumeDb = -20 + (volumeSetting * 5);
         Stream = _battleMusic2;
         Play();
     }

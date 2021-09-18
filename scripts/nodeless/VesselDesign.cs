@@ -108,6 +108,7 @@ public class VesselDesign: IItem {
     private static Dictionary<string, VesselDesign> designByName;
 
     public static void InitLists() {
+        Array.Sort(list, (x, y) => x.sellingPrice.CompareTo(y.sellingPrice));
         designByName = new Dictionary<string, VesselDesign>();
         foreach (var d in list) {
             designByName.Add(d.name, d);
@@ -630,7 +631,7 @@ public class VesselDesign: IItem {
             debris = 500,
             productionTime = 900,
 
-            maxHp = 850,
+            maxHp = 1000,
             maxShieldLevel = 3,
 
             maxSpeed = 80,
@@ -866,7 +867,7 @@ public class VesselDesign: IItem {
             sellingPrice = 4900,
             debris = 55,
             productionTime = 85,
-            availability = ProductionAvailability.Never,
+            availability = ProductionAvailability.ResearchRequired,
 
             maxHp = 160,
             maxShieldLevel = 3,

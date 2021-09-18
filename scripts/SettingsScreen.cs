@@ -34,6 +34,7 @@ public class SettingsScreen : Node2D {
         if (fromMainMenu) {
             GetTree().ChangeScene("res://scenes/MainMenu.tscn");
         } else {
+            RpgGameState.transition = RpgGameState.MapTransition.ExitSettings;
             GetTree().ChangeScene("res://scenes/MapView.tscn");
         }
     }

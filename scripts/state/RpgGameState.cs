@@ -65,11 +65,12 @@ public class RpgGameState {
         ExitStarBase,
         ExitResearchScreen,
         ExitQuestLogScreen,
+        ExitTQuest,
+        ExitSettings,
         UnitDestroyed,
         BaseAttackSimulation,
         EnemyUnitDestroyed,
         EnemyBaseAttackRepelled,
-        TQuestExit,
         EnemyUnitRetreats,
     }
 
@@ -230,6 +231,7 @@ public class RpgGameState {
         {Faction.Zyth, -10},
         {Faction.Vespion, 0},
         {Faction.Phaa, 0},
+        {Faction.PhaaRebel, 0},
         {Faction.Draklid, -5},
         {Faction.Rarilou, 0},
     };
@@ -308,6 +310,7 @@ public class RpgGameState {
     public ObjectPool<StarBase> starBases;
 
     public HashSet<string> randomEventsAvailable;
+    public HashSet<string> eventsResolved = new HashSet<string>();
     public int randomEventCooldown;
 
     public SpaceUnit.Ref humanUnit;
@@ -381,6 +384,16 @@ public class RpgGameState {
         v.faction = faction;
         v.designName = design.name;
         return v;
+    }
+
+    public int StorageFleeSlotsNum() {
+        int num = 0;
+        for (int i = 0; i < 14; i++) {
+            if (instance.storage[i] == null) {
+                num++;
+            }
+        }
+        return num;
     }
 
     public int StorageFreeSlot() {

@@ -291,14 +291,14 @@ public class MapView : Node2D {
         }
         RpgGameState.garrisonStarBase = starBase;
 
-        SetArenaSettings(system, ConvertVesselList(u.unit.fleet), defenders);
+        ArenaManager.SetArenaSettings(system, ConvertVesselList(u.unit.fleet), defenders);
         GetTree().ChangeScene("res://scenes/ArenaScreen.tscn");
     }
 
     private void OnFightEventUnit() {
         var u = _eventUnit;
         RpgGameState.arenaUnit1 = u.unit;
-        SetArenaSettings(_currentSystem.sys, ConvertVesselList(u.unit.fleet), ConvertVesselList(_humanUnit.fleet));
+        ArenaManager.SetArenaSettings(_currentSystem.sys, ConvertVesselList(u.unit.fleet), ConvertVesselList(_humanUnit.fleet));
         GetTree().ChangeScene("res://scenes/ArenaScreen.tscn");
     }
 
@@ -325,7 +325,7 @@ public class MapView : Node2D {
     private void OnKrigiaPatrolCommunicateButton() {
         var u = _eventUnit;
         RpgGameState.arenaUnit1 = u.unit;
-        SetArenaSettings(_currentSystem.sys, ConvertVesselList(u.unit.fleet), ConvertVesselList(_humanUnit.fleet));
+        ArenaManager.SetArenaSettings(_currentSystem.sys, ConvertVesselList(u.unit.fleet), ConvertVesselList(_humanUnit.fleet));
         RpgGameState.selectedTextQuest = new KrigiaPatrolTQuest();
         GetTree().ChangeScene("res://scenes/TextQuestScreen.tscn");
     }
@@ -716,7 +716,7 @@ public class MapView : Node2D {
                 return;
 
             case AbstractMapEvent.EffectKind.PrepareArenaSettings:
-                SetArenaSettings(_currentSystem.sys, ConvertVesselList(_randomEventContext.spaceUnit.fleet), ConvertVesselList(_humanUnit.fleet));
+                ArenaManager.SetArenaSettings(_currentSystem.sys, ConvertVesselList(_randomEventContext.spaceUnit.fleet), ConvertVesselList(_humanUnit.fleet));
                 return;
 
             case AbstractMapEvent.EffectKind.EnterArena: {
@@ -724,10 +724,10 @@ public class MapView : Node2D {
                     RpgGameState.arenaUnit1 = unit;
                     if (effect.value2 != null) {
                         RpgGameState.arenaUnit2 = (SpaceUnit)effect.value2;
-                        SetStagedArenaSettings(_currentSystem.sys, unit, RpgGameState.arenaUnit2, _humanUnit);
+                        ArenaManager.SetStagedArenaSettings(_currentSystem.sys, unit, RpgGameState.arenaUnit2, _humanUnit);
                     } else {
                         // A normal battle.
-                        SetArenaSettings(_currentSystem.sys, ConvertVesselList(unit.fleet), ConvertVesselList(_humanUnit.fleet));
+                        ArenaManager.SetArenaSettings(_currentSystem.sys, ConvertVesselList(unit.fleet), ConvertVesselList(_humanUnit.fleet));
                     }
                     _randomEventResolutionPostEffect = effect.kind;
                     return;
@@ -1257,9 +1257,10 @@ public class MapView : Node2D {
         }
 
         foreach (var q in _gameState.activeQuests) {
-            if (q.name == "Phaa Rebels") {
+            if (q.name == "Phaa Rebels" && !_gameState.eventsResolved.Contains(q.name)) {
                 _randomEventProto = new PhaaRebelsMapEvent();
                 if (_randomEventProto.Condition()) {
+                    _gameState.eventsResolved.Add(q.name);
                     OpenRandomEvent(NewRandomEventContext());
                 }
                 return;
@@ -1343,8 +1344,11 @@ public class MapView : Node2D {
             if (_currentSystem.sys.starBase.id != 0) {
                 enterBase.Disabled = false;
             }
-            // Can mine only in own or neutral systems.
-            if (_currentSystem.sys.starBase.id == 0 || _currentSystem.sys.starBase.Get().owner == Faction.Earthling) {
+            // Can mine only in non-hostile systems.
+            var canMine = _currentSystem.sys.starBase.id == 0 ||
+                          _currentSystem.sys.starBase.Get().owner == Faction.Earthling ||
+                          _gameState.diplomaticStatuses[_currentSystem.sys.starBase.Get().owner] >= DiplomaticStatus.NonAttackPact;
+            if (canMine) {
                 mining.Disabled = false;
             }
         } else {
@@ -1521,7 +1525,7 @@ public class MapView : Node2D {
         }
         RpgGameState.garrisonStarBase = starBase;
 
-        SetArenaSettings(system, ConvertVesselList(u.unit.fleet), defenders);
+        ArenaManager.SetArenaSettings(system, ConvertVesselList(u.unit.fleet), defenders);
         GetTree().ChangeScene("res://scenes/ArenaScreen.tscn");
     }
 
@@ -1881,117 +1885,117 @@ public class MapView : Node2D {
         return m;
     }
 
-    private void SetArenaSettings(StarSystem location, List<Vessel> vessels, Dictionary<Vessel, Vector2> spawnMap, Dictionary<Vessel, int> alliances) {
-        ArenaSettings.Reset();
-        ArenaSettings.isQuickBattle = false;
-        ArenaSettings.alliances = alliances;
+    // private void SetArenaSettings(StarSystem location, List<Vessel> vessels, Dictionary<Vessel, Vector2> spawnMap, Dictionary<Vessel, int> alliances) {
+    //     ArenaSettings.Reset();
+    //     ArenaSettings.isQuickBattle = false;
+    //     ArenaSettings.alliances = alliances;
 
-        // TODO: respect the game settings here.
-        ArenaSettings.numAsteroids = QRandom.IntRange(0, 3);
-        // 30% - none
-        // 20% - purple nebula
-        // 20% - blue nebula
-        // 30% - star
-        var envHazardRoll = QRandom.Float();
-        if (envHazardRoll < 0.3) {
-            ArenaSettings.envDanger = ArenaSettings.EnvDanger.None;
-        } else if (envHazardRoll < 0.5) {
-            ArenaSettings.envDanger = ArenaSettings.EnvDanger.PurpleNebula;
-        } else if (envHazardRoll < 0.7) {
-            ArenaSettings.envDanger = ArenaSettings.EnvDanger.BlueNebula;
-        } else {
-            ArenaSettings.envDanger = ArenaSettings.EnvDanger.Star;
-        }
-        ArenaSettings.starColor = location.color;
+    //     // TODO: respect the game settings here.
+    //     ArenaSettings.numAsteroids = QRandom.IntRange(0, 3);
+    //     // 30% - none
+    //     // 20% - purple nebula
+    //     // 20% - blue nebula
+    //     // 30% - star
+    //     var envHazardRoll = QRandom.Float();
+    //     if (envHazardRoll < 0.3) {
+    //         ArenaSettings.envDanger = ArenaSettings.EnvDanger.None;
+    //     } else if (envHazardRoll < 0.5) {
+    //         ArenaSettings.envDanger = ArenaSettings.EnvDanger.PurpleNebula;
+    //     } else if (envHazardRoll < 0.7) {
+    //         ArenaSettings.envDanger = ArenaSettings.EnvDanger.BlueNebula;
+    //     } else {
+    //         ArenaSettings.envDanger = ArenaSettings.EnvDanger.Star;
+    //     }
+    //     ArenaSettings.starColor = location.color;
 
-        foreach (var v in vessels) {
-            if (v.id == _humanUnit.fleet[0].id) {
-                ArenaSettings.flagship = v;
-            }
+    //     foreach (var v in vessels) {
+    //         if (v.id == _humanUnit.fleet[0].id) {
+    //             ArenaSettings.flagship = v;
+    //         }
 
-            v.spawnPos = spawnMap[v];
-            ArenaSettings.combatants.Add(v);
-            if (!v.isBot) {
-                v.isGamepad = GameControls.preferGamepad;
-            }
-        }
+    //         v.spawnPos = spawnMap[v];
+    //         ArenaSettings.combatants.Add(v);
+    //         if (!v.isBot) {
+    //             v.isGamepad = GameControls.preferGamepad;
+    //         }
+    //     }
 
-        if (location.starBase.id != 0) {
-            // For now, only player-controlled bases can have defensive
-            // structures, so we don't really care with setting the
-            // proper alliance number here (since it's always 0).
-            var starBase = location.starBase.Get();
-            if (starBase.modules.Contains("Gauss Turret")) {
-                ArenaSettings.defensiveTurretAlliance = 0;
-                ArenaSettings.defensiveTurret = NeedleGunWeapon.TurretDesign;
-                ArenaSettings.defensiveTurretShots = 3;
-                if (_gameState.technologiesResearched.Contains("Gauss Turret Capacity")) {
-                    ArenaSettings.defensiveTurretShots++;
-                }
-            } else if (starBase.modules.Contains("Missile Turret")) {
-                ArenaSettings.defensiveTurretAlliance = 0;
-                ArenaSettings.defensiveTurret = RocketLauncherWeapon.TurretDesign;
-                ArenaSettings.defensiveTurretShots = 3;
-                if (_gameState.technologiesResearched.Contains("Missile Turret Capacity")) {
-                    ArenaSettings.defensiveTurretShots++;
-                }
-            }
-        }
-    }
+    //     if (location.starBase.id != 0) {
+    //         // For now, only player-controlled bases can have defensive
+    //         // structures, so we don't really care with setting the
+    //         // proper alliance number here (since it's always 0).
+    //         var starBase = location.starBase.Get();
+    //         if (starBase.modules.Contains("Gauss Turret")) {
+    //             ArenaSettings.defensiveTurretAlliance = 0;
+    //             ArenaSettings.defensiveTurret = NeedleGunWeapon.TurretDesign;
+    //             ArenaSettings.defensiveTurretShots = 3;
+    //             if (_gameState.technologiesResearched.Contains("Gauss Turret Capacity")) {
+    //                 ArenaSettings.defensiveTurretShots++;
+    //             }
+    //         } else if (starBase.modules.Contains("Missile Turret")) {
+    //             ArenaSettings.defensiveTurretAlliance = 0;
+    //             ArenaSettings.defensiveTurret = RocketLauncherWeapon.TurretDesign;
+    //             ArenaSettings.defensiveTurretShots = 3;
+    //             if (_gameState.technologiesResearched.Contains("Missile Turret Capacity")) {
+    //                 ArenaSettings.defensiveTurretShots++;
+    //             }
+    //         }
+    //     }
+    // }
 
-    private void SetArenaSettings(StarSystem location, List<Vessel> enemyFleet, List<Vessel> alliedFleet) {
-        var spawnMap = DefaultSpawnMap(enemyFleet, alliedFleet);
-        var vessels = new List<Vessel>();
-        vessels.AddRange(enemyFleet);
-        vessels.AddRange(alliedFleet);
-        var alliances = new Dictionary<Vessel, int>();
-        foreach (var v in vessels) {
-            alliances[v] = _gameState.FactionsAtWar(Faction.Earthling, v.faction) ? 1 : 0;
-        }
-        SetArenaSettings(location, vessels, spawnMap, alliances);
-    }
+    // private void SetArenaSettings(StarSystem location, List<Vessel> enemyFleet, List<Vessel> alliedFleet) {
+    //     var spawnMap = DefaultSpawnMap(enemyFleet, alliedFleet);
+    //     var vessels = new List<Vessel>();
+    //     vessels.AddRange(enemyFleet);
+    //     vessels.AddRange(alliedFleet);
+    //     var alliances = new Dictionary<Vessel, int>();
+    //     foreach (var v in vessels) {
+    //         alliances[v] = _gameState.FactionsAtWar(Faction.Earthling, v.faction) ? 1 : 0;
+    //     }
+    //     SetArenaSettings(location, vessels, spawnMap, alliances);
+    // }
 
-    private void SetStagedArenaSettings(StarSystem location, SpaceUnit bot1, SpaceUnit bot2, SpaceUnit human) {
-        Func<Faction, int> factionToAlliance = (Faction f) => {
-            if (f == Faction.RandomEventAlly) {
-                return 0;
-            }
-            if (f == Faction.RandomEventHostile) {
-                return 1;
-            }
-            return 2;
-        };
-        var alliances = new Dictionary<Vessel, int>();
-        foreach (var vref in human.fleet) {
-            alliances[vref.Get()] = 0;
-        }
-        foreach (var vref in bot1.fleet) {
-            alliances[vref.Get()] = factionToAlliance(bot1.owner);
-        }
-        foreach (var vref in bot2.fleet) {
-            alliances[vref.Get()] = factionToAlliance(bot2.owner);
-        }
+    // private void SetStagedArenaSettings(StarSystem location, SpaceUnit bot1, SpaceUnit bot2, SpaceUnit human) {
+    //     Func<Faction, int> factionToAlliance = (Faction f) => {
+    //         if (f == Faction.RandomEventAlly) {
+    //             return 0;
+    //         }
+    //         if (f == Faction.RandomEventHostile) {
+    //             return 1;
+    //         }
+    //         return 2;
+    //     };
+    //     var alliances = new Dictionary<Vessel, int>();
+    //     foreach (var vref in human.fleet) {
+    //         alliances[vref.Get()] = 0;
+    //     }
+    //     foreach (var vref in bot1.fleet) {
+    //         alliances[vref.Get()] = factionToAlliance(bot1.owner);
+    //     }
+    //     foreach (var vref in bot2.fleet) {
+    //         alliances[vref.Get()] = factionToAlliance(bot2.owner);
+    //     }
 
-        var spawnMap = new Dictionary<Vessel, Vector2>();
-        var vessels = new List<Vessel>();
-        for (int i = 0; i < human.fleet.Count; i++) {
-            var v = human.fleet[i].Get();
-            spawnMap[v] = QMath.RandomizedLocation(new Vector2(224, 288 + (i * 192)), 40);
-            vessels.Add(v);
-        }
-        foreach (var vref in bot1.fleet) {
-            var v = vref.Get();
-            spawnMap[v] = v.spawnPos;
-            vessels.Add(v);
-        }
-        foreach (var vref in bot2.fleet) {
-            var v = vref.Get();
-            spawnMap[v] = v.spawnPos;
-            vessels.Add(v);
-        }
+    //     var spawnMap = new Dictionary<Vessel, Vector2>();
+    //     var vessels = new List<Vessel>();
+    //     for (int i = 0; i < human.fleet.Count; i++) {
+    //         var v = human.fleet[i].Get();
+    //         spawnMap[v] = QMath.RandomizedLocation(new Vector2(224, 288 + (i * 192)), 40);
+    //         vessels.Add(v);
+    //     }
+    //     foreach (var vref in bot1.fleet) {
+    //         var v = vref.Get();
+    //         spawnMap[v] = v.spawnPos;
+    //         vessels.Add(v);
+    //     }
+    //     foreach (var vref in bot2.fleet) {
+    //         var v = vref.Get();
+    //         spawnMap[v] = v.spawnPos;
+    //         vessels.Add(v);
+    //     }
 
-        SetArenaSettings(location, vessels, spawnMap, alliances);
-    }
+    //     SetArenaSettings(location, vessels, spawnMap, alliances);
+    // }
 
     private void RollFleetAttack() {
         var starBase = _currentSystem.sys.starBase.Get();
@@ -2014,7 +2018,7 @@ public class MapView : Node2D {
         }
         RpgGameState.garrisonStarBase = starBase;
 
-        SetArenaSettings(_currentSystem.sys, defenders, ConvertVesselList(_humanUnit.fleet));
+        ArenaManager.SetArenaSettings(_currentSystem.sys, defenders, ConvertVesselList(_humanUnit.fleet));
 
         GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/unit_under_attack.wav"));
         StopMovement();

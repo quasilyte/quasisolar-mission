@@ -60,6 +60,19 @@ public static class Utils {
         return resultString.Replace("\n ", "\n");;
     }
 
+    public static string DiplomaticStatusString(DiplomaticStatus status) {
+        if (status == DiplomaticStatus.War) {
+            return "at war";
+        }
+        if (status == DiplomaticStatus.Alliance) {
+            return "allies";
+        }
+        if (status == DiplomaticStatus.NonAttackPact) {
+            return "non-aggression pact";
+        }
+        return "unspecified";
+    }
+
     public static Color FactionColor(Faction faction) {
         if (faction == Faction.Earthling) {
             return Color.Color8(0x82, 0xd5, 0xd5);

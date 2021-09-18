@@ -17,7 +17,7 @@ public class SpaceUnit: AbstractPoolValue {
         KrigiaFinalAttack,
         PhaaArk,
 
-        RarilouFree,
+        RarilouFlee,
 
         BackToTheBase,
         AttackStarBase,

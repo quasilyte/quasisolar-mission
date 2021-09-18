@@ -129,6 +129,7 @@ public class TextQuestScreen : Node2D {
             return;
         }
         if (card == TQuestCard.exitQuestEnterMap) {
+            RpgGameState.transition = RpgGameState.MapTransition.ExitTQuest;
             GetTree().ChangeScene("res://scenes/MapView.tscn");
             return;
         }

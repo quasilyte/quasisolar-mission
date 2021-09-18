@@ -179,8 +179,8 @@ public class PhaaBaseTQuest : AbstractDiplomacyTQuest {
     private TQuestCard AssistMenu() {
         return new TQuestCard{
             text = ($@"
-                You help us - we give you {GetCurrency()}.
-                You give us {GetCurrency()} - we help you.
+                You help us - we give you {GetCurrencyName()}.
+                You give us {GetCurrencyName()} - we help you.
 
                 Do you need our help?
             "),
@@ -330,7 +330,7 @@ public class PhaaBaseTQuest : AbstractDiplomacyTQuest {
             if (reward.kind == Quest.RewardKind.GetReputation) {
                 text += $"> Got {reward.value} reputation points\\n";
             } else if (reward.kind == Quest.RewardKind.GetAlienCurrency) {
-                text += $"> Received {reward.value} {GetCurrency()}\\n";
+                text += $"> Received {reward.value} {GetCurrencyName()}\\n";
             } else if (reward.kind == Quest.RewardKind.GetRU) {
                 text += $"> Received {reward.value} RU\\n";
             } else if (reward.kind == Quest.RewardKind.GetTechnology) {

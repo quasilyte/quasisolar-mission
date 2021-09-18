@@ -1,22 +1,15 @@
 using System.Collections.Generic;
 
-public class RarilouEncounterTQuest : AbstractTQuest {
-    private RpgGameState _gameState;
-
+public class RarilouEncounterTQuest : AbstractDiplomacyTQuest {
     private bool _checkedQuest = false;
     private Quest.Template _rolledQuest = null;
     private Quest.Data _currentQuest = null;
 
-    private string Currency() { return RpgGameState.alienCurrencyNames[Faction.Rarilou]; }
-    private int Reputation() { return _gameState.reputations[Faction.Rarilou]; }
-    private DiplomaticStatus Status() { return _gameState.diplomaticStatuses[Faction.Rarilou]; }
-
-    public RarilouEncounterTQuest() {
-        _gameState = RpgGameState.instance;
-        DeclareValue("Rarilou reputation", () => Reputation(), true);
-        DeclareValue("Status", () => DiplomaticStatusString(Status()), true);
+    public RarilouEncounterTQuest(): base(Faction.Rarilou) {
+        DeclareValue("Rarilou reputation", () => GetReputation(), true);
+        DeclareValue("Status", () => DiplomaticStatusString(GetStatus()), true);
         DeclareValue("RU", () => _gameState.credits, true);
-        DeclareValue(Currency(), () => _gameState.alienCurrency[Faction.Rarilou], true);
+        DeclareValue(GetCurrencyName(), () => _gameState.alienCurrency[Faction.Rarilou], true);
         DeclareValue("Minerals", () => _gameState.humanUnit.Get().cargo.minerals, true);
         DeclareValue("Organic", () => _gameState.humanUnit.Get().cargo.organic, true);
         DeclareValue("Power", () => _gameState.humanUnit.Get().cargo.power, true);
@@ -58,14 +51,14 @@ public class RarilouEncounterTQuest : AbstractTQuest {
     }
 
     private string GetGreetingsText() {
-        if (Status() == DiplomaticStatus.War) {
+        if (GetStatus() == DiplomaticStatus.War) {
             return (@"
                 We don't want to attack your fleet, but if you will get
                 any closer, we will have to open fire. Let us leave this
                 system so every side can avoid unnecessary casualties.
             ");
         }
-        if (Status() == DiplomaticStatus.Alliance) {
+        if (GetStatus() == DiplomaticStatus.Alliance) {
             return (@"
                 Hail to the allied Earthling fleet.
                 What are you up to, captain?
@@ -78,23 +71,10 @@ public class RarilouEncounterTQuest : AbstractTQuest {
         ");
     }
 
-    private string DiplomaticStatusString(DiplomaticStatus status) {
-        if (status == DiplomaticStatus.War) {
-            return "at war";
-        }
-        if (status == DiplomaticStatus.Alliance) {
-            return "allies";
-        }
-        if (status == DiplomaticStatus.NonAttackPact) {
-            return "non-aggression pact";
-        }
-        return "unspecified";
-    }
-
     private List<TQuestAction> GetRootActions() {
         var actions = new List<TQuestAction>();
 
-        if (Status() != DiplomaticStatus.War) {
+        if (GetStatus() != DiplomaticStatus.War) {
             actions.Add(new TQuestAction{
                 text = "[Do business]",
                 next = () => DoBusiness(null),
@@ -106,7 +86,7 @@ public class RarilouEncounterTQuest : AbstractTQuest {
             next = AskQuestions,
         });
 
-        bool canAttack = Status() == DiplomaticStatus.War || Status() == DiplomaticStatus.Unspecified;
+        bool canAttack = GetStatus() == DiplomaticStatus.War || GetStatus() == DiplomaticStatus.Unspecified;
         if (canAttack) {
             actions.Add(new TQuestAction{
                 text = "[Hostile actions]",
@@ -140,7 +120,7 @@ public class RarilouEncounterTQuest : AbstractTQuest {
             if (reward.kind == Quest.RewardKind.GetReputation) {
                 text += $"> Got {reward.value} reputation points\\n";
             } else if (reward.kind == Quest.RewardKind.GetAlienCurrency) {
-                text += $"> Received {reward.value} {Currency()}\\n";
+                text += $"> Received {reward.value} {GetCurrencyName()}\\n";
             } else if (reward.kind == Quest.RewardKind.GetRU) {
                 text += $"> Received {reward.value} RU\\n";
             } else if (reward.kind == Quest.RewardKind.GetTechnology) {
@@ -204,12 +184,12 @@ public class RarilouEncounterTQuest : AbstractTQuest {
             }
         }
 
-        if (Status() == DiplomaticStatus.Unspecified) {
+        if (GetStatus() == DiplomaticStatus.Unspecified) {
             actions.Add(new TQuestAction{
                 text = "I propose a pact of non-aggression.",
                 next = TryNonAttackPact,
             });
-        } else if (Status() == DiplomaticStatus.NonAttackPact) {
+        } else if (GetStatus() == DiplomaticStatus.NonAttackPact) {
             actions.Add(new TQuestAction{
                 text = "I propose to form an alliance.",
                 next = TryAlliance,
@@ -276,7 +256,7 @@ public class RarilouEncounterTQuest : AbstractTQuest {
         actions.Add(new TQuestAction{
             text = "I want to recruit a vessel. (70)",
             cond = () => {
-                if (Status() != DiplomaticStatus.Alliance) {
+                if (GetStatus() != DiplomaticStatus.Alliance) {
                     return false;
                 }
                 if (_gameState.humanUnit.Get().fleet.Count == 4) {
@@ -310,7 +290,7 @@ public class RarilouEncounterTQuest : AbstractTQuest {
     }
 
     private TQuestCard TryNonAttackPact() {
-        if (Reputation() < 5) {
+        if (GetReputation() < 5) {
             return new TQuestCard{
                 text = (@"
                     I am afraid we have to decline your offer.
@@ -333,7 +313,7 @@ public class RarilouEncounterTQuest : AbstractTQuest {
     }
 
     private TQuestCard TryAlliance() {
-        if (Reputation() < 20) {
+        if (GetReputation() < 20) {
             return new TQuestCard{
                 text = (@"
                     Forming an allience is a serious commitment.

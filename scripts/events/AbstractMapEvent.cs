@@ -6,6 +6,7 @@ public abstract class AbstractMapEvent {
         OnSystemEntered,
         OnSystemPatroling,
         OnSpaceTravelling,
+        OnScript,
     }
 
     public enum EffectKind {
@@ -110,15 +111,6 @@ public abstract class AbstractMapEvent {
     }
 
     protected static SpaceUnit NewSpaceUnit(Faction faction, params Vessel[] fleet) {
-        var fleetList = new List<Vessel.Ref>();
-        foreach (var v in fleet) {
-            fleetList.Add(v.GetRef());
-        }
-
-        var spaceUnit = RpgGameState.instance.spaceUnits.New();
-        spaceUnit.owner = faction;
-        spaceUnit.pos = RpgGameState.instance.humanUnit.Get().pos;
-        spaceUnit.fleet = fleetList;
-        return spaceUnit;
+        return ArenaManager.NewSpaceUnit(faction, fleet);
     }
 }

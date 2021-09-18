@@ -18,7 +18,7 @@ public class QuestLogScreen : Node2D {
             var entry = QuestLogEntryNode.New();
             var isCompleted = Quest.CheckRequirements(RpgGameState.instance, q) != null;
             var status = isCompleted ? "Ready to be completed" : "In progress";
-            var description = Utils.FormatMultilineText(RarilouQuests.Find(q.name).logEntryText(q));
+            var description = Utils.FormatMultilineText(QuestsRegistry.FindQuest(q).logEntryText(q));
             var nameLabel = entry.GetNode<Label>("VBoxContainer/Name");
             nameLabel.Text = "# " + q.name;
             nameLabel.AddColorOverride("font_color", Utils.FactionColor(q.faction));

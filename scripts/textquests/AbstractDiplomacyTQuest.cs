@@ -11,21 +11,14 @@ public abstract class AbstractDiplomacyTQuest: AbstractTQuest {
     protected int GetCurrency() { return _gameState.alienCurrency[_faction]; }
     protected int GetReputation() { return _gameState.reputations[_faction]; }
     protected DiplomaticStatus GetStatus() { return _gameState.diplomaticStatuses[_faction]; }
+    protected SpaceUnit GetPlayerSpaceUnit() { return _gameState.humanUnit.Get(); }
+    protected StarSystem GetCurrentStarSystem() { return RpgGameState.starSystemByPos[GetPlayerSpaceUnit().pos]; }
 
     protected string DiplomaticStatusString(DiplomaticStatus status) {
-        if (status == DiplomaticStatus.War) {
-            return "at war";
-        }
-        if (status == DiplomaticStatus.Alliance) {
-            return "allies";
-        }
-        if (status == DiplomaticStatus.NonAttackPact) {
-            return "non-aggression pact";
-        }
-        return "unspecified";
+        return Utils.DiplomaticStatusString(status);
     }
 
-    protected void DoChangeReputation(int delta) { _gameState.reputations[Faction.Phaa] += delta; }
+    protected void DoChangeReputation(int delta) { _gameState.reputations[_faction] += delta; }
     protected void DoDeclareWar() { _gameState.diplomaticStatuses[_faction] = DiplomaticStatus.War; }
     protected void DoSignNonAttackPact() { _gameState.diplomaticStatuses[_faction] = DiplomaticStatus.NonAttackPact; }
 }
