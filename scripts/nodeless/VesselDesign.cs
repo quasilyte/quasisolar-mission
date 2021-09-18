@@ -869,7 +869,7 @@ public class VesselDesign: IItem {
             productionTime = 85,
             availability = ProductionAvailability.ResearchRequired,
 
-            maxHp = 160,
+            maxHp = 165,
             maxShieldLevel = 3,
 
             maxSpeed = 90,
@@ -882,7 +882,7 @@ public class VesselDesign: IItem {
             artifactSlots = 0,
 
             cargoSpace = 40,
-            size = Size.Normal,
+            size = Size.Small,
         },
 
         new VesselDesign{
@@ -895,7 +895,7 @@ public class VesselDesign: IItem {
             productionTime = 85,
             availability = ProductionAvailability.Never,
 
-            maxHp = 160,
+            maxHp = 165,
             maxShieldLevel = 3,
 
             maxSpeed = 90,
@@ -908,7 +908,7 @@ public class VesselDesign: IItem {
             artifactSlots = 0,
 
             cargoSpace = 40,
-            size = Size.Normal,
+            size = Size.Small,
         },
 
         // Vespion designs.
