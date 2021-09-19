@@ -14,7 +14,7 @@ public class StingerWeapon : IWeapon {
         damage = 6.0f,
         damageKind = DamageKind.Kinetic,
         projectileSpeed = 380.0f,
-        botHintSnipe = 0.3f,
+        botHintSnipe = 0.4f,
     };
     public WeaponDesign GetDesign() { return Design; }
     public void Ready() {}

@@ -442,7 +442,9 @@ public class EquipmentShopScreen : Node2D {
             var shieldPanel = panel.GetNode<Sprite>("Shield");
             var shieldSlot = shieldPanel.GetNode<ItemSlotNode>("Slot");
             shieldSlot.Reset(u, true);
-            if (u.Shield() != EmptyShield.Design) {
+            var canUseShield = u.Design().maxShieldLevel != 0;
+            shieldPanel.Frame = canUseShield ? 1 : 0;
+            if (canUseShield && u.Shield() != EmptyShield.Design) {
                 var itemNode = DraggableItemNode.New(shieldSlot, u.Shield(), u.isMercenary);
                 shieldSlot.ApplyItem(null, itemNode);
                 GetTree().CurrentScene.AddChild(itemNode);

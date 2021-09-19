@@ -609,14 +609,16 @@ focus_mode = 2
 text = "Done"
 
 [node name="BattleResultPopup" parent="UI" instance=ExtResource( 18 )]
+visible = true
 margin_left = 608.0
 margin_top = 64.0
-margin_right = 960.0
-margin_bottom = 208.0
+margin_right = 1344.0
+margin_bottom = 352.0
 
 [node name="Label" type="Label" parent="UI/BattleResultPopup"]
-margin_right = 352.0
-margin_bottom = 32.0
+margin_top = 16.0
+margin_right = 736.0
+margin_bottom = 48.0
 theme = ExtResource( 6 )
 text = "Victory!"
 align = 1
@@ -625,20 +627,34 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="List" type="VBoxContainer" parent="UI/BattleResultPopup"]
+[node name="Description" type="Label" parent="UI/BattleResultPopup"]
 margin_left = 32.0
 margin_top = 48.0
-margin_right = 320.0
-margin_bottom = 70.0
+margin_right = 704.0
+margin_bottom = 160.0
+theme = ExtResource( 6 )
+text = "Some post-battle text."
+align = 1
+valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="List" type="VBoxContainer" parent="UI/BattleResultPopup"]
+margin_left = 16.0
+margin_top = 176.0
+margin_right = 720.0
+margin_bottom = 198.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Done" parent="UI/BattleResultPopup" instance=ExtResource( 19 )]
-margin_left = 96.0
-margin_top = 96.0
-margin_right = 256.0
-margin_bottom = 128.0
+margin_left = 272.0
+margin_top = 240.0
+margin_right = 464.0
+margin_bottom = 272.0
 text = "Done"
 
 [node name="DraklidsPopup" parent="UI" instance=ExtResource( 18 )]
@@ -875,7 +891,6 @@ __meta__ = {
 }
 
 [node name="ResearchCompletedPopup" parent="UI" instance=ExtResource( 18 )]
-visible = true
 margin_left = 816.0
 margin_top = 512.0
 margin_right = 1440.0

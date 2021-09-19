@@ -73,15 +73,23 @@ public class Research {
         },
 
         new Research{
-            name = "Tempest",
-            category = Category.NewSpecialWeapon,
-            researchTime = 0,
-        },
-
-        new Research{
             name = "Improved Power Conversion",
             category = Category.Upgrade,
             researchTime = 0,
+        },
+
+        // Lock+Tech researches.
+
+        new Research{
+            name = "Tempest Lock",
+            category = Category.Fundamental,
+            researchTime = 0,
+        },
+        new Research{
+            name = "Tempest",
+            category = Category.NewSpecialWeapon,
+            dependencies = {"Tempest Lock"},
+            researchTime = 120,
         },
 
         // Quest-related researches.

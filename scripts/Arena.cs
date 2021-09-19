@@ -468,6 +468,8 @@ public class Arena : Node2D {
             // }
         }
 
+        ArenaSettings.extraReward(result);
+
         // alliances should contain only 1 element,
         // the victorious team.
         foreach (int alliance in alliances) {

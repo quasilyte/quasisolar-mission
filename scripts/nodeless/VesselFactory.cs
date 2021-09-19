@@ -51,8 +51,8 @@ public static class VesselFactory {
     public static void Init(Vessel v, string kind) {
         v.sentinelName = "Empty";
 
-        if (kind == "Neutral Pirate") {
-            InitNeutralPirate(v);
+        if (kind == "Neutral Ravager") {
+            InitNeutralRavager(v);
         } else if (kind == "Neutral Nomad") {
             InitNeutralNomad(v);
         } else if (kind == "Neutral Weak Avenger") {
@@ -195,22 +195,20 @@ public static class VesselFactory {
         }
     }
 
-    private static void InitNeutralPirate(Vessel v) {
-        v.designName = "Pirate";
-        v.energySourceName = "Power Generator";
+    private static void InitNeutralRavager(Vessel v) {
+        v.designName = "Ravager";
+        v.energySourceName = "Vortex Battery";
+        if (v.rank == 1) {
+            v.energySourceName = "Advanced Power Generator";
+        }
+
+        if (QRandom.Float() < RankChance(v.rank, 0.3, 0.65, 1)) {
+            v.specialWeaponName = TempestWeapon.Design.name;
+        }
 
         AddWeapon(v,
-            0.6, AssaultLaserWeapon.Design.name,
+            0.6, IonCannonWeapon.Design.name,
             0.4, StingerWeapon.Design.name);
-
-        AddWeapon(v,
-            0.7, SpreadGunWeapon.Design.name,
-            0.3, RocketLauncherWeapon.Design.name);
-
-        SetShield(v,
-            0.25, DispersionFieldShield.Design.name,
-            0.5, ReflectorShield.Design.name,
-            0.25, LaserPerimeterShield.Design.name);
     }
 
     private static void InitNeutralNomad(Vessel v) {

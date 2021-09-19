@@ -10,6 +10,7 @@ public abstract class AbstractMapEvent {
     }
 
     public enum EffectKind {
+        None,
         AddVesselStatus,
         AddCredits,
         AddMinerals,
@@ -32,6 +33,7 @@ public abstract class AbstractMapEvent {
         AddKrigiaMaterial,
         TeleportToSystem,
         EnterArena,
+        EnterDuelArena,
         EnterTextQuest,
         PrepareArenaSettings,
         SpawnSpaceUnit,
@@ -41,6 +43,7 @@ public abstract class AbstractMapEvent {
         public EffectKind kind;
         public object value;
         public object value2 = null; // When one value is not enough.
+        public System.Action fn = () => {};
     }
 
     public class Result {

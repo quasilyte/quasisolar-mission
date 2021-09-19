@@ -1,5 +1,6 @@
 using Godot;
 using System.Collections.Generic;
+using System;
 
 public class ArenaSettings {
     public enum BattleSpeed {
@@ -38,9 +39,13 @@ public class ArenaSettings {
     // Used only for the campaign mode.
     public static Dictionary<Vessel, int> alliances;
 
+    public static Action<BattleResult> extraReward;
+
     public static void Reset() {
         isQuickBattle = false;
         isStarBaseBattle = false;
+
+        extraReward = (BattleResult _) => {};
 
         defensiveTurretAlliance = 0;
         defensiveTurretShots = 0;

@@ -997,24 +997,24 @@ public class VesselDesign: IItem {
         // Neutral designs.
 
         new VesselDesign{
-            level = 2,
-            name = "Pirate",
+            level = 3,
+            name = "Ravager",
             affiliation = Faction.Neutral,
             description = "",
-            sellingPrice = 3500,
-            debris = 50,
-            productionTime = 45,
+            sellingPrice = 5900,
+            debris = 90,
+            productionTime = 70,
 
-            maxHp = 100,
-            maxShieldLevel = 2,
+            maxHp = 225,
+            maxShieldLevel = 0,
 
-            maxSpeed = 85,
-            acceleration = 2,
-            rotationSpeed = 1.6f,
+            maxSpeed = 75,
+            acceleration = 5,
+            rotationSpeed = 2,
 
-            sentinelSlot = false,
-            specialSlot = false,
-            weaponSlots = 2,
+            sentinelSlot = true,
+            specialSlot = true,
+            weaponSlots = 1,
             artifactSlots = 2,
 
             cargoSpace = 100,

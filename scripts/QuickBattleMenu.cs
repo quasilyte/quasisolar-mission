@@ -112,7 +112,7 @@ public class QuickBattleMenu : Node2D {
             "Human 1",
             "Human 1 (Gamepad 1)",
             "Human 2 (Gamepad 2)",
-            "Neutral Pirate",
+            "Neutral Ravager",
             "Neutral Nomad",
             "Neutral Avenger",
             "Neutral Spectre",

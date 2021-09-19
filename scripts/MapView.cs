@@ -43,6 +43,7 @@ public class MapView : Node2D {
     private MapViewCheatMenuPopup _cheatsPopup;
 
     private AbstractMapEvent.EffectKind _randomEventResolutionPostEffect;
+    private Action _randomEventResolutionAction;
 
     private SpaceUnitNode _eventUnit;
     private PopupNode _starBaseAttackPopup;
@@ -385,6 +386,13 @@ public class MapView : Node2D {
 
         var result = RpgGameState.lastBattleResult;
 
+        var description = _battleResult.GetNode<Label>("Description");
+        if (result.popupText != "") {
+            description.Text = result.popupText;
+        } else {
+            description.Text = "The enemy is defeated, your fleet can now collect the spoils of war.";
+        }
+
         if (result.exp != 0) {
             _gameState.experience += result.exp;
             lines.Add($"+{result.exp} experience");
@@ -392,6 +400,11 @@ public class MapView : Node2D {
         if (result.fuel != 0) {
             RpgGameState.AddFuel(result.fuel);
             lines.Add($"+{result.fuel} fuel units");
+        }
+
+        if (result.ru != 0) {
+            _gameState.credits += result.ru;
+            lines.Add($"+{result.ru} RU");
         }
 
         if (result.debris.other != 0) {
@@ -443,6 +456,10 @@ public class MapView : Node2D {
         if (!string.IsNullOrEmpty(result.technology)) {
             _gameState.technologiesResearched.Add(result.technology);
             lines.Add($"{result.technology} unlocked");
+        }
+        if (!string.IsNullOrEmpty(result.research)) {
+            _gameState.technologiesResearched.Add(result.research + " Lock");
+            lines.Add($"{result.research} research");
         }
 
         var offsetY = 36 * (lines.Count - 1);
@@ -562,6 +579,7 @@ public class MapView : Node2D {
     private void RunEventResolutionPostEffect() {
         switch (_randomEventResolutionPostEffect) {
             case AbstractMapEvent.EffectKind.EnterArena:
+                _randomEventResolutionAction();
                 GetTree().ChangeScene("res://scenes/ArenaScreen.tscn");
                 return;
             case AbstractMapEvent.EffectKind.EnterTextQuest:
@@ -572,6 +590,9 @@ public class MapView : Node2D {
 
     private void OnRandomEventAction(int actionIndex) {
         var eventResult = _randomEventInstance.actions[actionIndex].apply();
+
+        _randomEventResolutionPostEffect = AbstractMapEvent.EffectKind.None;
+        _randomEventResolutionAction = () => {};
 
         foreach (var effect in eventResult.effects) {
             ExecuteEffect(effect);
@@ -721,6 +742,16 @@ public class MapView : Node2D {
                 ArenaManager.SetArenaSettings(_currentSystem.sys, ConvertVesselList(_randomEventContext.spaceUnit.fleet), ConvertVesselList(_humanUnit.fleet));
                 return;
 
+            case AbstractMapEvent.EffectKind.EnterDuelArena: {
+                var unit = (SpaceUnit)effect.value;
+                RpgGameState.arenaUnit1 = unit;
+                var flagship = new List<Vessel>{_humanUnit.fleet[0].Get()};
+                ArenaManager.SetArenaSettings(_currentSystem.sys, ConvertVesselList(unit.fleet), flagship);
+                _randomEventResolutionPostEffect = AbstractMapEvent.EffectKind.EnterArena;
+                _randomEventResolutionAction = effect.fn;
+                return;
+            }
+
             case AbstractMapEvent.EffectKind.EnterArena: {
                     var unit = (SpaceUnit)effect.value;
                     RpgGameState.arenaUnit1 = unit;
@@ -732,6 +763,7 @@ public class MapView : Node2D {
                         ArenaManager.SetArenaSettings(_currentSystem.sys, ConvertVesselList(unit.fleet), ConvertVesselList(_humanUnit.fleet));
                     }
                     _randomEventResolutionPostEffect = effect.kind;
+                    _randomEventResolutionAction = effect.fn;
                     return;
                 }
         }
@@ -1781,11 +1813,7 @@ public class MapView : Node2D {
     }
 
     private List<Vessel> ConvertVesselList(List<Vessel.Ref> list) {
-        var result = new List<Vessel>();
-        foreach (var v in list) {
-            result.Add(v.Get());
-        }
-        return result;
+        return ArenaManager.ConvertVesselList(list);
     }
 
     private void ProcessStarSystems() {
