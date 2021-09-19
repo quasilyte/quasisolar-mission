@@ -194,7 +194,7 @@ public class ShipyardScreen : Node2D {
                 storagePanel.AddChild(itemSlot);
 
                 if (_starBase.garrison.Count > i) {
-                    var itemNode = DraggableItemNode.New(itemSlot, _starBase.garrison[i].Get());
+                    var itemNode = DraggableItemNode.New(itemSlot, _starBase.garrison[i].Get(), false);
                     itemSlot.ApplyItem(null, itemNode);
                     GetTree().CurrentScene.AddChild(itemNode);
                     itemNode.GlobalPosition = storagePanel.GlobalPosition;
@@ -213,7 +213,7 @@ public class ShipyardScreen : Node2D {
             var vessel = _gameState.humanUnit.Get().fleet[i].Get();
             panel.GetNode<Label>("Name").Text = vessel.pilotName;
             var slot = panel.GetNode<ItemSlotNode>("Slot");
-            var itemNode = DraggableItemNode.New(slot, vessel);
+            var itemNode = DraggableItemNode.New(slot, vessel, false);
             slot.ApplyItem(null, itemNode);
             GetTree().CurrentScene.AddChild(itemNode);
             itemNode.GlobalPosition = panel.GlobalPosition;

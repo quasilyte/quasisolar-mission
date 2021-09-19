@@ -8,22 +8,28 @@ public class DraggableItemNode : Node2D {
     public IItem item;
     private ItemSlotNode _slot;
 
-    public bool disabled = false;
+    private bool disabled = false;
 
     private static PackedScene _scene = null;
-    public static DraggableItemNode New(ItemSlotNode slot, IItem item) {
+    public static DraggableItemNode New(ItemSlotNode slot, IItem item, bool disabled) {
         if (_scene == null) {
             _scene = GD.Load<PackedScene>("res://scenes/DraggableItemNode.tscn");
         }
         var o = (DraggableItemNode)_scene.Instance();
         o._slot = slot;
         o.item = item;
+        o.disabled = disabled;
         return o;
     }
 
     public override void _Ready() {
         var sprite = GetNode<Sprite>("Sprite");
         sprite.Texture = ItemInfo.Texture(item);
+
+        if (disabled) {
+            var m = sprite.Modulate;
+            sprite.Modulate = new Color(m.r, m.g, m.b, 0.4f);
+        }
 
         var area = GetNode<Area2D>("Area2D");
         area.Connect("area_entered", this, nameof(OnAreaEntered));
