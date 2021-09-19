@@ -449,7 +449,7 @@ public class Arena : Node2D {
             } else {
                 vessel.hp = 0;
                 CollectVesselDebris(vessel, p, result);
-                if (_flagshipPilot != null && p.alliance != _flagshipPilot.alliance) {
+                if (!ArenaSettings.isStarBaseBattle && p.alliance != 0) {
                     result.exp += p.Vessel.State.vesselLevel * 3;
                     if (vessel.designName == "Visitor") {
                         result.technology = "Crystal Cannon";
