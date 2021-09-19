@@ -2,7 +2,7 @@ using Godot;
 
 public class RocketLauncherWeapon : IWeapon {
     public static WeaponDesign TurretDesign = new WeaponDesign{
-        damage = 16,
+        damage = 17,
         range = 1800,
         projectileSpeed = 380,
         damageKind = DamageKind.Thermal,
