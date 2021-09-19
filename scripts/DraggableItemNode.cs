@@ -8,6 +8,8 @@ public class DraggableItemNode : Node2D {
     public IItem item;
     private ItemSlotNode _slot;
 
+    public bool disabled = false;
+
     private static PackedScene _scene = null;
     public static DraggableItemNode New(ItemSlotNode slot, IItem item) {
         if (_scene == null) {
@@ -31,6 +33,10 @@ public class DraggableItemNode : Node2D {
     public ItemSlotNode GetSlotNode() { return _slot; }
 
     public override void _Process(float delta) {
+        if (disabled) {
+            return;
+        }
+
         if (_dragging == this) {
             GlobalPosition =  GetGlobalMousePosition();
         }

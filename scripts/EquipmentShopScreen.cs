@@ -432,6 +432,7 @@ public class EquipmentShopScreen : Node2D {
             energySourceSlot.Reset(u, true);
             if (u.energySourceName != "None") {
                 var itemNode = DraggableItemNode.New(energySourceSlot, u.GetEnergySource());
+                itemNode.disabled = u.isMercenary;
                 energySourceSlot.ApplyItem(null, itemNode);
                 GetTree().CurrentScene.AddChild(itemNode);
                 itemNode.GlobalPosition = energySourcePanel.GlobalPosition;
@@ -444,6 +445,7 @@ public class EquipmentShopScreen : Node2D {
             shieldSlot.Reset(u, true);
             if (u.Shield() != EmptyShield.Design) {
                 var itemNode = DraggableItemNode.New(shieldSlot, u.Shield());
+                itemNode.disabled = u.isMercenary;
                 shieldSlot.ApplyItem(null, itemNode);
                 GetTree().CurrentScene.AddChild(itemNode);
                 itemNode.GlobalPosition = shieldPanel.GlobalPosition;
@@ -457,6 +459,7 @@ public class EquipmentShopScreen : Node2D {
             sentinelSlot.Reset(u, u.Design().sentinelSlot);
             if (u.Design().sentinelSlot && u.sentinelName != "Empty") {
                 var itemNode = DraggableItemNode.New(sentinelSlot, u.Sentinel());
+                itemNode.disabled = u.isMercenary;
                 sentinelSlot.ApplyItem(null, itemNode);
                 GetTree().CurrentScene.AddChild(itemNode);
                 itemNode.GlobalPosition = sentinelPanel.GlobalPosition;
@@ -470,6 +473,7 @@ public class EquipmentShopScreen : Node2D {
             specialWeaponSlot.Reset(u, u.Design().specialSlot);
             if (u.Design().specialSlot && u.SpecialWeapon() != EmptyWeapon.Design) {
                 var itemNode = DraggableItemNode.New(specialWeaponSlot, u.SpecialWeapon());
+                itemNode.disabled = u.isMercenary;
                 specialWeaponSlot.ApplyItem(null, itemNode);
                 GetTree().CurrentScene.AddChild(itemNode);
                 itemNode.GlobalPosition = specialWeaponPanel.GlobalPosition;
@@ -491,6 +495,7 @@ public class EquipmentShopScreen : Node2D {
             }
 
             var itemNode = DraggableItemNode.New(weaponSlot, WeaponDesign.Find(w));
+            itemNode.disabled = u.isMercenary;
             weaponSlot.ApplyItem(null, itemNode);
             GetTree().CurrentScene.AddChild(itemNode);
             itemNode.GlobalPosition = weaponPanel.GlobalPosition;
@@ -512,6 +517,7 @@ public class EquipmentShopScreen : Node2D {
             }
 
             var itemNode = DraggableItemNode.New(artifactSlot, ArtifactDesign.Find(art));
+            itemNode.disabled = u.isMercenary;
             artifactSlot.ApplyItem(null, itemNode);
             GetTree().CurrentScene.AddChild(itemNode);
             itemNode.GlobalPosition = artifactPanel.GlobalPosition;
