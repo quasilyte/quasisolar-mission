@@ -346,9 +346,6 @@ public class RpgGameState {
                 if (instance.researchMaterial.Count(research.material) == 0) {
                     value *= 0.25;
                 }
-                if (instance.technologiesResearched.Contains("Alien Tech Lab")) {
-                    value = QMath.ClampMax(value + 0.1, 1);
-                }
             }
         }
         return value;
@@ -365,11 +362,11 @@ public class RpgGameState {
     public static float MaxFuel() {
         var value = instance.limits.maxFuel;
         if (instance.technologiesResearched.Contains("Improved Fuel Tanks III")) {
-            value *= 1.2f;
+            value *= 1.4f;
         } else if (instance.technologiesResearched.Contains("Improved Fuel Tanks II")) {
-            value *= 1.1f;
+            value *= 1.2f;
         } else if (instance.technologiesResearched.Contains("Improved Fuel Tanks")) {
-            value *= 1.05f;
+            value *= 1.1f;
         }
         return value;
     }

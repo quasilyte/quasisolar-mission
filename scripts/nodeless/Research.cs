@@ -117,15 +117,6 @@ public class Research {
             dependencies = {"Missile Turret"},
         },
 
-        // Science tech.
-
-        new Research{
-            name = "Alien Tech Lab",
-            category = Category.Upgrade,
-            researchTime = 70,
-            effect = "+10% research rate for alien projects",
-        },
-
         // Utility tech.
 
         new Research{
@@ -307,8 +298,6 @@ public class Research {
             dependencies = {"Level 3 Shields"},
         },
 
-        
-
         // Energy sources tech.
 
         new Research{
@@ -422,7 +411,7 @@ public class Research {
         new Research{
             name = "Warp Device",
             category = Category.NewSpecialWeapon,
-            researchTime = 170,
+            researchTime = 130,
         },
 
         // Upgrades.
@@ -438,23 +427,23 @@ public class Research {
             name = "Improved Fuel Tanks",
             category = Category.Upgrade,
             researchTime = 50,
-            effect = "+5% fuel tank capacity",
+            effect = "+10% fuel tank capacity",
         },
 
         new Research{
             name = "Improved Fuel Tanks II",
             category = Category.Upgrade,
-            researchTime = 75,
+            researchTime = 60,
             dependencies = {"Improved Fuel Tanks"},
-            effect = "+10% fuel tank capacity",
+            effect = "+20% fuel tank capacity",
         },
 
         new Research{
             name = "Improved Fuel Tanks III",
             category = Category.Upgrade,
-            researchTime = 75,
+            researchTime = 70,
             dependencies = {"Improved Fuel Tanks II"},
-            effect = "+20% fuel tank capacity",
+            effect = "+40% fuel tank capacity",
         },
 
         new Research{
@@ -467,7 +456,7 @@ public class Research {
         new Research{
             name = "Jump Tracer Mk3",
             category = Category.Upgrade,
-            researchTime = 85,
+            researchTime = 75,
             dependencies = {"Jump Tracer Mk2"},
             effect = "+25% radar range",
         },
