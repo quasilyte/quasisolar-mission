@@ -374,7 +374,6 @@ public class Research {
 
         new Research{
             name = "Assault Laser",
-            material = Faction.Draklid,
             category = Category.NewWeapon,
             researchTime = 100,
             dependencies = {
