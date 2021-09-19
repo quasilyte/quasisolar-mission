@@ -27,7 +27,7 @@ public class StarBaseModule {
     public static StarBaseModule[] list = new StarBaseModule[]{
         new StarBaseModule{
             name = "Debris Rectifier",
-            effect = "20% more RU when selling debris at this base",
+            effect = "30% more RU when selling debris at this base",
             sellingPrice = 1500,
             buildTime = 60,
         },
@@ -56,7 +56,7 @@ public class StarBaseModule {
         new StarBaseModule{
             name = "Production Module",
             effect = "producing vessels is 15% cheaper at this base",
-            sellingPrice = 4000,
+            sellingPrice = 3500,
             buildTime = 90,
         },
 

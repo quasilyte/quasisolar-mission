@@ -115,7 +115,7 @@ public class StarBase: AbstractPoolValue {
 
     public PriceInfo DebrisSellPrice() {
         if (modules.Contains("Debris Rectifier")) {
-            return new PriceInfo{value = 22, multiplier = 1};
+            return new PriceInfo{value = 23, multiplier = 1};
         }
         return new PriceInfo{value = 18, multiplier = 1};
     }
