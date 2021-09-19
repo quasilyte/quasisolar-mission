@@ -169,6 +169,7 @@ public class MapView : Node2D {
 
         _researchCompletedPopup = GetNode<PopupNode>("UI/ResearchCompletedPopup");
         _researchCompletedPopup.GetNode<ButtonNode>("DoneButton").Connect("pressed", this, nameof(OnResearchCompleteDoneButton));
+        _researchCompletedPopup.GetNode<ButtonNode>("OpenResearchScreen").Connect("pressed", this, nameof(OnResearchCompleteOpenResearchScreenButton));
 
         _starBaseAttackPopup = GetNode<PopupNode>("UI/BaseUnderAttackPopup");
         _starBaseAttackPopup.GetNode<ButtonNode>("PlayButton").Connect("pressed", this, nameof(OnStarBaseAttackPlayButton));
@@ -1542,6 +1543,11 @@ public class MapView : Node2D {
         var system = RpgGameState.starSystemByPos[_eventUnit.unit.pos];
         var starBase = system.starBase.Get();
         MarkStarBaseAsDiscovered(starBase);
+    }
+
+    private void OnResearchCompleteOpenResearchScreenButton() {
+        StopMovement();
+        GetTree().ChangeScene("res://scenes/screens/ResearchScreen.tscn");
     }
 
     private void OnResearchCompleteDoneButton() {

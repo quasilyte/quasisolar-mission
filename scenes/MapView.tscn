@@ -903,12 +903,18 @@ __meta__ = {
 }
 
 [node name="DoneButton" parent="UI/ResearchCompletedPopup" instance=ExtResource( 19 )]
-margin_left = 192.0
+margin_left = 336.0
 margin_top = 368.0
-margin_right = 432.0
+margin_right = 608.0
 margin_bottom = 400.0
-focus_mode = 2
 text = "OK"
+
+[node name="OpenResearchScreen" parent="UI/ResearchCompletedPopup" instance=ExtResource( 19 )]
+margin_left = 16.0
+margin_top = 368.0
+margin_right = 288.0
+margin_bottom = 400.0
+text = "Open Research Screen"
 
 [node name="Panel" type="Panel" parent="UI/ResearchCompletedPopup"]
 margin_left = 16.0
