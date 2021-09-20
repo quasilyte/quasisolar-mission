@@ -70,8 +70,8 @@ public class GamepadCursorNode : Node2D {
     }
 
     private void MoveCursor(float offsetX, float offsetY) {
-        var screenWidth = GetViewport().Size.x;
-        var screenHeight = GetViewport().Size.y;
+        var screenWidth = GetViewport().GetVisibleRect().Size.x;
+        var screenHeight = GetViewport().GetVisibleRect().Size.y;
         var newX = QMath.Clamp(Position.x + offsetX, 0, screenWidth);
         var newY = QMath.Clamp(Position.y + offsetY, 0, screenHeight);
 

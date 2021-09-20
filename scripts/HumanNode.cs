@@ -26,7 +26,7 @@ public class HumanNode : Node2D {
 
         _cursor = GamepadCursorNode.New(pilot);
         _cursor.SetAnchor(_targetLock);
-        _cursor.Position = camera.GetViewport().Size / 2;
+        _cursor.Position = GetViewport().GetVisibleRect().Size / 2;
         canvas.AddChild(_cursor);
 
         _hud = VesselHudNode.New();

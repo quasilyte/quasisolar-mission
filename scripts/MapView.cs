@@ -226,7 +226,7 @@ public class MapView : Node2D {
         _camera = GetNode<Camera2D>("Camera");
         _camera.LimitLeft = 0;
         _camera.LimitRight = (int)MAP_WIDTH;
-        _camera.Position = new Vector2(_humanUnit.pos.x, GetViewport().Size.y / 2);
+        _camera.Position = new Vector2(_humanUnit.pos.x, GetViewport().GetVisibleRect().Size.y / 2);
         _cameraSpeed = new Vector2(256, 0);
 
         if (RpgGameState.transition == RpgGameState.MapTransition.EnemyBaseAttackRepelled) {
@@ -459,7 +459,7 @@ public class MapView : Node2D {
         }
         if (!string.IsNullOrEmpty(result.research)) {
             _gameState.technologiesResearched.Add(result.research + " Lock");
-            lines.Add($"{result.research} research");
+            lines.Add($"{result.research} research project");
         }
 
         var offsetY = 36 * (lines.Count - 1);
