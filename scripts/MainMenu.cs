@@ -29,6 +29,10 @@ public class MainMenu : Node2D {
             VesselStatus.InitLists();
         }
 
+        foreach (var design in VesselDesign.list) {
+            GD.Print(design.name + " = " + design.PriceHintApprox() + " (orig: " + design.sellingPrice + ")");
+        }
+
         QuickBattleState.Reset();
     }
     

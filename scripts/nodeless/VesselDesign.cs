@@ -105,6 +105,129 @@ public class VesselDesign: IItem {
         return "large";
     }
 
+    public int PriceHintApprox() {
+        double m = 1.0;
+
+        if (weaponSlots == 0 && specialSlot) {
+            m -= 0.3;
+        } else if (weaponSlots == 1 && !specialSlot) {
+            // no changes
+        } else if (weaponSlots == 1 && specialSlot) {
+            m += 0.9;
+        } else if (weaponSlots == 2 && !specialSlot) {
+            m += 0.85;
+        } else if (weaponSlots == 2 && specialSlot) {
+            m += 2.6;
+        }
+
+        if (maxShieldLevel == 0) {
+            m -= 0.3;
+        } else if (maxShieldLevel == 1) {
+            // no changes
+        } else if (maxShieldLevel == 2) {
+            m += 0.3;
+        } else if (maxShieldLevel == 3) {
+            m += 0.75;
+        }
+
+        if (acceleration <= 1) {
+            m -= 0.1;
+        } else if (acceleration <= 2) {
+            // no changes
+        } else if (acceleration <= 3) {
+            m += 0.08;
+        } else if (acceleration <= 4) {
+            m += 0.15;
+        } else if (acceleration <= 5) {
+            m += 0.22;
+        } else {
+            m += 0.25;
+        }
+
+        if (rotationSpeed <= 1) {
+            m -= 0.3;
+        } else if (rotationSpeed <= 1.5) {
+            m -= 0.2;
+        } else if (rotationSpeed <= 2) {
+            // no chages
+        } else if (rotationSpeed <= 2.5) {
+            m += 0.1;
+        } else if (rotationSpeed <= 3) {
+            m += 0.17;
+        } else if (rotationSpeed <= 3.5) {
+            m += 0.23;
+        } else if (rotationSpeed <= 4.0) {
+            m += 0.29;
+        } else if (rotationSpeed <= 4.5) {
+            m += 0.35;
+        } else {
+            m += 0.41;
+        }
+
+        if (sentinelSlot) {
+            m += 0.45;
+        }
+
+        if (artifactSlots == 0) {
+            m -= 0.2;
+        } else if (artifactSlots == 1) {
+            m -= 0.05;
+        } else if (artifactSlots == 2) {
+            // no changes
+        } else if (artifactSlots == 3) {
+            m += 0.15;
+        } else if (artifactSlots == 4) {
+            m += 0.45;
+        } else if (artifactSlots == 5) {
+            m += 0.7;
+        }
+
+        if (maxSpeed <= 60) {
+            m -= 0.1;
+        } else if (maxSpeed <= 70) {
+            // no changes
+        } else if (maxSpeed <= 80) {
+            m += 0.05;
+        } else if (maxSpeed <= 85) {
+            m += 0.1;
+        } else if (maxSpeed <= 90) {
+            m += 0.2;
+        } else if (maxSpeed <= 95) {
+            m += 0.3;
+        } else if (maxSpeed <= 100) {
+            m += 0.4;
+        } else if (maxSpeed <= 105) {
+            m += 0.55;
+        } else if (maxSpeed <= 110) {
+            m += 0.7;
+        } else {
+            m += 1;
+        }
+
+        m += ((double)cargoSpace / 125.0);
+
+        if (size == Size.Small) {
+            m += 0.1;
+        } else if (size == Size.Normal) {
+            m -= 0.05;
+        } else if (size == Size.Large) {
+            m -= 0.25;
+        }
+
+        if (productionTime <= 50) {
+            m -= ((double)productionTime / 100);
+        } else if (productionTime <= 100) {
+            m -= ((double)productionTime / 95);
+        } else if (productionTime <= 150) {
+            m -= ((double)productionTime / 90);
+        } else {
+            m -= ((double)productionTime / 85);
+        }
+
+        double baseHpCost = 14 - (level * 0.5);
+        return (int)((baseHpCost * m) * (double)maxHp);
+    }
+
     private static Dictionary<string, VesselDesign> designByName;
 
     public static void InitLists() {
@@ -123,7 +246,7 @@ public class VesselDesign: IItem {
             name = "Scout",
             affiliation = Faction.Earthling,
             description = "A highly maneuverable budget design",
-            sellingPrice = 1750,
+            sellingPrice = 2500,
             debris = 30,
             productionTime = 20,
             availability = ProductionAvailability.Always,
@@ -145,13 +268,13 @@ public class VesselDesign: IItem {
         },
 
         new VesselDesign{
-            level = 2,
+            level = 3,
             name = "Explorer",
             affiliation = Faction.Earthling,
             description = "Simple, yet quite effective",
-            sellingPrice = 3900,
+            sellingPrice = 5000,
             debris = 50,
-            productionTime = 35,
+            productionTime = 50,
             availability = ProductionAvailability.Always,
 
             maxHp = 140,
@@ -227,7 +350,7 @@ public class VesselDesign: IItem {
             name = "Interceptor",
             affiliation = Faction.Earthling,
             description = "Elite Earthling military vessel design",
-            sellingPrice = 10500,
+            sellingPrice = 10000,
             debris = 75,
             productionTime = 100,
             availability = ProductionAvailability.ResearchRequired,
@@ -253,7 +376,7 @@ public class VesselDesign: IItem {
             name = "Gladiator",
             affiliation = Faction.Earthling,
             description = "Alien-design inspired battle ship",
-            sellingPrice = 14500,
+            sellingPrice = 12000,
             debris = 100,
             productionTime = 120,
             availability = ProductionAvailability.ResearchRequired,
@@ -475,7 +598,7 @@ public class VesselDesign: IItem {
             name = "Plunderer",
             affiliation = Faction.Draklid,
             description = "TODO",
-            sellingPrice = 15000,
+            sellingPrice = 12500,
             debris = 130,
             productionTime = 120,
 
@@ -502,7 +625,7 @@ public class VesselDesign: IItem {
             name = "Talons",
             affiliation = Faction.Krigia,
             description = "TODO",
-            sellingPrice = 2000,
+            sellingPrice = 1500,
             debris = 45,
             productionTime = 20,
 
@@ -552,7 +675,7 @@ public class VesselDesign: IItem {
             name = "Fangs",
             affiliation = Faction.Krigia,
             description = "TODO",
-            sellingPrice = 14500,
+            sellingPrice = 11500,
             debris = 110,
             productionTime = 115,
 
@@ -579,10 +702,10 @@ public class VesselDesign: IItem {
             description = "TODO",
             sellingPrice = 18500,
             debris = 190,
-            productionTime = 170,
+            productionTime = 200,
 
             maxHp = 450,
-            maxShieldLevel = 3,
+            maxShieldLevel = 2,
 
             maxSpeed = 70,
             acceleration = 2.7f,
@@ -602,7 +725,7 @@ public class VesselDesign: IItem {
             name = "Horns",
             affiliation = Faction.Krigia,
             description = "TODO",
-            sellingPrice = 25000,
+            sellingPrice = 22000,
             debris = 220,
             productionTime = 180,
 
@@ -619,7 +742,7 @@ public class VesselDesign: IItem {
             artifactSlots = 5,
 
             cargoSpace = 180,
-            size = Size.Large,
+            size = Size.Normal,
         },
 
         new VesselDesign{
@@ -654,7 +777,7 @@ public class VesselDesign: IItem {
             name = "Probe",
             affiliation = Faction.Wertu,
             description = "TODO",
-            sellingPrice = 2000,
+            sellingPrice = 3000,
             debris = 50,
             productionTime = 30,
 
@@ -679,7 +802,7 @@ public class VesselDesign: IItem {
             name = "Transporter",
             affiliation = Faction.Wertu,
             description = "TODO",
-            sellingPrice = 6600,
+            sellingPrice = 7500,
             debris = 130,
             productionTime = 70,
 
@@ -704,7 +827,7 @@ public class VesselDesign: IItem {
             name = "Guardian",
             affiliation = Faction.Wertu,
             description = "TODO",
-            sellingPrice = 15600,
+            sellingPrice = 13000,
             debris = 145,
             productionTime = 130,
 
@@ -729,7 +852,7 @@ public class VesselDesign: IItem {
             name = "Angel",
             affiliation = Faction.Wertu,
             description = "TODO",
-            sellingPrice = 16000,
+            sellingPrice = 14500,
             debris = 165,
             productionTime = 140,
 
@@ -781,7 +904,7 @@ public class VesselDesign: IItem {
             name = "Hunter",
             affiliation = Faction.Zyth,
             description = "TODO",
-            sellingPrice = 8900,
+            sellingPrice = 8000,
             debris = 125,
             productionTime = 105,
 
@@ -833,7 +956,7 @@ public class VesselDesign: IItem {
             name = "Leviathan",
             affiliation = Faction.Rarilou,
             description = "TODO",
-            sellingPrice = 12500,
+            sellingPrice = 9500,
             debris = 90,
             productionTime = 130,
 
@@ -924,7 +1047,7 @@ public class VesselDesign: IItem {
             name = "Larva",
             affiliation = Faction.Vespion,
             description = "TODO",
-            sellingPrice = 1000,
+            sellingPrice = 1750,
             debris = 20,
             productionTime = 15,
 
@@ -949,7 +1072,7 @@ public class VesselDesign: IItem {
             name = "Hornet",
             affiliation = Faction.Vespion,
             description = "TODO",
-            sellingPrice = 7000,
+            sellingPrice = 7500,
             debris = 60,
             productionTime = 50,
 
@@ -1001,7 +1124,7 @@ public class VesselDesign: IItem {
             name = "Ravager",
             affiliation = Faction.Neutral,
             description = "",
-            sellingPrice = 5900,
+            sellingPrice = 6500,
             debris = 90,
             productionTime = 70,
 
@@ -1026,7 +1149,7 @@ public class VesselDesign: IItem {
             name = "Nomad",
             affiliation = Faction.Neutral,
             description = "TODO",
-            sellingPrice = 12700,
+            sellingPrice = 9500,
             debris = 160,
             productionTime = 85,
             availability = ProductionAvailability.ResearchRequired,
@@ -1052,7 +1175,7 @@ public class VesselDesign: IItem {
             name = "Avenger",
             affiliation = Faction.Neutral,
             description = "TODO",
-            sellingPrice = 16500,
+            sellingPrice = 14500,
             debris = 200,
             productionTime = 100,
             availability = ProductionAvailability.ResearchRequired,
@@ -1105,7 +1228,7 @@ public class VesselDesign: IItem {
             name = "Spectre",
             affiliation = Faction.Neutral,
             description = "TODO",
-            sellingPrice = 20000,
+            sellingPrice = 12500,
             debris = 270,
             productionTime = 170,
 

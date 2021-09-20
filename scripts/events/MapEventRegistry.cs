@@ -18,7 +18,7 @@ public class MapEventRegistry {
             new SpectreAttackMapEvent(),
 
             // Ravagers sequence.
-            new NoiseSpamMapEvent(),
+            new StaticNoiseMapEvent(),
             new RavagersRetaliationMapEvent(),
 
             // Normal events.

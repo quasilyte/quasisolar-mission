@@ -379,7 +379,7 @@ public class NewGameScene : Node2D {
                 v.isBot = true;
                 v.faction = Faction.Earthling;
                 v.pilotName = PilotNames.UniqHumanName(config.usedNames);
-                VesselFactory.Init(v, "Krigia Ashes");
+                VesselFactory.Init(v, "Earthling Scout");
                 VesselFactory.RollUpgrades(v);
                 fleet.Add(v.GetRef());
             }

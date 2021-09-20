@@ -1,9 +1,9 @@
 using Godot;
 using System;
 
-public class NoiseSpamMapEvent: AbstractMapEvent {
-    public NoiseSpamMapEvent() {
-        title = "Noise Spam";
+public class StaticNoiseMapEvent: AbstractMapEvent {
+    public StaticNoiseMapEvent() {
+        title = "Static Noise";
         luckScore = 3;
         triggerKind = TriggerKind.OnSystemEntered;
     }
@@ -16,18 +16,26 @@ public class NoiseSpamMapEvent: AbstractMapEvent {
     }
 
     public override AbstractMapEvent Create(RandomEventContext ctx) {
-        var e = new NoiseSpamMapEvent();
+        var e = new StaticNoiseMapEvent();
 
         e.text = MultilineText(@"
             An unknown alien group is trying to jam our radars
-            with a heavy noise stream. So far we don't know if
-            they're trying to communicate with us or it's really
+            with a heavy static noise stream.
+            
+            So far we don't know if they're trying to communicate with us or it's really
             an attempt to make a surprise attack.
-
-            Their fleet consists of 3 medium-sized vessels.
         ");
 
-        System.Action extraReward = () => ArenaSettings.extraReward = (BattleResult result) => result.research = "Tempest";
+        System.Action extraReward = () => {
+            ArenaSettings.extraReward = (BattleResult result) => {
+                result.popupText = MultilineText(@"
+                    We saved a sequence of their initial message
+                    for the further analysis. For now, we labeled
+                    their vessels as Ravagers.
+                ");
+                result.research = "Tempest";
+            };
+        };
 
         e.actions.Add(new Action{
             name = "Attack",

@@ -8,6 +8,8 @@ class GenericBot : AbstractBot {
     private Asteroid _targetedAsteroid = null;
     private float _asteroidDamageDelivered = 0;
 
+    private float _maxAdvanceDist = 0;
+
     private IWeapon _pointDefense = null;
     private int _pointDefenseIndex = 0;
 
@@ -35,6 +37,8 @@ class GenericBot : AbstractBot {
     private float _chargeGoal = 0;
 
     public GenericBot(VesselNode vessel) : base(vessel) {
+        var hasHellfire = false;
+
         Func<IWeapon, bool> isLongRangeWeapon = (IWeapon w) => {
             return w is TorpedoLauncherWeapon ||
                 w is MortarWeapon ||
@@ -48,6 +52,8 @@ class GenericBot : AbstractBot {
                 w is ReaperCannonWeapon ||
                 w is DisintegratorWeapon;
         };
+
+        _maxAdvanceDist = QRandom.FloatRange(450, 700);
 
         if (vessel.specialWeapon.GetDesign() == AfterburnerWeapon.Design) {
             _hasAfterburner = true;
@@ -83,6 +89,7 @@ class GenericBot : AbstractBot {
             }
             if (w is HellfireWeapon) {
                 _preferCloseRange = true;
+                hasHellfire = true;
                 continue;
             }
 
@@ -98,6 +105,9 @@ class GenericBot : AbstractBot {
             _preferLongRange = isLongRangeWeapon(vessel.specialWeapon);
         }
 
+        if (hasHellfire && _preferLongRange) {
+            _preferLongRange = false;
+        }
         if (_preferCloseRange && _preferLongRange) {
             _preferCloseRange = false;
         }
@@ -178,12 +188,18 @@ class GenericBot : AbstractBot {
         return FixOutOfScreenPos(pos);
     }
 
-    private Vector2 PickWaypoint(float roll) {
-        if (roll < 0.15) {
+    private Vector2 PosNearTarget(float radius) {
+        var pos = QMath.RandomizedLocation(TargetPosition(), radius);
+        return _vessel.Position.MoveToward(pos, _maxAdvanceDist);
+    }
+
+    private Vector2 PickWaypoint() {
+        if (QRandom.Float() < 0.15) {
             return QMath.RandomizedLocation(_vessel.Position, 96);
         }
 
         var targetDistance = TargetDistance();
+        var roll = QRandom.Float();
 
         if (_preferLongRange && targetDistance < 192 && roll < 0.9) {
             return FleeWaypoint(TargetPosition());
@@ -207,14 +223,14 @@ class GenericBot : AbstractBot {
         }
 
         if (_preferCloseRange) {
-            return QMath.RandomizedLocation(TargetPosition(), 64);
+            return PosNearTarget(64);
         }
 
         if (targetDistance > 500) {
-            return QMath.RandomizedLocation(TargetPosition(), 160);
+            return PosNearTarget(160);
         }
 
-        return QMath.RandomizedLocation(TargetPosition(), 192);
+        return PosNearTarget(192);
     }
 
     private void ActMove() {
@@ -232,7 +248,7 @@ class GenericBot : AbstractBot {
                 var fleeRoll = QRandom.Float();
                 if (fleeRoll < 0.05) {
                     _fleeDelay = 3 + fleeRoll;
-                    ChangeWaypoint(CorrectedPos(PickWaypoint(fleeRoll)));
+                    ChangeWaypoint(CorrectedPos(PickWaypoint()));
                 }
             }
             return;
@@ -262,7 +278,7 @@ class GenericBot : AbstractBot {
             }
         }
 
-        AddWaypoint(CorrectedPos(PickWaypoint(QRandom.Float())));
+        AddWaypoint(CorrectedPos(PickWaypoint()));
     }
 
     private bool MaybeFollowAlly() {

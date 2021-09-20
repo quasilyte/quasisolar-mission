@@ -19,8 +19,10 @@ public class RavagersRetaliationMapEvent: AbstractMapEvent {
         e.text = MultilineText($@"
             The familiar spaceships we named Ravagers are trying to surround our flagship.
 
-            Based on what we can decode now, they want to have a 1-on-1
-            match with the flagship captain, {Flagship().pilotName}.
+            Some time passed since their last attack and we had some time
+            to figure out what their noise-like sequences mean.
+            Based on what we can decode now, it seems that they're challenging
+            {Flagship().pilotName} to 1-on-1 battle against their pilot.
 
             Do we agree on these terms or should we attack with our entire fleet?
         ");
