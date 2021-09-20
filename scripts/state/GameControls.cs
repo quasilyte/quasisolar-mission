@@ -59,11 +59,7 @@ class GameControls {
         }
 
         {
-            InputMap.AddAction("leftMouseButton");
-
-            var e = new InputEventMouseButton();
-            e.ButtonIndex = (int)ButtonList.Left;
-            InputMap.ActionAddEvent("leftMouseButton", e);
+            // leftMouseButton is registered via project settings.
 
             var e2 = new InputEventJoypadButton();
             e2.ButtonIndex = (int)JoystickList.XboxA;
