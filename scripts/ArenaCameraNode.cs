@@ -7,8 +7,8 @@ public class ArenaCameraNode : Camera2D {
     private float _cameraSpeed = 100;
 
     public override void _Ready() {
-        var screenWidth = GetTree().Root.Size.x;
-        var screenHeight = GetTree().Root.Size.y;
+        var screenWidth = GetTree().Root.GetVisibleRect().Size.x;
+        var screenHeight = GetTree().Root.GetVisibleRect().Size.y;
         LimitLeft = 0;
         LimitTop = 0;
         LimitRight = (int)screenWidth;
