@@ -54,6 +54,9 @@ public static class WeaponFactory {
         if (w == RocketLauncherWeapon.Design) {
             return new RocketLauncherWeapon(p);
         }
+        if (w == FlareWeapon.Design) {
+            return new FlareWeapon(p);
+        }
         if (w == HurricaneWeapon.Design) {
             return new HurricaneWeapon(p);
         }

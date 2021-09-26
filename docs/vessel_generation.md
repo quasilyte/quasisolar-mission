@@ -72,12 +72,12 @@ Special weapons:
 
 Weapons:
 
-* Needle Gun
 * Cutter
 * Assault Laser
 * **Hellfire**
 * Stinger
 * **Disk Thrower**
+* **Flare**
 
 Special weapons:
 
@@ -144,7 +144,7 @@ Special weapons:
 | Spread Gun | Earthlings, Draklid | n/a |
 | Spread Laser | Vespion, Phaa | Phaa |
 | Ion Cannon | Earthlings, Krigia, Vespion | n/a |
-| Needle Gun | Earthlings, Zyth, Draklid | n/a |
+| Needle Gun | Earthlings, Draklid | n/a |
 | Harpoon | Zyth | Zyth |
 | Disruptor | Zyth, Draklid | Draklid |
 | Photon Burst Cannon | Wertu, Rarilou | Wertu |
@@ -161,6 +161,7 @@ Special weapons:
 | Weapon | Used by | Research material |
 |---|---|---|
 | Hellfire | Zyth | Zyth |
+| Flare | Zyth | Zyth |
 | Reaper Cannon | Earthlings | n/a |
 | Zap | Earthlings, Wertu, Draklid | n/a |
 | Bubble Gun | Phaa | Phaa |
@@ -173,7 +174,7 @@ Special weapons:
 | Hurricane | Krigia, Phaa | Krigia |
 | Shield Breaker | Wertu | Wertu |
 | Restructuring Ray | Wertu | Wertu |
-| Stinger | Earthling, Krigia, Zyth, Draklid | n/a |
+| Stinger | Earthling, Krigia, Draklid | n/a |
 | Afterburner | Draklid | Draklid |
 | Crystal Cannon | ? | ? |
 

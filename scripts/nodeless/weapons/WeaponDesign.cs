@@ -61,14 +61,7 @@ public class WeaponDesign : IItem {
         var parts = new List<string>();
         parts.Add(name + " (" + ItemInfo.BuyingPrice(this) + ")");
         parts.Add("");
-        parts.Add(description + ".");
-        if (extraDescription != "") {
-            parts.Add(extraDescription + ".");
-        }
-        parts.Add("");
-        if (damageKind != DamageKind.None) {
-            parts.Add("Damage type: " + damageKind.ToString().ToLower());
-        }
+
         if (damage > 0) {
             var avgDamage = damage;
             if (maxDamageHint != 0) {
@@ -83,11 +76,10 @@ public class WeaponDesign : IItem {
             if (burst != 1) {
                 damageString += "*" + burst.ToString();
             }
+            damageString += " " + damageKind.ToString().ToLower();
             parts.Add("Damage: " + damageString + " (" + perSec.ToString() + "/sec)");
         }
-        if (energyDamage != 0) {
-            parts.Add("Energy damage: " + energyDamage.ToString());
-        }
+        parts.Add("Rate of fire: " + rateOfFireText());
         if (minRange != 0) {
             parts.Add("Min range: " + minRange.ToString());
         }
@@ -97,7 +89,6 @@ public class WeaponDesign : IItem {
         if (duration != 0) {
             parts.Add("Duration: " + duration.ToString());
         }
-        parts.Add("Rate of fire: " + rateOfFireText());
         if (energyConstHint != "") {
             parts.Add("Energy cost: " + energyConstHint);
         } else if (energyCost != 0) {
@@ -110,6 +101,16 @@ public class WeaponDesign : IItem {
         if (special2 != "") {
             parts.Add("Special: " + special2);
         }
+        if (energyDamage != 0) {
+            parts.Add($"Special: burns {energyDamage} energy on hit");
+        }
+
+        parts.Add("");
+        parts.Add(description + ".");
+        if (extraDescription != "") {
+            parts.Add(extraDescription + ".");
+        }
+
         return string.Join("\n", parts);
     }
 
@@ -145,6 +146,7 @@ public class WeaponDesign : IItem {
             PulseLaserWeapon.Design,
             AssaultLaserWeapon.Design,
             RocketLauncherWeapon.Design,
+            FlareWeapon.Design,
             HurricaneWeapon.Design,
             ShieldBreakerWeapon.Design,
             CutterWeapon.Design,
