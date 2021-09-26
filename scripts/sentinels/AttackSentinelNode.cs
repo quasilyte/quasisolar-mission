@@ -26,8 +26,12 @@ public class AttackSentinelNode : SentinelNode {
         var projectile = Projectile.New(_design.weapon, pilot);
         GetParent().AddChild(projectile);
         projectile.GlobalPosition = _sprite.GlobalPosition;
-        var target = QMath.RandomizedLocation(enemy.Vessel.Position, 8);
-        projectile.Rotation = (target - _sprite.GlobalPosition).Normalized().Angle();
+        var target = enemy.Vessel.Position;
+        if (QRandom.Float() < 0.55) {
+            target = QMath.CalculateSnipeShot(_design.weapon, Position, enemy.Vessel.Position, enemy.Vessel.State.velocity);
+        }
+        var cursor = QMath.RandomizedLocation(target, 10);
+        projectile.Rotation = (cursor - _sprite.GlobalPosition).Normalized().Angle();
 
         if (_design.weapon == PhotonBurstCannonWeapon.Design) {
             var sfx = SoundEffectNode.New(GD.Load<AudioStream>("res://audio/weapon/Photon_Burst_Cannon.wav"), -4);
