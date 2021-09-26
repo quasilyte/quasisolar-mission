@@ -74,7 +74,7 @@ public class SentinelDesign: IItem {
             description = "TODO",
             kind = Kind.Attack,
             hp = 35,
-            sellingPrice = 3000,
+            sellingPrice = 2400,
             weapon = IonCannonWeapon.Design,
             attackCooldown = 2,
         },
@@ -98,6 +98,17 @@ public class SentinelDesign: IItem {
             shield = IonCurtainShield.Design,
             attackCooldown = 3.0f,
             sellingPrice = 3700,
+        },
+
+        new SentinelDesign{
+            researchRequired = true,
+            name = "Stinger Fighter",
+            description = "TODO",
+            kind = Kind.Attack,
+            hp = 65,
+            sellingPrice = 3900,
+            weapon = StingerWeapon.Design,
+            attackCooldown = 2.2f,
         },
 
         new SentinelDesign{

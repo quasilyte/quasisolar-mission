@@ -162,6 +162,12 @@ public class Research {
         },
 
         new Research{
+            name = "Bomber",
+            category = Category.NewVesselDesign,
+            researchTime = 100,
+        },
+
+        new Research{
             name = "Interceptor",
             category = Category.NewVesselDesign,
             researchTime = 90,
@@ -233,6 +239,13 @@ public class Research {
             category = Category.NewSentinel,
             researchTime = 50,
             dependencies = {"Point-Defense Laser"},
+        },
+
+        new Research{
+            name = "Stinger Fighter",
+            category = Category.NewSentinel,
+            researchTime = 45,
+            dependencies = {"Stinger"},
         },
 
         new Research{
@@ -503,7 +516,15 @@ public class Research {
             name = "Hellfire",
             material = Faction.Zyth,
             category = Category.NewWeapon,
-            researchTime = 75,
+            researchTime = 70,
+            dependencies = {"Zyth Weapons II"},
+        },
+
+        new Research{
+            name = "Flare",
+            material = Faction.Zyth,
+            category = Category.NewWeapon,
+            researchTime = 80,
             dependencies = {"Zyth Weapons II"},
         },
 
@@ -700,13 +721,6 @@ public class Research {
         // Phaa tech tree.
 
         new Research{
-            name = "Stingray",
-            material = Faction.Phaa,
-            category = Category.NewExplorationDrone,
-            researchTime = 45,
-        },
-
-        new Research{
             name = "Aegis",
             category = Category.NewShield,
             researchTime = 110,
@@ -716,7 +730,7 @@ public class Research {
         new Research{
             name = "Phaa Weapons",
             material = Faction.Phaa,
-            researchTime = 70,
+            researchTime = 50,
         },
 
         new Research{
