@@ -1,11 +1,11 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://theme.tres" type="Theme" id=1]
-[ext_resource path="res://scripts/ButtonNode.cs" type="Script" id=2]
+[ext_resource path="res://scripts/ui/ButtonNode.cs" type="Script" id=2]
 
 [node name="ButtonNode" type="Button"]
-margin_right = 160.0
-margin_bottom = 32.0
+margin_right = 224.0
+margin_bottom = 48.0
 focus_mode = 0
 theme = ExtResource( 1 )
 text = "Button"

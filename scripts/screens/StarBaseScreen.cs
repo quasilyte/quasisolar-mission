@@ -13,15 +13,15 @@ public class StarBaseScreen : Node2D {
     }
 
     private void OnEquipmentShopButton() {
-        GetTree().ChangeScene("res://scenes/EquipmentShopScreen.tscn");
+        GetTree().ChangeScene("res://scenes/screens/EquipmentShopScreen.tscn");
     }
 
     private void OnShipyardButton() {
-        GetTree().ChangeScene("res://scenes/ShipyardScreen.tscn");
+        GetTree().ChangeScene("res://scenes/screens/ShipyardScreen.tscn");
     }
 
     private void OnStarBaseModulesButton() {
-        GetTree().ChangeScene("res://scenes/StarBaseModulesScreen.tscn");
+        GetTree().ChangeScene("res://scenes/screens/StarBaseModulesScreen.tscn");
     }
 
     private void OnVesselUpgradesButton() {

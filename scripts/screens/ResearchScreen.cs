@@ -26,7 +26,7 @@ public class ResearchScreen : Node2D {
     }
 
     private void SetupUI() {
-        GetNode<Button>("Status/LeaveButton").Connect("pressed", this, nameof(OnLeaveButton));
+        GetNode<TextureButton>("Status/LeaveButton").Connect("pressed", this, nameof(OnLeaveButton));
         GetNode<Button>("Status/InvestButton").Connect("pressed", this, nameof(OnInvestButton));
 
         var projectsPanel = GetNode<VBoxContainer>("ProjectList/ScrollContainer/List");
@@ -54,25 +54,17 @@ public class ResearchScreen : Node2D {
                 continue;
             }
 
-            var project = ResearchProjectNode.New();
+            var project = ListItemNode.New(r.name);
 
-            var label = project.GetNode<Label>("GridContainer/Name");
+            var label = project.GetNode<Label>("Label");
+            label.MouseFilter = Control.MouseFilterEnum.Stop;
 
-            label.Text = r.name;
-            // project.RectSize = new Vector2(256, 32);
-            // label.RectPosition = new Vector2(offsetX, offsetY);
             projectsPanel.AddChild(project);
-
-            // var button = ButtonNode.New();
-            // button.Text = ">";
-            // button.RectSize = new Vector2(32, 32);
-            // // button.RectPosition = new Vector2(-48, 0);
-            // label.AddChild(button);
 
             _researchNodes.Add(new ResearchNode {
                 value = r,
                 label = label,
-                button = project.GetNode<ButtonNode>("GridContainer/Start"),
+                button = project.GetNode<ButtonNode>("Button"),
             });
         }
 
@@ -150,13 +142,13 @@ public class ResearchScreen : Node2D {
     private void UpdateUI() {
         GetNode<Button>("Status/InvestButton").Disabled = _gameState.credits < 1000;
 
-        GetNode<Label>("Status/KrigiaMaterialValue").Text = _gameState.researchMaterial.krigia.ToString();
-        GetNode<Label>("Status/WertuMaterialValue").Text = _gameState.researchMaterial.wertu.ToString();
-        GetNode<Label>("Status/ZythMaterialValue").Text = _gameState.researchMaterial.zyth.ToString();
-        GetNode<Label>("Status/PhaaMaterialValue").Text = _gameState.researchMaterial.phaa.ToString();
-        GetNode<Label>("Status/DraklidMaterialValue").Text = _gameState.researchMaterial.draklid.ToString();
-        GetNode<Label>("Status/VespionMaterialValue").Text = _gameState.researchMaterial.vespion.ToString();
-        GetNode<Label>("Status/RarilouMaterialValue").Text = _gameState.researchMaterial.rarilou.ToString();
+        GetNode<Label>("Material/KrigiaMaterialValue").Text = _gameState.researchMaterial.krigia.ToString();
+        GetNode<Label>("Material/WertuMaterialValue").Text = _gameState.researchMaterial.wertu.ToString();
+        GetNode<Label>("Material/ZythMaterialValue").Text = _gameState.researchMaterial.zyth.ToString();
+        GetNode<Label>("Material/PhaaMaterialValue").Text = _gameState.researchMaterial.phaa.ToString();
+        GetNode<Label>("Material/DraklidMaterialValue").Text = _gameState.researchMaterial.draklid.ToString();
+        GetNode<Label>("Material/VespionMaterialValue").Text = _gameState.researchMaterial.vespion.ToString();
+        GetNode<Label>("Material/RarilouMaterialValue").Text = _gameState.researchMaterial.rarilou.ToString();
 
         GetNode<Label>("Status/CreditsValue").Text = _gameState.credits.ToString();
         GetNode<Label>("Status/ScienceFuncsValue").Text = _gameState.scienceFunds.ToString();

@@ -27,6 +27,8 @@ public class VesselDesign: IItem {
     public string description;
     public string extraDescription = "";
 
+    public bool canDestroyBase = false;
+
     public int sellingPrice;
     public int debris;
     public int productionTime;
@@ -83,16 +85,30 @@ public class VesselDesign: IItem {
         parts.Add("Level: " + level.ToString());
         parts.Add("Max hp: " + maxHp);
         parts.Add("Max shield level: " + maxShieldLevel);
-        parts.Add("Max speed: " + maxSpeed);
-        parts.Add("Acceleration: " + acceleration);
-        parts.Add("Rotation speed: " + rotationSpeed);
-        parts.Add("Weapon slots: " + weaponSlots.ToString());
-        parts.Add("Special weapon slots: " + (specialSlot ? "1" : "0"));
-        parts.Add("Sentinel slot: " + (sentinelSlot ? "yes" : "no"));
-        parts.Add("Artifact slots: " + artifactSlots.ToString());
-        parts.Add("Cargo space: " + cargoSpace.ToString());
-        parts.Add("Size: " + sizeText());
+        parts.Add($"Speed: {maxSpeed} max, {acceleration} acceleration, {rotationSpeed} rotation");
+        if (specialSlot) {
+            parts.Add($"Weapon slots: {weaponSlots} + special");
+        } else {
+            parts.Add($"Weapon slots: {weaponSlots}");
+        }
+        parts.Add("Slots: " + SlotsText());
+        parts.Add($"Size: {sizeText()} hull, {cargoSpace} cargo space");
         return string.Join("\n", parts);
+    }
+
+    private string SlotsText() {
+        var parts = new List<string>();
+        if (sentinelSlot) {
+            parts.Add("sentinel");
+        }
+        if (artifactSlots != 0) {
+            string suffix = artifactSlots == 1 ? "" : "s";
+            parts.Add($"{artifactSlots} artifact" + suffix);
+        }
+        if (parts.Count == 0) {
+            return "none";
+        }
+        return string.Join(", ", parts);
     }
 
     private string sizeText() {
@@ -215,13 +231,17 @@ public class VesselDesign: IItem {
         }
 
         if (productionTime <= 50) {
-            m -= ((double)productionTime / 100);
+            m += 0.2;
         } else if (productionTime <= 100) {
-            m -= ((double)productionTime / 95);
+            // no changes
         } else if (productionTime <= 150) {
-            m -= ((double)productionTime / 90);
+            m -= 0.15;
         } else {
-            m -= ((double)productionTime / 85);
+            m -= 0.4;
+        }
+
+        if (canDestroyBase) {
+            m += 1.5;
         }
 
         double baseHpCost = 14 - (level * 0.5);
@@ -343,6 +363,34 @@ public class VesselDesign: IItem {
 
             cargoSpace = 50,
             size = Size.Normal,
+        },
+
+        new VesselDesign{
+            level = 4,
+            name = "Bomber",
+            affiliation = Faction.Earthling,
+            description = "A siege vessel that can destroy a star base",
+            sellingPrice = 9500,
+            debris = 90,
+            productionTime = 150,
+            availability = ProductionAvailability.ResearchRequired,
+
+            canDestroyBase = true,
+
+            maxHp = 260,
+            maxShieldLevel = 2,
+
+            maxSpeed = 70,
+            acceleration = 2,
+            rotationSpeed = 1.6f,
+
+            sentinelSlot = true,
+            specialSlot = true,
+            weaponSlots = 0,
+            artifactSlots = 2,
+
+            cargoSpace = 50,
+            size = Size.Large,
         },
 
         new VesselDesign{
@@ -696,6 +744,33 @@ public class VesselDesign: IItem {
         },
 
         new VesselDesign{
+            level = 5,
+            name = "Destroyer",
+            affiliation = Faction.Krigia,
+            description = "TODO",
+            sellingPrice = 17000,
+            debris = 120,
+            productionTime = 210,
+
+            canDestroyBase = true,
+
+            maxHp = 360,
+            maxShieldLevel = 2,
+
+            maxSpeed = 75,
+            acceleration = 3,
+            rotationSpeed = 2,
+
+            sentinelSlot = false,
+            specialSlot = true,
+            weaponSlots = 1,
+            artifactSlots = 3,
+
+            cargoSpace = 100,
+            size = Size.Large,
+        },
+
+        new VesselDesign{
             level = 6,
             name = "Tusks",
             affiliation = Faction.Krigia,
@@ -880,6 +955,8 @@ public class VesselDesign: IItem {
             sellingPrice = 23000,
             debris = 265,
             productionTime = 190,
+            
+            canDestroyBase = true,
 
             maxHp = 550,
             maxShieldLevel = 3,

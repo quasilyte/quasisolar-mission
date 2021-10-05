@@ -78,7 +78,6 @@ public class RpgGameState {
 
     public class MapState {
         public bool movementEnabled = false;
-        public UnitMode mode = UnitMode.Idle;
     }
 
     public class KrigiaPlans {
@@ -211,6 +210,15 @@ public class RpgGameState {
         foreach (var kv in o.reputations) {
             o.alienCurrency[kv.Key] = 0;
         }
+
+        o.storage[0] = ItemInfo.Of(PulseLaserWeapon.Design);
+        o.storage[1] = ItemInfo.Of(AssaultLaserWeapon.Design);
+        o.storage[2] = ItemInfo.Of(PointDefenseLaserWeapon.Design);
+        o.storage[3] = ItemInfo.Of(DisruptorWeapon.Design);
+        o.storage[4] = ItemInfo.Of(ShivaRechargerArtifact.Design);
+        o.storage[5] = ItemInfo.Of(DroidArtifact.Design);
+        o.storage[6] = ItemInfo.Of(IonCurtainShield.Design);
+        o.storage[7] = ItemInfo.Of(SentinelDesign.Find("Ion Fighter"));
         
         return o;
     }
@@ -269,7 +277,11 @@ public class RpgGameState {
 
     public ulong seed;
 
-    public ItemInfo[] storage = new ItemInfo[14];
+    public ItemInfo[] storage = new ItemInfo[3 * 5];
+
+    public int ItemStorageCapacity() {
+        return storage.Length;
+    }
 
     public int credits = 0;
 
@@ -391,7 +403,7 @@ public class RpgGameState {
 
     public int StorageFleeSlotsNum() {
         int num = 0;
-        for (int i = 0; i < 14; i++) {
+        for (int i = 0; i < storage.Length; i++) {
             if (instance.storage[i] == null) {
                 num++;
             }
@@ -400,7 +412,7 @@ public class RpgGameState {
     }
 
     public int StorageFreeSlot() {
-        for (int i = 0; i < 14; i++) {
+        for (int i = 0; i < storage.Length; i++) {
             if (instance.storage[i] == null) {
                 return i;
             }

@@ -1,6 +1,8 @@
 public enum ItemKind {
+    Unset, // Zero value mostly for the property editor
+
     Storage, // Used for storage slots
-    Sell, // Used for equipment sell slot
+    Shop, // Used for equipment shop slots
 
     GarrisonVessel, // Used for shipyard slots
     Vessel, // Used for shipyard slots

@@ -46,7 +46,7 @@ public class MainMenu : Node2D {
     }
 
     private void OnNewAdventureButtonPressed() {
-        GetTree().ChangeScene("res://scenes/NewGameScene.tscn");
+        GetTree().ChangeScene("res://scenes/screens/NewGameScene.tscn");
     }
 
     private void OnQuickBattleButtonPressed() {

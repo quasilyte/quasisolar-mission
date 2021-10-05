@@ -123,19 +123,33 @@ public class KrigiaStarBaseNode : StarBaseNode {
 
     private string ChooseVesselToProduce() {
         string design = "";
+
+        if (starBase.level >= ItemInfo.MinStarBaseLevel(VesselDesign.Find("Destroyer"))) {
+            bool hasDestroyer = false;
+            foreach (var v in starBase.garrison) {
+                if (v.Get().designName == "Destroyer") {
+                    hasDestroyer = true;
+                    break;
+                }
+            }
+            if (!hasDestroyer) {
+                return "Destroyer";
+            }
+        }
+
         if (_gameState.day < 1600) {
             while (true) {
                 var roll = QRandom.Float();
                 if (roll < 0.3) {
-                    design ="Talons";
+                    design = "Talons";
                 } else if (roll < 0.6) {
-                    design ="Claws";
+                    design = "Claws";
                 } else if (roll < 0.8) {
-                    design ="Fangs";
+                    design = "Fangs";
                 } else if (roll < 0.9) {
-                    design ="Tusks";
+                    design = "Tusks";
                 } else {
-                    design ="Horns";
+                    design = "Horns";
                 }
                 if (starBase.level >= ItemInfo.MinStarBaseLevel(VesselDesign.Find(design))) {
                     return design;
@@ -145,15 +159,15 @@ public class KrigiaStarBaseNode : StarBaseNode {
             while (true) {
                 var roll = QRandom.Float();
                 if (roll < 0.1) {
-                    design ="Talons";
+                    design = "Talons";
                 } else if (roll < 0.2) {
-                    design ="Claws";
+                    design = "Claws";
                 } else if (roll < 0.6) {
-                    design ="Fangs";
+                    design = "Fangs";
                 } else if (roll < 0.8) {
-                    design ="Tusks";
+                    design = "Tusks";
                 } else {
-                    design ="Horns";
+                    design = "Horns";
                 }
                 if (starBase.level >= ItemInfo.MinStarBaseLevel(VesselDesign.Find(design))) {
                     return design;

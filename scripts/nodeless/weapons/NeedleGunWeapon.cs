@@ -2,10 +2,10 @@ using Godot;
 
 public class NeedleGunWeapon : IWeapon {
     public static WeaponDesign TurretDesign = new WeaponDesign{
-        damage = 22,
+        damage = 20,
         range = 2000,
         projectileSpeed = 500,
-        damageKind = DamageKind.Electromagnetic,
+        damageKind = DamageKind.Kinetic,
         ignoresAsteroids = true,
         maskScale = 2.5f,
     };
@@ -15,13 +15,13 @@ public class NeedleGunWeapon : IWeapon {
         level = 1,
         researchRequired = false,
         description = "A rail gun that shots projectiles with high kinetic power",
-        extraDescription = "Penetrates targets, can hit several targets on one line",
+        special = "penetrating projectiles",
         targeting = "any direction, projectiles",
         sellingPrice = 900,
         cooldown = 1.8f,
         range = 270.0f,
         damage = 11.0f,
-        damageKind = DamageKind.Electromagnetic,
+        damageKind = DamageKind.Kinetic,
         energyCost = 10,
         projectileSpeed = 280.0f,
         botHintSnipe = 0.25f,

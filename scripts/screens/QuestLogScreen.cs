@@ -9,7 +9,7 @@ public class QuestLogScreen : Node2D {
     }
 
     private void SetupUI() {
-        GetNode<Button>("Status/LeaveButton").Connect("pressed", this, nameof(OnLeaveButton));
+        GetNode<TextureButton>("Status/LeaveButton").Connect("pressed", this, nameof(OnLeaveButton));
     }
 
     private void UpdateUI() {

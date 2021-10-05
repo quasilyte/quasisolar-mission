@@ -8,7 +8,7 @@ public class GameMenuNode : Node2D {
     private static PackedScene _scene = null;
     public static GameMenuNode New() {
         if (_scene == null) {
-            _scene = GD.Load<PackedScene>("res://scenes/GameMenuNode.tscn");
+            _scene = GD.Load<PackedScene>("res://scenes/ui/GameMenuNode.tscn");
         }
         var o = (GameMenuNode)_scene.Instance();
         return o;

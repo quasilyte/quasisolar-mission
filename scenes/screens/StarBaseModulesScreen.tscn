@@ -1,17 +1,18 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://images/bg/starbase_bg.png" type="Texture" id=1]
 [ext_resource path="res://theme.tres" type="Theme" id=2]
-[ext_resource path="res://images/shipyard/item_slot.png" type="Texture" id=3]
-[ext_resource path="res://images/spacemap/health_bar_purple.png" type="Texture" id=4]
-[ext_resource path="res://images/spacemap/health_bar_gray.png" type="Texture" id=5]
-[ext_resource path="res://scripts/StarBaseModulesScreen.cs" type="Script" id=6]
-[ext_resource path="res://scenes/ButtonNode.tscn" type="PackedScene" id=7]
+[ext_resource path="res://images/ui/gray_bar.png" type="Texture" id=3]
+[ext_resource path="res://images/ui/purple_bar.png" type="Texture" id=5]
+[ext_resource path="res://scripts/screens/StarBaseModulesScreen.cs" type="Script" id=6]
+[ext_resource path="res://scenes/ui/ButtonNode.tscn" type="PackedScene" id=7]
 [ext_resource path="res://styles/text_box.tres" type="StyleBox" id=8]
-[ext_resource path="res://scenes/SlotButtonNode.tscn" type="PackedScene" id=9]
-[ext_resource path="res://images/recycle.png" type="Texture" id=10]
-[ext_resource path="res://images/spacemap/minerals_icon.png" type="Texture" id=11]
-[ext_resource path="res://images/spacemap/power_icon.png" type="Texture" id=12]
+[ext_resource path="res://scenes/ui/SlotButtonNode.tscn" type="PackedScene" id=9]
+[ext_resource path="res://images/ui/minerals_icon.png" type="Texture" id=10]
+[ext_resource path="res://images/ui/power_icon.png" type="Texture" id=11]
+[ext_resource path="res://images/ui/recycle.png" type="Texture" id=12]
+[ext_resource path="res://images/ui/back.png" type="Texture" id=13]
+[ext_resource path="res://images/ui/item_slot_normal.png" type="Texture" id=14]
 
 [node name="StarBaseModulesScreen" type="Node2D"]
 script = ExtResource( 6 )
@@ -24,10 +25,10 @@ __meta__ = {
 }
 
 [node name="Modules" type="Panel" parent="."]
-margin_left = 96.0
-margin_top = 288.0
-margin_right = 544.0
-margin_bottom = 688.0
+margin_left = 32.0
+margin_top = 224.0
+margin_right = 576.0
+margin_bottom = 800.0
 theme = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -35,7 +36,7 @@ __meta__ = {
 
 [node name="Title" type="Label" parent="Modules"]
 margin_top = 16.0
-margin_right = 448.0
+margin_right = 512.0
 margin_bottom = 48.0
 theme = ExtResource( 2 )
 text = "Star Base Modules"
@@ -46,19 +47,18 @@ __meta__ = {
 }
 
 [node name="Module0" type="Sprite" parent="Modules"]
-position = Vector2( 112, 96 )
-texture = ExtResource( 3 )
-hframes = 3
-frame = 1
+position = Vector2( 152, 120 )
+texture = ExtResource( 14 )
 
 [node name="Name" type="Label" parent="Modules/Module0"]
 anchor_left = 1.25
 anchor_top = 0.25
 anchor_right = 1.25
 anchor_bottom = 0.25
-margin_left = -32.0
-margin_top = -32.0
-margin_right = 224.0
+margin_left = -68.0
+margin_top = -44.0
+margin_right = 188.0
+margin_bottom = -12.0
 text = "Module 1"
 valign = 1
 __meta__ = {
@@ -66,99 +66,98 @@ __meta__ = {
 }
 
 [node name="SellButton" parent="Modules/Module0" instance=ExtResource( 7 )]
-margin_left = -80.0
-margin_top = -16.0
-margin_right = -48.0
-margin_bottom = 16.0
+margin_left = -136.0
+margin_top = -32.0
+margin_right = -72.0
+margin_bottom = 32.0
 text = "$"
 
 [node name="Module1" type="Sprite" parent="Modules"]
-position = Vector2( 112, 176 )
-texture = ExtResource( 3 )
-hframes = 3
-frame = 1
+position = Vector2( 152, 248 )
+texture = ExtResource( 14 )
 
 [node name="Name" type="Label" parent="Modules/Module1"]
 anchor_left = 1.25
 anchor_top = 0.25
 anchor_right = 1.25
 anchor_bottom = 0.25
-margin_left = -32.0
-margin_top = -32.0
-margin_right = 224.0
-text = "Module 2"
+margin_left = -68.0
+margin_top = -44.0
+margin_right = 188.0
+margin_bottom = -12.0
+text = "Module 1"
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="SellButton" parent="Modules/Module1" instance=ExtResource( 7 )]
-margin_left = -80.0
-margin_top = -16.0
-margin_right = -48.0
-margin_bottom = 16.0
+margin_left = -136.0
+margin_top = -32.0
+margin_right = -72.0
+margin_bottom = 32.0
+focus_mode = 2
 text = "$"
 
 [node name="Module2" type="Sprite" parent="Modules"]
-position = Vector2( 112, 256 )
-texture = ExtResource( 3 )
-hframes = 3
-frame = 1
+position = Vector2( 152, 376 )
+texture = ExtResource( 14 )
 
 [node name="Name" type="Label" parent="Modules/Module2"]
 anchor_left = 1.25
 anchor_top = 0.25
 anchor_right = 1.25
 anchor_bottom = 0.25
-margin_left = -32.0
-margin_top = -32.0
-margin_right = 224.0
-text = "Module 3"
+margin_left = -68.0
+margin_top = -44.0
+margin_right = 188.0
+margin_bottom = -12.0
+text = "Module 1"
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="SellButton" parent="Modules/Module2" instance=ExtResource( 7 )]
-margin_left = -80.0
-margin_top = -16.0
-margin_right = -48.0
-margin_bottom = 16.0
+margin_left = -136.0
+margin_top = -32.0
+margin_right = -72.0
+margin_bottom = 32.0
+focus_mode = 2
 text = "$"
 
 [node name="Module3" type="Sprite" parent="Modules"]
-position = Vector2( 112, 336 )
-texture = ExtResource( 3 )
-hframes = 3
-frame = 1
+position = Vector2( 152, 504 )
+texture = ExtResource( 14 )
 
 [node name="Name" type="Label" parent="Modules/Module3"]
 anchor_left = 1.25
 anchor_top = 0.25
 anchor_right = 1.25
 anchor_bottom = 0.25
-margin_left = -32.0
-margin_top = -32.0
-margin_right = 224.0
-text = "Module 4"
+margin_left = -68.0
+margin_top = -44.0
+margin_right = 188.0
+margin_bottom = -12.0
+text = "Module 1"
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="SellButton" parent="Modules/Module3" instance=ExtResource( 7 )]
-margin_left = -80.0
-margin_top = -16.0
-margin_right = -48.0
-margin_bottom = 16.0
+margin_left = -136.0
+margin_top = -32.0
+margin_right = -72.0
+margin_bottom = 32.0
 focus_mode = 2
 text = "$"
 
 [node name="ModulesAvailable" type="Panel" parent="."]
-margin_left = 560.0
-margin_top = 208.0
-margin_right = 1008.0
-margin_bottom = 896.0
+margin_left = 592.0
+margin_top = 80.0
+margin_right = 1040.0
+margin_bottom = 976.0
 theme = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -180,17 +179,34 @@ __meta__ = {
 margin_left = 16.0
 margin_top = 64.0
 margin_right = 432.0
-margin_bottom = 672.0
+margin_bottom = 880.0
 custom_styles/panel = ExtResource( 8 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="ScrollContainer" type="ScrollContainer" parent="ModulesAvailable/Box"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 400.0
+margin_bottom = 800.0
+scroll_horizontal_enabled = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ModulesAvailable/Box/ScrollContainer"]
+margin_right = 384.0
+margin_bottom = 784.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 16
+
 [node name="ModuleInfo" type="Panel" parent="."]
-margin_left = 1024.0
-margin_top = 208.0
-margin_right = 1856.0
-margin_bottom = 544.0
+margin_left = 1056.0
+margin_top = 80.0
+margin_right = 1888.0
+margin_bottom = 416.0
 theme = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -223,15 +239,16 @@ margin_left = 16.0
 margin_top = 16.0
 margin_right = 784.0
 margin_bottom = 240.0
+autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="ProductionMenu" type="Panel" parent="."]
-margin_left = 1024.0
-margin_top = 560.0
-margin_right = 1376.0
-margin_bottom = 752.0
+margin_left = 1056.0
+margin_top = 432.0
+margin_right = 1456.0
+margin_bottom = 672.0
 theme = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -239,7 +256,7 @@ __meta__ = {
 
 [node name="Title" type="Label" parent="ProductionMenu"]
 margin_top = 16.0
-margin_right = 352.0
+margin_right = 400.0
 margin_bottom = 48.0
 theme = ExtResource( 2 )
 text = "Star Base Production"
@@ -250,9 +267,9 @@ __meta__ = {
 }
 
 [node name="ModeName" type="Label" parent="ProductionMenu"]
-margin_top = 144.0
-margin_right = 352.0
-margin_bottom = 176.0
+margin_top = 192.0
+margin_right = 400.0
+margin_bottom = 224.0
 theme = ExtResource( 2 )
 text = "Generating Minerals"
 align = 1
@@ -262,40 +279,40 @@ __meta__ = {
 }
 
 [node name="MineralsMode" parent="ProductionMenu" instance=ExtResource( 9 )]
-margin_left = 48.0
+margin_left = 16.0
 margin_top = 64.0
-margin_right = 112.0
-margin_bottom = 128.0
+margin_right = 128.0
+margin_bottom = 176.0
 
 [node name="minerals_icon" type="Sprite" parent="ProductionMenu/MineralsMode"]
-position = Vector2( 32, 32 )
-texture = ExtResource( 11 )
+position = Vector2( 56, 56 )
+texture = ExtResource( 10 )
 
 [node name="PowerMode" parent="ProductionMenu" instance=ExtResource( 9 )]
 margin_left = 144.0
 margin_top = 64.0
-margin_right = 208.0
-margin_bottom = 128.0
+margin_right = 256.0
+margin_bottom = 176.0
 
 [node name="power_icon" type="Sprite" parent="ProductionMenu/PowerMode"]
-position = Vector2( 32, 32 )
-texture = ExtResource( 12 )
+position = Vector2( 56, 56 )
+texture = ExtResource( 11 )
 
 [node name="RUMode" parent="ProductionMenu" instance=ExtResource( 9 )]
-margin_left = 240.0
+margin_left = 272.0
 margin_top = 64.0
-margin_right = 304.0
-margin_bottom = 128.0
+margin_right = 384.0
+margin_bottom = 176.0
 
 [node name="recycle" type="Sprite" parent="ProductionMenu/RUMode"]
-position = Vector2( 32, 32 )
-texture = ExtResource( 10 )
+position = Vector2( 56, 56 )
+texture = ExtResource( 12 )
 
 [node name="ConstructionProgress" type="Panel" parent="."]
-margin_left = 96.0
-margin_top = 704.0
-margin_right = 544.0
-margin_bottom = 832.0
+margin_left = 32.0
+margin_top = 816.0
+margin_right = 576.0
+margin_bottom = 976.0
 theme = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -303,7 +320,7 @@ __meta__ = {
 
 [node name="Title" type="Label" parent="ConstructionProgress"]
 margin_top = 16.0
-margin_right = 448.0
+margin_right = 544.0
 margin_bottom = 48.0
 theme = ExtResource( 2 )
 text = "Construction Progress"
@@ -314,9 +331,9 @@ __meta__ = {
 }
 
 [node name="Name" type="Label" parent="ConstructionProgress"]
-margin_top = 48.0
-margin_right = 448.0
-margin_bottom = 80.0
+margin_top = 64.0
+margin_right = 544.0
+margin_bottom = 96.0
 text = "<Module name>"
 align = 1
 valign = 1
@@ -325,43 +342,44 @@ __meta__ = {
 }
 
 [node name="ProgressBar" type="TextureProgress" parent="ConstructionProgress"]
-margin_left = 112.0
-margin_top = 96.0
-margin_right = 272.0
-margin_bottom = 106.0
+margin_left = 144.0
+margin_top = 112.0
+margin_right = 327.0
+margin_bottom = 135.0
 rect_scale = Vector2( 1.4, 1.4 )
 value = 50.0
-texture_under = ExtResource( 5 )
-texture_progress = ExtResource( 4 )
+texture_under = ExtResource( 3 )
+texture_progress = ExtResource( 5 )
+nine_patch_stretch = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Status" type="Panel" parent="."]
-margin_left = 96.0
-margin_top = 208.0
-margin_right = 544.0
-margin_bottom = 272.0
+margin_left = 32.0
+margin_top = 80.0
+margin_right = 576.0
+margin_bottom = 208.0
 theme = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Credits" type="Label" parent="Status"]
-margin_left = 16.0
-margin_top = 16.0
-margin_right = 112.0
-margin_bottom = 48.0
+margin_left = 128.0
+margin_top = 48.0
+margin_right = 192.0
+margin_bottom = 80.0
 theme = ExtResource( 2 )
-text = "Credits:"
+text = "RU"
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Value" type="Label" parent="Status/Credits"]
-margin_left = 96.0
-margin_right = 176.0
+margin_left = 64.0
+margin_right = 148.0
 margin_bottom = 32.0
 text = "999999"
 valign = 1
@@ -369,9 +387,12 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="LeaveButton" parent="Status" instance=ExtResource( 7 )]
-margin_left = 336.0
+[node name="LeaveButton" type="TextureButton" parent="Status"]
+margin_left = 16.0
 margin_top = 16.0
-margin_right = 432.0
-margin_bottom = 48.0
-text = "Leave"
+margin_right = 112.0
+margin_bottom = 112.0
+texture_normal = ExtResource( 13 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://scripts/ui/ItemSlotNode.cs" type="Script" id=1]
+[ext_resource path="res://images/items/Advanced_Power_Generator.png" type="Texture" id=3]
+[ext_resource path="res://images/ui/item_slot_normal.png" type="Texture" id=4]
+[ext_resource path="res://images/ui/item_slot_disabled.png" type="Texture" id=5]
+
+[node name="ItemSlotNode" type="Control"]
+margin_left = -56.0
+margin_top = -56.0
+margin_right = 56.0
+margin_bottom = 56.0
+rect_min_size = Vector2( 112, 112 )
+mouse_filter = 2
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Toggle" type="TextureButton" parent="."]
+mouse_filter = 1
+texture_normal = ExtResource( 4 )
+texture_disabled = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ItemSprite" type="Sprite" parent="."]
+position = Vector2( 56, 56 )
+texture = ExtResource( 3 )

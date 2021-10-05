@@ -4,16 +4,16 @@ public class NewGameOptions {
     public class Option {
         public string text;
         public object value = null;
-        public int score;
-        public bool selected;
+        public int score = 0;
+        public bool selected = false;
     }
 
     public Dictionary<string, Option[]> byName = new Dictionary<string, Option[]> {
         {
             "GameMode",
             new Option[]{
-                new Option{text = "RPG", value = "RPG", score = 0, selected = true},
-                new Option{text = "Strategy", value = "Strategy", score = 0},
+                new Option{text = "RPG", value = "RPG", score = 0},
+                new Option{text = "Strategy", value = "Strategy", score = 0, selected = true,},
             }
         },
 

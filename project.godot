@@ -18,6 +18,7 @@ _global_script_class_icons={
 config/name="Space Battle"
 run/main_scene="res://scenes/MainMenu.tscn"
 config/icon="res://icon.png"
+config/quit_on_go_back=false
 
 [autoload]
 

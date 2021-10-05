@@ -5,7 +5,7 @@ public class IonCannonWeapon : IWeapon {
         name = "Ion Cannon",
         level = 1,
         researchRequired = false,
-        description = "A tactical weapon that can dry the target\nbattery up",
+        description = "A tactical weapon that can dry the target battery up",
         targeting = "any direction, projectiles",
         sellingPrice = 1400,
         cooldown = 0.3f,

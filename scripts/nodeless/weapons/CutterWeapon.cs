@@ -5,7 +5,7 @@ public class CutterWeapon : AbstractWeapon {
         name = "Cutter",
         level = 2,
         description = "TODO",
-        targeting = "front directions (180°), projectiles",
+        targeting = "frontal 180°, projectiles",
         sellingPrice = 3900,
         cooldown = 1,
         energyCost = 13,

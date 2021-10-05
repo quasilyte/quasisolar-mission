@@ -1,0 +1,834 @@
+[gd_scene load_steps=14 format=2]
+
+[ext_resource path="res://theme.tres" type="Theme" id=1]
+[ext_resource path="res://styles/text_box.tres" type="StyleBox" id=2]
+[ext_resource path="res://images/bg/starbase_bg.png" type="Texture" id=3]
+[ext_resource path="res://scripts/EquipmentShopScreen.cs" type="Script" id=4]
+[ext_resource path="res://images/ui/green_bar.png" type="Texture" id=6]
+[ext_resource path="res://images/ui/gray_bar.png" type="Texture" id=7]
+[ext_resource path="res://styles/popup_box.tres" type="StyleBox" id=8]
+[ext_resource path="res://images/ui/back.png" type="Texture" id=9]
+[ext_resource path="res://scenes/ui/ItemSlotNode.tscn" type="PackedScene" id=10]
+[ext_resource path="res://images/ui/toggle_slot.png" type="Texture" id=11]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.156863, 0.156863, 0.156863, 0.686275 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.364706, 0.376471, 0.47451, 1 )
+corner_radius_top_left = 32
+corner_radius_top_right = 32
+corner_radius_bottom_right = 32
+corner_radius_bottom_left = 32
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.270588, 0.278431, 0.368627, 0.686275 )
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 0.156863, 0.156863, 0.156863, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0.65098, 0.729412, 0.862745, 1 )
+corner_radius_top_left = 32
+corner_radius_top_right = 32
+corner_radius_bottom_right = 32
+corner_radius_bottom_left = 32
+
+[node name="EquipmentShopScreen" type="Node2D"]
+script = ExtResource( 4 )
+
+[node name="Background" type="Sprite" parent="."]
+position = Vector2( 960, 540 )
+texture = ExtResource( 3 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="UnitMenu" type="Panel" parent="."]
+margin_left = 448.0
+margin_top = 48.0
+margin_right = 1104.0
+margin_bottom = 864.0
+mouse_filter = 2
+theme = ExtResource( 1 )
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FleetHeader" type="Label" parent="UnitMenu"]
+margin_left = 224.0
+margin_top = 16.0
+margin_right = 592.0
+margin_bottom = 45.0
+theme = ExtResource( 1 )
+text = "Fleet"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FlagshipHeader" type="Label" parent="UnitMenu"]
+margin_left = 32.0
+margin_top = 16.0
+margin_right = 176.0
+margin_bottom = 45.0
+theme = ExtResource( 1 )
+text = "Flagship"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="WeaponsHeader" type="Label" parent="UnitMenu"]
+margin_left = 48.0
+margin_top = 176.0
+margin_right = 288.0
+margin_bottom = 205.0
+theme = ExtResource( 1 )
+text = "Weapons"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ArtifactsHeader" type="Label" parent="UnitMenu"]
+margin_left = 16.0
+margin_top = 656.0
+margin_right = 640.0
+margin_bottom = 685.0
+theme = ExtResource( 1 )
+text = "Artifacts"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpecialWeaponHeader" type="Label" parent="UnitMenu"]
+margin_left = 416.0
+margin_top = 176.0
+margin_right = 656.0
+margin_bottom = 205.0
+theme = ExtResource( 1 )
+text = "Special Weapon"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EnergySourceHeader" type="Label" parent="UnitMenu"]
+margin_left = 432.0
+margin_top = 336.0
+margin_right = 640.0
+margin_bottom = 365.0
+theme = ExtResource( 1 )
+text = "Energy Source"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SentinelHeader" type="Label" parent="UnitMenu"]
+margin_left = 464.0
+margin_top = 496.0
+margin_right = 608.0
+margin_bottom = 525.0
+theme = ExtResource( 1 )
+text = "Sentinel"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ShieldHeader" type="Label" parent="UnitMenu"]
+margin_left = 32.0
+margin_top = 496.0
+margin_right = 176.0
+margin_bottom = 525.0
+theme = ExtResource( 1 )
+text = "Shield"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Unit0" type="Sprite" parent="UnitMenu"]
+position = Vector2( 48, 48 )
+texture = ExtResource( 11 )
+centered = false
+hframes = 2
+
+[node name="Unit1" type="Sprite" parent="UnitMenu"]
+position = Vector2( 224, 48 )
+texture = ExtResource( 11 )
+centered = false
+hframes = 2
+
+[node name="Unit2" type="Sprite" parent="UnitMenu"]
+position = Vector2( 352, 48 )
+texture = ExtResource( 11 )
+centered = false
+hframes = 2
+
+[node name="Unit3" type="Sprite" parent="UnitMenu"]
+position = Vector2( 480, 48 )
+texture = ExtResource( 11 )
+centered = false
+hframes = 2
+
+[node name="Weapon0" parent="UnitMenu" instance=ExtResource( 10 )]
+anchor_left = 0.159
+anchor_top = 0.324
+anchor_right = 0.159
+anchor_bottom = 0.324
+margin_left = -56.304
+margin_top = -56.384
+margin_right = 55.696
+margin_bottom = 55.616
+presetItemKind = 6
+
+[node name="Weapon1" parent="UnitMenu" instance=ExtResource( 10 )]
+anchor_left = 0.354
+anchor_top = 0.324
+anchor_right = 0.354
+anchor_bottom = 0.324
+margin_left = -56.224
+margin_top = -56.384
+margin_right = 55.776
+margin_bottom = 55.616
+presetItemKind = 6
+presetIndex = 1
+
+[node name="SpecialWeapon" parent="UnitMenu" instance=ExtResource( 10 )]
+anchor_left = 0.817
+anchor_top = 0.324
+anchor_right = 0.817
+anchor_bottom = 0.324
+margin_left = -55.952
+margin_top = -56.384
+margin_right = 56.048
+margin_bottom = 55.616
+presetItemKind = 7
+
+[node name="VesselDesign" type="Panel" parent="UnitMenu"]
+margin_left = 272.0
+margin_top = 368.0
+margin_right = 384.0
+margin_bottom = 480.0
+custom_styles/panel = SubResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite" type="Sprite" parent="UnitMenu/VesselDesign"]
+position = Vector2( 56, 56 )
+scale = Vector2( 2, 2 )
+
+[node name="HealthBar" type="TextureProgress" parent="UnitMenu"]
+anchor_left = 0.5
+anchor_top = 0.659
+anchor_right = 0.5
+anchor_bottom = 0.659
+margin_left = -88.0
+margin_top = -9.74402
+margin_right = 88.0
+margin_bottom = 10.256
+value = 90.0
+texture_under = ExtResource( 7 )
+texture_progress = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Value" type="Label" parent="UnitMenu/HealthBar"]
+anchor_left = 0.5
+anchor_top = -0.8
+anchor_right = 0.5
+anchor_bottom = -0.8
+margin_left = -88.0
+margin_top = -16.0
+margin_right = 88.0
+margin_bottom = 13.0
+text = "90/100"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RepairButton" type="Button" parent="UnitMenu"]
+anchor_left = 0.5
+anchor_top = 0.725
+anchor_right = 0.5
+anchor_bottom = 0.725
+margin_left = -88.0
+margin_top = -31.6
+margin_right = 88.0
+margin_bottom = 32.4
+focus_mode = 0
+theme = ExtResource( 1 )
+text = "Repair"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Artifact0" parent="UnitMenu" instance=ExtResource( 10 )]
+anchor_left = 0.11
+anchor_top = 0.912
+anchor_right = 0.11
+anchor_bottom = 0.912
+margin_left = -56.16
+margin_top = -56.1921
+margin_right = 55.84
+margin_bottom = 55.8079
+presetItemKind = 11
+
+[node name="Artifact1" parent="UnitMenu" instance=ExtResource( 10 )]
+anchor_left = 0.305
+anchor_top = 0.912
+anchor_right = 0.305
+anchor_bottom = 0.912
+margin_left = -56.08
+margin_top = -56.1921
+margin_right = 55.92
+margin_bottom = 55.8079
+presetItemKind = 11
+presetIndex = 1
+
+[node name="Artifact2" parent="UnitMenu" instance=ExtResource( 10 )]
+anchor_left = 0.5
+anchor_top = 0.912
+anchor_right = 0.5
+anchor_bottom = 0.912
+margin_top = -56.1921
+margin_bottom = 55.8079
+presetItemKind = 11
+presetIndex = 2
+
+[node name="Artifact3" parent="UnitMenu" instance=ExtResource( 10 )]
+anchor_left = 0.695
+anchor_top = 0.912
+anchor_right = 0.695
+anchor_bottom = 0.912
+margin_left = -55.92
+margin_top = -56.1921
+margin_right = 56.08
+margin_bottom = 55.8079
+presetItemKind = 11
+presetIndex = 3
+
+[node name="Artifact4" parent="UnitMenu" instance=ExtResource( 10 )]
+anchor_left = 0.89
+anchor_top = 0.912
+anchor_right = 0.89
+anchor_bottom = 0.912
+margin_left = -55.84
+margin_top = -56.1921
+margin_right = 56.16
+margin_bottom = 55.8079
+presetItemKind = 11
+presetIndex = 4
+
+[node name="Shield" parent="UnitMenu" instance=ExtResource( 10 )]
+anchor_left = 0.159
+anchor_top = 0.716
+anchor_right = 0.159
+anchor_bottom = 0.716
+margin_left = -56.304
+margin_top = -56.256
+margin_right = 55.696
+margin_bottom = 55.744
+presetItemKind = 9
+
+[node name="Sentinel" parent="UnitMenu" instance=ExtResource( 10 )]
+anchor_left = 0.817
+anchor_top = 0.716
+anchor_right = 0.817
+anchor_bottom = 0.716
+margin_left = -55.952
+margin_top = -56.256
+margin_right = 56.048
+margin_bottom = 55.744
+presetItemKind = 8
+
+[node name="EnergySource" parent="UnitMenu" instance=ExtResource( 10 )]
+anchor_left = 0.817
+anchor_top = 0.52
+anchor_right = 0.817
+anchor_bottom = 0.52
+margin_left = -55.952
+margin_top = -56.32
+margin_right = 56.048
+margin_bottom = 55.68
+presetItemKind = 10
+
+[node name="Status" type="Panel" parent="."]
+margin_left = 32.0
+margin_top = 48.0
+margin_right = 432.0
+margin_bottom = 576.0
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CreditsValue" type="Label" parent="Status"]
+margin_left = 224.0
+margin_top = 48.0
+margin_right = 336.0
+margin_bottom = 80.0
+theme = ExtResource( 1 )
+text = "0"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Status/CreditsValue"]
+margin_left = -96.0
+margin_right = -16.0
+margin_bottom = 32.0
+theme = ExtResource( 1 )
+text = "RU"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FuelValue" type="Label" parent="Status"]
+margin_left = 224.0
+margin_top = 80.0
+margin_right = 336.0
+margin_bottom = 112.0
+theme = ExtResource( 1 )
+text = "0"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Status/FuelValue"]
+margin_left = -96.0
+margin_right = -16.0
+margin_bottom = 32.0
+theme = ExtResource( 1 )
+text = "Fuel"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CargoValue" type="Label" parent="Status"]
+margin_left = 224.0
+margin_top = 16.0
+margin_right = 336.0
+margin_bottom = 48.0
+theme = ExtResource( 1 )
+text = "0"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Status/CargoValue"]
+margin_left = -96.0
+margin_right = -16.0
+margin_bottom = 32.0
+theme = ExtResource( 1 )
+text = "Cargo"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RefuelButton" type="Button" parent="Status"]
+margin_left = 48.0
+margin_top = 208.0
+margin_right = 352.0
+margin_bottom = 272.0
+focus_mode = 0
+theme = ExtResource( 1 )
+text = "Buy Fuel"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CargoButton" type="Button" parent="Status"]
+margin_left = 48.0
+margin_top = 288.0
+margin_right = 352.0
+margin_bottom = 352.0
+focus_mode = 0
+theme = ExtResource( 1 )
+text = "Cargo"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SellDebris" type="Button" parent="Status"]
+margin_left = 48.0
+margin_top = 128.0
+margin_right = 352.0
+margin_bottom = 192.0
+focus_mode = 0
+theme = ExtResource( 1 )
+text = "Sell Debris"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DronesButton" type="Button" parent="Status"]
+margin_left = 48.0
+margin_top = 448.0
+margin_right = 352.0
+margin_bottom = 512.0
+focus_mode = 0
+theme = ExtResource( 1 )
+text = "Drones"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RepairAllButton" type="Button" parent="Status"]
+margin_left = 48.0
+margin_top = 368.0
+margin_right = 352.0
+margin_bottom = 432.0
+focus_mode = 0
+theme = ExtResource( 1 )
+text = "Repair All"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LeaveButton" type="TextureButton" parent="Status"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 96.0
+margin_bottom = 96.0
+focus_mode = 0
+texture_normal = ExtResource( 9 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Status"]
+margin_right = 40.0
+margin_bottom = 14.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Storage" type="Panel" parent="."]
+margin_left = 32.0
+margin_top = 592.0
+margin_right = 432.0
+margin_bottom = 1024.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StorageHeader" type="Label" parent="Storage"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 384.0
+margin_bottom = 45.0
+theme = ExtResource( 1 )
+text = "Storage"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Storage"]
+margin_left = 16.0
+margin_top = 64.0
+margin_right = 384.0
+margin_bottom = 416.0
+mouse_filter = 1
+theme = ExtResource( 1 )
+scroll_horizontal_enabled = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GridContainer" type="GridContainer" parent="Storage/ScrollContainer"]
+mouse_filter = 2
+custom_constants/vseparation = 8
+custom_constants/hseparation = 8
+columns = 3
+
+[node name="EquipmentShop" type="Panel" parent="."]
+margin_left = 1120.0
+margin_top = 48.0
+margin_right = 1760.0
+margin_bottom = 432.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Header" type="Label" parent="EquipmentShop"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 624.0
+margin_bottom = 45.0
+theme = ExtResource( 1 )
+text = "Equipment Shop"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CategorySelect" type="OptionButton" parent="EquipmentShop"]
+margin_left = 16.0
+margin_top = 304.0
+margin_right = 368.0
+margin_bottom = 368.0
+focus_mode = 0
+theme = ExtResource( 1 )
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="EquipmentShop"]
+margin_left = 16.0
+margin_top = 48.0
+margin_right = 624.0
+margin_bottom = 280.0
+scroll_horizontal_enabled = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GridContainer" type="GridContainer" parent="EquipmentShop/ScrollContainer"]
+custom_constants/vseparation = 8
+custom_constants/hseparation = 8
+columns = 5
+
+[node name="BuySell" type="Button" parent="EquipmentShop"]
+margin_left = 384.0
+margin_top = 304.0
+margin_right = 624.0
+margin_bottom = 368.0
+focus_mode = 0
+theme = ExtResource( 1 )
+disabled = true
+text = "Buy"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EquipmentInfo" type="Panel" parent="."]
+margin_left = 1120.0
+margin_top = 448.0
+margin_right = 1888.0
+margin_bottom = 1024.0
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Header" type="Label" parent="EquipmentInfo"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 752.0
+margin_bottom = 45.0
+theme = ExtResource( 1 )
+text = "Equipment Info"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="InfoBox" type="Panel" parent="EquipmentInfo"]
+margin_left = 16.0
+margin_top = 64.0
+margin_right = 752.0
+margin_bottom = 560.0
+custom_styles/panel = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Body" type="Label" parent="EquipmentInfo/InfoBox"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 720.0
+margin_bottom = 480.0
+theme = ExtResource( 1 )
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SellEquipmentPopup" type="Popup" parent="."]
+margin_left = 1312.0
+margin_top = 80.0
+margin_right = 1824.0
+margin_bottom = 288.0
+popup_exclusive = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="SellEquipmentPopup"]
+margin_right = 512.0
+margin_bottom = 208.0
+theme = ExtResource( 1 )
+custom_styles/panel = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="SellEquipmentPopup"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 496.0
+margin_bottom = 48.0
+theme = ExtResource( 1 )
+text = "Sell X?"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SellingPrice" type="Label" parent="SellEquipmentPopup"]
+margin_left = 16.0
+margin_top = 64.0
+margin_right = 496.0
+margin_bottom = 96.0
+theme = ExtResource( 1 )
+text = "0 RU"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Confirm" type="Button" parent="SellEquipmentPopup"]
+margin_left = 32.0
+margin_top = 112.0
+margin_right = 224.0
+margin_bottom = 176.0
+theme = ExtResource( 1 )
+text = "Confirm"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Cancel" type="Button" parent="SellEquipmentPopup"]
+margin_left = 288.0
+margin_top = 112.0
+margin_right = 480.0
+margin_bottom = 176.0
+theme = ExtResource( 1 )
+text = "Cancel"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RepairPopup" type="Popup" parent="."]
+margin_left = 448.0
+margin_top = 96.0
+margin_right = 1072.0
+margin_bottom = 272.0
+popup_exclusive = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="RepairPopup"]
+margin_right = 624.0
+margin_bottom = 176.0
+theme = ExtResource( 1 )
+custom_styles/panel = SubResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="RepairPopup"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 608.0
+margin_bottom = 48.0
+theme = ExtResource( 1 )
+text = "Which kind of repair?"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RepairFull" type="Button" parent="RepairPopup"]
+margin_left = 32.0
+margin_top = 64.0
+margin_right = 208.0
+margin_bottom = 128.0
+focus_mode = 0
+theme = ExtResource( 1 )
+text = "Full"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="RepairPopup/RepairFull"]
+margin_top = 64.0
+margin_right = 176.0
+margin_bottom = 96.0
+theme = ExtResource( 1 )
+text = "0 RU"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RepairMinor" type="Button" parent="RepairPopup"]
+margin_left = 224.0
+margin_top = 64.0
+margin_right = 400.0
+margin_bottom = 128.0
+focus_mode = 0
+theme = ExtResource( 1 )
+text = "25 hp"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="RepairPopup/RepairMinor"]
+margin_top = 64.0
+margin_right = 176.0
+margin_bottom = 96.0
+theme = ExtResource( 1 )
+text = "0 RU"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Cancel" type="Button" parent="RepairPopup"]
+margin_left = 416.0
+margin_top = 64.0
+margin_right = 592.0
+margin_bottom = 128.0
+focus_mode = 0
+theme = ExtResource( 1 )
+text = "Cancel"
+__meta__ = {
+"_edit_use_anchors_": false
+}

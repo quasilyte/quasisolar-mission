@@ -1,24 +1,23 @@
 [gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scenes/PopupNode.tscn" type="PackedScene" id=1]
-[ext_resource path="res://images/spacemap/minerals_icon.png" type="Texture" id=2]
-[ext_resource path="res://images/spacemap/organic_icon.png" type="Texture" id=3]
-[ext_resource path="res://images/spacemap/power_icon.png" type="Texture" id=4]
+[ext_resource path="res://images/ui/organic_icon.png" type="Texture" id=2]
+[ext_resource path="res://images/ui/minerals_icon.png" type="Texture" id=3]
+[ext_resource path="res://images/ui/power_icon.png" type="Texture" id=4]
 [ext_resource path="res://styles/text_box.tres" type="StyleBox" id=5]
-[ext_resource path="res://scenes/ButtonNode.tscn" type="PackedScene" id=6]
+[ext_resource path="res://scenes/ui/ButtonNode.tscn" type="PackedScene" id=6]
 [ext_resource path="res://scenes/AnimatedPlanetNode.tscn" type="PackedScene" id=7]
-[ext_resource path="res://scripts/PlanetsMenuPopupNode.cs" type="Script" id=8]
+[ext_resource path="res://scripts/ui/PlanetsMenuPopupNode.cs" type="Script" id=8]
 
 [node name="PlanetsMenuPopupNode" instance=ExtResource( 1 )]
-visible = true
-margin_left = 16.0
-margin_right = 816.0
-margin_bottom = 448.0
+margin_right = 1104.0
+margin_bottom = 624.0
 script = ExtResource( 8 )
 
 [node name="Title" type="Label" parent="." index="0"]
-margin_right = 800.0
-margin_bottom = 32.0
+margin_top = 16.0
+margin_right = 1184.0
+margin_bottom = 48.0
 text = "Star System Planets"
 align = 1
 valign = 1
@@ -28,25 +27,26 @@ __meta__ = {
 
 [node name="Planet2" type="Label" parent="." index="1"]
 margin_left = 16.0
-margin_top = 144.0
-margin_right = 272.0
-margin_bottom = 176.0
+margin_top = 224.0
+margin_right = 320.0
+margin_bottom = 288.0
 mouse_filter = 0
-text = "Xenolithic World"
+text = "Hydrocarbon World"
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="minerals_icon" type="Sprite" parent="Planet2" index="0"]
-position = Vector2( 304, 16 )
-texture = ExtResource( 2 )
+position = Vector2( 384, 32 )
+texture = ExtResource( 3 )
 
 [node name="Minerals" type="Label" parent="Planet2" index="1"]
-margin_left = 256.0
-margin_right = 288.0
-margin_bottom = 32.0
-text = "?"
+margin_left = 320.0
+margin_top = 16.0
+margin_right = 352.0
+margin_bottom = 48.0
+text = "2"
 align = 1
 valign = 1
 __meta__ = {
@@ -54,14 +54,15 @@ __meta__ = {
 }
 
 [node name="organic_icon" type="Sprite" parent="Planet2" index="2"]
-position = Vector2( 384, 16 )
-texture = ExtResource( 3 )
+position = Vector2( 496, 32 )
+texture = ExtResource( 2 )
 
 [node name="Organic" type="Label" parent="Planet2" index="3"]
-margin_left = 336.0
-margin_right = 368.0
-margin_bottom = 32.0
-text = "?"
+margin_left = 432.0
+margin_top = 16.0
+margin_right = 464.0
+margin_bottom = 48.0
+text = "1"
 align = 1
 valign = 1
 __meta__ = {
@@ -69,14 +70,15 @@ __meta__ = {
 }
 
 [node name="power_icon" type="Sprite" parent="Planet2" index="4"]
-position = Vector2( 464, 16 )
+position = Vector2( 608, 32 )
 texture = ExtResource( 4 )
 
 [node name="Power" type="Label" parent="Planet2" index="5"]
-margin_left = 416.0
-margin_right = 448.0
-margin_bottom = 32.0
-text = "?"
+margin_left = 544.0
+margin_top = 16.0
+margin_right = 576.0
+margin_bottom = 48.0
+text = "0"
 align = 1
 valign = 1
 __meta__ = {
@@ -84,41 +86,43 @@ __meta__ = {
 }
 
 [node name="DroneSelect" type="OptionButton" parent="Planet2" index="6"]
-margin_left = 544.0
-margin_right = 768.0
-margin_bottom = 32.0
+margin_left = 736.0
+margin_right = 1072.0
+margin_bottom = 64.0
+focus_mode = 0
 text = "No drone deployed"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="SendDroneButton" parent="Planet2" index="7" instance=ExtResource( 6 )]
-margin_left = 496.0
-margin_right = 528.0
-focus_mode = 2
+margin_left = 656.0
+margin_right = 720.0
+margin_bottom = 64.0
 text = "<"
 
 [node name="Planet1" type="Label" parent="." index="2"]
 margin_left = 16.0
-margin_top = 96.0
-margin_right = 272.0
-margin_bottom = 128.0
+margin_top = 144.0
+margin_right = 320.0
+margin_bottom = 208.0
 mouse_filter = 0
-text = "Telluric World"
+text = "Hydrocarbon World"
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="minerals_icon" type="Sprite" parent="Planet1" index="0"]
-position = Vector2( 304, 16 )
-texture = ExtResource( 2 )
+position = Vector2( 384, 32 )
+texture = ExtResource( 3 )
 
 [node name="Minerals" type="Label" parent="Planet1" index="1"]
-margin_left = 256.0
-margin_right = 288.0
-margin_bottom = 32.0
-text = "?"
+margin_left = 320.0
+margin_top = 16.0
+margin_right = 352.0
+margin_bottom = 48.0
+text = "2"
 align = 1
 valign = 1
 __meta__ = {
@@ -126,14 +130,15 @@ __meta__ = {
 }
 
 [node name="organic_icon" type="Sprite" parent="Planet1" index="2"]
-position = Vector2( 384, 16 )
-texture = ExtResource( 3 )
+position = Vector2( 496, 32 )
+texture = ExtResource( 2 )
 
 [node name="Organic" type="Label" parent="Planet1" index="3"]
-margin_left = 336.0
-margin_right = 368.0
-margin_bottom = 32.0
-text = "?"
+margin_left = 432.0
+margin_top = 16.0
+margin_right = 464.0
+margin_bottom = 48.0
+text = "1"
 align = 1
 valign = 1
 __meta__ = {
@@ -141,14 +146,15 @@ __meta__ = {
 }
 
 [node name="power_icon" type="Sprite" parent="Planet1" index="4"]
-position = Vector2( 464, 16 )
+position = Vector2( 608, 32 )
 texture = ExtResource( 4 )
 
 [node name="Power" type="Label" parent="Planet1" index="5"]
-margin_left = 416.0
-margin_right = 448.0
-margin_bottom = 32.0
-text = "?"
+margin_left = 544.0
+margin_top = 16.0
+margin_right = 576.0
+margin_bottom = 48.0
+text = "0"
 align = 1
 valign = 1
 __meta__ = {
@@ -156,24 +162,26 @@ __meta__ = {
 }
 
 [node name="DroneSelect" type="OptionButton" parent="Planet1" index="6"]
-margin_left = 544.0
-margin_right = 768.0
-margin_bottom = 32.0
+margin_left = 736.0
+margin_right = 1072.0
+margin_bottom = 64.0
+focus_mode = 0
 text = "No drone deployed"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="SendDroneButton" parent="Planet1" index="7" instance=ExtResource( 6 )]
-margin_left = 496.0
-margin_right = 528.0
+margin_left = 656.0
+margin_right = 720.0
+margin_bottom = 64.0
 text = "<"
 
 [node name="Planet0" type="Label" parent="." index="3"]
 margin_left = 16.0
-margin_top = 48.0
-margin_right = 272.0
-margin_bottom = 80.0
+margin_top = 64.0
+margin_right = 320.0
+margin_bottom = 128.0
 mouse_filter = 0
 text = "Hydrocarbon World"
 valign = 1
@@ -182,13 +190,14 @@ __meta__ = {
 }
 
 [node name="minerals_icon" type="Sprite" parent="Planet0" index="0"]
-position = Vector2( 304, 16 )
-texture = ExtResource( 2 )
+position = Vector2( 384, 32 )
+texture = ExtResource( 3 )
 
 [node name="Minerals" type="Label" parent="Planet0" index="1"]
-margin_left = 256.0
-margin_right = 288.0
-margin_bottom = 32.0
+margin_left = 320.0
+margin_top = 16.0
+margin_right = 352.0
+margin_bottom = 48.0
 text = "2"
 align = 1
 valign = 1
@@ -197,13 +206,14 @@ __meta__ = {
 }
 
 [node name="organic_icon" type="Sprite" parent="Planet0" index="2"]
-position = Vector2( 384, 16 )
-texture = ExtResource( 3 )
+position = Vector2( 496, 32 )
+texture = ExtResource( 2 )
 
 [node name="Organic" type="Label" parent="Planet0" index="3"]
-margin_left = 336.0
-margin_right = 368.0
-margin_bottom = 32.0
+margin_left = 432.0
+margin_top = 16.0
+margin_right = 464.0
+margin_bottom = 48.0
 text = "1"
 align = 1
 valign = 1
@@ -212,13 +222,14 @@ __meta__ = {
 }
 
 [node name="power_icon" type="Sprite" parent="Planet0" index="4"]
-position = Vector2( 464, 16 )
+position = Vector2( 608, 32 )
 texture = ExtResource( 4 )
 
 [node name="Power" type="Label" parent="Planet0" index="5"]
-margin_left = 416.0
-margin_right = 448.0
-margin_bottom = 32.0
+margin_left = 544.0
+margin_top = 16.0
+margin_right = 576.0
+margin_bottom = 48.0
 text = "0"
 align = 1
 valign = 1
@@ -227,9 +238,9 @@ __meta__ = {
 }
 
 [node name="DroneSelect" type="OptionButton" parent="Planet0" index="6"]
-margin_left = 544.0
-margin_right = 768.0
-margin_bottom = 32.0
+margin_left = 736.0
+margin_right = 1072.0
+margin_bottom = 64.0
 focus_mode = 0
 text = "No drone deployed"
 __meta__ = {
@@ -237,22 +248,23 @@ __meta__ = {
 }
 
 [node name="SendDroneButton" parent="Planet0" index="7" instance=ExtResource( 6 )]
-margin_left = 496.0
-margin_right = 528.0
+margin_left = 656.0
+margin_right = 720.0
+margin_bottom = 64.0
 text = "<"
 
 [node name="DoneButton" parent="." index="4" instance=ExtResource( 6 )]
 margin_left = 16.0
-margin_top = 400.0
+margin_top = 528.0
 margin_right = 240.0
-margin_bottom = 432.0
+margin_bottom = 592.0
 text = "Done"
 
 [node name="PlanetInfo" type="Panel" parent="." index="5"]
 margin_left = 256.0
-margin_top = 224.0
-margin_right = 784.0
-margin_bottom = 432.0
+margin_top = 352.0
+margin_right = 1088.0
+margin_bottom = 592.0
 custom_styles/panel = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -261,15 +273,14 @@ __meta__ = {
 [node name="BasicInfo" type="Label" parent="PlanetInfo" index="0"]
 margin_left = 16.0
 margin_top = 16.0
-margin_right = 512.0
-margin_bottom = 192.0
+margin_right = 816.0
+margin_bottom = 224.0
 text = "Telluric World
 
 Temperature: 93
 Radius: 7530 km
 Surface: rich
-Explored: 70%
-"
+Explored: 70%"
 autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -277,9 +288,9 @@ __meta__ = {
 
 [node name="Panel2" type="Panel" parent="." index="6"]
 margin_left = 16.0
-margin_top = 224.0
+margin_top = 352.0
 margin_right = 240.0
-margin_bottom = 384.0
+margin_bottom = 512.0
 custom_styles/panel = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -287,9 +298,9 @@ __meta__ = {
 
 [node name="Label" type="Label" parent="." index="7"]
 margin_left = 256.0
-margin_top = 192.0
-margin_right = 784.0
-margin_bottom = 224.0
+margin_top = 320.0
+margin_right = 1088.0
+margin_bottom = 352.0
 text = "Planet Info"
 align = 1
 valign = 1
@@ -298,4 +309,4 @@ __meta__ = {
 }
 
 [node name="PlanetModel" parent="." index="8" instance=ExtResource( 7 )]
-position = Vector2( 128, 304 )
+position = Vector2( 128, 432 )

@@ -21,7 +21,7 @@ public class StarBaseModulesScreen : Node2D {
     }
 
     private void SetupUI() {
-        GetNode<Button>("Status/LeaveButton").Connect("pressed", this, nameof(OnLeaveButton));
+        GetNode<TextureButton>("Status/LeaveButton").Connect("pressed", this, nameof(OnLeaveButton));
 
         var modulesAvailable = new List<StarBaseModule>();
         foreach (var module in StarBaseModule.list) {
@@ -36,30 +36,19 @@ public class StarBaseModulesScreen : Node2D {
             moduleNode.GetNode<ButtonNode>("SellButton").Connect("pressed", this, nameof(OnModuleSellButton), new Godot.Collections.Array { i });
         }
 
-        var box = GetNode<Panel>("ModulesAvailable/Box");
-        var offsetX = 64;
-        var offsetY = 24;
+        var box = GetNode<VBoxContainer>("ModulesAvailable/Box/ScrollContainer/VBoxContainer");
         for (int i = 0; i < modulesAvailable.Count; i++) {
             var module = modulesAvailable[i];
-            var moduleLabel = new Label();
-            moduleLabel.Text = module.name;
-            moduleLabel.RectSize = new Vector2(256, 32);
-            moduleLabel.Valign = Label.VAlign.Center;
-            moduleLabel.RectPosition = new Vector2(offsetX, offsetY);
-            moduleLabel.MouseFilter = Control.MouseFilterEnum.Stop;
-            box.AddChild(moduleLabel);
+            var item = ListItemNode.New(module.name);
+            box.AddChild(item);
 
+            var startButton = item.GetNode<ButtonNode>("Button");
+            startButton.Connect("pressed", this, nameof(OnStartButton), new Godot.Collections.Array { i });
+
+            var moduleLabel = item.GetNode<Label>("Label");
+            moduleLabel.MouseFilter = Control.MouseFilterEnum.Stop;
             moduleLabel.Connect("mouse_entered", this, nameof(OnSelectionMouseEnter), new Godot.Collections.Array { module.name });
             moduleLabel.Connect("mouse_exited", this, nameof(InfoBoxClear));
-
-            var startButton = ButtonNode.New();
-            startButton.Text = ">";
-            startButton.RectSize = new Vector2(32, 32);
-            startButton.RectPosition = new Vector2(-48, 0);
-            startButton.Connect("pressed", this, nameof(OnStartButton), new Godot.Collections.Array { i });
-            moduleLabel.AddChild(startButton);
-
-            offsetY += 48;
 
             _moduleNodes.Add(new ModuleNode {
                 value = module,
@@ -115,9 +104,9 @@ public class StarBaseModulesScreen : Node2D {
             produtionLabelText = "Generating RU";
             break;
         }
-        GetNode<SlotButtonNode>("ProductionMenu/MineralsMode").SetOutlineVisibility(mineralsOutline);
-        GetNode<SlotButtonNode>("ProductionMenu/PowerMode").SetOutlineVisibility(powerOutline);
-        GetNode<SlotButtonNode>("ProductionMenu/RUMode").SetOutlineVisibility(ruOutline);
+        GetNode<SlotButtonNode>("ProductionMenu/MineralsMode").SetSelected(mineralsOutline);
+        GetNode<SlotButtonNode>("ProductionMenu/PowerMode").SetSelected(powerOutline);
+        GetNode<SlotButtonNode>("ProductionMenu/RUMode").SetSelected(ruOutline);
         GetNode<Label>("ProductionMenu/ModeName").Text = produtionLabelText;
     }
 
@@ -202,6 +191,6 @@ public class StarBaseModulesScreen : Node2D {
     }
 
     private void OnLeaveButton() {
-        GetTree().ChangeScene("res://scenes/StarBaseScreen.tscn");
+        GetTree().ChangeScene("res://scenes/screens/StarBaseScreen.tscn");
     }
 }

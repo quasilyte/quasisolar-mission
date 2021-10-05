@@ -5,7 +5,7 @@ public class PlanetsMenuPopupNode : PopupNode {
     private static PackedScene _scene = null;
     public static PlanetsMenuPopupNode New() {
         if (_scene == null) {
-            _scene = GD.Load<PackedScene>("res://scenes/PlanetsMenuPopupNode.tscn");
+            _scene = GD.Load<PackedScene>("res://scenes/ui/PlanetsMenuPopupNode.tscn");
         }
         var o = (PlanetsMenuPopupNode)_scene.Instance();
         return o;

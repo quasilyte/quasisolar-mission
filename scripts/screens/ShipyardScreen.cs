@@ -11,9 +11,11 @@ public class ShipyardScreen : Node2D {
     private bool _lockControls = false;
     private PopupNode _exodusPopup;
 
+    private Button _productionButton;
+
     private RpgGameState _gameState;
 
-    private Merchandise _selectedMerchandise = new Merchandise { };
+    private ItemSlotController _itemSlotController = new ItemSlotController();
     private List<VesselDesign> _vesselSelection;
 
     private Vessel[] _fleetSlots = new Vessel[SpaceUnit.maxFleetSize];
@@ -25,6 +27,7 @@ public class ShipyardScreen : Node2D {
         _gameState = RpgGameState.instance;
         _starBase = RpgGameState.enteredBase;
         _vesselSelection = VesselSelection();
+        _productionButton = GetNode<Button>("VesselProduction/StartProduction");
         SetupUI();
         UpdateUI();
     }
@@ -45,14 +48,26 @@ public class ShipyardScreen : Node2D {
             _gameState.credits > _gameState.exodusPrice;
     }
 
+    private bool CanLeave() {
+        return VesselArrayToList(_fleetSlots).Count >= 1;
+    }
+
     private void UpdateUI() {
+        GetNode<TextureButton>("Status/LeaveButton").Disabled = !CanLeave();
+
         GetNode<Label>("Status/CreditsValue").Text = _gameState.credits.ToString();
 
         GetNode<ButtonNode>("Status/ArkButton").Disabled = !CanTurnIntoArk();
 
-        GetNode<Button>("VesselProduction/StartProduction").Disabled = _selectedMerchandise.sprite == null ||
-            _starBase.VesselProductionPrice(_selectedMerchandise.item) > _gameState.credits ||
+        var selected = _itemSlotController.selected;
+        _productionButton.Disabled = selected == null ||
+            selected.GetItemKind() != ItemKind.Shop ||
+            _starBase.VesselProductionPrice((VesselDesign)selected.GetItem()) > _gameState.credits ||
             _starBase.productionQueue.Count >= 4;
+
+        // GetNode<Button>("VesselProduction/StartProduction").Disabled = _selectedMerchandise.sprite == null ||
+        //     _starBase.VesselProductionPrice(_selectedMerchandise.item) > _gameState.credits ||
+        //     _starBase.productionQueue.Count >= 4;
 
         {
             int i = 0;
@@ -130,19 +145,20 @@ public class ShipyardScreen : Node2D {
 
         GetNode<ButtonNode>("Status/ArkButton").Connect("pressed", this, nameof(OnArkButton));
 
-        GetNode<Button>("Status/LeaveButton").Connect("pressed", this, nameof(OnLeaveButton));
+        GetNode<TextureButton>("Status/LeaveButton").Connect("pressed", this, nameof(OnLeaveButton));
 
         GetNode<Button>("VesselProduction/StartProduction").Connect("pressed", this, nameof(OnStartProductionButton));
 
-        for (int i = 0; i < _vesselSelection.Count; i++) {
-            var item = _vesselSelection[i];
-            var shopPanel = GetNode<Sprite>($"VesselProduction/Vessel{i}");
-            var itemNode = MerchandiseItemNode.New(item);
+        var productionGrid = GetNode<GridContainer>("VesselProduction/ScrollContainer/GridContainer");
+        for (int i = 0; i < 5 * 4; i++) {
+            var slot = ItemSlotNode.New(0, ItemKind.Shop);
+            productionGrid.AddChild(slot);
             var args = new Godot.Collections.Array { i };
-            itemNode.Connect("Clicked", this, nameof(OnMerchandiseClicked), args);
-            itemNode.Name = "Merchandise";
-            shopPanel.AddChild(itemNode);
-            itemNode.GlobalPosition = shopPanel.GlobalPosition;
+            slot.Reset(null, true);
+            slot.Connect("Clicked", this, nameof(OnItemClicked), new Godot.Collections.Array{slot});
+            if (_vesselSelection.Count > i) {
+                slot.AssignItem(_vesselSelection[i]);
+            }
         }
 
         for (int i = 0; i < 4; i++) {
@@ -164,64 +180,62 @@ public class ShipyardScreen : Node2D {
         }
 
         for (int i = 0; i < _fleetSlots.Length; i++) {
-            var panel = GetNode<Sprite>($"ActiveFleet/Vessel{i}");
-            var vesselSlot = ItemSlotNode.New(i, ItemKind.Vessel);
-            vesselSlot.Name = "Slot";
-            vesselSlot.SetAssignItemCallback((int index, DraggableItemNode itemNode) => {
-                _fleetSlots[index] = itemNode != null ? (Vessel)itemNode.item : null;
-                return true;
+            var vesselSlot = GetNode<ItemSlotNode>($"ActiveFleet/Vessel{i}");
+            vesselSlot.SetAssignItemCallback((int index, IItem item) => {
+                _fleetSlots[index] = item != null ? (Vessel)item : null;
+                if (item == null) {
+                    vesselSlot.GetNode<Label>("Name").Text = "";
+                } else {
+                    vesselSlot.GetNode<Label>("Name").Text = ((Vessel)item).pilotName;
+                }
             });
-            panel.AddChild(vesselSlot);
-            var args = new Godot.Collections.Array { i };
-            vesselSlot.GetNode<Area2D>("Area2D").Connect("mouse_entered", this, nameof(OnVesselSlotHover), args);
             vesselSlot.Reset(null, true);
-            vesselSlot.Connect("ItemApplied", this, nameof(OnShipApplied));
+            vesselSlot.Connect("Clicked", this, nameof(OnItemClicked), new Godot.Collections.Array{vesselSlot});
         }
 
-        const int numRows = 4;
-        const int numCols = 6;
-        for (int row = 0; row < numRows; row++) {
-            for (int col = 0; col < numCols; col++) {
-                var i = col + (row * numCols);
-                var storagePanel = GetNode<Sprite>($"Garrison/Vessel{i}");
-                var itemSlot = ItemSlotNode.New(i, ItemKind.GarrisonVessel);
-                itemSlot.SetAssignItemCallback((int index, DraggableItemNode itemNode) => {
-                    _garrisonSlots[index] = itemNode != null ? (Vessel)itemNode.item : null;
-                    return true;
-                });
-                itemSlot.Reset(null, true);
-                itemSlot.Name = "Slot";
-                storagePanel.AddChild(itemSlot);
-
-                if (_starBase.garrison.Count > i) {
-                    var itemNode = DraggableItemNode.New(itemSlot, _starBase.garrison[i].Get(), false);
-                    itemSlot.ApplyItem(null, itemNode);
-                    GetTree().CurrentScene.AddChild(itemNode);
-                    itemNode.GlobalPosition = storagePanel.GlobalPosition;
-                }
-
-                itemSlot.Connect("ItemApplied", this, nameof(OnShipApplied));
+        var garrisonGrid = GetNode<GridContainer>("Garrison/ScrollContainer/GridContainer");
+        for (int i = 0; i < StarBase.maxGarrisonSize; i++) {
+            var itemSlot = ItemSlotNode.New(i, ItemKind.GarrisonVessel);
+            garrisonGrid.AddChild(itemSlot);
+            itemSlot.SetAssignItemCallback((int index, IItem item) => {
+                _garrisonSlots[index] = item != null ? (Vessel)item : null;
+            });
+            itemSlot.Reset(null, true);
+            itemSlot.Connect("Clicked", this, nameof(OnItemClicked), new Godot.Collections.Array{itemSlot});
+            if (_starBase.garrison.Count > i) {
+                itemSlot.ApplyItem(_starBase.garrison[i].Get());
             }
         }
 
         for (int i = 0; i < _fleetSlots.Length; i++) {
-            var panel = GetNode<Sprite>($"ActiveFleet/Vessel{i}");
-            panel.GetNode<Label>("Name").Text = "";
+            var slot = GetNode<ItemSlotNode>($"ActiveFleet/Vessel{i}");
             if (_gameState.humanUnit.Get().fleet.Count <= i) {
+                slot.GetNode<Label>("Name").Text = "";
                 continue;
             }
             var vessel = _gameState.humanUnit.Get().fleet[i].Get();
-            panel.GetNode<Label>("Name").Text = vessel.pilotName;
-            var slot = panel.GetNode<ItemSlotNode>("Slot");
-            var itemNode = DraggableItemNode.New(slot, vessel, false);
-            slot.ApplyItem(null, itemNode);
-            GetTree().CurrentScene.AddChild(itemNode);
-            itemNode.GlobalPosition = panel.GlobalPosition;
+            slot.GetNode<Label>("Name").Text = vessel.pilotName;
+            slot.ApplyItem(vessel);
         }
     }
 
+    private void OnItemClicked(ItemSlotNode itemSlot) {
+        _itemSlotController.OnItemClicked(itemSlot);
+
+        var infoBox = GetNode<Label>("VesselInfo/InfoBox/Body");
+        if (_itemSlotController.selected == null) {
+            infoBox.Text = "";
+        } else {
+            infoBox.Text = ItemInfo.RenderHelp(_itemSlotController.selected.GetItem());
+        }
+
+        UpdateUI();
+    }
+
     private void OnStartProductionButton() {
-        if (_gameState.credits < _starBase.VesselProductionPrice(_selectedMerchandise.item)) {
+        var selected = _itemSlotController.selected;
+        var vesselDesign = (VesselDesign)selected.GetItem();
+        if (_gameState.credits < _starBase.VesselProductionPrice(vesselDesign)) {
             return;
         }
         var starBase = RpgGameState.enteredBase;
@@ -232,50 +246,13 @@ public class ShipyardScreen : Node2D {
             return;
         }
 
-        _gameState.credits -= _starBase.VesselProductionPrice(_selectedMerchandise.item);
+        _gameState.credits -= _starBase.VesselProductionPrice(vesselDesign);
         if (starBase.productionQueue.Count == 0) {
             GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/production_started.wav"));
         }
-        starBase.productionQueue.Enqueue(_selectedMerchandise.item.name);
+        starBase.productionQueue.Enqueue(vesselDesign.name);
 
         UpdateUI();
-    }
-
-    private void OnMerchandiseClicked(int index) {
-        if (_selectedMerchandise.sprite != null) {
-            _selectedMerchandise.sprite.Frame = 1;
-        }
-        var item = _vesselSelection[index];
-        _selectedMerchandise.sprite = GetNode<Sprite>($"VesselProduction/Vessel{index}");
-        _selectedMerchandise.item = item;
-        _selectedMerchandise.sprite.Frame = 2;
-
-        GetNode<Label>("VesselInfo/InfoBox/Body").Text = item.RenderHelp(_starBase.VesselProductionPrice(item));
-
-        UpdateUI();
-    }
-
-    private void OnShipApplied(ItemSlotNode fromSlot, DraggableItemNode dragged) {
-        if (fromSlot != null) {
-            var vessel = (Vessel)dragged.item;
-            if (fromSlot.GetParent().HasNode("Name")) {
-                fromSlot.GetParent().GetNode<Label>("Name").Text = "";
-            }
-            if (dragged.GetSlotNode().GetParent().HasNode("Name")) {
-                dragged.GetSlotNode().GetParent().GetNode<Label>("Name").Text = vessel.pilotName;
-            }
-        }
-
-        // _sellItemFallbackSlot = fromSlot;
-        // _sellItemNode = dragged;
-
-        // var itemName = ItemInfo.Name(dragged.item);
-        // _sellEquipmentPopup.GetNode<Label>("Title").Text = "Sell " + itemName + "?";
-        // var sellingPrice = ItemInfo.SellingPrice(dragged.item) / 2;
-        // _sellEquipmentPopup.GetNode<Label>("SellingPrice").Text = $"{sellingPrice} cr";
-        
-        // _lockControls = true;
-        // _sellEquipmentPopup.PopupCentered();
     }
 
     private void OnVesselSlotHover(int vesselIndex) {
@@ -313,6 +290,6 @@ public class ShipyardScreen : Node2D {
     private void OnLeaveButton() {
         UpdateFleet();
         UpdateGarrison();
-        GetTree().ChangeScene("res://scenes/StarBaseScreen.tscn");
+        GetTree().ChangeScene("res://scenes/screens/StarBaseScreen.tscn");
     }
 }

@@ -53,10 +53,10 @@ public class HackingMapEvent: AbstractMapEvent {
                 return new Result{
                     skipText = true,
                     effects = {
-                        new Effect{
-                            kind = EffectKind.EnterTextQuest,
-                            value = new HackingTQuest(),
-                        }
+                        // new Effect{
+                        //     kind = EffectKind.EnterTextQuest,
+                        //     value = new HackingTQuest(),
+                        // }
                     },
                 };
             }

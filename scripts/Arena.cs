@@ -377,11 +377,23 @@ public class Arena : Node2D {
         }
     }
 
+    private void OnEscapeButton() {
+        ChangeScene("QuickBattleMenu");
+    }
+
     public override void _Input(InputEvent e) {
         if (e is InputEventKey keyEvent) {
             if (keyEvent.Scancode == (uint)Godot.KeyList.Escape && !keyEvent.Pressed) {
-                ChangeScene("QuickBattleMenu");
+                OnEscapeButton();
+                return;
             }
+        }
+    }
+
+    public override void _Notification(int what) {
+        if (what == MainLoop.NotificationWmGoBackRequest) {
+            OnEscapeButton();
+            return;
         }
     }
 

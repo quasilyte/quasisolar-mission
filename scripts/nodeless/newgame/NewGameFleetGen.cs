@@ -21,6 +21,7 @@ public class NewGameFleetGen {
         new VesselTemplate{design = VesselDesign.Find("Talons"), roll = 0},
         new VesselTemplate{design = VesselDesign.Find("Claws"), roll = 0.3f},
         new VesselTemplate{design = VesselDesign.Find("Fangs"), roll = 0.55f},
+        new VesselTemplate{design = VesselDesign.Find("Destroyer"), roll = 0.7f},
         new VesselTemplate{design = VesselDesign.Find("Tusks"), roll = 0.75f},
         new VesselTemplate{design = VesselDesign.Find("Horns"), roll = 0.90f},
     };

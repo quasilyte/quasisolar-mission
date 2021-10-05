@@ -8,6 +8,7 @@ public class SwarmSpawnerWeapon : IWeapon {
         description = "TODO",
         extraDescription = "Can't launch more than 3 swarms at once",
         targeting = "any direction, auto fighters",
+        special = "cripples target rotation on hit",
         sellingPrice = 4500,
         cooldown = 2.5f,
         energyCost = 20,

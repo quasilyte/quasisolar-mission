@@ -4,9 +4,9 @@ public class DisruptorWeapon : AbstractWeapon {
     public static WeaponDesign Design = new WeaponDesign {
         name = "Disruptor",
         level = 1,
-        description = "Launches an electric surges that mess with the enemy reactor.",
-        extraDescription = "On hit, temporarily disables energy regen",
+        description = "Launches an electric surge that messes with the enemy reactor",
         targeting = "any direction, homing projectiles",
+        special = "disables energy regen on hit",
         sellingPrice = 3400,
         cooldown = 2,
         energyCost = 9.0f,

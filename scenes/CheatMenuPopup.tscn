@@ -2,7 +2,8 @@
 
 [ext_resource path="res://theme.tres" type="Theme" id=1]
 [ext_resource path="res://styles/text_box.tres" type="StyleBox" id=2]
-[ext_resource path="res://scenes/ButtonNode.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/ui/ButtonNode.tscn" type="PackedScene" id=3]
+
 
 [node name="CheatMenuPopup" type="PopupDialog"]
 margin_right = 496.0

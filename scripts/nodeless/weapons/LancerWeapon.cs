@@ -10,7 +10,7 @@ public class LancerWeapon : IWeapon {
         cooldown = 1.7f,
         energyCost = 19.0f,
         range = 380.0f,
-        damage = 30.0f,
+        damage = 40.0f,
         damageKind = DamageKind.Electromagnetic,
         projectileSpeed = 550.0f,
         botHintSnipe = 0.7f,

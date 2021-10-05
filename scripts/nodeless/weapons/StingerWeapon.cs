@@ -5,7 +5,7 @@ public class StingerWeapon : IWeapon {
         name = "Stinger",
         level = 2,
         description = "A weapon that is designed to slow down the target",
-        special = "reduces target mobility for a short period of time",
+        special = "reduces target speed on hit",
         targeting = "any direction, projectiles",
         sellingPrice = 3500,
         cooldown = 0.6f,

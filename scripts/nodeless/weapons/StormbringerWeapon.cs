@@ -10,7 +10,7 @@ public class StormbringerWeapon : IWeapon {
         cooldown = 1.2f,
         energyCost = 12,
         range = 450.0f,
-        damage = 16.0f,
+        damage = 25,
         damageKind = DamageKind.Electromagnetic,
         projectileSpeed = 400.0f,
         botHintEffectiveAngle = 2,

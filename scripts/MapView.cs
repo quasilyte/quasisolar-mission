@@ -56,27 +56,11 @@ public class MapView : Node2D {
     private List<UnitMemberNode> _unitMembers = new List<UnitMemberNode>();
 
     private TextureButton _modeToggled;
-    private Dictionary<UnitMode, TextureButton> _modeToggles;
 
     private void SwitchButtonTextures(TextureButton b) {
         var tmp = b.TextureNormal;
         b.TextureNormal = b.TexturePressed;
         b.TexturePressed = tmp;
-    }
-
-    private void SetUnitMode(UnitMode newMode) {
-        var pressed = _modeToggles[newMode];
-        if (_modeToggled == pressed) {
-            return;
-        }
-        SwitchButtonTextures(pressed);
-        SwitchButtonTextures(_modeToggled);
-        _gameState.mapState.mode = newMode;
-        _modeToggled = pressed;
-    }
-
-    private void OnModeTogglePressed(UnitMode newMode) {
-        SetUnitMode(newMode);
     }
 
     private bool IsRandomEventFaction(Faction faction) {
@@ -135,26 +119,6 @@ public class MapView : Node2D {
 
         _movementToggle = GetNode<TextureButton>("UI/MovementToggle");
         _movementToggle.Connect("pressed", this, nameof(OnMovementTogglePressed));
-
-        var modeIdleToggle = GetNode<TextureButton>("UI/Modes/IdleModeToggle");
-        modeIdleToggle.Connect("pressed", this, nameof(OnModeTogglePressed),
-            new Godot.Collections.Array { UnitMode.Idle });
-
-        var modeAttackToggle = GetNode<TextureButton>("UI/Modes/AttackModeToggle");
-        modeAttackToggle.Connect("pressed", this, nameof(OnModeTogglePressed),
-            new Godot.Collections.Array { UnitMode.Attack });
-
-        // var modeSearchToggle = GetNode<TextureButton>("UI/Modes/SearchModeToggle");
-        // modeSearchToggle.Connect("pressed", this, nameof(OnModeTogglePressed),
-        //     new Godot.Collections.Array { UnitMode.Search });
-
-        _modeToggles = new Dictionary<UnitMode, TextureButton>{
-            {UnitMode.Idle, modeIdleToggle},
-            {UnitMode.Attack, modeAttackToggle},
-        };
-
-        _modeToggled = _modeToggles[_gameState.mapState.mode];
-        SwitchButtonTextures(_modeToggled);
 
         AddUnitMembers();
 
@@ -861,7 +825,7 @@ public class MapView : Node2D {
         var starBase = _currentSystem.sys.starBase.Get();
         if (starBase.owner == Faction.Earthling) {
             RpgGameState.enteredBase = starBase;
-            GetTree().ChangeScene("res://scenes/StarBaseScreen.tscn");
+            GetTree().ChangeScene("res://scenes/screens/StarBaseScreen.tscn");
         } else if (starBase.owner == Faction.Phaa) {
             _randomEventProto = new PhaaBaseMapEvent();
             OpenRandomEvent(NewRandomEventContext());
@@ -893,14 +857,13 @@ public class MapView : Node2D {
         AddChild(SoundEffectNode.New(GD.Load<AudioStream>("res://audio/weapon/Scythe.wav"), -6));
 
         UpdatePlanetsMenu();
-        UpdateDronesValue();
     }
 
     private void OnPlanetMouseEnter(int i) {
         var p = _currentSystem.sys.resourcePlanets[i];
 
         var infoLines = new List<string>();
-        infoLines.Add(p.name);
+        infoLines.Add(p.name + " (" + QMath.Percantage(p.explored, p.explorationUnits) + "% explored)");
         infoLines.Add("");
         infoLines.Add("Type: " + (p.gasGiant ? "gas giant" : "rocky"));
         infoLines.Add("Temperature: " + p.temperature);
@@ -920,8 +883,6 @@ public class MapView : Node2D {
         }
 
         infoLines.Add("Surface resources: " + surfaceDescription);
-
-        infoLines.Add("Explored: " + QMath.Percantage(p.explored, p.explorationUnits) + "%");
 
         _planetsPopup.GetNode<Label>("PlanetInfo/BasicInfo").Text = string.Join("\n", infoLines);
 
@@ -985,18 +946,19 @@ public class MapView : Node2D {
         var cameraPos = _camera.Position;
 
         var viewport = GetViewport();
-        var leftMargin = 40;
-        var rightMargin = viewport.Size.x - 40;
+        var viewportRect = viewport.GetVisibleRect();
+        var leftMargin = 56;
+        var rightMargin = viewportRect.Size.x - 56;
         var cursor = viewport.GetMousePosition();
 
         if (cursor.x < leftMargin) {
-            if (cursor.x < 8) {
+            if (cursor.x < 16) {
                 cameraPos -= _cameraSpeed * delta * 3;
             } else {
                 cameraPos -= _cameraSpeed * delta;
             }
         } else if (cursor.x > rightMargin) {
-            if (cursor.x > (viewport.Size.x - 8)) {
+            if (cursor.x > (viewportRect.Size.x - 16)) {
                 cameraPos += _cameraSpeed * delta * 3;
             } else {
                 cameraPos += _cameraSpeed * delta;
@@ -1007,7 +969,7 @@ public class MapView : Node2D {
             return;
         }
 
-        var x = QMath.Clamp(cameraPos.x, viewport.Size.x / 2, MAP_WIDTH - viewport.Size.x / 2);
+        var x = QMath.Clamp(cameraPos.x, viewportRect.Size.x / 2, MAP_WIDTH - viewportRect.Size.x / 2);
         var y = cameraPos.y;
         _camera.Position = new Vector2(x, y);
     }
@@ -1020,6 +982,13 @@ public class MapView : Node2D {
         _lockControls = true;
         StopMovement();
         _menuNode.Open();
+    }
+
+    public override void _Notification(int what) {
+        if (what == MainLoop.NotificationWmGoBackRequest) {
+            OpenGameMenu();
+            return;
+        }
     }
 
     public override void _Process(float delta) {
@@ -1345,8 +1314,6 @@ public class MapView : Node2D {
     }
 
     private void UpdateUI() {
-        GetNode<Label>("UI/FuelValue/Max").Text = "/" + ((int)RpgGameState.MaxFuel()).ToString();
-
         var enterBase = GetNode<TextureButton>("UI/EnterBaseButton");
         enterBase.Disabled = true;
         var mining = GetNode<TextureButton>("UI/MiningButton");
@@ -1367,10 +1334,8 @@ public class MapView : Node2D {
             u.UpdateColor();
         }
 
-        UpdateDronesValue();
         UpdateDayValue();
         UpdateFuelValue();
-        UpdateExpValue();
         UpdateCreditsValue();
         UpdateCargoValue();
         if (_currentSystem != null) {
@@ -1386,7 +1351,7 @@ public class MapView : Node2D {
                 mining.Disabled = false;
             }
         } else {
-            GetNode<Label>("UI/LocationValue").Text = "Interstellar Space";
+            GetNode<Label>("UI/LocationValue").Text = "Undefined";
         }
 
         _human.Update();
@@ -1398,16 +1363,8 @@ public class MapView : Node2D {
         GetNode<Label>("UI/CargoValue").Text = $"{current}/{max}";
     }
 
-    private void UpdateExpValue() {
-        GetNode<Label>("UI/ExpValue").Text = _gameState.experience.ToString();
-    }
-
     private void UpdateCreditsValue() {
         GetNode<Label>("UI/CreditsValue").Text = _gameState.credits.ToString();
-    }
-
-    private void UpdateDronesValue() {
-        GetNode<Label>("UI/DronesValue").Text = _gameState.explorationDrones.Count.ToString();
     }
 
     private void UpdateDayValue() {
@@ -1415,7 +1372,9 @@ public class MapView : Node2D {
     }
 
     private void UpdateFuelValue() {
-        GetNode<Label>("UI/FuelValue").Text = ((int)_gameState.fuel).ToString();
+        int max = (int)RpgGameState.MaxFuel();
+        int current = (int)_gameState.fuel;
+        GetNode<Label>("UI/FuelValue").Text = $"{current}/{max}";
     }
 
     private void RecoverFleetEnergy(List<Vessel.Ref> fleet) {
@@ -1824,78 +1783,8 @@ public class MapView : Node2D {
     }
 
     private void ProcessUnitMode() {
-        if (_gameState.mapState.mode == UnitMode.Idle) {
-            var toAdd = _gameState.technologiesResearched.Contains("Recycling") ? 2 : 1;
-            _gameState.fuel = QMath.ClampMax(_gameState.fuel + toAdd, RpgGameState.MaxFuel());
-            return;
-        }
-
-        var starBaseRef = _currentSystem.sys.starBase;
-
-        if (_gameState.mapState.mode == UnitMode.Attack) {
-            if (_gameState.fuel < 1) {
-                SetUnitMode(UnitMode.Idle);
-                StopMovement();
-                return;
-            }
-            if (starBaseRef.id == 0) {
-                return;
-            }
-            var starBase = starBaseRef.Get();
-            if (!_gameState.FactionsAtWar(starBase.owner, Faction.Earthling)) {
-                return;
-            }
-            
-            _gameState.fuel -= 1;
-            if (starBase.garrison.Count != 0) {
-                return;
-            }
-            var damage = _humanUnit.fleet.Count;
-            starBase.hp -= damage;
-            if (starBase.hp <= 0) {
-                SetUnitMode(UnitMode.Idle);
-                StopMovement();
-                _currentSystem.DestroyStarBase();
-                GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/enemy_base_eradicated.wav"));
-            }
-            return;
-        }
-
-        if (_gameState.mapState.mode == UnitMode.Search) {
-            // if (_gameState.fuel < 3) {
-            //     SetUnitMode(UnitMode.Idle);
-            //     StopMovement();
-            //     return;
-            // }
-            // if (_currentSystem.sys.artifact == null) {
-            //     return;
-            // }
-            // if (starBaseRef.id != 0 && _gameState.FactionsAtWar(starBaseRef.Get().owner, Faction.Earthling)) {
-            //     _currentSystem.sys.artifactRecoveryDelay -= 1;
-            // } else {
-            //     _currentSystem.sys.artifactRecoveryDelay -= 2;
-            // }
-            // if (_currentSystem.sys.artifactRecoveryDelay <= 0) {
-            //     _gameState.artifactsRecovered.Add(_currentSystem.sys.artifact);
-
-            //     _currentSystem.sys.artifactRecoveryDelay = 0;
-            //     _currentSystem.sys.artifact = null;
-
-            //     var notification = MapNotificationNode.New("Artifact recovered");
-            //     _currentSystem.AddChild(notification);
-
-            //     _gameState.credits += 3000;
-
-            //     GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/artifact_recovered.wav"));
-
-            //     SetUnitMode(UnitMode.Idle);
-            //     StopMovement();
-
-            //     _currentSystem.UpdateInfo();
-            // }
-            // _gameState.fuel -= 3;
-            // return;
-        }
+        var toAdd = _gameState.technologiesResearched.Contains("Recycling") ? 2 : 1;
+        _gameState.fuel = QMath.ClampMax(_gameState.fuel + toAdd, RpgGameState.MaxFuel());
     }
 
     private int ArkVesselIndex() {
@@ -1932,11 +1821,9 @@ public class MapView : Node2D {
             return;
         }
 
-        if (_gameState.mapState.mode != UnitMode.Attack) {
-            var roll = QRandom.Float();
-            if (roll >= 0.25) {
-                return;
-            }
+        var roll = QRandom.Float();
+        if (roll >= 0.25) {
+            return;
         }
 
         var numDefenders = Math.Min(starBase.garrison.Count, 4);

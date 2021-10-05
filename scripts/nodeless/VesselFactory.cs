@@ -65,6 +65,8 @@ public static class VesselFactory {
             InitKrigiaClaws(v);
         } else if (kind == "Krigia Fangs") {
             InitKrigiaFangs(v);
+        } else if (kind == "Krigia Destroyer") {
+            InitKrigiaDestroyer(v);
         } else if (kind == "Krigia Tusks") {
             InitKrigiaTusks(v);
         } else if (kind == "Krigia Horns") {
@@ -519,6 +521,23 @@ public static class VesselFactory {
         }
     }
 
+    private static void InitKrigiaDestroyer(Vessel v) {
+        v.designName = "Destroyer";
+        v.energySourceName = "Vortex Battery";
+
+        v.weapons.Add(GreatScytheWeapon.Design.name);
+
+        if (QRandom.Float() < RankChance(v.rank, 0.7, 0.9, 1)) {
+            v.specialWeaponName = TorpedoLauncherWeapon.Design.name;
+        } else {
+            v.specialWeaponName = DisintegratorWeapon.Design.name;
+        }
+
+        SetShield(v,
+            0.6, DispersionFieldShield.Design.name,
+            0.4, ReflectorShield.Design.name);
+    }
+
     private static void InitKrigiaTusks(Vessel v) {
         v.designName = "Tusks";
 
@@ -693,20 +712,32 @@ public static class VesselFactory {
 
     private static void InitZythHunter(Vessel v) {
         v.designName = "Hunter";
+        
         v.energySourceName = "Advanced Power Generator";
+        if (v.rank >= 2) {
+            v.energySourceName = "Vortex Battery";
+        }
 
         SetSpecialWeapon(v,
             0.5, HarpoonWeapon.Design.name,
             0.5, DisruptorWeapon.Design.name);
 
-        AddWeapon(v,
-            0.5, HellfireWeapon.Design.name,
-            0.3, CutterWeapon.Design.name,
-            0.2, NeedleGunWeapon.Design.name);
+        if (v.specialWeaponName != HarpoonWeapon.Design.name) {
+            AddWeapon(v,
+                0.4, HellfireWeapon.Design.name,
+                0.3, CutterWeapon.Design.name,
+                0.3, FlareWeapon.Design.name);
+        } else {
+            AddWeapon(v,
+                0.6, HellfireWeapon.Design.name,
+                0.4, FlareWeapon.Design.name);
+        }
 
-        SetShield(v,
-            0.4, IonCurtainShield.Design.name,
-            0.2, HeatScreenShield.Design.name);
+        if (QRandom.Float() < RankChance(v.rank, 0.5, 0.7, 0.9)) {
+            SetShield(v,
+                0.6, IonCurtainShield.Design.name,
+                0.4, HeatScreenShield.Design.name);
+        }
     }
 
     private static void InitZythInvader(Vessel v) {
@@ -719,7 +750,7 @@ public static class VesselFactory {
 
         AddWeapon(v,
             0.6, PulseLaserWeapon.Design.name,
-            0.4, StingerWeapon.Design.name);
+            0.4, FlareWeapon.Design.name);
 
         SetSpecialWeapon(v, 0.5, DisruptorWeapon.Design.name);
 

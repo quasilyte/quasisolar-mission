@@ -136,6 +136,7 @@ public class QuickBattleMenu : Node2D {
             "Krigia Talons",
             "Krigia Claws",
             "Krigia Fangs",
+            "Krigia Destroyer",
             "Krigia Tusks",
             "Krigia Horns",
             "Krigia Ashes",

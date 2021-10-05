@@ -1,0 +1,408 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://images/shipyard/item_slot.png" type="Texture" id=2]
+[ext_resource path="res://scenes/ui/ButtonNode.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/PopupNode.tscn" type="PackedScene" id=4]
+[ext_resource path="res://theme.tres" type="Theme" id=5]
+[ext_resource path="res://styles/text_box.tres" type="StyleBox" id=6]
+[ext_resource path="res://images/ui/back.png" type="Texture" id=7]
+[ext_resource path="res://images/bg/starbase_bg.png" type="Texture" id=8]
+[ext_resource path="res://scripts/screens/ShipyardScreen.cs" type="Script" id=9]
+[ext_resource path="res://scenes/ui/ItemSlotNode.tscn" type="PackedScene" id=10]
+[ext_resource path="res://images/ui/back_disabled.png" type="Texture" id=11]
+
+[node name="ShipyardScreen" type="Node2D"]
+script = ExtResource( 9 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Background" type="Sprite" parent="."]
+position = Vector2( 960, 540 )
+texture = ExtResource( 8 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="ActiveFleet" type="Panel" parent="."]
+margin_left = 80.0
+margin_top = 192.0
+margin_right = 528.0
+margin_bottom = 768.0
+theme = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="ActiveFleet"]
+margin_top = 16.0
+margin_right = 448.0
+margin_bottom = 48.0
+theme = ExtResource( 5 )
+text = "Active Fleet"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Vessel0" parent="ActiveFleet" instance=ExtResource( 10 )]
+margin_left = 16.0
+margin_top = 64.0
+margin_right = 128.0
+margin_bottom = 176.0
+presetItemKind = 4
+
+[node name="Name" type="Label" parent="ActiveFleet/Vessel0"]
+margin_left = 128.0
+margin_top = 32.0
+margin_right = 416.0
+margin_bottom = 80.0
+text = "Flagship"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Vessel1" parent="ActiveFleet" instance=ExtResource( 10 )]
+margin_left = 16.0
+margin_top = 192.0
+margin_right = 128.0
+margin_bottom = 304.0
+presetItemKind = 4
+presetIndex = 1
+
+[node name="Name" type="Label" parent="ActiveFleet/Vessel1"]
+margin_left = 128.0
+margin_top = 32.0
+margin_right = 416.0
+margin_bottom = 80.0
+text = "Companion"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Vessel2" parent="ActiveFleet" instance=ExtResource( 10 )]
+margin_left = 16.0
+margin_top = 320.0
+margin_right = 128.0
+margin_bottom = 432.0
+presetItemKind = 4
+presetIndex = 2
+
+[node name="Name" type="Label" parent="ActiveFleet/Vessel2"]
+margin_left = 128.0
+margin_top = 32.0
+margin_right = 416.0
+margin_bottom = 80.0
+text = "Companion"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Vessel3" parent="ActiveFleet" instance=ExtResource( 10 )]
+margin_left = 16.0
+margin_top = 448.0
+margin_right = 128.0
+margin_bottom = 560.0
+presetItemKind = 4
+presetIndex = 3
+
+[node name="Name" type="Label" parent="ActiveFleet/Vessel3"]
+margin_left = 128.0
+margin_top = 32.0
+margin_right = 416.0
+margin_bottom = 80.0
+text = "Companion"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ProductionQueue" type="Panel" parent="."]
+margin_left = 80.0
+margin_top = 784.0
+margin_right = 528.0
+margin_bottom = 976.0
+theme = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="ProductionQueue"]
+margin_top = 16.0
+margin_right = 448.0
+margin_bottom = 48.0
+theme = ExtResource( 5 )
+text = "Production Queue"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ProgressValue" type="Label" parent="ProductionQueue"]
+margin_left = 32.0
+margin_top = 144.0
+margin_right = 128.0
+margin_bottom = 176.0
+text = "100%"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Order0" type="Sprite" parent="ProductionQueue"]
+position = Vector2( 80, 96 )
+texture = ExtResource( 2 )
+hframes = 3
+frame = 1
+
+[node name="Order1" type="Sprite" parent="ProductionQueue"]
+position = Vector2( 208, 96 )
+texture = ExtResource( 2 )
+hframes = 3
+frame = 1
+
+[node name="Order2" type="Sprite" parent="ProductionQueue"]
+position = Vector2( 288, 96 )
+texture = ExtResource( 2 )
+hframes = 3
+frame = 1
+
+[node name="Order3" type="Sprite" parent="ProductionQueue"]
+position = Vector2( 368, 96 )
+texture = ExtResource( 2 )
+hframes = 3
+frame = 1
+
+[node name="Garrison" type="Panel" parent="."]
+margin_left = 544.0
+margin_top = 192.0
+margin_right = 1072.0
+margin_bottom = 744.0
+theme = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="Garrison"]
+margin_top = 16.0
+margin_right = 528.0
+margin_bottom = 48.0
+theme = ExtResource( 5 )
+text = "Garrison"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Garrison"]
+margin_left = 16.0
+margin_top = 64.0
+margin_right = 512.0
+margin_bottom = 536.0
+scroll_horizontal_enabled = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GridContainer" type="GridContainer" parent="Garrison/ScrollContainer"]
+custom_constants/vseparation = 8
+custom_constants/hseparation = 8
+columns = 4
+
+[node name="VesselProduction" type="Panel" parent="."]
+margin_left = 1088.0
+margin_top = 48.0
+margin_right = 1728.0
+margin_bottom = 432.0
+theme = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="VesselProduction"]
+margin_top = 16.0
+margin_right = 640.0
+margin_bottom = 48.0
+theme = ExtResource( 5 )
+text = "Vessel Production"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StartProduction" type="Button" parent="VesselProduction"]
+margin_left = 320.0
+margin_top = 304.0
+margin_right = 624.0
+margin_bottom = 368.0
+focus_mode = 0
+disabled = true
+text = "Start Production"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VesselProduction"]
+margin_left = 16.0
+margin_top = 48.0
+margin_right = 624.0
+margin_bottom = 280.0
+scroll_horizontal_enabled = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GridContainer" type="GridContainer" parent="VesselProduction/ScrollContainer"]
+custom_constants/vseparation = 8
+custom_constants/hseparation = 8
+columns = 5
+
+[node name="VesselInfo" type="Panel" parent="."]
+margin_left = 1088.0
+margin_top = 448.0
+margin_right = 1904.0
+margin_bottom = 1024.0
+theme = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="VesselInfo"]
+margin_top = 16.0
+margin_right = 816.0
+margin_bottom = 48.0
+theme = ExtResource( 5 )
+text = "Vessel Information"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="InfoBox" type="Panel" parent="VesselInfo"]
+margin_left = 16.0
+margin_top = 64.0
+margin_right = 800.0
+margin_bottom = 560.0
+custom_styles/panel = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Body" type="Label" parent="VesselInfo/InfoBox"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 768.0
+margin_bottom = 480.0
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Status" type="Panel" parent="."]
+margin_left = 16.0
+margin_top = 48.0
+margin_right = 528.0
+margin_bottom = 176.0
+theme = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CreditsValue" type="Label" parent="Status"]
+margin_left = 192.0
+margin_top = 48.0
+margin_right = 292.0
+margin_bottom = 80.0
+text = "999999"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Status/CreditsValue"]
+margin_left = -64.0
+margin_bottom = 32.0
+text = "RU"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ArkButton" parent="Status" instance=ExtResource( 3 )]
+margin_left = 304.0
+margin_top = 32.0
+margin_right = 496.0
+margin_bottom = 96.0
+text = "Ark Exodus"
+
+[node name="LeaveButton" type="TextureButton" parent="Status"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 112.0
+margin_bottom = 112.0
+texture_normal = ExtResource( 7 )
+texture_disabled = ExtResource( 11 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ExodusPopup" parent="." instance=ExtResource( 4 )]
+margin_right = 448.0
+margin_bottom = 336.0
+
+[node name="Label" type="Label" parent="ExodusPopup"]
+margin_top = 16.0
+margin_right = 448.0
+margin_bottom = 48.0
+text = "Turn base into an Ark?"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="ExodusPopup"]
+margin_left = 16.0
+margin_top = 48.0
+margin_right = 432.0
+margin_bottom = 272.0
+custom_styles/panel = ExtResource( 6 )
+
+[node name="Label" type="Label" parent="ExodusPopup/Panel"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 400.0
+margin_bottom = 208.0
+text = "The star base will be lost along with all resources and fleet in its garrison. In addition, the procedure requires 5000 credits.
+
+You'll get an Ark vessel to relocate the base."
+align = 1
+valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AcceptButton" parent="ExodusPopup" instance=ExtResource( 3 )]
+margin_left = 16.0
+margin_top = 288.0
+margin_right = 208.0
+margin_bottom = 320.0
+text = "Do it"
+
+[node name="CancelButton" parent="ExodusPopup" instance=ExtResource( 3 )]
+margin_left = 240.0
+margin_top = 288.0
+margin_right = 432.0
+margin_bottom = 320.0
+focus_mode = 2
+text = "Cancel"

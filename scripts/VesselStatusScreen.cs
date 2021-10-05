@@ -124,7 +124,7 @@ public class VesselStatusScreen : Node2D {
     }
 
     private void OnLeavePressed() {
-        GetTree().ChangeScene("res://scenes/StarBaseScreen.tscn");
+        GetTree().ChangeScene("res://scenes/screens/StarBaseScreen.tscn");
     }
 
     private void OnMemberSelected(int id) {

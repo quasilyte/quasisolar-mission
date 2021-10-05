@@ -5,7 +5,7 @@ public class ShockwaveCasterWeapon : IWeapon {
         name = "Shockwave Caster",
         level = 1,
         description = "TODO",
-        extraDescription = "On hit, causes the knockback effect",
+        special = "target knockback on hit",
         targeting = "any direction, projectiles",
         sellingPrice = 5000,
         cooldown = 0.9f,

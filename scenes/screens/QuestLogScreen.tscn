@@ -3,7 +3,7 @@
 [ext_resource path="res://images/bg/galaxy_map.png" type="Texture" id=1]
 [ext_resource path="res://scripts/screens/QuestLogScreen.cs" type="Script" id=2]
 [ext_resource path="res://theme.tres" type="Theme" id=3]
-[ext_resource path="res://scenes/ButtonNode.tscn" type="PackedScene" id=4]
+[ext_resource path="res://images/ui/back.png" type="Texture" id=4]
 [ext_resource path="res://styles/text_box.tres" type="StyleBox" id=6]
 
 [node name="QuestLogScreen" type="Node2D"]
@@ -20,21 +20,25 @@ __meta__ = {
 }
 
 [node name="Status" type="Panel" parent="."]
-margin_left = 384.0
+margin_left = 448.0
 margin_top = 160.0
 margin_right = 576.0
-margin_bottom = 226.0
+margin_bottom = 288.0
 theme = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="LeaveButton" parent="Status" instance=ExtResource( 4 )]
+[node name="TextureButton" type="TextureButton" parent="Status"]
 margin_left = 16.0
 margin_top = 16.0
-margin_right = 176.0
-margin_bottom = 48.0
-text = "Leave"
+margin_right = 112.0
+margin_bottom = 112.0
+focus_mode = 0
+texture_normal = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="ActiveQuests" type="Panel" parent="."]
 margin_left = 592.0

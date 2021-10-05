@@ -18,9 +18,9 @@ __meta__ = {
 }
 
 [node name="NewAdventureButton" type="Button" parent="."]
-margin_left = 192.0
-margin_top = 944.0
-margin_right = 448.0
+margin_left = 176.0
+margin_top = 928.0
+margin_right = 464.0
 margin_bottom = 1008.0
 rect_pivot_offset = Vector2( 98, 18.9512 )
 focus_mode = 0
@@ -31,9 +31,9 @@ __meta__ = {
 }
 
 [node name="LoadGameButton" type="Button" parent="."]
-margin_left = 512.0
-margin_top = 944.0
-margin_right = 768.0
+margin_left = 496.0
+margin_top = 928.0
+margin_right = 784.0
 margin_bottom = 1008.0
 rect_pivot_offset = Vector2( 98, 18.9512 )
 focus_mode = 0
@@ -44,9 +44,9 @@ __meta__ = {
 }
 
 [node name="QuickBattleButton" type="Button" parent="."]
-margin_left = 832.0
-margin_top = 944.0
-margin_right = 1088.0
+margin_left = 816.0
+margin_top = 928.0
+margin_right = 1104.0
 margin_bottom = 1008.0
 rect_pivot_offset = Vector2( 98, 18.9512 )
 focus_mode = 0
@@ -57,9 +57,9 @@ __meta__ = {
 }
 
 [node name="SettingsButton" type="Button" parent="."]
-margin_left = 1152.0
-margin_top = 944.0
-margin_right = 1408.0
+margin_left = 1136.0
+margin_top = 928.0
+margin_right = 1424.0
 margin_bottom = 1008.0
 rect_pivot_offset = Vector2( 98, 18.9512 )
 focus_mode = 0
@@ -70,9 +70,9 @@ __meta__ = {
 }
 
 [node name="ExitButton" type="Button" parent="."]
-margin_left = 1472.0
-margin_top = 944.0
-margin_right = 1728.0
+margin_left = 1456.0
+margin_top = 928.0
+margin_right = 1744.0
 margin_bottom = 1008.0
 rect_pivot_offset = Vector2( 98, 18.9512 )
 focus_mode = 0

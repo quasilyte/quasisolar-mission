@@ -7,7 +7,6 @@ public class TorpedoLauncherWeapon : IWeapon {
         description = "TODO",
         extraDescription = "Can't launch more than 1 torpedo at once",
         targeting = "forward-only, homing missles",
-        special = "torpedo can survive 1 hit from the point-defense",
         sellingPrice = 10000,
         cooldown = 5.0f,
         range = 2500,

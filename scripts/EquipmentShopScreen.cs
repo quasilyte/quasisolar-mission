@@ -21,17 +21,18 @@ public class EquipmentShopScreen : Node2D {
     private StarBase _starBase;
 
     private List<IItem> _shopSelection;
+    private List<ItemSlotNode> _shopSlots = new List<ItemSlotNode>();
+    private List<ItemSlotNode> _storageSlots = new List<ItemSlotNode>();
 
+    private ItemSlotNode _selectedItemSlot;
     private ItemSlotNode _sellItemSlot;
     private ItemSlotNode _sellItemFallbackSlot;
-    private DraggableItemNode _sellItemNode;
+
+    private Button _buySell;
 
     private OptionButton _shopCategorySelect;
 
     private Vessel _selectedVessel;
-
-    private List<Sprite> _equipmentSlots = new List<Sprite> { };
-    private Merchandise _selectedMerchandise = new Merchandise { };
 
     private static string[] _equipmentCategories = new string[]{
         "Weapon",
@@ -48,10 +49,11 @@ public class EquipmentShopScreen : Node2D {
         _starBase = RpgGameState.enteredBase;
 
         _shopSelection = RpgGameState.enteredBase.ShopSelection();
+        _buySell = GetNode<Button>("EquipmentShop/BuySell");
 
         SetupUI();
 
-        GetNode<Button>("Status/LeaveButton").Connect("pressed", this, nameof(OnLeavePressed));
+        GetNode<TextureButton>("Status/LeaveButton").Connect("pressed", this, nameof(OnLeavePressed));
         GetNode<Button>("Status/RefuelButton").Connect("pressed", this, nameof(OnRefuelButton));
         GetNode<Button>("Status/RepairAllButton").Connect("pressed", this, nameof(OnRepairAllButton));
         GetNode<Button>("Status/CargoButton").Connect("pressed", this, nameof(OnCargoButton));
@@ -85,7 +87,7 @@ public class EquipmentShopScreen : Node2D {
             }
             var panel = GetNode<Sprite>($"UnitMenu/Unit{i}");
             var button = new TextureButton();
-            button.RectSize = new Vector2(64, 64);
+            button.RectSize = new Vector2(112, 112);
             button.Expand = true;
             button.StretchMode = TextureButton.StretchModeEnum.KeepCentered;
             button.TextureNormal = u.Get().Design().Texture();
@@ -221,8 +223,8 @@ public class EquipmentShopScreen : Node2D {
         }
 
         var box = _dronesPopup.GetNode<Panel>("DroneSelectionBox");
-        var offsetX = 64;
-        var offsetY = 24;
+        var offsetX = 96;
+        var offsetY = 32;
         foreach (var drone in dronesForSale) {
             var droneLabel = new Label();
             droneLabel.Text = drone.name;
@@ -237,12 +239,12 @@ public class EquipmentShopScreen : Node2D {
 
             var buyButton = ButtonNode.New();
             buyButton.Text = "$";
-            buyButton.RectSize = new Vector2(32, 32);
-            buyButton.RectPosition = new Vector2(-48, 0);
+            buyButton.RectSize = new Vector2(64, 64);
+            buyButton.RectPosition = new Vector2(-80, -16);
             buyButton.Connect("pressed", this, nameof(OnDroneBuyPressed), new Godot.Collections.Array { drone.name });
             droneLabel.AddChild(buyButton);
 
-            offsetY += 48;
+            offsetY += 80;
         }
     }
 
@@ -302,122 +304,131 @@ public class EquipmentShopScreen : Node2D {
         var panel = GetNode<Panel>("UnitMenu");
 
         for (int i = 0; i < 2; i++) {
-            var weaponPanel = panel.GetNode<Sprite>($"Weapon{i}");
-            var weaponSlot = ItemSlotNode.New(i, ItemKind.Weapon);
-            weaponSlot.SetAssignItemCallback((int index, DraggableItemNode itemNode) => {
-                _selectedVessel.weapons[index] = itemNode != null ? ((WeaponDesign)itemNode.item).name : EmptyWeapon.Design.name;
-                return true;
+            var weaponSlot = panel.GetNode<ItemSlotNode>($"Weapon{i}");
+            weaponSlot.SetAssignItemCallback((int index, IItem item) => {
+                _selectedVessel.weapons[index] = item != null ? ((WeaponDesign)item).name : EmptyWeapon.Design.name;
             });
-            weaponSlot.Name = "Slot";
-            weaponPanel.AddChild(weaponSlot);
-            var args = new Godot.Collections.Array { i };
-            weaponSlot.GetNode<Area2D>("Area2D").Connect("mouse_entered", this, nameof(OnWeaponSlotHover), args);
+            weaponSlot.Connect("Clicked", this, nameof(OnItemClicked), new Godot.Collections.Array{weaponSlot});
         }
         {
-            var weaponPanel = panel.GetNode<Sprite>("SpecialWeapon");
-            var weaponSlot = ItemSlotNode.New(0, ItemKind.SpecialWeapon);
-            weaponSlot.SetAssignItemCallback((int index, DraggableItemNode itemNode) => {
-                _selectedVessel.specialWeaponName = itemNode != null ? ((WeaponDesign)itemNode.item).name : EmptyWeapon.Design.name;
-                return true;
+            var weaponSlot = panel.GetNode<ItemSlotNode>("SpecialWeapon");
+            weaponSlot.SetAssignItemCallback((int index, IItem item) => {
+                _selectedVessel.specialWeaponName = item != null ? ((WeaponDesign)item).name : EmptyWeapon.Design.name;
             });
-            weaponSlot.Name = "Slot";
-            weaponPanel.AddChild(weaponSlot);
+            weaponSlot.Connect("Clicked", this, nameof(OnItemClicked), new Godot.Collections.Array{weaponSlot});
         }
 
         {
-            var energySourcePanel = panel.GetNode<Sprite>("EnergySource");
-            var energySourceSlot = ItemSlotNode.New(0, ItemKind.EnergySource);
-            energySourceSlot.SetAssignItemCallback((int index, DraggableItemNode itemNode) => {
-                _selectedVessel.energySourceName = itemNode != null ? ((EnergySource)itemNode.item).name : "None";
-                return true;
+            var energySourceSlot = panel.GetNode<ItemSlotNode>("EnergySource");
+            energySourceSlot.SetAssignItemCallback((int index, IItem item) => {
+                _selectedVessel.energySourceName = item != null ? ((EnergySource)item).name : "None";
             });
-            energySourceSlot.Name = "Slot";
-            energySourcePanel.AddChild(energySourceSlot);
+            energySourceSlot.Connect("Clicked", this, nameof(OnItemClicked), new Godot.Collections.Array{energySourceSlot});
         }
 
         {
-            var shieldPanel = panel.GetNode<Sprite>("Shield");
-            var shieldSlot = ItemSlotNode.New(0, ItemKind.Shield);
-            shieldSlot.SetAssignItemCallback((int index, DraggableItemNode itemNode) => {
-                _selectedVessel.shieldName = itemNode != null ? ((ShieldDesign)itemNode.item).name : EmptyShield.Design.name;
-                return true;
+            var shieldSlot = panel.GetNode<ItemSlotNode>("Shield");
+            shieldSlot.SetAssignItemCallback((int index, IItem item) => {
+                _selectedVessel.shieldName = item != null ? ((ShieldDesign)item).name : EmptyShield.Design.name;
             });
-            shieldSlot.Name = "Slot";
-            shieldPanel.AddChild(shieldSlot);
+            shieldSlot.Connect("Clicked", this, nameof(OnItemClicked), new Godot.Collections.Array{shieldSlot});
         }
 
         {
-            var sentinelPanel = panel.GetNode<Sprite>("Sentinel");
-            var sentinelSlot = ItemSlotNode.New(0, ItemKind.Sentinel);
-            sentinelSlot.SetAssignItemCallback((int index, DraggableItemNode itemNode) => {
-                _selectedVessel.sentinelName = itemNode != null ? ((SentinelDesign)itemNode.item).name : "Empty";
-                return true;
+            var sentinelSlot = panel.GetNode<ItemSlotNode>("Sentinel");
+            sentinelSlot.SetAssignItemCallback((int index, IItem item) => {
+                _selectedVessel.sentinelName = item != null ? ((SentinelDesign)item).name : "Empty";
             });
-            sentinelSlot.Name = "Slot";
-            sentinelPanel.AddChild(sentinelSlot);
+            sentinelSlot.Connect("Clicked", this, nameof(OnItemClicked), new Godot.Collections.Array{sentinelSlot});
         }
 
         for (int i = 0; i < 5; i++) {
-            var artifactPanel = panel.GetNode<Sprite>($"Artifact{i}");
-            var artifactSlot = ItemSlotNode.New(i, ItemKind.Artifact);
-            artifactSlot.SetAssignItemCallback((int index, DraggableItemNode itemNode) => {
-                _selectedVessel.artifacts[index] = itemNode != null ? ((ArtifactDesign)itemNode.item).name : EmptyArtifact.Design.name;
-                return true;
+            var artifactSlot = panel.GetNode<ItemSlotNode>($"Artifact{i}");
+            artifactSlot.SetAssignItemCallback((int index, IItem item) => {
+                _selectedVessel.artifacts[index] = item != null ? ((ArtifactDesign)item).name : EmptyArtifact.Design.name;
             });
-            artifactSlot.Name = "Slot";
-            artifactPanel.AddChild(artifactSlot);
+            artifactSlot.Connect("Clicked", this, nameof(OnItemClicked), new Godot.Collections.Array{artifactSlot});
         }
 
-        const int numRows = 2;
-        const int numCols = 7;
-        for (int row = 0; row < numRows; row++) {
-            for (int col = 0; col < numCols; col++) {
-                var i = col + (row * numCols);
-                var storagePanel = GetNode<Sprite>($"Storage/Item{i}");
-                var itemSlot = ItemSlotNode.New(i, ItemKind.Storage);
-                itemSlot.SetAssignItemCallback((int index, DraggableItemNode itemNode) => {
-                    _gameState.PutItemToStorage(itemNode != null ? itemNode.item : null, index);
-                    return true;
-                });
-                itemSlot.Reset(null, true);
-                itemSlot.Name = "Slot";
-                storagePanel.AddChild(itemSlot);
+        var itemStorageGrid = GetNode<GridContainer>("Storage/ScrollContainer/GridContainer");
+        for (int i = 0; i < _gameState.ItemStorageCapacity(); i++) {
+            var itemSlot = ItemSlotNode.New(i, ItemKind.Storage);
+            itemStorageGrid.AddChild(itemSlot);
+            itemSlot.SetAssignItemCallback((int index, IItem item) => {
+                _gameState.PutItemToStorage(item, index);
+            });
+            itemSlot.Connect("Clicked", this, nameof(OnItemClicked), new Godot.Collections.Array{itemSlot});
+            itemSlot.Reset(null, true);
 
-                if (_gameState.storage[i] != null) {
-                    var itemNode = DraggableItemNode.New(itemSlot, _gameState.storage[i].ToItem(), false);
-                    itemSlot.ApplyItem(null, itemNode);
-                    GetTree().CurrentScene.AddChild(itemNode);
-                    itemNode.GlobalPosition = storagePanel.GlobalPosition;
-                }
+            if (_gameState.storage[i] != null) {
+                itemSlot.ApplyItem(_gameState.storage[i].ToItem());
+            }
+            _storageSlots.Add(itemSlot);
+        }
+
+        var itemShopGrid = GetNode<GridContainer>("EquipmentShop/ScrollContainer/GridContainer");
+        for (int i = 0; i < 30; i++) {
+            var itemSlot = ItemSlotNode.New(i, ItemKind.Shop);
+            itemShopGrid.AddChild(itemSlot);
+            itemSlot.Connect("Clicked", this, nameof(OnItemClicked), new Godot.Collections.Array{itemSlot});
+            itemSlot.Reset(null, true);
+            _shopSlots.Add(itemSlot);
+        }
+
+        _buySell.Connect("pressed", this, nameof(OnShopBuySellButton));
+    }
+
+    private void OnItemClicked(ItemSlotNode itemSlot) {
+        if (_selectedItemSlot == null && itemSlot.IsEmpty()) {
+            // Clicking an empty slot without another slot selected is a no-op.
+        } else if (_selectedItemSlot == itemSlot) {
+            // Clicked on the same item again.
+            itemSlot.MakeUnselected();
+            _selectedItemSlot = null;
+        } else if (_selectedItemSlot == null) {
+            // Nothing is selected, so any item slot click selects it.
+            itemSlot.MakeSelected();
+            _selectedItemSlot = itemSlot;
+        } else if (_selectedItemSlot != null && !itemSlot.IsEmpty()) {
+            // Pressing the other item while having an item selected selects a new item.
+            _selectedItemSlot.MakeUnselected();
+            itemSlot.MakeSelected();
+            _selectedItemSlot = itemSlot;
+        } else if (_selectedItemSlot != null && itemSlot.IsEmpty()) {
+            // Pressing an empty slot transfers an item to a new slot.
+            if (itemSlot.ApplyItem(_selectedItemSlot)) {
+                _selectedItemSlot.MakeUnselected();
+                _selectedItemSlot = null;
             }
         }
 
-        {
-            var sellPanel = GetNode<Sprite>("EquipmentShop/SellSlot");
-            _sellItemSlot = ItemSlotNode.New(0, ItemKind.Sell);
-            _sellItemSlot.Connect("ItemApplied", this, nameof(OnSellEquipmentItemDragged));
-            _sellItemSlot.Reset(null, true);
-            sellPanel.AddChild(_sellItemSlot);
+        if (_selectedItemSlot == null) {
+            _buySell.Disabled = true;
+        } else if (_selectedItemSlot.GetItemKind() == ItemKind.Shop) {
+            _buySell.Disabled = ItemInfo.SellingPrice(_selectedItemSlot.GetItem()) > _gameState.credits;
+            _buySell.Text = "Buy";
+        } else {
+            _buySell.Text = "Sell";
+            _buySell.Disabled = false;
         }
 
-        const int shopMumRows = 4;
-        const int shopNumCols = 8;
-        for (int i = 0; i < shopMumRows * shopNumCols; i++) {
-            _equipmentSlots.Add(GetNode<Sprite>($"EquipmentShop/Item{i}"));
+        var infoBox = GetNode<Label>("EquipmentInfo/InfoBox/Body");
+        if (_selectedItemSlot == null) {
+            infoBox.Text = "";
+        } else {
+            infoBox.Text = ItemInfo.RenderHelp(_selectedItemSlot.GetItem());
         }
-
-        GetNode<Button>("EquipmentShop/Buy").Connect("pressed", this, nameof(OnShopBuyButton));
     }
 
     private void SelectMember(int vesselIndex) {
         var panel = GetNode<Panel>("UnitMenu");
 
         for (int i = 0; i < _humanUnit.fleet.Count; i++) {
-            GetNode<Sprite>($"UnitMenu/Unit{i}").Frame = 1;
+            GetNode<Sprite>($"UnitMenu/Unit{i}").Frame = 0;
         }
 
         var unitPanel = GetNode<Sprite>($"UnitMenu/Unit{vesselIndex}");
-        unitPanel.Frame = 2;
+        unitPanel.Frame = 1;
 
         var u = _humanUnit.fleet[vesselIndex].Get();
         _selectedVessel = u;
@@ -427,83 +438,55 @@ public class EquipmentShopScreen : Node2D {
         panel.GetNode<TextureProgress>("HealthBar").Value = QMath.Percantage(u.hp, u.MaxHp());
 
         {
-            var energySourcePanel = panel.GetNode<Sprite>("EnergySource");
-            var energySourceSlot = energySourcePanel.GetNode<ItemSlotNode>("Slot");
+            var energySourceSlot = panel.GetNode<ItemSlotNode>("EnergySource");
             energySourceSlot.Reset(u, true);
             if (u.energySourceName != "None") {
-                var itemNode = DraggableItemNode.New(energySourceSlot, u.GetEnergySource(), u.isMercenary);
-                energySourceSlot.ApplyItem(null, itemNode);
-                GetTree().CurrentScene.AddChild(itemNode);
-                itemNode.GlobalPosition = energySourcePanel.GlobalPosition;
+                energySourceSlot.ApplyItem(u.GetEnergySource());
             }
         }
 
         {
-            var shieldPanel = panel.GetNode<Sprite>("Shield");
-            var shieldSlot = shieldPanel.GetNode<ItemSlotNode>("Slot");
-            shieldSlot.Reset(u, true);
+            var shieldSlot = panel.GetNode<ItemSlotNode>("Shield");
             var canUseShield = u.Design().maxShieldLevel != 0;
-            shieldPanel.Frame = canUseShield ? 1 : 0;
+            shieldSlot.Reset(u, canUseShield);
             if (canUseShield && u.Shield() != EmptyShield.Design) {
-                var itemNode = DraggableItemNode.New(shieldSlot, u.Shield(), u.isMercenary);
-                shieldSlot.ApplyItem(null, itemNode);
-                GetTree().CurrentScene.AddChild(itemNode);
-                itemNode.GlobalPosition = shieldPanel.GlobalPosition;
+                shieldSlot.ApplyItem(u.Shield());
             }
         }
 
         {
-            var sentinelPanel = panel.GetNode<Sprite>("Sentinel");
-            var sentinelSlot = sentinelPanel.GetNode<ItemSlotNode>("Slot");
-            sentinelPanel.Frame = u.Design().sentinelSlot ? 1 : 0;
+            var sentinelSlot = panel.GetNode<ItemSlotNode>("Sentinel");
             sentinelSlot.Reset(u, u.Design().sentinelSlot);
             if (u.Design().sentinelSlot && u.sentinelName != "Empty") {
-                var itemNode = DraggableItemNode.New(sentinelSlot, u.Sentinel(), u.isMercenary);
-                sentinelSlot.ApplyItem(null, itemNode);
-                GetTree().CurrentScene.AddChild(itemNode);
-                itemNode.GlobalPosition = sentinelPanel.GlobalPosition;
+                sentinelSlot.ApplyItem(u.Sentinel());
             }
         }
 
         {
-            var specialWeaponPanel = panel.GetNode<Sprite>("SpecialWeapon");
-            var specialWeaponSlot = specialWeaponPanel.GetNode<ItemSlotNode>("Slot");
-            specialWeaponPanel.Frame = u.Design().specialSlot ? 1 : 0;
+            var specialWeaponSlot = panel.GetNode<ItemSlotNode>("SpecialWeapon");
             specialWeaponSlot.Reset(u, u.Design().specialSlot);
             if (u.Design().specialSlot && u.SpecialWeapon() != EmptyWeapon.Design) {
-                var itemNode = DraggableItemNode.New(specialWeaponSlot, u.SpecialWeapon(), u.isMercenary);
-                specialWeaponSlot.ApplyItem(null, itemNode);
-                GetTree().CurrentScene.AddChild(itemNode);
-                itemNode.GlobalPosition = specialWeaponPanel.GlobalPosition;
+                specialWeaponSlot.ApplyItem(u.SpecialWeapon());
             }
         }
 
         for (int j = 0; j < u.weapons.Count; j++) {
             bool slotAvailable = j < u.Design().weaponSlots;
-            var weaponPanel = panel.GetNode<Sprite>($"Weapon{j}");
-            var weaponSlot = weaponPanel.GetNode<ItemSlotNode>("Slot");
+            var weaponSlot = panel.GetNode<ItemSlotNode>($"Weapon{j}");
             var w = u.weapons[j];
-            weaponPanel.Frame = slotAvailable ? 1 : 0;
             weaponSlot.Reset(u, slotAvailable);
             if (!slotAvailable) {
                 continue;
             }
-            if (w == EmptyWeapon.Design.name) {
-                continue;
+            if (w != EmptyWeapon.Design.name) {
+                weaponSlot.ApplyItem(WeaponDesign.Find(w));
             }
-
-            var itemNode = DraggableItemNode.New(weaponSlot, WeaponDesign.Find(w), u.isMercenary);
-            weaponSlot.ApplyItem(null, itemNode);
-            GetTree().CurrentScene.AddChild(itemNode);
-            itemNode.GlobalPosition = weaponPanel.GlobalPosition;
         }
 
         for (int j = 0; j < u.artifacts.Count; j++) {
             bool slotAvailable = j < u.Design().artifactSlots;
-            var artifactPanel = panel.GetNode<Sprite>($"Artifact{j}");
-            var artifactSlot = artifactPanel.GetNode<ItemSlotNode>("Slot");
+            var artifactSlot = panel.GetNode<ItemSlotNode>($"Artifact{j}");
             var art = u.artifacts[j];
-            artifactPanel.Frame = slotAvailable ? 1 : 0;
             artifactSlot.Reset(u, slotAvailable);
 
             if (!slotAvailable) {
@@ -513,26 +496,13 @@ public class EquipmentShopScreen : Node2D {
                 continue;
             }
 
-            var itemNode = DraggableItemNode.New(artifactSlot, ArtifactDesign.Find(art), u.isMercenary);
-            artifactSlot.ApplyItem(null, itemNode);
-            GetTree().CurrentScene.AddChild(itemNode);
-            itemNode.GlobalPosition = artifactPanel.GlobalPosition;
+            artifactSlot.ApplyItem(ArtifactDesign.Find(art));
         }
     }
 
     private void SelectShopCategory(string category) {
-        foreach (var slot in _equipmentSlots) {
-            if (slot.HasNode("Merchandise")) {
-                // Used Free() instead of QueueFree() here on purpose.
-                // We're adding a new node with the same name below,
-                // so we need it removed right now.
-                slot.GetNode<MerchandiseItemNode>("Merchandise").Free();
-            }
-        }
-        if (_selectedMerchandise.sprite != null) {
-            _selectedMerchandise.sprite.Frame = 1;
-            _selectedMerchandise.sprite = null;
-            _selectedMerchandise.item = null;
+        foreach (var slot in _shopSlots) {
+            slot.Reset(null, true);
         }
 
         int i = 0;
@@ -542,54 +512,62 @@ public class EquipmentShopScreen : Node2D {
             if (item.GetItemKind().ToString() != category) {
                 continue;
             }
-            var shopPanel = _equipmentSlots[i];
-            var itemNode = MerchandiseItemNode.New(item);
-            var args = new Godot.Collections.Array { i, itemIndex };
-            itemNode.Connect("Clicked", this, nameof(OnMerchandiseClicked), args);
-            itemNode.Name = "Merchandise";
-            shopPanel.AddChild(itemNode);
-            itemNode.GlobalPosition = shopPanel.GlobalPosition;
+            var itemNode = _shopSlots[i];
+            itemNode.AssignItem(item);
             i++;
         }
     }
 
-    private void OnMerchandiseClicked(int merchIndex, int itemIndex) {
-        if (_selectedMerchandise.sprite != null) {
-            _selectedMerchandise.sprite.Frame = 1;
+    private ItemSlotNode SelectedShopSlot() {
+        foreach (var slot in _shopSlots) {
+            if (slot.IsEmpty()) {
+                break;
+            }
+            if (slot.IsSelected()) {
+                return slot;
+            }
         }
-        var item = _shopSelection[itemIndex];
-        _selectedMerchandise.sprite = _equipmentSlots[merchIndex];
-        _selectedMerchandise.item = item;
-        _selectedMerchandise.sprite.Frame = 2;
-
-        GetNode<Label>("EquipmentInfo/InfoBoxMerchandise/Body").Text = ItemInfo.RenderHelp(item);
-
-        UpdateUI();
+        return null;
     }
 
-    private void OnShopBuyButton() {
-        var item = _selectedMerchandise.item;
+    private void OnItemBuy() {
+        var item = _selectedItemSlot.GetItem();
         var price = ItemInfo.BuyingPrice(item);
         if (price > _gameState.credits) {
             return;
         }
         _gameState.credits -= price;
         PlayMoneySound();
-        for (int i = 0; i < _gameState.storage.Length; i++) {
-            if (_gameState.storage[i] == null) {
-                _gameState.PutItemToStorage(item, i);
 
-                var storagePanel = GetNode<Sprite>($"Storage/Item{i}");
-                var itemSlot = storagePanel.GetNode<ItemSlotNode>("Slot");
-                itemSlot.Reset(null, true);
-                var itemNode = DraggableItemNode.New(itemSlot, _gameState.storage[i].ToItem(), false);
-                itemSlot.ApplyItem(null, itemNode);
-                GetTree().CurrentScene.AddChild(itemNode);
-                itemNode.GlobalPosition = storagePanel.GlobalPosition;
-                break;
-            }
-        }
+        var i = _gameState.StorageFreeSlot();
+        _gameState.PutItemToStorage(item, i);
+        _storageSlots[i].ApplyItem(item);
+    
+        _buySell.Disabled = ItemInfo.SellingPrice(_selectedItemSlot.GetItem()) > _gameState.credits;
+
         UpdateUI();
+    }
+
+    private void OnItemSell() {
+        var item = _selectedItemSlot.GetItem();
+        var itemName = ItemInfo.Name(item);
+        _sellEquipmentPopup.GetNode<Label>("Title").Text = "Sell " + itemName + "?";
+        var sellingPrice = ItemInfo.SellingPrice(item) / 2;
+        _sellEquipmentPopup.GetNode<Label>("SellingPrice").Text = $"{sellingPrice} RU";
+        
+        _lockControls = true;
+        _sellEquipmentPopup.PopupCentered();
+    }
+
+    private void OnShopBuySellButton() {
+        if (_selectedItemSlot == null) {
+            return;
+        }
+        if (_buySell.Text == "Sell") {
+            OnItemSell();
+        } else {
+            OnItemBuy();
+        }
     }
 
     private void OnShopCategorySelected(int id) {
@@ -602,13 +580,7 @@ public class EquipmentShopScreen : Node2D {
         UpdateUI();
     }
 
-    private void OnWeaponSlotHover(int weaponIndex) {
-        GetNode<Label>("EquipmentInfo/InfoBoxOwn/Body").Text = WeaponDesign.Find(_selectedVessel.weapons[weaponIndex]).RenderHelp();
-    }
-
     private void UpdateUI() {
-        // _dronesPopup.GetNode<Label>("ControlLimitValue").Text = _gameState.dronesOwned + "/" + RpgGameState.MaxDrones();
-
         var numDrones = _gameState.explorationDrones.Count;
         var maxDrones = RpgGameState.MaxExplorationDrones();
         _dronesPopup.GetNode<Label>("FleetDronesTitle").Text = $"Fleet Drones ({numDrones}/{maxDrones})";
@@ -632,27 +604,6 @@ public class EquipmentShopScreen : Node2D {
         GetNode<Button>("UnitMenu/RepairButton").Disabled = _selectedVessel.hp == _selectedVessel.MaxHp();
 
         GetNode<Button>("Status/RefuelButton").Disabled = _gameState.fuel == RpgGameState.MaxFuel();
-
-        GetNode<Button>("EquipmentShop/Buy").Disabled = _selectedMerchandise.sprite == null ||
-            ItemInfo.BuyingPrice(_selectedMerchandise.item) > _gameState.credits;
-    }
-
-    private void OnSellEquipmentItemDragged(ItemSlotNode fromSlot, DraggableItemNode dragged) {
-        if (_lockControls) {
-            fromSlot.ApplyItem(_sellItemSlot, dragged);
-            return;
-        }
-
-        _sellItemFallbackSlot = fromSlot;
-        _sellItemNode = dragged;
-
-        var itemName = ItemInfo.Name(dragged.item);
-        _sellEquipmentPopup.GetNode<Label>("Title").Text = "Sell " + itemName + "?";
-        var sellingPrice = ItemInfo.SellingPrice(dragged.item) / 2;
-        _sellEquipmentPopup.GetNode<Label>("SellingPrice").Text = $"{sellingPrice} cr";
-        
-        _lockControls = true;
-        _sellEquipmentPopup.PopupCentered();
     }
 
     private void PlayMoneySound() {
@@ -660,22 +611,21 @@ public class EquipmentShopScreen : Node2D {
     }
 
     private void OnSellEquipmentConfirmButton() {
-        _sellItemNode.QueueFree();
-        _sellItemSlot.MakeEmpty();
-
-        var sellingPrice = ItemInfo.SellingPrice(_sellItemNode.item) / 2;
+        var item = _selectedItemSlot.GetItem();
+        var sellingPrice = ItemInfo.SellingPrice(item) / 2;
         _gameState.credits += sellingPrice;
         UpdateUI();
 
         PlayMoneySound();
+
+        _selectedItemSlot.MakeUnselected();
+        _selectedItemSlot.MakeEmpty();
 
         _sellEquipmentPopup.Hide();
         _lockControls = false;
     }
 
     private void OnSellEquipmentCancelButton() {
-        _sellItemFallbackSlot.ApplyItem(_sellItemSlot, _sellItemNode);
-
         _sellEquipmentPopup.Hide();
         _lockControls = false;
     }
@@ -832,6 +782,6 @@ public class EquipmentShopScreen : Node2D {
     }
 
     private void OnLeavePressed() {
-        GetTree().ChangeScene("res://scenes/StarBaseScreen.tscn");
+        GetTree().ChangeScene("res://scenes/screens/StarBaseScreen.tscn");
     }
 }

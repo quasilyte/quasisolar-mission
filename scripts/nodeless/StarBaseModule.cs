@@ -27,7 +27,7 @@ public class StarBaseModule {
     public static StarBaseModule[] list = new StarBaseModule[]{
         new StarBaseModule{
             name = "Debris Rectifier",
-            effect = "30% more RU when selling debris at this base",
+            effect = "35% more RU when selling debris at this base",
             sellingPrice = 1500,
             buildTime = 60,
         },
@@ -37,7 +37,7 @@ public class StarBaseModule {
         new StarBaseModule{
             name = "Gauss Turret",
             sellingPrice = 1500,
-            effect = "shoots the attackers during the star base defense battles",
+            effect = "assists in battles inside this system",
             buildTime = 20,
             isTurret = true,
         },
@@ -45,7 +45,7 @@ public class StarBaseModule {
         new StarBaseModule{
             name = "Missile Turret",
             sellingPrice = 7000,
-            effect = "shoots the attackers during the star base defense battles",
+            effect = "assists in battles inside this system",
             buildTime = 100,
             researchRequired = true,
             isTurret = true,
@@ -55,14 +55,14 @@ public class StarBaseModule {
 
         new StarBaseModule{
             name = "Production Module",
-            effect = "producing vessels is 15% cheaper at this base",
+            effect = "producing vessels is 20% cheaper at this base",
             sellingPrice = 3500,
             buildTime = 90,
         },
 
         new StarBaseModule{
             name = "Refuel Module",
-            effect = "buy fuel at the cost of 1 RU instead of 5 at this base",
+            effect = "fuel cost is decreased from 5 to 1 RU",
             sellingPrice = 2000,
             buildTime = 70,
         },
@@ -71,21 +71,21 @@ public class StarBaseModule {
 
         new StarBaseModule{
             name = "Minerals Collector",
-            effect = "collect mineral resources from explored planets",
+            effect = "collect minerals from explored planets",
             sellingPrice = 2000,
             buildTime = 30,
         },
 
         new StarBaseModule{
             name = "Organic Collector",
-            effect = "collect organic resources from explored planets",
+            effect = "collect organic from explored planets",
             sellingPrice = 2500,
             buildTime = 30,
         },
 
         new StarBaseModule{
             name = "Power Collector",
-            effect = "collect power resources from explored planets",
+            effect = "collect power from explored planets",
             sellingPrice = 5000,
             buildTime = 30,
         },

@@ -5,6 +5,7 @@ public class AfterburnerWeapon : IWeapon {
         name = "Afterburner",
         level = 2,
         description = "TODO",
+        special = "speed boost when activated",
         targeting = "n/a",
         sellingPrice = 5000,
         cooldown = 0.7f,

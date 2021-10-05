@@ -69,15 +69,6 @@ public class ExplorationDrone {
         },
 
         new ExplorationDrone{
-            name = "Stingray",
-            sellingPrice = 2500,
-            maxTemp = 260,
-            explorationRate = 15,
-            needsResearch = true,
-            description = "The fastest exploration drone you can find.",
-        },
-
-        new ExplorationDrone{
             name = "Ifrit",
             sellingPrice = 3000,
             maxTemp = 500,

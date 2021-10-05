@@ -98,7 +98,7 @@ public class StarBase: AbstractPoolValue {
     }
 
     public int VesselProductionPrice(VesselDesign design) {
-        return modules.Contains("Production Module") ? QMath.IntAdjust(design.sellingPrice, 0.85) : design.sellingPrice;
+        return modules.Contains("Production Module") ? QMath.IntAdjust(design.sellingPrice, 0.80) : design.sellingPrice;
     }
 
     public int FuelPrice() {
@@ -115,7 +115,7 @@ public class StarBase: AbstractPoolValue {
 
     public PriceInfo DebrisSellPrice() {
         if (modules.Contains("Debris Rectifier")) {
-            return new PriceInfo{value = 23, multiplier = 1};
+            return new PriceInfo{value = 24, multiplier = 1};
         }
         return new PriceInfo{value = 18, multiplier = 1};
     }

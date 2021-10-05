@@ -4,7 +4,7 @@ public class LaserAbsorberArtifact : IArtifact {
     public static ArtifactDesign Design = new ArtifactDesign{
         name = "Laser Absorber",
         description = "TODO",
-        effect2 = "15% chance to block incoming electromagnetic damage",
+        effect = "15% chance to block incoming electromagnetic damage",
         sellingPrice = 7000,
     };
 
