@@ -34,7 +34,6 @@ public class MapView : Node2D, IMapViewContext {
     private Popup _fleetAttackPopup;
     private PlanetsMenuPopupNode _planetsPopup;
     private PopupNode _starSystemMenu;
-    private PopupNode _battleResult;
     private PopupNode _researchCompletedPopup;
     private PopupNode _patrolReachesBasePopup;
     private MapViewCheatMenuPopup _cheatsPopup;
@@ -162,9 +161,6 @@ public class MapView : Node2D, IMapViewContext {
         _draklidsEventPopup = GetNode<PopupNode>("UI/DraklidsPopup");
         _draklidsEventPopup.GetNode<ButtonNode>("FightButton").Connect("pressed", this, nameof(OnFightEventUnit));
         _draklidsEventPopup.GetNode<ButtonNode>("LeaveButton").Connect("pressed", this, nameof(OnDraklidsLeaveButton));
-
-        _battleResult = GetNode<PopupNode>("UI/BattleResultPopup");
-        _battleResult.GetNode<ButtonNode>("Done").Connect("pressed", this, nameof(OnBattleResultsDone));
 
         _cheatsPopup = GetNode<MapViewCheatMenuPopup>("UI/CheatMenuPopup");
         _cheatsPopup.Connect("CommandExecuted", this, nameof(OnCheatCommandExecuted));
@@ -345,109 +341,13 @@ public class MapView : Node2D, IMapViewContext {
     private void ShowBattleResults() {
         _lockControls = true;
 
-        var listNode = _battleResult.GetNode<VBoxContainer>("List");
-        var doneButton = _battleResult.GetNode<ButtonNode>("Done");
-
-        var lines = new List<string>();
-
-        var result = RpgGameState.lastBattleResult;
-
-        var description = _battleResult.GetNode<Label>("Description");
-        if (result.popupText != "") {
-            description.Text = result.popupText;
-        } else {
-            description.Text = "The enemy is defeated, your fleet can now collect the spoils of war.";
-        }
-
-        if (result.exp != 0) {
-            _gameState.experience += result.exp;
-            lines.Add($"+{result.exp} experience");
-        }
-        if (result.fuel != 0) {
-            RpgGameState.AddFuel(result.fuel);
-            lines.Add($"+{result.fuel} fuel units");
-        }
-
-        if (result.ru != 0) {
-            _gameState.credits += result.ru;
-            lines.Add($"+{result.ru} RU");
-        }
-
-        if (result.debris.other != 0) {
-            _humanUnit.CargoAddDebris(result.debris.other, Faction.Neutral);
-            lines.Add($"+{result.debris.other} debris");
-        }
-        if (result.debris.krigia != 0) {
-            _humanUnit.CargoAddDebris(result.debris.krigia, Faction.Krigia);
-            lines.Add($"+{result.debris.krigia} Krigia debris");
-        }
-        if (result.debris.wertu != 0) {
-            _humanUnit.CargoAddDebris(result.debris.wertu, Faction.Wertu);
-            lines.Add($"+{result.debris.wertu} Wertu debris");
-        }
-        if (result.debris.zyth != 0) {
-            _humanUnit.CargoAddDebris(result.debris.zyth, Faction.Zyth);
-            lines.Add($"+{result.debris.zyth} Zyth debris");
-        }
-        if (result.debris.phaa != 0) {
-            _humanUnit.CargoAddDebris(result.debris.phaa, Faction.Phaa);
-            lines.Add($"+{result.debris.phaa} Phaa debris");
-        }
-        if (result.debris.draklid != 0) {
-            _humanUnit.CargoAddDebris(result.debris.draklid, Faction.Draklid);
-            lines.Add($"+{result.debris.draklid} Draklid debris");
-        }
-        if (result.debris.vespion != 0) {
-            _humanUnit.CargoAddDebris(result.debris.phaa, Faction.Vespion);
-            lines.Add($"+{result.debris.vespion} Vespion debris");
-        }
-        if (result.debris.rarilou != 0) {
-            _humanUnit.CargoAddDebris(result.debris.rarilou, Faction.Rarilou);
-            lines.Add($"+{result.debris.rarilou} Rarilou debris");
-        }
-
-        if (result.power != 0) {
-            _humanUnit.CargoAddPower(result.power);
-            lines.Add($"+{result.power} power resource");
-        }
-        if (result.organic != 0) {
-            _humanUnit.CargoAddOrganic(result.organic);
-            lines.Add($"+{result.organic} organic resource");
-        }
-        if (result.minerals != 0) {
-            _humanUnit.CargoAddMinerals(result.minerals);
-            lines.Add($"+{result.minerals} mineral resouce");
-        }
-
-        if (!string.IsNullOrEmpty(result.technology)) {
-            _gameState.technologiesResearched.Add(result.technology);
-            lines.Add($"{result.technology} unlocked");
-        }
-        if (!string.IsNullOrEmpty(result.research)) {
-            _gameState.technologiesResearched.Add(result.research + " Lock");
-            lines.Add($"{result.research} research project");
-        }
-
-        var offsetY = 36 * (lines.Count - 1);
-        _battleResult.RectSize += new Vector2(0, offsetY);
-        listNode.RectSize += new Vector2(0, offsetY); ;
-        doneButton.RectPosition += new Vector2(0, offsetY);
-
-        foreach (var l in lines) {
-            var label = new Label();
-            label.Text = l;
-            label.Align = Label.AlignEnum.Center;
-            label.Valign = Label.VAlign.Center;
-            label.RectMinSize = new Vector2(0, 32);
-            listNode.AddChild(label);
-        }
-
-        _battleResult.PopupCentered();
-    }
-
-    private void OnBattleResultsDone() {
-        _lockControls = false;
-        _battleResult.Hide();
+        var popupBuilder = new BattleResultPopup();
+        popupBuilder.SetOnResolved(() => { _lockControls = false; });
+        popupBuilder.SetBattleResult(RpgGameState.lastBattleResult);
+        
+        var popup = popupBuilder.Build();
+        GetNode<CanvasLayer>("UI").AddChild(popup);
+        popup.PopupCentered();
     }
 
     private void OpenCheats() {
@@ -501,9 +401,7 @@ public class MapView : Node2D, IMapViewContext {
         GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/interface/random_event.wav"));
 
         var popupBuilder = new RandomMapEventPopupBuilder();
-        popupBuilder.SetOnResolved(() => {
-            _lockControls = false;
-        });
+        popupBuilder.SetOnResolved(() => { _lockControls = false; });
         popupBuilder.SetMapEvent(_randomEventProto.Create(ctx));
         popupBuilder.SetMapViewContext(this);
         popupBuilder.SetMapEventContext(ctx);
@@ -533,9 +431,9 @@ public class MapView : Node2D, IMapViewContext {
     }
 
     private void ReorderUnitMembers() {
-        var offsetY = 80;
+        var offsetY = 128;
         for (int i = 0; i < _unitMembers.Count; i++) {
-            _unitMembers[i].Position = new Vector2(64, (offsetY * i) + 24);
+            _unitMembers[i].Position = new Vector2(16, (offsetY * i) + 8);
         }
     }
 

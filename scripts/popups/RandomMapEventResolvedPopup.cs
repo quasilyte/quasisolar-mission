@@ -32,7 +32,6 @@ public class RandomMapEventResolvedPopup: AbstractMapPopupBuilder {
             },
         };
 
-
         return MapEventPopupNode.New(title, text, options);
     }
 }
