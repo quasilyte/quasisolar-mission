@@ -413,7 +413,7 @@ public class Arena : Node2D {
         unit.fleet = new List<Vessel.Ref>{unit.fleet[0]};
         unit.fleet[0].Get().hp = 0;
         unit.fleet[0].Get().energy = 0;
-        ChangeSceneAfterDelay("MapView");
+        ChangeSceneAfterDelay("screens/MapView");
     }
 
     private void CheckStatus() {
@@ -500,7 +500,7 @@ public class Arena : Node2D {
                 return;
             }
             RpgGameState.transition = RpgGameState.MapTransition.BaseAttackSimulation;
-            ChangeSceneAfterDelay("MapView");
+            ChangeSceneAfterDelay("screens/MapView");
             return;
         }
 
@@ -534,7 +534,7 @@ public class Arena : Node2D {
             RpgGameState.lastBattleResult = result;
         }
 
-        ChangeSceneAfterDelay("MapView");
+        ChangeSceneAfterDelay("screens/MapView");
     }
 
     private void CollectVesselDebris(Vessel vessel, Pilot p, BattleResult result) {

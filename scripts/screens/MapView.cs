@@ -3,12 +3,12 @@ using System;
 using System.Collections.Generic;
 using CheatCommandKind = MapViewCheatMenuPopup.CommandKind;
 
-public class MapView : Node2D {
+public class MapView : Node2D, IMapViewContext {
     const float MAP_WIDTH = (1080 * 3) + 220;
 
     private AbstractMapEvent _randomEventProto;
-    private AbstractMapEvent _randomEventInstance;
-    private RandomEventContext _randomEventContext;
+    // private AbstractMapEvent _randomEventInstance;
+    // private RandomEventContext _randomEventContext;
 
     private GameMenuNode _menuNode;
 
@@ -35,15 +35,13 @@ public class MapView : Node2D {
     private Popup _miningPopup;
     private PlanetsMenuPopupNode _planetsPopup;
     private PopupNode _starSystemMenu;
-    private PopupNode _randomEventPopup;
-    private PopupNode _randomEventResolvedPopup;
     private PopupNode _battleResult;
     private PopupNode _researchCompletedPopup;
     private PopupNode _patrolReachesBasePopup;
     private MapViewCheatMenuPopup _cheatsPopup;
 
-    private AbstractMapEvent.EffectKind _randomEventResolutionPostEffect;
-    private Action _randomEventResolutionAction;
+    // private AbstractMapEvent.EffectKind _randomEventResolutionPostEffect;
+    // private Action _randomEventResolutionAction;
 
     private SpaceUnitNode _eventUnit;
     private PopupNode _starBaseAttackPopup;
@@ -56,6 +54,23 @@ public class MapView : Node2D {
     private List<UnitMemberNode> _unitMembers = new List<UnitMemberNode>();
 
     private TextureButton _modeToggled;
+
+
+    public void AddPlayerUnitMember(Vessel v) {
+        DoAddUnitMember(v);
+        ReorderUnitMembers();
+    }
+
+    public void UpdateUI() { DoUpdateUI(); }
+    public void AddUIChild(Node n) { GetNode<CanvasLayer>("UI").AddChild(n); }
+    public void RemovePlayerUnitMember(int index) { DoRemovePlayerVessel(index); }
+
+    public void EnterSystem(StarSystem sys) {
+        _humanUnit.pos = sys.pos;
+        _human.GlobalPosition = _humanUnit.pos;
+        _human.node.GlobalPosition = _humanUnit.pos;
+        EnterSystem(sys);
+    }
 
     private void SwitchButtonTextures(TextureButton b) {
         var tmp = b.TextureNormal;
@@ -158,15 +173,6 @@ public class MapView : Node2D {
         _cheatsPopup = GetNode<MapViewCheatMenuPopup>("UI/CheatMenuPopup");
         _cheatsPopup.Connect("CommandExecuted", this, nameof(OnCheatCommandExecuted));
         _cheatsPopup.GetNode<ButtonNode>("Done").Connect("pressed", this, nameof(OnCheatsDone));
-
-        _randomEventPopup = GetNode<PopupNode>("UI/RandomEventPopup");
-        _randomEventPopup.GetNode<ButtonNode>("Action1").Connect("pressed", this, nameof(OnRandomEventAction), new Godot.Collections.Array { 0 });
-        _randomEventPopup.GetNode<ButtonNode>("Action2").Connect("pressed", this, nameof(OnRandomEventAction), new Godot.Collections.Array { 1 });
-        _randomEventPopup.GetNode<ButtonNode>("Action3").Connect("pressed", this, nameof(OnRandomEventAction), new Godot.Collections.Array { 2 });
-        _randomEventPopup.GetNode<ButtonNode>("Action4").Connect("pressed", this, nameof(OnRandomEventAction), new Godot.Collections.Array { 3 });
-
-        _randomEventResolvedPopup = GetNode<PopupNode>("UI/RandomEventResolvedPopup");
-        _randomEventResolvedPopup.GetNode<ButtonNode>("Done").Connect("pressed", this, nameof(OnRandomEventResolvedDone));
 
         _starSystemMenu = GetNode<PopupNode>("UI/StarSystemMenuPopup");
         _starSystemMenu.GetNode<ButtonNode>("Done").Connect("pressed", this, nameof(OnStarSystemMenuDone));
@@ -498,249 +504,82 @@ public class MapView : Node2D {
 
         GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/interface/random_event.wav"));
 
-        _randomEventInstance = _randomEventProto.Create(ctx);
-
-        _randomEventPopup.GetNode<Label>("Title").Text = _randomEventInstance.title;
-        _randomEventContext = ctx;
-
-        var text = _randomEventInstance.text;
-        // var extraText = _randomEvent.extraText(_randomEventContext);
-        // if (!extraText.Empty()) {
-        //     text += "\n\n" + extraText;
-        // }
-        _randomEventPopup.GetNode<Label>("Text").Text = text;
-
-        for (int i = 0; i < 4; i++) {
-            var button = _randomEventPopup.GetNode<ButtonNode>($"Action{i + 1}");
-            if (_randomEventInstance.actions.Count > i) {
-                var a = _randomEventInstance.actions[i];
-                button.Disabled = !a.condition();
-                button.Visible = true;
-
-                var buttonText = a.name;
-                var hint = a.hint();
-                if (hint != "") {
-                    buttonText += " " + hint;
-                }
-                button.Text = buttonText;
-            } else {
-                button.Disabled = true;
-                button.Visible = false;
-            }
-        }
+        var popupBuilder = new RandomMapEventPopupBuilder();
+        popupBuilder.SetOnResolved(() => {
+            _lockControls = false;
+        });
+        popupBuilder.SetMapEvent(_randomEventProto.Create(ctx));
+        popupBuilder.SetMapViewContext(this);
+        popupBuilder.SetMapEventContext(ctx);
 
         _lockControls = true;
-        _randomEventPopup.PopupCentered();
+        var popup = popupBuilder.Build();
+        GetNode<CanvasLayer>("UI").AddChild(popup);
+        popup.PopupCentered();
     }
 
-    private void OnRandomEventResolvedDone() {
-        _lockControls = false;
-        _randomEventResolvedPopup.Hide();
+    // private void OnRandomEventResolvedDone() {
+    //     _lockControls = false;
+    //     _randomEventResolvedPopup.Hide();
 
-        RunEventResolutionPostEffect();
-    }
+    //     RunEventResolutionPostEffect();
+    // }
 
-    private void RunEventResolutionPostEffect() {
-        switch (_randomEventResolutionPostEffect) {
-            case AbstractMapEvent.EffectKind.EnterArena:
-                _randomEventResolutionAction();
-                GetTree().ChangeScene("res://scenes/ArenaScreen.tscn");
-                return;
-            case AbstractMapEvent.EffectKind.EnterTextQuest:
-                GetTree().ChangeScene("res://scenes/TextQuestScreen.tscn");
-                return;
-        }
-    }
+    // private void RunEventResolutionPostEffect() {
+    //     switch (_randomEventResolutionPostEffect) {
+    //         case AbstractMapEvent.EffectKind.EnterArena:
+    //             _randomEventResolutionAction();
+    //             GetTree().ChangeScene("res://scenes/ArenaScreen.tscn");
+    //             return;
+    //         case AbstractMapEvent.EffectKind.EnterTextQuest:
+    //             GetTree().ChangeScene("res://scenes/TextQuestScreen.tscn");
+    //             return;
+    //     }
+    // }
 
-    private void OnRandomEventAction(int actionIndex) {
-        var eventResult = _randomEventInstance.actions[actionIndex].apply();
+    // private void OnRandomEventAction(int actionIndex) {
+    //     var eventResult = _randomEventInstance.actions[actionIndex].apply();
 
-        _randomEventResolutionPostEffect = AbstractMapEvent.EffectKind.None;
-        _randomEventResolutionAction = () => {};
+    //     _randomEventResolutionPostEffect = AbstractMapEvent.EffectKind.None;
+    //     _randomEventResolutionAction = () => {};
 
-        foreach (var effect in eventResult.effects) {
-            ExecuteEffect(effect);
-        }
+    //     foreach (var effect in eventResult.effects) {
+    //         ExecuteEffect(effect);
+    //     }
 
-        if (eventResult.skipText) {
-            _randomEventPopup.Hide();
-            _lockControls = false;
-            RunEventResolutionPostEffect();
-        } else {
-            var outcomeText = "<" + _randomEventInstance.actions[actionIndex].name + ">";
-            outcomeText += "\n\n" + eventResult.text;
+    //     if (eventResult.skipText) {
+    //         _randomEventPopup.Hide();
+    //         _lockControls = false;
+    //         RunEventResolutionPostEffect();
+    //     } else {
+    //         var outcomeText = "<" + _randomEventInstance.actions[actionIndex].name + ">";
+    //         outcomeText += "\n\n" + eventResult.text;
 
-            if (eventResult.expReward != 0) {
-                outcomeText += $"\n\nGained {eventResult.expReward} experience points.";
-                _gameState.experience += eventResult.expReward;
-            }
+    //         if (eventResult.expReward != 0) {
+    //             outcomeText += $"\n\nGained {eventResult.expReward} experience points.";
+    //             _gameState.experience += eventResult.expReward;
+    //         }
 
-            _randomEventResolvedPopup.GetNode<Label>("Title").Text = _randomEventInstance.title;
-            _randomEventResolvedPopup.GetNode<Label>("Text").Text = outcomeText;
+    //         _randomEventResolvedPopup.GetNode<Label>("Title").Text = _randomEventInstance.title;
+    //         _randomEventResolvedPopup.GetNode<Label>("Text").Text = outcomeText;
 
-            _randomEventPopup.Hide();
-            _randomEventResolvedPopup.PopupCentered();
-        }
+    //         _randomEventPopup.Hide();
+    //         _randomEventResolvedPopup.PopupCentered();
+    //     }
 
-        _randomEventInstance = null;
-        _randomEventProto = null;
-        UpdateUI();
-    }
-
-    private void ExecuteEffect(AbstractMapEvent.Effect effect) {
-        switch (effect.kind) {
-            case AbstractMapEvent.EffectKind.AddTechnology:
-                _gameState.technologiesResearched.Add((string)effect.value);
-                return;
-
-            case AbstractMapEvent.EffectKind.AddVesselToFleet:
-                AddUnitMember((Vessel)effect.value);
-                ReorderUnitMembers();
-                _gameState.humanUnit.Get().fleet.Add(((Vessel)effect.value).GetRef());
-                return;
-
-            case AbstractMapEvent.EffectKind.DeclareWar:
-                if (_gameState.diplomaticStatuses[(Faction)effect.value] != DiplomaticStatus.War) {
-                    _gameState.reputations[(Faction)effect.value] -= 5;
-                }
-                _gameState.diplomaticStatuses[(Faction)effect.value] = DiplomaticStatus.War;
-                return;
-
-            case AbstractMapEvent.EffectKind.AddDrone:
-                _gameState.explorationDrones.Add((string)effect.value);
-                return;
-
-            case AbstractMapEvent.EffectKind.AddVesselStatus:
-                _gameState.humanUnit.Get().fleet[(int)effect.value].Get().statusList.Add((string)effect.value2);
-                return;
-
-            case AbstractMapEvent.EffectKind.AddItem:
-                _gameState.PutItemToStorage((IItem)effect.value);
-                return;
-
-            case AbstractMapEvent.EffectKind.AddCredits:
-                _gameState.credits += (int)effect.value;
-                return;
-            case AbstractMapEvent.EffectKind.AddMinerals:
-                _humanUnit.CargoAddMinerals((int)effect.value);
-                return;
-            case AbstractMapEvent.EffectKind.AddOrganic:
-                _humanUnit.CargoAddOrganic((int)effect.value);
-                return;
-            case AbstractMapEvent.EffectKind.AddPower:
-                _humanUnit.CargoAddPower((int)effect.value);
-                return;
-            case AbstractMapEvent.EffectKind.AddFlagshipBackupEnergy:
-                _humanUnit.fleet[0].Get().AddEnergy((float)effect.value);
-                return;
-
-            case AbstractMapEvent.EffectKind.AddReputation:
-                _gameState.reputations[(Faction)effect.value2] += (int)effect.value2;
-                return;
-
-            case AbstractMapEvent.EffectKind.DestroyVessel:
-                RemoveHumanVessel((int)effect.value);
-                return;
-
-            case AbstractMapEvent.EffectKind.SpendAnyVesselBackupEnergy:
-                foreach (var v in _humanUnit.fleet) {
-                    if (v.Get().energy >= (int)effect.value) {
-                        v.Get().energy -= (int)effect.value;
-                        break;
-                    }
-                }
-                return;
-            case AbstractMapEvent.EffectKind.AddFuel:
-                RpgGameState.AddFuel((int)effect.value);
-                return;
-            case AbstractMapEvent.EffectKind.AddFleetBackupEnergyPercentage: {
-                    var randRange = (Vector2)effect.value;
-                    foreach (var handle in _humanUnit.fleet) {
-                        var v = handle.Get();
-                        var roll = QRandom.FloatRange(randRange.x, randRange.y);
-                        v.energy = QMath.ClampMin(v.energy - v.energy * roll, 0);
-                    }
-                    return;
-                }
-
-            case AbstractMapEvent.EffectKind.AddKrigiaMaterial:
-                _gameState.researchMaterial.Add((int)effect.value, Faction.Krigia);
-                return;
-
-            case AbstractMapEvent.EffectKind.DamageFlagshipPercentage: {
-                var randRange = (Vector2)effect.value;
-                var flagship = _humanUnit.fleet[0].Get();
-                flagship.hp -= flagship.hp * QRandom.FloatRange(randRange.x, randRange.y);
-                return;
-            }
-
-            case AbstractMapEvent.EffectKind.DamageFleetPercentage: {
-                    var randRange = (Vector2)effect.value;
-                    foreach (var handle in _humanUnit.fleet) {
-                        var v = handle.Get();
-                        if (v.hp < 2) {
-                            continue;
-                        }
-                        var damageRoll = QRandom.FloatRange(randRange.x, randRange.y);
-                        v.hp -= v.hp * damageRoll;
-                    }
-                    return;
-                }
-            case AbstractMapEvent.EffectKind.TeleportToSystem:
-                var targetSys = (StarSystem)effect.value;
-                _humanUnit.pos = targetSys.pos;
-                _human.GlobalPosition = _humanUnit.pos;
-                _human.node.GlobalPosition = _humanUnit.pos;
-                EnterSystem(targetSys);
-                return;
-            case AbstractMapEvent.EffectKind.ApplySlow:
-                _gameState.travelSlowPoints += (int)effect.value;
-                return;
-
-            case AbstractMapEvent.EffectKind.EnterTextQuest:
-                RpgGameState.selectedTextQuest = (AbstractTQuest)effect.value;
-                _randomEventResolutionPostEffect = effect.kind;
-                return;
-
-            case AbstractMapEvent.EffectKind.PrepareArenaSettings:
-                ArenaManager.SetArenaSettings(_currentSystem.sys, ConvertVesselList(_randomEventContext.spaceUnit.fleet), ConvertVesselList(_humanUnit.fleet));
-                return;
-
-            case AbstractMapEvent.EffectKind.EnterDuelArena: {
-                var unit = (SpaceUnit)effect.value;
-                RpgGameState.arenaUnit1 = unit;
-                var flagship = new List<Vessel>{_humanUnit.fleet[0].Get()};
-                ArenaManager.SetArenaSettings(_currentSystem.sys, ConvertVesselList(unit.fleet), flagship);
-                _randomEventResolutionPostEffect = AbstractMapEvent.EffectKind.EnterArena;
-                _randomEventResolutionAction = effect.fn;
-                return;
-            }
-
-            case AbstractMapEvent.EffectKind.EnterArena: {
-                    var unit = (SpaceUnit)effect.value;
-                    RpgGameState.arenaUnit1 = unit;
-                    if (effect.value2 != null) {
-                        RpgGameState.arenaUnit2 = (SpaceUnit)effect.value2;
-                        ArenaManager.SetStagedArenaSettings(_currentSystem.sys, unit, RpgGameState.arenaUnit2, _humanUnit);
-                    } else {
-                        // A normal battle.
-                        ArenaManager.SetArenaSettings(_currentSystem.sys, ConvertVesselList(unit.fleet), ConvertVesselList(_humanUnit.fleet));
-                    }
-                    _randomEventResolutionPostEffect = effect.kind;
-                    _randomEventResolutionAction = effect.fn;
-                    return;
-                }
-        }
-    }
+    //     _randomEventInstance = null;
+    //     _randomEventProto = null;
+    //     UpdateUI();
+    // }
 
     private void AddUnitMembers() {
         foreach (var handle in _humanUnit.fleet) {
-            AddUnitMember(handle.Get());
+            DoAddUnitMember(handle.Get());
         }
         ReorderUnitMembers();
     }
 
-    private void AddUnitMember(Vessel v) {
+    private void DoAddUnitMember(Vessel v) {
         var unitMembers = GetNode<Label>("UI/UnitMembers");
         var box = unitMembers.GetNode<VBoxContainer>("Box");
 
@@ -780,7 +619,7 @@ public class MapView : Node2D {
         return _currentSystem != null && _currentSystem.sys.starBase.id == 0;
     }
 
-    private void RemoveHumanVessel(int index) {
+    private void DoRemovePlayerVessel(int index) {
         _humanUnit.fleet[index].Get().deleted = true;
         _humanUnit.fleet.RemoveAt(index);
         _unitMembers[index].QueueFree();
@@ -794,7 +633,7 @@ public class MapView : Node2D {
             return;
         }
 
-        RemoveHumanVessel(arkIndex);
+        DoRemovePlayerVessel(arkIndex);
 
         var starBase = _gameState.starBases.New();
         starBase.owner = Faction.Earthling;
@@ -1218,7 +1057,7 @@ public class MapView : Node2D {
         }
     }
 
-    private void EnterSystem(StarSystem sys) {
+    private void DoEnterSystem(StarSystem sys) {
         _gameState.travelSlowPoints = 0;
         _currentSystem = _starSystemNodeByStarSystem[sys];
         _dstSystem = null;
@@ -1313,7 +1152,7 @@ public class MapView : Node2D {
         UpdateUI();
     }
 
-    private void UpdateUI() {
+    private void DoUpdateUI() {
         var enterBase = GetNode<TextureButton>("UI/EnterBaseButton");
         enterBase.Disabled = true;
         var mining = GetNode<TextureButton>("UI/MiningButton");
