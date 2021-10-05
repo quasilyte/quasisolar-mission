@@ -38,7 +38,7 @@ public class Rocket : Node2D, IProjectile {
     }
 
     public override void _Ready() {
-        AddToGroup("rockets");
+        _firedBy.context.rockets.Add(this);
         if (weapon == HurricaneWeapon.Design) {
             GetNode<Sprite>("Sprite").Texture = GD.Load<Texture>("res://images/ammo/hurricane_rocket.png");
         } else if (weapon == ShieldBreakerWeapon.Design) {

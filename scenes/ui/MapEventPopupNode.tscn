@@ -5,7 +5,6 @@
 [ext_resource path="res://styles/text_box.tres" type="StyleBox" id=3]
 
 [node name="MapEventPopupNode" type="PopupPanel"]
-visible = true
 margin_right = 768.0
 margin_bottom = 264.0
 size_flags_horizontal = 0
@@ -36,7 +35,7 @@ __meta__ = {
 margin_left = 32.0
 margin_top = 32.0
 margin_right = 734.0
-margin_bottom = 254.0
+margin_bottom = 222.0
 custom_constants/separation = 8
 __meta__ = {
 "_edit_use_anchors_": false

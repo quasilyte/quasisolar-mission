@@ -28,7 +28,7 @@ public class FlareProjectileNode : Node2D, IProjectile {
     }
 
     public override void _Ready() {
-        AddToGroup("rockets");
+        _firedBy.context.rockets.Add(this);
 
         var nearest = QMath.NearestEnemy(GlobalPosition + Transform.x * 160, _firedBy);
         if (nearest != null) {

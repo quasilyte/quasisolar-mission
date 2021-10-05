@@ -26,7 +26,7 @@ public class PointDefenseGuardNode : SentinelNode {
     }
 
     protected override void ProcessAttack() {
-        foreach (var n in GetTree().GetNodesInGroup("rockets")) {
+        foreach (var n in pilot.context.rockets.GetNodes()) {
             if (n is Rocket rocket) {
                 if (rocket.GetWeaponDesign() == ShieldBreakerWeapon.Design) {
                     continue;

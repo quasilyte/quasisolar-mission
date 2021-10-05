@@ -133,7 +133,7 @@ class GenericBot : AbstractBot {
 
         ActMove();
         ActDefense(events);
-        ActFight(delta);
+        ActFight(events, delta);
     }
 
     protected void SetTarget(Pilot target) {
@@ -398,7 +398,7 @@ class GenericBot : AbstractBot {
             }
         }
 
-        foreach (var n in _vessel.GetTree().GetNodesInGroup("mortar_shells")) {
+        foreach (var n in _pilot.context.mortarShells.GetNodes()) {
             Node2D shell = null;
             var dangerDistance = 0;
             if (n is MjolnirProjectile mjolnirProjectile) {
@@ -554,7 +554,7 @@ class GenericBot : AbstractBot {
         if (!_pointDefense.CanFire(_vessel.State, _vessel.Position)) {
             return;
         }
-        foreach (var n in _vessel.GetTree().GetNodesInGroup("rockets")) {
+        foreach (var n in _pilot.context.rockets.GetNodes()) {
             if (n is Rocket rocket) {
                 if (rocket.FiredBy().alliance == _pilot.alliance) {
                     continue;
@@ -578,12 +578,12 @@ class GenericBot : AbstractBot {
         }
     }
 
-    private void ActFight(float delta) {
+    private void ActFight(BotEvents events, float delta) {
         if (_currentTarget == null) {
             return;
         }
 
-        UseSpecialWeapon();
+        UseSpecialWeapon(events);
         UseNormalWeapons();
 
         MaybeChargeWeapon(delta);
@@ -607,7 +607,7 @@ class GenericBot : AbstractBot {
         _weaponCharge += delta;
     }
 
-    protected virtual void UseSpecialWeapon() {
+    protected virtual void UseSpecialWeapon(BotEvents events) {
         var design = _vessel.specialWeapon.GetDesign();
 
         if (design == EmptyWeapon.Design) {
@@ -691,7 +691,7 @@ class GenericBot : AbstractBot {
 
         if (design == ShockwaveCasterWeapon.Design) {
             if (targetDistance > 350 && targetDistance < 600 && _vessel.specialWeapon.CanFire(_vessel.State, _vessel.Position)) {
-                foreach (var n in _vessel.GetTree().GetNodesInGroup("asteroids")) {
+                foreach (var n in _pilot.context.asteroids.GetNodes()) {
                     var a = (Asteroid)n;
                     var dist = _vessel.Position.DistanceTo(a.Position);
                     if (dist > 250) {

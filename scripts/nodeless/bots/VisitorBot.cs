@@ -13,7 +13,7 @@ class VisitorBot : GenericBot {
         base.ActImpl(delta, events);
     }
 
-    protected override void UseSpecialWeapon() {
+    protected override void UseSpecialWeapon(BotEvents events) {
         if (TargetDistance() < CrystalCannonWeapon.Design.range) {
             return;
         }

@@ -38,7 +38,7 @@ public class PointDefenseLaserWeapon : IWeapon {
             }
             return true;
         }
-        foreach (var n in _owner.Vessel.GetTree().GetNodesInGroup("rockets")) {
+        foreach (var n in _owner.context.rockets.GetNodes()) {
             if (n is Rocket rocket) {
                 if (rocket.GetWeaponDesign() == ShieldBreakerWeapon.Design) {
                     continue;
@@ -89,7 +89,7 @@ public class PointDefenseLaserWeapon : IWeapon {
             _owner.Vessel.GetParent().AddChild(beam);
         }
 
-        foreach (var n in _owner.Vessel.GetTree().GetNodesInGroup("rockets")) {
+        foreach (var n in _owner.context.rockets.GetNodes()) {
             if (n is Rocket rocket) {
                 if (rocket.GetWeaponDesign() == ShieldBreakerWeapon.Design) {
                     continue;

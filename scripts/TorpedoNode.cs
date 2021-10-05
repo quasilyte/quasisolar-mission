@@ -29,7 +29,7 @@ public class TorpedoNode : Node2D, IProjectile {
     }
 
     public override void _Ready() {
-        AddToGroup("rockets");
+        _firedBy.context.rockets.Add(this);
     }
 
     public void Start(Node2D target) {

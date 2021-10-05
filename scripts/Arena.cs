@@ -37,6 +37,8 @@ public class Arena : Node2D {
     private Pilot _flagshipPilot;
     private bool _battleIsOver = false;
 
+    private ArenaContext _context = new ArenaContext();
+
     private Pilot _defensiveTurretPilot = null;
     private int _defensiveTurretShots = 0;
     private float _turretShotDelay = 0;
@@ -150,11 +152,13 @@ public class Arena : Node2D {
                 pilot = new Pilot{
                     name = vessel.pilotName,
                     alliance = (int)vessel.faction,
+                    context = _context,
                 };
             } else {
                 pilot = new Pilot{
                     name = vessel.pilotName,
                     alliance = ArenaSettings.alliances[vessel],
+                    context = _context,
                 };
             }
             addPilot(pilot, vessel);
@@ -163,6 +167,7 @@ public class Arena : Node2D {
             _defensiveTurretPilot = new Pilot{
                 name = "star base",
                 alliance = ArenaSettings.defensiveTurretAlliance,
+                context = _context,
             };
             _defensiveTurretShots = ArenaSettings.defensiveTurretShots;
             _turretShotDelay = QRandom.FloatRange(2, 6);
@@ -181,7 +186,7 @@ public class Arena : Node2D {
             vesselNode.State.backupEnergy = combatant.energy;
             pilot.Vessel = vesselNode;
             AddChild(vesselNode);
-            vesselNode.AddToGroup("affectedByEnvHazard");
+            _context.affectedByEnvHazard.Add(vesselNode);
             var centerPos = new Vector2(GetTree().Root.Size.x / 2, GetTree().Root.Size.y / 2);
             vesselNode.GlobalPosition = combatant.spawnPos;
             if (!combatant.Design().fullArc) {
@@ -350,6 +355,8 @@ public class Arena : Node2D {
     }
 
     public override void _Process(float delta) {
+        _context.Process();
+
         if (_defensiveTurretShots != 0) {
             _turretShotDelay = QMath.ClampMin(_turretShotDelay - delta, 0);
             if (_turretShotDelay == 0) {
@@ -361,7 +368,7 @@ public class Arena : Node2D {
 
         _envHazardTick += delta;
         if (_envHazardTick >= 1) {
-            var nodes = GetTree().GetNodesInGroup("affectedByEnvHazard");
+            var nodes = _context.affectedByEnvHazard.GetNodes();
             foreach (var n in nodes) {
                 if (n is Asteroid asteroid) {
                     asteroid.OnEnvHazardTick();
@@ -372,7 +379,7 @@ public class Arena : Node2D {
             _envHazardTick = 0;
         }
 
-        if (GetTree().GetNodesInGroup("asteroids").Count < ArenaSettings.numAsteroids) {
+        if (_context.asteroids.Count() < ArenaSettings.numAsteroids) {
             spawnAsteroid();
         }
     }
@@ -601,8 +608,8 @@ public class Arena : Node2D {
             asteroid.Position = new Vector2(QRandom.Float() * screenWidth, screenHeight - 20);
             asteroid.RotationDegrees = 250 + QRandom.Float() * 40;
         }
-        asteroid.AddToGroup("asteroids");
-        asteroid.AddToGroup("affectedByEnvHazard");
+        _context.asteroids.Add(asteroid);
+        _context.affectedByEnvHazard.Add(asteroid);
         AddChild(asteroid);
     }
 }

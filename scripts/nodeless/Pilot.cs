@@ -9,4 +9,6 @@ public class Pilot {
     public List<Pilot> Enemies = new List<Pilot>();
     public List<Pilot> Allies = new List<Pilot>();
     public bool Active = true;
+
+    public ArenaContext context;
 }

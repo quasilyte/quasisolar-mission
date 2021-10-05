@@ -22,7 +22,7 @@ public class MjolnirProjectile : Node2D {
     }
 
     public override void _Ready() {
-        AddToGroup("mortar_shells");
+        FiredBy.context.mortarShells.Add(this);
 
         _hp = MortarWeapon.Design.range;
 

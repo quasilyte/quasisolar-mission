@@ -30,7 +30,6 @@ public class SwarmNode : Node2D, IProjectile {
     }
 
     public override void _Ready() {
-        AddToGroup("swarm");
     }
 
     public void Start(Node2D target) {
