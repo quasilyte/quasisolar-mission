@@ -210,15 +210,6 @@ public class RpgGameState {
         foreach (var kv in o.reputations) {
             o.alienCurrency[kv.Key] = 0;
         }
-
-        o.storage[0] = ItemInfo.Of(PulseLaserWeapon.Design);
-        o.storage[1] = ItemInfo.Of(AssaultLaserWeapon.Design);
-        o.storage[2] = ItemInfo.Of(PointDefenseLaserWeapon.Design);
-        o.storage[3] = ItemInfo.Of(DisruptorWeapon.Design);
-        o.storage[4] = ItemInfo.Of(ShivaRechargerArtifact.Design);
-        o.storage[5] = ItemInfo.Of(DroidArtifact.Design);
-        o.storage[6] = ItemInfo.Of(IonCurtainShield.Design);
-        o.storage[7] = ItemInfo.Of(SentinelDesign.Find("Ion Fighter"));
         
         return o;
     }
