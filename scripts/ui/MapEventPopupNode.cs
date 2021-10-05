@@ -49,6 +49,7 @@ public class MapEventPopupNode : PopupPanel {
             label.Text = $"{id+1}. {o.text}";
             label.Valign = Label.VAlign.Center;
             label.MouseFilter = Control.MouseFilterEnum.Stop;
+            label.RectMinSize = new Vector2(0, 16 * 3);
             list.AddChild(label);
 
             var args = new Godot.Collections.Array{id};

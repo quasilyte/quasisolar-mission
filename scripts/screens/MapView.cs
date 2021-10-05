@@ -69,7 +69,7 @@ public class MapView : Node2D, IMapViewContext {
         _humanUnit.pos = sys.pos;
         _human.GlobalPosition = _humanUnit.pos;
         _human.node.GlobalPosition = _humanUnit.pos;
-        EnterSystem(sys);
+        DoEnterSystem(sys);
     }
 
     private void SwitchButtonTextures(TextureButton b) {
@@ -517,60 +517,6 @@ public class MapView : Node2D, IMapViewContext {
         GetNode<CanvasLayer>("UI").AddChild(popup);
         popup.PopupCentered();
     }
-
-    // private void OnRandomEventResolvedDone() {
-    //     _lockControls = false;
-    //     _randomEventResolvedPopup.Hide();
-
-    //     RunEventResolutionPostEffect();
-    // }
-
-    // private void RunEventResolutionPostEffect() {
-    //     switch (_randomEventResolutionPostEffect) {
-    //         case AbstractMapEvent.EffectKind.EnterArena:
-    //             _randomEventResolutionAction();
-    //             GetTree().ChangeScene("res://scenes/ArenaScreen.tscn");
-    //             return;
-    //         case AbstractMapEvent.EffectKind.EnterTextQuest:
-    //             GetTree().ChangeScene("res://scenes/TextQuestScreen.tscn");
-    //             return;
-    //     }
-    // }
-
-    // private void OnRandomEventAction(int actionIndex) {
-    //     var eventResult = _randomEventInstance.actions[actionIndex].apply();
-
-    //     _randomEventResolutionPostEffect = AbstractMapEvent.EffectKind.None;
-    //     _randomEventResolutionAction = () => {};
-
-    //     foreach (var effect in eventResult.effects) {
-    //         ExecuteEffect(effect);
-    //     }
-
-    //     if (eventResult.skipText) {
-    //         _randomEventPopup.Hide();
-    //         _lockControls = false;
-    //         RunEventResolutionPostEffect();
-    //     } else {
-    //         var outcomeText = "<" + _randomEventInstance.actions[actionIndex].name + ">";
-    //         outcomeText += "\n\n" + eventResult.text;
-
-    //         if (eventResult.expReward != 0) {
-    //             outcomeText += $"\n\nGained {eventResult.expReward} experience points.";
-    //             _gameState.experience += eventResult.expReward;
-    //         }
-
-    //         _randomEventResolvedPopup.GetNode<Label>("Title").Text = _randomEventInstance.title;
-    //         _randomEventResolvedPopup.GetNode<Label>("Text").Text = outcomeText;
-
-    //         _randomEventPopup.Hide();
-    //         _randomEventResolvedPopup.PopupCentered();
-    //     }
-
-    //     _randomEventInstance = null;
-    //     _randomEventProto = null;
-    //     UpdateUI();
-    // }
 
     private void AddUnitMembers() {
         foreach (var handle in _humanUnit.fleet) {
@@ -1148,7 +1094,7 @@ public class MapView : Node2D, IMapViewContext {
 
     private void OnDestinationReached() {
         StopMovement();
-        EnterSystem(_dstSystem.sys);
+        DoEnterSystem(_dstSystem.sys);
         UpdateUI();
     }
 
