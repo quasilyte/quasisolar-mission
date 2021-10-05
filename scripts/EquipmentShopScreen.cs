@@ -3,11 +3,6 @@ using System;
 using System.Collections.Generic;
 
 public class EquipmentShopScreen : Node2D {
-    class Merchandise {
-        public Sprite sprite;
-        public IItem item;
-    }
-
     private bool _lockControls = false;
 
     private Popup _repairPopup;
@@ -25,8 +20,6 @@ public class EquipmentShopScreen : Node2D {
     private List<ItemSlotNode> _storageSlots = new List<ItemSlotNode>();
 
     private ItemSlotNode _selectedItemSlot;
-    private ItemSlotNode _sellItemSlot;
-    private ItemSlotNode _sellItemFallbackSlot;
 
     private Button _buySell;
 

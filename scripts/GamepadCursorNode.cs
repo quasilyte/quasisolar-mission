@@ -9,8 +9,6 @@ public class GamepadCursorNode : Node2D {
     private bool _attackCursor = false;
     private Vector2 _fallbackPos;
 
-    private float _visibilityTime = 0;
-
     private static PackedScene _scene = null;
     public static GamepadCursorNode New(Pilot pilot) {
         if (_scene == null) {

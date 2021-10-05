@@ -7,8 +7,6 @@ public class Waypoint : Node2D {
     public bool visible;
     private Color? _color;
 
-    private Vector2 _pos;
-
     private static PackedScene _scene = null;
     public static Waypoint New(bool visible, Color? color) {
         if (_scene == null) {
@@ -28,11 +26,4 @@ public class Waypoint : Node2D {
             sprite.Modulate = _color.Value;
         }
     }
-
-    // public override void _Process(float delta) {
-    //     if (_camera != null) {
-    //         var offset = _camera.GetCameraScreenCenter() - _camera.GetViewportRect().Size / 2; 
-    //         Position = _pos - offset;
-    //     }
-    // }
 }

@@ -3,12 +3,6 @@ using System;
 using System.Collections.Generic;
 
 public class ShipyardScreen : Node2D {
-    class Merchandise {
-        public Sprite sprite;
-        public VesselDesign item;
-    }
-
-    private bool _lockControls = false;
     private PopupNode _exodusPopup;
 
     private Button _productionButton;
@@ -106,12 +100,10 @@ public class ShipyardScreen : Node2D {
     }
 
     private void OnArkButton() {
-        _lockControls = true;
         _exodusPopup.PopupCentered();
     }
 
     private void OnArkCancelButton() {
-        _lockControls = false;
         _exodusPopup.Hide();
     }
 

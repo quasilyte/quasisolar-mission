@@ -4,8 +4,6 @@ using System;
 public class EnergyBoltNode : Node2D, IProjectile {
     private float _hp;
 
-    private Sprite _sprite;
-
     private Pilot _firedBy;
 
     public int chargeLevel;

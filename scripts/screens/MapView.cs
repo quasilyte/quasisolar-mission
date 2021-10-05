@@ -32,7 +32,6 @@ public class MapView : Node2D, IMapViewContext {
 
     private bool _lockControls = false;
     private Popup _fleetAttackPopup;
-    private Popup _miningPopup;
     private PlanetsMenuPopupNode _planetsPopup;
     private PopupNode _starSystemMenu;
     private PopupNode _battleResult;
@@ -52,9 +51,6 @@ public class MapView : Node2D, IMapViewContext {
     private HashSet<SpaceUnitNode> _spaceUnits = new HashSet<SpaceUnitNode>();
 
     private List<UnitMemberNode> _unitMembers = new List<UnitMemberNode>();
-
-    private TextureButton _modeToggled;
-
 
     public void AddPlayerUnitMember(Vessel v) {
         DoAddUnitMember(v);
@@ -685,17 +681,6 @@ public class MapView : Node2D, IMapViewContext {
         StopMovement();
         UpdatePlanetsMenu();
         _planetsPopup.PopupCentered();
-    }
-
-    private void OnMiningButton() {
-        _lockControls = true;
-        StopMovement();
-        _miningPopup.PopupCentered();
-    }
-
-    private void OnMiningDoneButton() {
-        _lockControls = false;
-        _miningPopup.Hide();
     }
 
     private void OnFightButton() {

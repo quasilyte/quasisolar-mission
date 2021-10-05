@@ -18,7 +18,6 @@ public class VesselNode : Node2D {
     private Waypoint _currentWaypoint;
 
     private bool _hasMagneticNegator = false;
-    private bool _hasImpulseDevourer = false;
     private bool _hasLaserAbsorber = false;
 
     public bool hasSentinelController = false;
@@ -75,9 +74,6 @@ public class VesselNode : Node2D {
         foreach (IArtifact a in artifacts) {
             if (a is MagneticNegatorArtifact) {
                 _hasMagneticNegator = true;
-            }
-            if (a is ImpulseDevourerArtifact) {
-                _hasImpulseDevourer = true;
             }
             if (a is LaserAbsorberArtifact) {
                 _hasLaserAbsorber = true;
@@ -333,6 +329,12 @@ public class VesselNode : Node2D {
         if (amount > 0) {
             var reducedAmount = QMath.ClampMin(shield.ReduceDamage(amount, kind), 1);
             var damageReduced = reducedAmount != amount;
+
+            if (damageReduced && State.hasImpulseDevourer) {
+                var damageDelta = amount - reducedAmount;
+                State.backupEnergy = QMath.ClampMax(State.backupEnergy + damageDelta, State.stats.maxBackupEnergy);
+            }
+
             if (_sentinel != null && !damageReduced && !shield.IsActive()) {
                 if (_sentinel is ShieldSentinelNode shieldSentinel) {
                     reducedAmount = QMath.ClampMin(shieldSentinel.ReduceDamage(amount, kind), 1);

@@ -5,7 +5,6 @@ public class BubbleNode : Node2D, IProjectile {
     private float _hp;
 
     private Pilot _firedBy;
-    private WeaponDesign _weapon;
 
     private Vector2 _velocity;
     private int _velocityTicks;

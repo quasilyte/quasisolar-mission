@@ -12,8 +12,6 @@ public class SwarmNode : Node2D, IProjectile {
     private Node2D _target;
     private Pilot _firedBy;
 
-    private static AudioStream _destroyedAudioStream;
-
     public WeaponDesign GetWeaponDesign() { return SwarmSpawnerWeapon.Design; }
     public Pilot FiredBy() { return _firedBy; }
     public Node2D GetProjectileNode() { return this; }

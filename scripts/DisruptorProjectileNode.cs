@@ -6,7 +6,6 @@ public class DisruptorProjectileNode : Node2D, IProjectile {
     private Node2D _target;
 
     private Pilot _firedBy;
-    private WeaponDesign _weapon;
 
     public WeaponDesign GetWeaponDesign() { return DisruptorWeapon.Design; }
     public Pilot FiredBy() { return _firedBy; }
