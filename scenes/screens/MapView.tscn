@@ -1,7 +1,7 @@
 [gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://images/bg/map_tile.jpg" type="Texture" id=1]
-[ext_resource path="res://scripts/MapView.cs" type="Script" id=2]
+[ext_resource path="res://scripts/screens/MapView.cs" type="Script" id=2]
 [ext_resource path="res://images/ui/star_base.png" type="Texture" id=3]
 [ext_resource path="res://images/ui/movement_off.png" type="Texture" id=4]
 [ext_resource path="res://images/ui/movement_on.png" type="Texture" id=5]
@@ -537,14 +537,16 @@ focus_mode = 2
 text = "Done"
 
 [node name="BattleResultPopup" parent="UI" instance=ExtResource( 18 )]
+visible = true
 margin_left = 608.0
 margin_top = 64.0
-margin_right = 1344.0
-margin_bottom = 352.0
+margin_right = 1408.0
+margin_bottom = 384.0
 
 [node name="Label" type="Label" parent="UI/BattleResultPopup"]
+margin_left = 32.0
 margin_top = 16.0
-margin_right = 736.0
+margin_right = 768.0
 margin_bottom = 48.0
 theme = ExtResource( 6 )
 text = "Victory!"
@@ -555,9 +557,9 @@ __meta__ = {
 }
 
 [node name="Description" type="Label" parent="UI/BattleResultPopup"]
-margin_left = 32.0
+margin_left = 64.0
 margin_top = 48.0
-margin_right = 704.0
+margin_right = 736.0
 margin_bottom = 160.0
 theme = ExtResource( 6 )
 text = "Some post-battle text."
@@ -578,10 +580,10 @@ __meta__ = {
 }
 
 [node name="Done" parent="UI/BattleResultPopup" instance=ExtResource( 19 )]
-margin_left = 272.0
+margin_left = 304.0
 margin_top = 240.0
-margin_right = 464.0
-margin_bottom = 272.0
+margin_right = 496.0
+margin_bottom = 304.0
 text = "Done"
 
 [node name="DraklidsPopup" parent="UI" instance=ExtResource( 18 )]
@@ -818,14 +820,15 @@ __meta__ = {
 }
 
 [node name="ResearchCompletedPopup" parent="UI" instance=ExtResource( 18 )]
-margin_left = 816.0
-margin_top = 512.0
-margin_right = 1440.0
-margin_bottom = 928.0
+margin_left = 752.0
+margin_top = 336.0
+margin_right = 1600.0
+margin_bottom = 944.0
 
 [node name="Title" type="Label" parent="UI/ResearchCompletedPopup"]
-margin_right = 624.0
-margin_bottom = 32.0
+margin_top = 16.0
+margin_right = 848.0
+margin_bottom = 48.0
 text = "Research completed"
 align = 1
 valign = 1
@@ -834,9 +837,9 @@ __meta__ = {
 }
 
 [node name="SubTitle" type="Label" parent="UI/ResearchCompletedPopup"]
-margin_top = 32.0
-margin_right = 624.0
-margin_bottom = 64.0
+margin_top = 48.0
+margin_right = 848.0
+margin_bottom = 80.0
 text = "<Project Name>"
 align = 1
 valign = 1
@@ -845,24 +848,24 @@ __meta__ = {
 }
 
 [node name="DoneButton" parent="UI/ResearchCompletedPopup" instance=ExtResource( 19 )]
-margin_left = 336.0
-margin_top = 368.0
-margin_right = 608.0
-margin_bottom = 400.0
+margin_left = 512.0
+margin_top = 528.0
+margin_right = 832.0
+margin_bottom = 592.0
 text = "OK"
 
 [node name="OpenResearchScreen" parent="UI/ResearchCompletedPopup" instance=ExtResource( 19 )]
 margin_left = 16.0
-margin_top = 368.0
-margin_right = 288.0
-margin_bottom = 400.0
+margin_top = 528.0
+margin_right = 336.0
+margin_bottom = 592.0
 text = "Open Research Screen"
 
 [node name="Panel" type="Panel" parent="UI/ResearchCompletedPopup"]
 margin_left = 16.0
-margin_top = 64.0
-margin_right = 608.0
-margin_bottom = 352.0
+margin_top = 96.0
+margin_right = 832.0
+margin_bottom = 512.0
 custom_styles/panel = ExtResource( 20 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -871,8 +874,8 @@ __meta__ = {
 [node name="Text" type="Label" parent="UI/ResearchCompletedPopup/Panel"]
 margin_left = 16.0
 margin_top = 16.0
-margin_right = 576.0
-margin_bottom = 272.0
+margin_right = 800.0
+margin_bottom = 400.0
 text = "New energy source is available for production.
 
 New research projects available:

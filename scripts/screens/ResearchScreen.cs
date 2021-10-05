@@ -188,6 +188,6 @@ public class ResearchScreen : Node2D {
 
     private void OnLeaveButton() {
         RpgGameState.transition = RpgGameState.MapTransition.ExitResearchScreen;
-        GetTree().ChangeScene("res://scenes/MapView.tscn");
+        GetTree().ChangeScene("res://scenes/screens/MapView.tscn");
     }
 }

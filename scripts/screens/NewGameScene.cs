@@ -75,7 +75,7 @@ public class NewGameScene : Node2D {
 
         gameStateInstance.explorationDrones.Add("Curiosity");
 
-        GetTree().ChangeScene("res://scenes/MapView.tscn");
+        GetTree().ChangeScene("res://scenes/screens/MapView.tscn");
     }
 
     private ulong GameSeed() {

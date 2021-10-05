@@ -135,7 +135,7 @@ public class ShipyardScreen : Node2D {
         VesselFactory.InitStats(ark);
         _gameState.humanUnit.Get().fleet.Add(ark.GetRef());
 
-        GetTree().ChangeScene("res://scenes/MapView.tscn");
+        GetTree().ChangeScene("res://scenes/screens/MapView.tscn");
     }
 
     private void SetupUI() {

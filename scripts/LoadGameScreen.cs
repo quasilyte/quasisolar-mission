@@ -12,6 +12,6 @@ public class LoadGameScreen : Node2D {
         instance.InitStaticState(false);
         RpgGameState.instance = instance;
 
-        GetTree().ChangeScene("res://scenes/MapView.tscn");
+        GetTree().ChangeScene("res://scenes/screens/MapView.tscn");
     }
 }

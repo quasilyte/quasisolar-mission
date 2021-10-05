@@ -9,7 +9,7 @@ public class SpreadLaserWeapon : AbstractWeapon {
         sellingPrice = 800,
         cooldown = 0.15f,
         energyCost = 3,
-        range = 220.0f,
+        range = 250.0f,
         damage = 6.0f,
         damageKind = DamageKind.Electromagnetic,
         projectileSpeed = 450.0f,

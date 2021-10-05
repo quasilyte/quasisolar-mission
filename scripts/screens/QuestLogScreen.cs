@@ -30,6 +30,6 @@ public class QuestLogScreen : Node2D {
 
     private void OnLeaveButton() {
         RpgGameState.transition = RpgGameState.MapTransition.ExitQuestLogScreen;
-        GetTree().ChangeScene("res://scenes/MapView.tscn");
+        GetTree().ChangeScene("res://scenes/screens/MapView.tscn");
     }
 }

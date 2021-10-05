@@ -18,6 +18,7 @@ public class Projectile : Node2D, IProjectile {
     private static Texture _needleGunTexture;
     private static Texture _shockwaveCasterTexture;
     private static Texture _spreadGunTexture;
+    private static Texture _spreadLaserTexture;
     private static Texture _reaperCannonTexture;
     private static Texture _hellfireTexture;
     private static Texture _crystalShardTexture;
@@ -128,10 +129,10 @@ public class Projectile : Node2D, IProjectile {
 
     private void InitSpreadLaser() {
         _hp = SpreadLaserWeapon.Design.range;
-        if (_spreadGunTexture == null) {
-            _spreadGunTexture = GD.Load<Texture>("res://images/ammo/Spread_Laser.png");
+        if (_spreadLaserTexture == null) {
+            _spreadLaserTexture = GD.Load<Texture>("res://images/ammo/Spread_Laser.png");
         }
-        _texture = _spreadGunTexture;
+        _texture = _spreadLaserTexture;
     }
 
     private void InitHellfire() {
