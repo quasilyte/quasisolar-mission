@@ -8,6 +8,8 @@ public abstract class SentinelNode : Node2D {
     protected SentinelDesign _design;
     protected Sprite _sprite;
 
+    protected Node2D _pivot;
+
     protected float _attackCooldown = 0;
 
     private float _hp;
@@ -29,6 +31,8 @@ public abstract class SentinelNode : Node2D {
         if (_vessel.hasSentinelController) {
             _hp *= 1.5f;
         }
+
+        _pivot = GetNode<Node2D>("Pivot");
 
         var area = GetNode<Area2D>("Pivot/Sprite/Area2D");
         area.Connect("area_entered", this, nameof(OnCollision));
@@ -53,7 +57,7 @@ public abstract class SentinelNode : Node2D {
         _attackCooldown = QMath.ClampMin(_attackCooldown - delta, 0);
 
         GlobalPosition = _vessel.GlobalPosition;
-        GetNode<Node2D>("Pivot").Rotation += 1 * delta;
+        _pivot.Rotation += 1 * delta;
         _sprite.GlobalRotation = 0;
 
         if (_attackCooldown == 0) {
