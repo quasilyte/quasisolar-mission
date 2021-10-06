@@ -44,7 +44,7 @@ public class AbandonedVesselMapEvent : AbstractMapEvent {
                             },
                             new Effect{
                                 kind = EffectKind.AddFuel,
-                                value = fuel,
+                                value = (float)fuel,
                             },
                         },
                     };
