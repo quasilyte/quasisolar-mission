@@ -1424,16 +1424,6 @@ public class MapView : Node2D, IMapViewContext {
         ctx.spaceUnit = spaceUnit;
         RpgGameState.arenaUnit1 = spaceUnit;
         OpenRandomEvent(ctx);
-
-        // ArenaManager.SetArenaSettings(_currentSystem.sys, defenders, ConvertVesselList(_humanUnit.fleet));
-
-        // GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/unit_under_attack.wav"));
-        // StopMovement();
-        // _lockControls = true;
-        // var pluralSuffix = numDefenders == 1 ? "" : "s";
-        // _fleetAttackPopup.GetNode<Label>("Attackers").Text = $"Attackers: {numDefenders} {starBase.owner.ToString()} ship" + pluralSuffix;
-        // _fleetAttackPopup.GetNode<Button>("RetreatButton").Disabled = _gameState.fuel < RpgGameState.RetreatFuelCost();
-        // _fleetAttackPopup.PopupCentered();
     }
 
     private void ProcessRarilouActions() {
