@@ -29,7 +29,6 @@ public class MapView : Node2D, IMapViewContext {
     private Vector2 _cameraSpeed;
 
     private bool _lockControls = false;
-    private Popup _fleetAttackPopup;
     private PlanetsMenuPopupNode _planetsPopup;
     private PopupNode _starSystemMenu;
     private PopupNode _researchCompletedPopup;
@@ -159,10 +158,6 @@ public class MapView : Node2D, IMapViewContext {
         _starSystemMenu.GetNode<ButtonNode>("Done").Connect("pressed", this, nameof(OnStarSystemMenuDone));
         _starSystemMenu.GetNode<ButtonNode>("ConvertPower").Connect("pressed", this, nameof(OnConvertPower));
         _starSystemMenu.GetNode<ButtonNode>("BuildNewBase").Connect("pressed", this, nameof(OnBuildNewBase));
-
-        _fleetAttackPopup = GetNode<Popup>("UI/FleetAttackPopup");
-        _fleetAttackPopup.GetNode<Button>("FightButton").Connect("pressed", this, nameof(OnFightButton));
-        _fleetAttackPopup.GetNode<Button>("RetreatButton").Connect("pressed", this, nameof(OnRetreatButton));
 
         _planetsPopup = PlanetsMenuPopupNode.New();
         _planetsPopup.GetNode<ButtonNode>("DoneButton").Connect("pressed", this, nameof(OnPlanetsDoneButton));
@@ -548,19 +543,6 @@ public class MapView : Node2D, IMapViewContext {
         StopMovement();
         UpdatePlanetsMenu();
         _planetsPopup.PopupCentered();
-    }
-
-    private void OnFightButton() {
-        _lockControls = false;
-        _fleetAttackPopup.Hide();
-        GetTree().ChangeScene("res://scenes/ArenaScreen.tscn");
-    }
-
-    private void OnRetreatButton() {
-        _lockControls = false;
-        _fleetAttackPopup.Hide();
-        _gameState.fuel -= RpgGameState.RetreatFuelCost();
-        UpdateUI();
     }
 
     private void OnMovementTogglePressed() {
@@ -1439,21 +1421,32 @@ public class MapView : Node2D, IMapViewContext {
         }
 
         var numDefenders = Math.Min(starBase.garrison.Count, 4);
-        var defenders = new List<Vessel>();
+        var defenders = new List<Vessel.Ref>();
         for (int i = 0; i < numDefenders; i++) {
-            defenders.Add(starBase.garrison[i].Get());
+            defenders.Add(starBase.garrison[i]);
         }
         RpgGameState.garrisonStarBase = starBase;
 
-        ArenaManager.SetArenaSettings(_currentSystem.sys, defenders, ConvertVesselList(_humanUnit.fleet));
+        var spaceUnit = _gameState.spaceUnits.New();
+        spaceUnit.owner = starBase.owner;
+        spaceUnit.pos = starBase.system.Get().pos;
+        spaceUnit.fleet = defenders;
 
-        GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/unit_under_attack.wav"));
-        StopMovement();
-        _lockControls = true;
-        var pluralSuffix = numDefenders == 1 ? "" : "s";
-        _fleetAttackPopup.GetNode<Label>("Attackers").Text = $"Attackers: {numDefenders} {starBase.owner.ToString()} ship" + pluralSuffix;
-        _fleetAttackPopup.GetNode<Button>("RetreatButton").Disabled = _gameState.fuel < RpgGameState.RetreatFuelCost();
-        _fleetAttackPopup.PopupCentered();
+        _randomEventProto = new PatrolAttackMapEvent();
+        var ctx = NewRandomEventContext();
+        ctx.spaceUnit = spaceUnit;
+        RpgGameState.arenaUnit1 = spaceUnit;
+        OpenRandomEvent(ctx);
+
+        // ArenaManager.SetArenaSettings(_currentSystem.sys, defenders, ConvertVesselList(_humanUnit.fleet));
+
+        // GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/unit_under_attack.wav"));
+        // StopMovement();
+        // _lockControls = true;
+        // var pluralSuffix = numDefenders == 1 ? "" : "s";
+        // _fleetAttackPopup.GetNode<Label>("Attackers").Text = $"Attackers: {numDefenders} {starBase.owner.ToString()} ship" + pluralSuffix;
+        // _fleetAttackPopup.GetNode<Button>("RetreatButton").Disabled = _gameState.fuel < RpgGameState.RetreatFuelCost();
+        // _fleetAttackPopup.PopupCentered();
     }
 
     private void ProcessRarilouActions() {

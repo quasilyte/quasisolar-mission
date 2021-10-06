@@ -54,7 +54,7 @@ public class DraklidEncounterMapEvent: AbstractMapEvent {
             });
         } else {
             e.actions.Add(new Action{
-                name = "Escape",
+                name = "Retreat",
                 hint = () => "(" + RpgGameState.RetreatFuelCost() + " fuel)",
                 condition = () => GameState().fuel >= RpgGameState.RetreatFuelCost(),
                 apply = () => new Result{
