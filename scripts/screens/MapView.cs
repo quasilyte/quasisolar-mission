@@ -1,7 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
-using CheatCommandKind = MapViewCheatMenuPopup.CommandKind;
+using CheatCommandKind = MapViewCheatMenuPopupNode.CommandKind;
 
 public class MapView : Node2D, IMapViewContext {
     const float MAP_WIDTH = (1080 * 3) + 220;
@@ -33,7 +33,7 @@ public class MapView : Node2D, IMapViewContext {
     private PopupNode _starSystemMenu;
     private PopupNode _researchCompletedPopup;
     private PopupNode _patrolReachesBasePopup;
-    private MapViewCheatMenuPopup _cheatsPopup;
+    private MapViewCheatMenuPopupNode _cheatsPopup;
 
     private SpaceUnitNode _eventUnit;
     private PopupNode _starBaseAttackPopup;
@@ -158,7 +158,7 @@ public class MapView : Node2D, IMapViewContext {
         _krigiaTaskForcePopup.GetNode<ButtonNode>("FightButton").Connect("pressed", this, nameof(OnFightEventUnit));
         _krigiaTaskForcePopup.GetNode<ButtonNode>("LeaveButton").Connect("pressed", this, nameof(OnKrigiaTaskForceLeaveButton));
 
-        _cheatsPopup = GetNode<MapViewCheatMenuPopup>("UI/CheatMenuPopup");
+        _cheatsPopup = GetNode<MapViewCheatMenuPopupNode>("UI/CheatMenuPopup");
         _cheatsPopup.Connect("CommandExecuted", this, nameof(OnCheatCommandExecuted));
         _cheatsPopup.GetNode<ButtonNode>("Done").Connect("pressed", this, nameof(OnCheatsDone));
 
@@ -308,7 +308,7 @@ public class MapView : Node2D, IMapViewContext {
         _cheatsPopup.PopupCentered();
     }
 
-    private void OnCheatCommandExecuted(MapViewCheatMenuPopup.Command command) {
+    private void OnCheatCommandExecuted(MapViewCheatMenuPopupNode.Command command) {
         switch (command.kind) {
             case CheatCommandKind.RevealMap:
                 foreach (var sys in _starSystemNodes) {

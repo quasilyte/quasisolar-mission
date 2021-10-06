@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class MapViewCheatMenuPopup : PopupDialog {
+public class MapViewCheatMenuPopupNode : PopupDialog {
     public enum CommandKind {
         StatsChange,
         CurrentSystemChange,

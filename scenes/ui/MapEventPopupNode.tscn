@@ -5,8 +5,8 @@
 [ext_resource path="res://styles/text_box.tres" type="StyleBox" id=3]
 
 [node name="MapEventPopupNode" type="PopupPanel"]
-margin_right = 768.0
-margin_bottom = 264.0
+margin_right = 832.0
+margin_bottom = 296.0
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme = ExtResource( 1 )
@@ -19,8 +19,8 @@ __meta__ = {
 [node name="Margin" type="MarginContainer" parent="."]
 margin_left = 1.0
 margin_top = 1.0
-margin_right = 767.0
-margin_bottom = 263.0
+margin_right = 831.0
+margin_bottom = 295.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/margin_right = 32
@@ -34,29 +34,29 @@ __meta__ = {
 [node name="VBoxContainer" type="VBoxContainer" parent="Margin"]
 margin_left = 32.0
 margin_top = 32.0
-margin_right = 734.0
-margin_bottom = 222.0
+margin_right = 798.0
+margin_bottom = 254.0
 custom_constants/separation = 8
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Title" type="Label" parent="Margin/VBoxContainer"]
-margin_right = 702.0
+margin_right = 766.0
 margin_bottom = 29.0
 text = "[Map Event]"
 align = 1
 
 [node name="PanelContainer" type="PanelContainer" parent="Margin/VBoxContainer"]
 margin_top = 37.0
-margin_right = 702.0
+margin_right = 766.0
 margin_bottom = 198.0
 custom_styles/panel = ExtResource( 3 )
 
 [node name="Margin" type="MarginContainer" parent="Margin/VBoxContainer/PanelContainer"]
 margin_left = 2.0
 margin_top = 2.0
-margin_right = 700.0
+margin_right = 764.0
 margin_bottom = 159.0
 custom_constants/margin_right = 16
 custom_constants/margin_top = 16
@@ -66,7 +66,7 @@ custom_constants/margin_bottom = 16
 [node name="Text" type="Label" parent="Margin/VBoxContainer/PanelContainer/Margin"]
 margin_left = 16.0
 margin_top = 16.0
-margin_right = 682.0
+margin_right = 746.0
 margin_bottom = 141.0
 text = "Some event text description
 that can span on multiple lines.
@@ -77,12 +77,12 @@ autowrap = true
 
 [node name="OptionsMargin" type="MarginContainer" parent="Margin/VBoxContainer"]
 margin_top = 206.0
-margin_right = 702.0
+margin_right = 766.0
 margin_bottom = 222.0
 custom_constants/margin_top = 16
 
 [node name="VBox" type="VBoxContainer" parent="Margin/VBoxContainer/OptionsMargin"]
 margin_top = 16.0
-margin_right = 702.0
+margin_right = 766.0
 margin_bottom = 16.0
 custom_constants/separation = 8
