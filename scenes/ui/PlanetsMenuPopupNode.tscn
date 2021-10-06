@@ -10,14 +10,16 @@
 [ext_resource path="res://scripts/ui/PlanetsMenuPopupNode.cs" type="Script" id=8]
 
 [node name="PlanetsMenuPopupNode" instance=ExtResource( 1 )]
-margin_right = 1104.0
-margin_bottom = 624.0
+visible = true
+margin_right = 1136.0
+margin_bottom = 640.0
 script = ExtResource( 8 )
 
 [node name="Title" type="Label" parent="." index="0"]
-margin_top = 16.0
-margin_right = 1184.0
-margin_bottom = 48.0
+margin_left = 16.0
+margin_top = 32.0
+margin_right = 1104.0
+margin_bottom = 64.0
 text = "Star System Planets"
 align = 1
 valign = 1
@@ -26,10 +28,10 @@ __meta__ = {
 }
 
 [node name="Planet2" type="Label" parent="." index="1"]
-margin_left = 16.0
-margin_top = 224.0
-margin_right = 320.0
-margin_bottom = 288.0
+margin_left = 32.0
+margin_top = 240.0
+margin_right = 336.0
+margin_bottom = 304.0
 mouse_filter = 0
 text = "Hydrocarbon World"
 valign = 1
@@ -102,10 +104,10 @@ margin_bottom = 64.0
 text = "<"
 
 [node name="Planet1" type="Label" parent="." index="2"]
-margin_left = 16.0
-margin_top = 144.0
-margin_right = 320.0
-margin_bottom = 208.0
+margin_left = 32.0
+margin_top = 160.0
+margin_right = 336.0
+margin_bottom = 224.0
 mouse_filter = 0
 text = "Hydrocarbon World"
 valign = 1
@@ -178,10 +180,10 @@ margin_bottom = 64.0
 text = "<"
 
 [node name="Planet0" type="Label" parent="." index="3"]
-margin_left = 16.0
-margin_top = 64.0
-margin_right = 320.0
-margin_bottom = 128.0
+margin_left = 32.0
+margin_top = 80.0
+margin_right = 336.0
+margin_bottom = 144.0
 mouse_filter = 0
 text = "Hydrocarbon World"
 valign = 1
@@ -254,17 +256,17 @@ margin_bottom = 64.0
 text = "<"
 
 [node name="DoneButton" parent="." index="4" instance=ExtResource( 6 )]
-margin_left = 16.0
-margin_top = 528.0
-margin_right = 240.0
-margin_bottom = 592.0
+margin_left = 32.0
+margin_top = 544.0
+margin_right = 256.0
+margin_bottom = 608.0
 text = "Done"
 
 [node name="PlanetInfo" type="Panel" parent="." index="5"]
-margin_left = 256.0
-margin_top = 352.0
-margin_right = 1088.0
-margin_bottom = 592.0
+margin_left = 272.0
+margin_top = 368.0
+margin_right = 1104.0
+margin_bottom = 608.0
 custom_styles/panel = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -287,20 +289,20 @@ __meta__ = {
 }
 
 [node name="Panel2" type="Panel" parent="." index="6"]
-margin_left = 16.0
-margin_top = 352.0
-margin_right = 240.0
-margin_bottom = 512.0
+margin_left = 32.0
+margin_top = 368.0
+margin_right = 256.0
+margin_bottom = 528.0
 custom_styles/panel = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Label" type="Label" parent="." index="7"]
-margin_left = 256.0
-margin_top = 320.0
-margin_right = 1088.0
-margin_bottom = 352.0
+margin_left = 272.0
+margin_top = 336.0
+margin_right = 1104.0
+margin_bottom = 368.0
 text = "Planet Info"
 align = 1
 valign = 1
@@ -309,4 +311,4 @@ __meta__ = {
 }
 
 [node name="PlanetModel" parent="." index="8" instance=ExtResource( 7 )]
-position = Vector2( 128, 432 )
+position = Vector2( 144, 448 )

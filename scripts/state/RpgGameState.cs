@@ -274,6 +274,10 @@ public class RpgGameState {
         return storage.Length;
     }
 
+    public static float RetreatFuelCost() {
+        return 70;
+    }
+
     public int credits = 0;
 
     public int exodusPrice;

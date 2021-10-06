@@ -2,7 +2,7 @@ using Godot;
 using System.Collections.Generic;
 using System;
 
-public class RandomMapEventPopupBuilder: AbstractMapPopupBuilder {
+public class RandomMapEventPopupBuilder : AbstractMapPopupBuilder {
     private AbstractMapEvent _mapEvent;
     private IMapViewContext _context;
     private RandomEventContext _eventContext;
@@ -12,7 +12,7 @@ public class RandomMapEventPopupBuilder: AbstractMapPopupBuilder {
     private RpgGameState _gameState;
     private SpaceUnit _humanUnit;
     private StarSystem _currentSystem;
-    
+
     public void SetMapEventContext(RandomEventContext ctx) { _eventContext = ctx; }
     public void SetMapViewContext(IMapViewContext ctx) { _context = ctx; }
     public void SetMapEvent(AbstractMapEvent e) { _mapEvent = e; }
@@ -33,7 +33,7 @@ public class RandomMapEventPopupBuilder: AbstractMapPopupBuilder {
             if (buttonHint != "") {
                 buttonText += " " + buttonHint;
             }
-            options.Add(new MapEventPopupNode.Option{
+            options.Add(new MapEventPopupNode.Option {
                 text = buttonText,
                 disabled = !a.condition(),
                 apply = () => OnActionClicked(a),
@@ -53,7 +53,7 @@ public class RandomMapEventPopupBuilder: AbstractMapPopupBuilder {
             DoResolve();
             return;
         }
-        
+
         var popupBuilder = new RandomMapEventResolvedPopup();
         popupBuilder.SetOnResolved(() => {
             DoResolve();
@@ -153,11 +153,11 @@ public class RandomMapEventPopupBuilder: AbstractMapPopupBuilder {
                 return;
 
             case AbstractMapEvent.EffectKind.DamageFlagshipPercentage: {
-                var randRange = (Vector2)effect.value;
-                var flagship = _humanUnit.fleet[0].Get();
-                flagship.hp -= flagship.hp * QRandom.FloatRange(randRange.x, randRange.y);
-                return;
-            }
+                    var randRange = (Vector2)effect.value;
+                    var flagship = _humanUnit.fleet[0].Get();
+                    flagship.hp -= flagship.hp * QRandom.FloatRange(randRange.x, randRange.y);
+                    return;
+                }
 
             case AbstractMapEvent.EffectKind.DamageFleetPercentage: {
                     var randRange = (Vector2)effect.value;
@@ -189,14 +189,14 @@ public class RandomMapEventPopupBuilder: AbstractMapPopupBuilder {
                 return;
 
             case AbstractMapEvent.EffectKind.EnterDuelArena: {
-                var unit = (SpaceUnit)effect.value;
-                RpgGameState.arenaUnit1 = unit;
-                var flagship = new List<Vessel.Ref>{_humanUnit.fleet[0]};
-                ArenaManager.SetArenaSettings(_currentSystem, unit.fleet, flagship);
-                _randomEventResolutionPostEffect = AbstractMapEvent.EffectKind.EnterArena;
-                _randomEventResolutionAction = effect.fn;
-                return;
-            }
+                    var unit = (SpaceUnit)effect.value;
+                    RpgGameState.arenaUnit1 = unit;
+                    var flagship = new List<Vessel.Ref> { _humanUnit.fleet[0] };
+                    ArenaManager.SetArenaSettings(_currentSystem, unit.fleet, flagship);
+                    _randomEventResolutionPostEffect = AbstractMapEvent.EffectKind.EnterArena;
+                    _randomEventResolutionAction = effect.fn;
+                    return;
+                }
 
             case AbstractMapEvent.EffectKind.EnterArena: {
                     var unit = (SpaceUnit)effect.value;
@@ -212,6 +212,16 @@ public class RandomMapEventPopupBuilder: AbstractMapPopupBuilder {
                     _randomEventResolutionAction = effect.fn;
                     return;
                 }
+
+            case AbstractMapEvent.EffectKind.SpaceUnitRetreat: {
+                    var unit = (SpaceUnit)effect.value;
+                    var destinationOptions = RpgGameState.starSystemConnections[_currentSystem];
+                    var nextSystem = QRandom.Element(destinationOptions);
+                    unit.waypoint = nextSystem.pos;
+                    unit.botSystemLeaveDelay = 0;
+                    return;
+                }
+
         }
     }
 

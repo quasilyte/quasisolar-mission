@@ -12,11 +12,13 @@ public abstract class AbstractMapEvent {
     public enum EffectKind {
         None,
         AddVesselStatus,
+
         AddCredits,
         AddMinerals,
         AddOrganic,
         AddPower,
         AddFuel,
+
         AddDrone,
         AddFlagshipBackupEnergy,
         AddFleetBackupEnergyPercentage,
@@ -37,6 +39,7 @@ public abstract class AbstractMapEvent {
         EnterTextQuest,
         PrepareArenaSettings,
         SpawnSpaceUnit,
+        SpaceUnitRetreat,
     }
 
     public class Effect {

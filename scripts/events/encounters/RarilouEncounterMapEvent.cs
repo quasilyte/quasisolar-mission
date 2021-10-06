@@ -1,11 +1,8 @@
 public class RarilouEncounterMapEvent: AbstractMapEvent {
     public RarilouEncounterMapEvent() {
         title = "Rarilou Encounter";
-        luckScore = 5;
-        triggerKind = TriggerKind.OnSystemEntered;
+        triggerKind = TriggerKind.OnScript;
     }
-
-    public override bool Condition() { return false; }
 
     public override AbstractMapEvent Create(RandomEventContext ctx) {
         var e = new RarilouEncounterMapEvent();
@@ -62,11 +59,7 @@ public class RarilouEncounterMapEvent: AbstractMapEvent {
 
         e.actions.Add(new Action{
             name = "Ignore",
-            apply = () => {
-                return new Result{
-                    skipText = true,
-                };
-            }
+            apply = () => new Result{skipText = true},
         });
 
         return e;

@@ -50,6 +50,7 @@ public class DraklidSpaceUnitNode : SpaceUnitNode {
         UpdateVisibility();        
 
         if (unit.waypoint != Vector2.Zero) {
+            _canBeDetected = true;
             return;
         }
 

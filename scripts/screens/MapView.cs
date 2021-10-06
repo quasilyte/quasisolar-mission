@@ -7,8 +7,6 @@ public class MapView : Node2D, IMapViewContext {
     const float MAP_WIDTH = (1080 * 3) + 220;
 
     private AbstractMapEvent _randomEventProto;
-    // private AbstractMapEvent _randomEventInstance;
-    // private RandomEventContext _randomEventContext;
 
     private GameMenuNode _menuNode;
 
@@ -38,12 +36,8 @@ public class MapView : Node2D, IMapViewContext {
     private PopupNode _patrolReachesBasePopup;
     private MapViewCheatMenuPopup _cheatsPopup;
 
-    // private AbstractMapEvent.EffectKind _randomEventResolutionPostEffect;
-    // private Action _randomEventResolutionAction;
-
     private SpaceUnitNode _eventUnit;
     private PopupNode _starBaseAttackPopup;
-    private PopupNode _draklidsEventPopup;
     private PopupNode _krigiaPatrolPopup;
     private PopupNode _krigiaTaskForcePopup;
 
@@ -123,7 +117,6 @@ public class MapView : Node2D, IMapViewContext {
 
         MapItemInfoNode.instance = MapItemInfoNode.New();
         AddChild(MapItemInfoNode.instance);
-        // GetNode<CanvasLayer>("UI").AddChild(MapItemInfoNode.instance);
 
         RenderMap();
 
@@ -157,10 +150,6 @@ public class MapView : Node2D, IMapViewContext {
         _krigiaPatrolPopup.GetNode<ButtonNode>("FightButton").Connect("pressed", this, nameof(OnFightEventUnit));
         _krigiaPatrolPopup.GetNode<ButtonNode>("CommunicateButton").Connect("pressed", this, nameof(OnKrigiaPatrolCommunicateButton));
         _krigiaPatrolPopup.GetNode<ButtonNode>("LeaveButton").Connect("pressed", this, nameof(OnKrigiaPatrolLeaveButton));
-
-        _draklidsEventPopup = GetNode<PopupNode>("UI/DraklidsPopup");
-        _draklidsEventPopup.GetNode<ButtonNode>("FightButton").Connect("pressed", this, nameof(OnFightEventUnit));
-        _draklidsEventPopup.GetNode<ButtonNode>("LeaveButton").Connect("pressed", this, nameof(OnDraklidsLeaveButton));
 
         _cheatsPopup = GetNode<MapViewCheatMenuPopup>("UI/CheatMenuPopup");
         _cheatsPopup.Connect("CommandExecuted", this, nameof(OnCheatCommandExecuted));
@@ -267,26 +256,6 @@ public class MapView : Node2D, IMapViewContext {
         GetTree().ChangeScene("res://scenes/ArenaScreen.tscn");
     }
 
-    private float RetreatFuelCost() {
-        return 70;
-    }
-
-    private void OnDraklidsLeaveButton() {
-        _lockControls = false;
-        _draklidsEventPopup.Hide();
-
-        var u = (DraklidSpaceUnitNode)_eventUnit;
-        if (DraklidsWantToAttack(u)) {
-            _gameState.fuel -= RetreatFuelCost();
-        } else {
-            // Scare them off.
-            u.unit.botSystemLeaveDelay = 0;
-            u.PickNewWaypoint();
-        }
-
-        UpdateUI();
-    }
-
     private void OnKrigiaPatrolCommunicateButton() {
         var u = _eventUnit;
         RpgGameState.arenaUnit1 = u.unit;
@@ -303,14 +272,14 @@ public class MapView : Node2D, IMapViewContext {
             MarkStarBaseAsDiscovered(_currentSystem.sys.starBase.Get());
         }
 
-        _gameState.fuel -= RetreatFuelCost();
+        _gameState.fuel -= RpgGameState.RetreatFuelCost();
         UpdateUI();
     }
 
     private void OnKrigiaTaskForceLeaveButton() {
         _lockControls = false;
         _krigiaTaskForcePopup.Hide();
-        _gameState.fuel -= RetreatFuelCost();
+        _gameState.fuel -= RpgGameState.RetreatFuelCost();
         UpdateUI();
 
         if (_currentSystem.sys.starBase.id != 0) {
@@ -590,7 +559,7 @@ public class MapView : Node2D, IMapViewContext {
     private void OnRetreatButton() {
         _lockControls = false;
         _fleetAttackPopup.Hide();
-        _gameState.fuel -= RetreatFuelCost();
+        _gameState.fuel -= RpgGameState.RetreatFuelCost();
         UpdateUI();
     }
 
@@ -1355,17 +1324,8 @@ public class MapView : Node2D, IMapViewContext {
         return false;
     }
 
-    private bool DraklidsWantToAttack(SpaceUnitNode u) {
-        if (u.unit.CargoFree() == 0) {
-            return false;
-        }
-        var draklidForce = u.unit.FleetCost();
-        var humanForce = _humanUnit.FleetCost();
-        return draklidForce * 2 > humanForce;
-    }
-
     private void TriggerKrigiaPatrolEvent(SpaceUnitNode u) {
-        _krigiaPatrolPopup.GetNode<ButtonNode>("LeaveButton").Disabled = _gameState.fuel < RetreatFuelCost();
+        _krigiaPatrolPopup.GetNode<ButtonNode>("LeaveButton").Disabled = _gameState.fuel < RpgGameState.RetreatFuelCost();
 
         GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/interface/random_event.wav"));
         StopMovement();
@@ -1391,7 +1351,7 @@ public class MapView : Node2D, IMapViewContext {
     }
 
     private void TriggerKrigiaTaskForceEvent(SpaceUnitNode u) {
-        _krigiaTaskForcePopup.GetNode<ButtonNode>("LeaveButton").Disabled = _gameState.fuel < RetreatFuelCost();
+        _krigiaTaskForcePopup.GetNode<ButtonNode>("LeaveButton").Disabled = _gameState.fuel < RpgGameState.RetreatFuelCost();
 
         GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/interface/random_event.wav"));
         StopMovement();
@@ -1401,27 +1361,11 @@ public class MapView : Node2D, IMapViewContext {
     }
 
     private void TriggerDraklidEvent(SpaceUnitNode u) {
-        var pluralSuffix = u.unit.fleet.Count == 1 ? "" : "s";
-        var text = "Short-range radars detect a Draklid raid unit. ";
-        text += "They have " + u.unit.fleet.Count + " vessel" + pluralSuffix + ".\n\n";
-        if (DraklidsWantToAttack(u)) {
-            text += "Based on the fact that it's moving towards your direction, ";
-            text += "the battle is imminent, unless you sacrifice some fuel and warp away.";
-            _draklidsEventPopup.GetNode<ButtonNode>("FightButton").Text = "Prepare for battle";
-            _draklidsEventPopup.GetNode<ButtonNode>("LeaveButton").Text = "Retreat";
-            _draklidsEventPopup.GetNode<ButtonNode>("LeaveButton").Disabled = _gameState.fuel < RetreatFuelCost();
-        } else {
-            text += "It looks like they're not looking for a fight.";
-            _draklidsEventPopup.GetNode<ButtonNode>("FightButton").Text = "Attack them";
-            _draklidsEventPopup.GetNode<ButtonNode>("LeaveButton").Text = "Ignore them";
-        }
-        _draklidsEventPopup.GetNode<Label>("Panel/Text").Text = text;
-
-        GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/interface/random_event.wav"));
-        StopMovement();
-        _lockControls = true;
-        _eventUnit = u;
-        _draklidsEventPopup.PopupCentered();
+        _randomEventProto = new DraklidEncounterMapEvent();
+        var ctx = NewRandomEventContext();
+        ctx.spaceUnit = u.unit;
+        RpgGameState.arenaUnit1 = u.unit;
+        OpenRandomEvent(ctx);
     }
 
     private void ProcessUnits() {
@@ -1508,7 +1452,7 @@ public class MapView : Node2D, IMapViewContext {
         _lockControls = true;
         var pluralSuffix = numDefenders == 1 ? "" : "s";
         _fleetAttackPopup.GetNode<Label>("Attackers").Text = $"Attackers: {numDefenders} {starBase.owner.ToString()} ship" + pluralSuffix;
-        _fleetAttackPopup.GetNode<Button>("RetreatButton").Disabled = _gameState.fuel < RetreatFuelCost();
+        _fleetAttackPopup.GetNode<Button>("RetreatButton").Disabled = _gameState.fuel < RpgGameState.RetreatFuelCost();
         _fleetAttackPopup.PopupCentered();
     }
 
