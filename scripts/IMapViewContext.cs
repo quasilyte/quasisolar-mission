@@ -8,4 +8,7 @@ public interface IMapViewContext {
 
     SceneTree GetTree();
     void AddUIChild(Node n);
+
+    void CreateNotification(Vector2 pos, string text);
+    void CreateBadNotification(Vector2 pos, string text);
 }

@@ -37,7 +37,6 @@ public class MapView : Node2D, IMapViewContext {
 
     private SpaceUnitNode _eventUnit;
     private PopupNode _starBaseAttackPopup;
-    private PopupNode _krigiaPatrolPopup;
     private PopupNode _krigiaTaskForcePopup;
 
     private HashSet<SpaceUnitNode> _spaceUnits = new HashSet<SpaceUnitNode>();
@@ -58,6 +57,20 @@ public class MapView : Node2D, IMapViewContext {
         _human.GlobalPosition = _humanUnit.pos;
         _human.node.GlobalPosition = _humanUnit.pos;
         DoEnterSystem(sys);
+    }
+
+    public void CreateNotification(Vector2 pos, string text) {
+        GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/interface/generic_notification.wav"));
+        var notification = MapNotificationNode.New(text);
+        AddChild(notification);
+        notification.GlobalPosition = pos;
+    }
+
+    public void CreateBadNotification(Vector2 pos, string text) {
+        GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/interface/generic_notification.wav"));
+        var notification = MapBadNotificationNode.New(text);
+        AddChild(notification);
+        notification.GlobalPosition = pos;
     }
 
     private void SwitchButtonTextures(TextureButton b) {
@@ -144,11 +157,6 @@ public class MapView : Node2D, IMapViewContext {
         _krigiaTaskForcePopup = GetNode<PopupNode>("UI/KrigiaTaskForcePopup");
         _krigiaTaskForcePopup.GetNode<ButtonNode>("FightButton").Connect("pressed", this, nameof(OnFightEventUnit));
         _krigiaTaskForcePopup.GetNode<ButtonNode>("LeaveButton").Connect("pressed", this, nameof(OnKrigiaTaskForceLeaveButton));
-
-        _krigiaPatrolPopup = GetNode<PopupNode>("UI/KrigiaPatrolPopup");
-        _krigiaPatrolPopup.GetNode<ButtonNode>("FightButton").Connect("pressed", this, nameof(OnFightEventUnit));
-        _krigiaPatrolPopup.GetNode<ButtonNode>("CommunicateButton").Connect("pressed", this, nameof(OnKrigiaPatrolCommunicateButton));
-        _krigiaPatrolPopup.GetNode<ButtonNode>("LeaveButton").Connect("pressed", this, nameof(OnKrigiaPatrolLeaveButton));
 
         _cheatsPopup = GetNode<MapViewCheatMenuPopup>("UI/CheatMenuPopup");
         _cheatsPopup.Connect("CommandExecuted", this, nameof(OnCheatCommandExecuted));
@@ -249,26 +257,6 @@ public class MapView : Node2D, IMapViewContext {
         RpgGameState.arenaUnit1 = u.unit;
         ArenaManager.SetArenaSettings(_currentSystem.sys, ConvertVesselList(u.unit.fleet), ConvertVesselList(_humanUnit.fleet));
         GetTree().ChangeScene("res://scenes/ArenaScreen.tscn");
-    }
-
-    private void OnKrigiaPatrolCommunicateButton() {
-        var u = _eventUnit;
-        RpgGameState.arenaUnit1 = u.unit;
-        ArenaManager.SetArenaSettings(_currentSystem.sys, ConvertVesselList(u.unit.fleet), ConvertVesselList(_humanUnit.fleet));
-        RpgGameState.selectedTextQuest = new KrigiaPatrolTQuest();
-        GetTree().ChangeScene("res://scenes/TextQuestScreen.tscn");
-    }
-
-    private void OnKrigiaPatrolLeaveButton() {
-        _lockControls = false;
-        _krigiaPatrolPopup.Hide();
-
-        if (_currentSystem.sys.starBase.id != 0) {
-            MarkStarBaseAsDiscovered(_currentSystem.sys.starBase.Get());
-        }
-
-        _gameState.fuel -= RpgGameState.RetreatFuelCost();
-        UpdateUI();
     }
 
     private void OnKrigiaTaskForceLeaveButton() {
@@ -697,10 +685,7 @@ public class MapView : Node2D, IMapViewContext {
             return;
         }
         starBase.discoveredByKrigia = _gameState.day;
-        GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/interface/generic_notification.wav"));
-        var notification = MapBadNotificationNode.New("Base detected");
-        AddChild(notification);
-        notification.GlobalPosition = starBase.system.Get().pos;
+        CreateBadNotification(starBase.system.Get().pos, "Base detected");
     }
 
     private void OnSearchForStarBase(SpaceUnitNode unitNode) {
@@ -1245,17 +1230,13 @@ public class MapView : Node2D, IMapViewContext {
             if (p.artifact != "" && p.explored > p.explorationUnits/2) {
                 _gameState.artifactsRecovered.Add(p.artifact);
                 p.artifact = "";
-                var notification = MapNotificationNode.New("Artifact recovered");
-                _currentSystem.AddChild(notification);
-                GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/artifact_recovered.wav"));
+                CreateNotification(_currentSystem.GlobalPosition, "Artifact recovered");
                 StopMovement();
             }
 
             if (p.IsExplored()) {
                 p.activeDrone = "";
-                GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/interface/generic_notification.wav"));
-                var notification = MapNotificationNode.New(p.name + " explored");
-                _currentSystem.AddChild(notification);
+                CreateNotification(_currentSystem.GlobalPosition, p.name + " explored");
                 StopMovement();
             }
         }
@@ -1307,13 +1288,19 @@ public class MapView : Node2D, IMapViewContext {
     }
 
     private void TriggerKrigiaPatrolEvent(SpaceUnitNode u) {
-        _krigiaPatrolPopup.GetNode<ButtonNode>("LeaveButton").Disabled = _gameState.fuel < RpgGameState.RetreatFuelCost();
+        _randomEventProto = new KrigiaEncounterMapEvent();
+        var ctx = NewRandomEventContext();
+        ctx.spaceUnit = u.unit;
+        RpgGameState.arenaUnit1 = u.unit;
+        OpenRandomEvent(ctx);
 
-        GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/interface/random_event.wav"));
-        StopMovement();
-        _lockControls = true;
-        _eventUnit = u;
-        _krigiaPatrolPopup.PopupCentered();
+        // _krigiaPatrolPopup.GetNode<ButtonNode>("LeaveButton").Disabled = _gameState.fuel < RpgGameState.RetreatFuelCost();
+
+        // GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/interface/random_event.wav"));
+        // StopMovement();
+        // _lockControls = true;
+        // _eventUnit = u;
+        // _krigiaPatrolPopup.PopupCentered();
     }
 
     private void TriggerBaseAttackEvent(SpaceUnitNode u) {
@@ -1498,9 +1485,7 @@ public class MapView : Node2D, IMapViewContext {
         spaceUnit.fleet = fleet;
 
         if (_gameState.humanUnit.Get().pos.DistanceTo(spaceUnit.pos) <= RpgGameState.RadarRange()) {
-            var notification = MapNotificationNode.New("Unit Materialized");
-            AddChild(notification);
-            notification.GlobalPosition = spaceUnit.pos;
+            CreateNotification(spaceUnit.pos, "Unit materialized");
         }
 
         var unitNode = RarilouSpaceUnitNode.New(spaceUnit);
@@ -1627,9 +1612,7 @@ public class MapView : Node2D, IMapViewContext {
     }
 
     private void SpawnKrigiaFinalAttack(Vector2 pos, Vector2 firstWaypoint) {
-        var notification = MapBadNotificationNode.New("Krigia Flagship Arrives");
-        AddChild(notification);
-        notification.GlobalPosition = pos;
+        CreateBadNotification(pos, "Krigia flagship arrives");
 
         var spaceUnit = _gameState.spaceUnits.New();
         spaceUnit.owner = Faction.Krigia;

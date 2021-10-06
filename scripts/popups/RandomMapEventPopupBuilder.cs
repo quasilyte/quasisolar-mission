@@ -222,6 +222,18 @@ public class RandomMapEventPopupBuilder : AbstractMapPopupBuilder {
                     return;
                 }
 
+            case AbstractMapEvent.EffectKind.KrigiaDetectsStarBase: {
+                    var starSystem = (StarSystem)effect.value;
+                    if (starSystem.starBase.id != 0) {
+                        var starBase = starSystem.starBase.Get();
+                        if (starBase.owner == Faction.Earthling && starBase.discoveredByKrigia == 0) {
+                            starBase.discoveredByKrigia = _gameState.day;
+                            _context.CreateBadNotification(starBase.system.Get().pos, "Base detected");
+                        }
+                    }
+                    return;
+                }
+
         }
     }
 

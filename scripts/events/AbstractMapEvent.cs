@@ -19,6 +19,7 @@ public abstract class AbstractMapEvent {
         AddPower,
         AddFuel,
 
+        KrigiaDetectsStarBase,
         AddDrone,
         AddFlagshipBackupEnergy,
         AddFleetBackupEnergyPercentage,
