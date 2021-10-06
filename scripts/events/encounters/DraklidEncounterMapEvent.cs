@@ -62,7 +62,7 @@ public class DraklidEncounterMapEvent: AbstractMapEvent {
                     effects = {
                         new Effect{
                             kind = EffectKind.AddFuel,
-                            value = -RpgGameState.RetreatFuelCost(),
+                            value = -(int)RpgGameState.RetreatFuelCost(),
                         },
                     },
                 },

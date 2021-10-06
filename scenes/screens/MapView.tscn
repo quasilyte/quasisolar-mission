@@ -288,6 +288,7 @@ __meta__ = {
 }
 
 [node name="StarSystemMenuPopup" parent="UI" instance=ExtResource( 18 )]
+visible = true
 margin_left = 1120.0
 margin_top = 544.0
 margin_right = 1520.0

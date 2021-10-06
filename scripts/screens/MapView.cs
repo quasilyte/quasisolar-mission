@@ -164,6 +164,7 @@ public class MapView : Node2D, IMapViewContext {
 
         _starSystemMenu = GetNode<PopupNode>("UI/StarSystemMenuPopup");
         _starSystemMenu.GetNode<ButtonNode>("Done").Connect("pressed", this, nameof(OnStarSystemMenuDone));
+        _starSystemMenu.GetNode<ButtonNode>("Attack").Connect("pressed", this, nameof(OnAttackBaseButton));
         _starSystemMenu.GetNode<ButtonNode>("ConvertPower").Connect("pressed", this, nameof(OnConvertPower));
         _starSystemMenu.GetNode<ButtonNode>("BuildNewBase").Connect("pressed", this, nameof(OnBuildNewBase));
 
@@ -392,6 +393,11 @@ public class MapView : Node2D, IMapViewContext {
     private void OnStarSystemMenuDone() {
         _lockControls = false;
         _starSystemMenu.Hide();
+    }
+
+    private void OnAttackBaseButton() {
+        _currentSystem.DestroyStarBase();
+        GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/enemy_base_eradicated.wav"));
     }
 
     private void OnConvertPower() {
@@ -923,7 +929,23 @@ public class MapView : Node2D, IMapViewContext {
         var mining = GetNode<TextureButton>("UI/MiningButton");
         mining.Disabled = true;
 
+        bool hasBomber = false;
+        foreach (var v in _humanUnit.fleet) {
+            if (v.Get().Design().canDestroyBase) {
+                hasBomber = true;
+                break;
+            }
+        }
+
+        bool isAtEnemyBase = _currentSystem != null &&
+                             _currentSystem.sys.starBase.id != 0 &&
+                             _currentSystem.sys.starBase.Get().owner != Faction.Earthling &&
+                             _gameState.diplomaticStatuses[_currentSystem.sys.starBase.Get().owner] >= DiplomaticStatus.War;
+
+        bool canDestroyEnemyBase = isAtEnemyBase && hasBomber && _currentSystem.sys.starBase.Get().garrison.Count == 0;
+
         _starSystemMenu.GetNode<ButtonNode>("ConvertPower").Disabled = _humanUnit.cargo.power < 5;
+        _starSystemMenu.GetNode<ButtonNode>("Attack").Disabled = !canDestroyEnemyBase;
         _starSystemMenu.GetNode<ButtonNode>("BuildNewBase").Disabled = ArkVesselIndex() == -1 || !CanBuildStarBase();
 
         for (int i = 0; i < _unitMembers.Count; i++) {

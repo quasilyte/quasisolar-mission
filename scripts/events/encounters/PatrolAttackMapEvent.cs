@@ -36,7 +36,7 @@ public class PatrolAttackMapEvent: AbstractMapEvent {
                 effects = {
                     new Effect{
                         kind = EffectKind.AddFuel,
-                        value = -RpgGameState.RetreatFuelCost(),
+                        value = -(int)RpgGameState.RetreatFuelCost(),
                     },
                 },
             },

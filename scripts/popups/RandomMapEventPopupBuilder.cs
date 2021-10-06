@@ -136,7 +136,7 @@ public class RandomMapEventPopupBuilder : AbstractMapPopupBuilder {
                 }
                 return;
             case AbstractMapEvent.EffectKind.AddFuel:
-                RpgGameState.AddFuel((float)effect.value);
+                RpgGameState.AddFuel((int)effect.value);
                 return;
             case AbstractMapEvent.EffectKind.AddFleetBackupEnergyPercentage: {
                     var randRange = (Vector2)effect.value;

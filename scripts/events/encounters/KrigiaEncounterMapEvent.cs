@@ -57,7 +57,7 @@ public class KrigiaEncounterMapEvent: AbstractMapEvent {
                 effects = {
                     new Effect{
                         kind = EffectKind.AddFuel,
-                        value = -RpgGameState.RetreatFuelCost(),
+                        value = -(int)RpgGameState.RetreatFuelCost(),
                     },
                     new Effect{
                         kind = EffectKind.KrigiaDetectsStarBase,

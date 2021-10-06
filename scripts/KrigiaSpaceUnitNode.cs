@@ -188,6 +188,7 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
             return;
         }
 
+        // TODO: at that point the star base can be destroyed.
         if (_currentSystem == unit.botOrigin.Get().system.Get()) {
             EnterBase(starBase);
             return;
