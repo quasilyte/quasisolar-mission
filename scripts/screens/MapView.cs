@@ -289,10 +289,7 @@ public class MapView : Node2D, IMapViewContext {
             return;
         }
 
-        var damage = taskForce.unit.fleet.Count;
-        starBase.hp -= damage;
-        if (starBase.hp <= 0) {
-            // TODO: create notification.
+        if (taskForce.unit.HasBomber()) {
             StopMovement();
             RpgGameState.humanBases.Remove(starBase);
             _starSystemNodeByStarSystem[starBase.system.Get()].DestroyStarBase();
@@ -938,13 +935,7 @@ public class MapView : Node2D, IMapViewContext {
         var mining = GetNode<TextureButton>("UI/MiningButton");
         mining.Disabled = true;
 
-        bool hasBomber = false;
-        foreach (var v in _humanUnit.fleet) {
-            if (v.Get().Design().canDestroyBase) {
-                hasBomber = true;
-                break;
-            }
-        }
+        bool hasBomber = _humanUnit.HasBomber();
 
         bool isAtEnemyBase = _currentSystem != null &&
                              _currentSystem.sys.starBase.id != 0 &&
@@ -1586,7 +1577,7 @@ public class MapView : Node2D, IMapViewContext {
         if (starBase.botReinforcementsDelay > 0) {
             return;
         }
-        starBase.botReinforcementsDelay = QRandom.IntRange(100, 200);
+        starBase.botReinforcementsDelay = QRandom.IntRange(150, 300);
 
         var connectedSystems = RpgGameState.starSystemConnections[starBase.system.Get()];
         StarBase alliedBase = null;
@@ -1594,7 +1585,17 @@ public class MapView : Node2D, IMapViewContext {
             if (sys.starBase.id == 0 || sys.starBase.Get().owner != starBase.owner) {
                 continue;
             }
-            if (sys.starBase.Get().garrison.Count <= starBase.garrison.Count) {
+            if (sys.starBase.Get().garrison.Count < 8) {
+                continue;
+            }
+            bool hasBomber = false;
+            foreach (var v in sys.starBase.Get().garrison) {
+                if (v.Get().Design().canDestroyBase) {
+                    hasBomber = true;
+                    break;
+                }
+            }
+            if (!hasBomber) {
                 continue;
             }
             alliedBase = sys.starBase.Get();
@@ -1604,24 +1605,10 @@ public class MapView : Node2D, IMapViewContext {
             return;
         }
 
-        var reinforcementsFleet = new List<Vessel.Ref>();
-        var groupSize = QRandom.IntRange(2, 4);
-        var keptInGarrison = alliedBase.garrison.FindAll(v => {
-            if (v.Get().Design().level <= 2) {
-                return true;
-            }
-            if (reinforcementsFleet.Count == groupSize) {
-                return true;
-            }
-            reinforcementsFleet.Add(v);
-            return false;
-        });
-
-        if (reinforcementsFleet.Count < groupSize) {
+        var reinforcementsFleet = AssembleKrigiaTaskForce(alliedBase);
+        if (reinforcementsFleet == null) {
             return;
         }
-
-        alliedBase.garrison = keptInGarrison;
 
         var spaceUnit = _gameState.spaceUnits.New();
         spaceUnit.owner = Faction.Krigia;
@@ -1655,6 +1642,35 @@ public class MapView : Node2D, IMapViewContext {
 
         var unitNode = KrigiaSpaceUnitNode.New(spaceUnit);
         AddSpaceUnit(unitNode);
+    }
+
+    private List<Vessel.Ref> AssembleKrigiaTaskForce(StarBase starBase) {
+        var taskForceFleet = new List<Vessel.Ref>();
+        var groupSize = QRandom.IntRange(2, 3);
+        bool hasBomber = false;
+        var keptInGarrison = starBase.garrison.FindAll(v => {
+            if (v.Get().Design().level <= 2) {
+                return true;
+            }
+            if (taskForceFleet.Count == groupSize) {
+                if (!hasBomber && v.Get().Design().canDestroyBase) {
+                    hasBomber = true;
+                    taskForceFleet.Add(v);
+                    return false;
+                }
+                return true;
+            }
+            if (v.Get().Design().canDestroyBase) {
+                hasBomber = true;
+            }
+            taskForceFleet.Add(v);
+            return false;
+        });
+        if (taskForceFleet.Count < groupSize || !hasBomber) {
+            return null;
+        }
+        starBase.garrison = keptInGarrison;
+        return taskForceFleet;
     }
 
     private void ProcessKrigiaActions() {
@@ -1710,27 +1726,13 @@ public class MapView : Node2D, IMapViewContext {
             return; // Target system is out of reach
         }
 
-        var taskForceFleet = new List<Vessel.Ref>();
-        var groupSize = QRandom.IntRange(2, 4);
-        var keptInGarrison = nearestStarBase.garrison.FindAll(v => {
-            if (v.Get().Design().level <= 2) {
-                return true;
-            }
-            if (taskForceFleet.Count == groupSize) {
-                return true;
-            }
-            taskForceFleet.Add(v);
-            return false;
-        });
-
-        if (taskForceFleet.Count < groupSize) {
+        var taskForceFleet = AssembleKrigiaTaskForce(nearestStarBase);
+        if (taskForceFleet == null) {
             // Can't assemble a task force from this base.
             KrigiaBaseRequestReinforcements(nearestStarBase);
-            _gameState.krigiaPlans.taskForceDelay = QRandom.IntRange(60, 90);
+            _gameState.krigiaPlans.taskForceDelay = QRandom.IntRange(90, 140);
             return;
         }
-
-        nearestStarBase.garrison = keptInGarrison;
 
         var spaceUnit = _gameState.spaceUnits.New();
         spaceUnit.owner = Faction.Krigia;

@@ -103,7 +103,8 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
 
     private void TaskForceProcessDay() {
         // Base is destroyed. Can return home.
-        if (_currentSystem.starBase.id == 0) {
+        // Also return if there is no bomber in the group.
+        if (_currentSystem.starBase.id == 0 || !unit.HasBomber()) {
             ReturnToTheBase();
             return;
         }

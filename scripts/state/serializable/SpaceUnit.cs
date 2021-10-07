@@ -35,6 +35,15 @@ public class SpaceUnit: AbstractPoolValue {
     public Program botProgram = Program.GenericBehavior;
     public StarBase.Ref botOrigin;
 
+    public bool HasBomber() {
+        foreach (var v in fleet) {
+            if (v.Get().Design().canDestroyBase) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public int FleetCost() {
         var cost = 0;
         foreach (var v in fleet) {

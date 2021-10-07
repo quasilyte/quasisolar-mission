@@ -114,7 +114,7 @@ public class StarSystemNode : Node2D {
             var numShips = starBase.garrison.Count;
             var pluralSuffix = numShips == 1 ? "" : "s";
             var level = Utils.IntToRoman(starBase.level);
-            lines.Add($"Base {level}: {starBase.hp}% HP, {numShips} ship" + pluralSuffix);
+            lines.Add($"Base {level}: {numShips} ship" + pluralSuffix);
         }
 
         if (sys.HasArtifact()) {

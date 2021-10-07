@@ -29,8 +29,6 @@ public class StarBase: AbstractPoolValue {
     // Non-zero value represents the day at which this base was discovered.
     public int discoveredByKrigia = 0;
 
-    public int hp = 100;
-
     public int level = 1;
 
     public float levelProgression = 0;
