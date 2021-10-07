@@ -516,14 +516,16 @@ public class Arena : Node2D {
             if (RpgGameState.arenaUnit2 != null) {
                 CollectUnitCargo(RpgGameState.arenaUnit2, result);
             }
+        }
 
+        if (RpgGameState.garrisonStarBase != null) {
             if (isHumanBaseBattle) {
                 RpgGameState.transition = RpgGameState.MapTransition.BaseAttackSimulation;
             } else {
-                RpgGameState.transition = RpgGameState.MapTransition.EnemyUnitDestroyed;
+                RpgGameState.transition = RpgGameState.MapTransition.EnemyBaseAttackRepelled;
             }
         } else {
-            RpgGameState.transition = RpgGameState.MapTransition.EnemyBaseAttackRepelled;
+            RpgGameState.transition = RpgGameState.MapTransition.EnemyUnitDestroyed;
         }
 
         // if (_gameState.skillsLearned.Contains("Salvaging")) {

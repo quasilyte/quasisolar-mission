@@ -409,7 +409,8 @@ public class VesselNode : Node2D {
                 damage += 4 * energyBolt.chargeLevel;
             }
             bool critical = false;
-            if (design.damageKind == DamageKind.Kinetic && firedBy.Vessel.State.hasKineticAccelerator) {
+            // firedBy.Vessel is null for base defensive turrets.
+            if (design.damageKind == DamageKind.Kinetic && firedBy.Vessel != null && firedBy.Vessel.State.hasKineticAccelerator) {
                 if (QRandom.Float() < KineticAcceleratorArtifact.chance) {
                     damage *= 2;
                     critical = true;

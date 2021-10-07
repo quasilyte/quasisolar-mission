@@ -101,13 +101,13 @@ public class MapView : Node2D, IMapViewContext {
 
         if (RpgGameState.transition == RpgGameState.MapTransition.EnemyBaseAttackRepelled) {
             ProcessUnitCasualties(_humanUnit);
-            ProcessStarBaseCasualties(RpgGameState.garrisonStarBase);
+            ProcessStarBaseCasualties(RpgGameState.garrisonStarBase, RpgGameState.arenaUnit1);
         } else if (RpgGameState.transition == RpgGameState.MapTransition.EnemyUnitDestroyed) {
             ProcessUnitCasualties(_humanUnit);
             ProcessUnitCasualties(RpgGameState.arenaUnit1);
             ProcessUnitCasualties(RpgGameState.arenaUnit2);
         } else if (RpgGameState.transition == RpgGameState.MapTransition.BaseAttackSimulation) {
-            ProcessStarBaseCasualties(RpgGameState.garrisonStarBase);
+            ProcessStarBaseCasualties(RpgGameState.garrisonStarBase, RpgGameState.arenaUnit2);
             ProcessUnitCasualties(RpgGameState.arenaUnit1);
             if (RpgGameState.arenaUnit1.owner == Faction.Krigia && !RpgGameState.arenaUnit1.deleted) {
                 MarkStarBaseAsDiscovered(RpgGameState.garrisonStarBase);
@@ -217,10 +217,12 @@ public class MapView : Node2D, IMapViewContext {
         return result;
     }
 
-    private void ProcessStarBaseCasualties(StarBase starBase) {
-        starBase.garrison = RemoveCasualties(starBase.garrison);
-        foreach (var v in starBase.garrison) {
+    private void ProcessStarBaseCasualties(StarBase starBase, SpaceUnit defenders) {
+        var survivors = RemoveCasualties(defenders.fleet);
+        defenders.deleted = true;
+        foreach (var v in survivors) {
             v.Get().energy = v.Get().MaxBackupEnergy();
+            starBase.garrison.Add(v);
         }
     }
 
@@ -242,14 +244,21 @@ public class MapView : Node2D, IMapViewContext {
         var system = RpgGameState.starSystemByPos[u.unit.pos];
         var starBase = system.starBase.Get();
         var numDefenders = Math.Min(starBase.garrison.Count, 4);
-        var defenders = new List<Vessel>();
+        var defenders = new List<Vessel.Ref>();
         for (int i = 0; i < numDefenders; i++) {
-            defenders.Add(starBase.garrison[i].Get());
+            defenders.Add(starBase.PopVessel());
         }
         RpgGameState.garrisonStarBase = starBase;
 
-        ArenaManager.SetArenaSettings(system, ConvertVesselList(u.unit.fleet), defenders);
+        var spaceUnit = _gameState.spaceUnits.New();
+        spaceUnit.owner = starBase.owner;
+        spaceUnit.pos = starBase.system.Get().pos;
+        spaceUnit.fleet = defenders;
+
+        ArenaManager.SetArenaSettings(system, u.unit.fleet, defenders);
         ArenaSettings.isStarBaseBattle = true;
+        RpgGameState.arenaUnit1 = u.unit;
+        RpgGameState.arenaUnit2 = spaceUnit;
         GetTree().ChangeScene("res://scenes/ArenaScreen.tscn");
     }
 
@@ -1135,21 +1144,27 @@ public class MapView : Node2D, IMapViewContext {
 
     private void OnPatrolReachesBaseAttackButton() {
         var u = _eventUnit;
-        RpgGameState.arenaUnit1 = u.unit;
 
         // TODO: allow units selection?
         // FIXME: code is duplicated from OnStarBaseAttackPlayButton().
         var system = RpgGameState.starSystemByPos[u.unit.pos];
         var starBase = system.starBase.Get();
         var numDefenders = Math.Min(starBase.garrison.Count, 4);
-        var defenders = new List<Vessel>();
+        var defenders = new List<Vessel.Ref>();
         for (int i = 0; i < numDefenders; i++) {
-            defenders.Add(starBase.garrison[i].Get());
+            defenders.Add(starBase.PopVessel());
         }
         RpgGameState.garrisonStarBase = starBase;
 
-        ArenaManager.SetArenaSettings(system, ConvertVesselList(u.unit.fleet), defenders);
+        var spaceUnit = _gameState.spaceUnits.New();
+        spaceUnit.owner = starBase.owner;
+        spaceUnit.pos = starBase.system.Get().pos;
+        spaceUnit.fleet = defenders;
+
+        ArenaManager.SetArenaSettings(system, u.unit.fleet, defenders);
         ArenaSettings.isStarBaseBattle = true;
+        RpgGameState.arenaUnit1 = u.unit;
+        RpgGameState.arenaUnit2 = spaceUnit;
         GetTree().ChangeScene("res://scenes/ArenaScreen.tscn");
     }
 
@@ -1432,7 +1447,7 @@ public class MapView : Node2D, IMapViewContext {
         var numDefenders = Math.Min(starBase.garrison.Count, 4);
         var defenders = new List<Vessel.Ref>();
         for (int i = 0; i < numDefenders; i++) {
-            defenders.Add(starBase.garrison[i]);
+            defenders.Add(starBase.PopVessel());
         }
         RpgGameState.garrisonStarBase = starBase;
 
@@ -1444,7 +1459,6 @@ public class MapView : Node2D, IMapViewContext {
         _randomEventProto = new PatrolAttackMapEvent();
         var ctx = NewRandomEventContext();
         ctx.spaceUnit = spaceUnit;
-        RpgGameState.arenaUnit1 = spaceUnit;
         OpenRandomEvent(ctx);
     }
 
