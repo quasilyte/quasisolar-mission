@@ -93,6 +93,9 @@ public class VesselDesign: IItem {
         }
         parts.Add("Slots: " + SlotsText());
         parts.Add($"Size: {sizeText()} hull, {cargoSpace} cargo space");
+        if (canDestroyBase) {
+            parts.Add("Special: can destroy star bases");
+        }
         return string.Join("\n", parts);
     }
 
@@ -828,6 +831,8 @@ public class VesselDesign: IItem {
             sellingPrice = 50000,
             debris = 500,
             productionTime = 900,
+
+            canDestroyBase = true,
 
             maxHp = 1000,
             maxShieldLevel = 3,
