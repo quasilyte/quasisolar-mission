@@ -893,6 +893,10 @@ public static class VesselFactory {
         v.specialWeaponName = TorpedoLauncherWeapon.Design.name;
 
         v.shieldName = PhaserShield.Design.name;
+
+        v.artifacts.Add(ShieldProlongerArtifact.Design.name);
+        v.artifacts.Add(ShivaRechargerArtifact.Design.name);
+        v.artifacts.Add(MagneticNegatorArtifact.Design.name);
     }
 
     private static void InitUniqueVisitor(Vessel v) {
