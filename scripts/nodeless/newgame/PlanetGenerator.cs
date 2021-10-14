@@ -118,7 +118,7 @@ public class PlanetGenerator {
             planet.textureName = PickPlanetSprite("gas", planetSprites);
             planet.gasGiant = true;
             planet.explorationUnits = QMath.IntAdjust(planet.explorationUnits, 1.25);
-        } else if (planet.temperature > 250) {
+        } else if (planet.temperature >= 300) {
             planet.textureName = PickPlanetSprite("volcanic", planetSprites);
         } else if (planet.temperature < -70) {
             planet.textureName = PickPlanetSprite("ice", planetSprites);

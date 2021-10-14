@@ -96,17 +96,20 @@ public class StarBase: AbstractPoolValue {
     }
 
     public int VesselProductionPrice(VesselDesign design) {
-        return modules.Contains("Production Module") ? QMath.IntAdjust(design.sellingPrice, 0.80) : design.sellingPrice;
+        return modules.Contains("Production Facility") ? QMath.IntAdjust(design.sellingPrice, 0.80) : design.sellingPrice;
     }
 
     public int FuelPrice() {
-        return modules.Contains("Refuel Module") ? 1 : 5;
+        return modules.Contains("Refuel Facility") ? 1 : 5;
     }
 
     public int RepairPrice(Vessel v) {
         int price = 3 + (v.Design().level * 2);
         foreach (var statusName in v.statusList) {
             price += VesselStatus.statusByName[statusName].repairCost;
+        }
+        if (modules.Contains("Repair Facility")) {
+            price /= 2;
         }
         return price;
     }

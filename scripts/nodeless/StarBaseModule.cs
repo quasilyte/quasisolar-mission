@@ -54,17 +54,24 @@ public class StarBaseModule {
         // Discounts.
 
         new StarBaseModule{
-            name = "Production Module",
+            name = "Production Facility",
             effect = "producing vessels is 20% cheaper at this base",
             sellingPrice = 3500,
             buildTime = 90,
         },
 
         new StarBaseModule{
-            name = "Refuel Module",
+            name = "Refuel Facility",
             effect = "fuel cost is decreased from 5 to 1 RU",
             sellingPrice = 2000,
             buildTime = 70,
+        },
+
+        new StarBaseModule{
+            name = "Repair Facility",
+            effect = "vessel repair cost is halved at this base",
+            sellingPrice = 2000,
+            buildTime = 85,
         },
 
         // Resources-related.
