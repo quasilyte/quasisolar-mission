@@ -19,7 +19,12 @@ public class ResearchScreen : Node2D {
 
         _researchList = new List<Research>(Research.list);
 
-        _researchList.Sort((x, y) => x.name.CompareTo(y.name));
+        _researchList.Sort((x, y) => {
+            if (x.category == y.category) {
+                return x.name.CompareTo(y.name);
+            }
+            return x.category.CompareTo(y.category);
+        });
 
         SetupUI();
         UpdateUI();
@@ -29,50 +34,28 @@ public class ResearchScreen : Node2D {
         GetNode<TextureButton>("Status/LeaveButton").Connect("pressed", this, nameof(OnLeaveButton));
         GetNode<Button>("Status/InvestButton").Connect("pressed", this, nameof(OnInvestButton));
 
-        var projectsPanel = GetNode<VBoxContainer>("ProjectList/ScrollContainer/List");
-        foreach (var r in _researchList) {
-            if (r.researchTime == 0) {
-                continue;
-            }
-            if (r.quest != "") {
-                if (_gameState.activeQuests.Find((x) => x.name == r.quest) == null) {
-                    continue;
-                }
-            }
-            if (_gameState.technologiesResearched.Contains(r.name)) {
-                continue;
-            }
-            if (!Research.IsAvailable(_gameState.technologiesResearched, r.dependencies)) {
-                continue;
-            }
-            if (r.material != Faction.Neutral) {
-                if (_gameState.researchMaterial.Count(r.material) == 0) {
-                    continue;
-                }
-            }
-            if (r.category == Research.Category.NewArtifact && !_gameState.artifactsRecovered.Contains(r.name)) {
-                continue;
-            }
-
-            var project = ListItemNode.New(r.name);
-
-            var label = project.GetNode<Label>("Label");
-            label.MouseFilter = Control.MouseFilterEnum.Stop;
-
-            projectsPanel.AddChild(project);
-
-            _researchNodes.Add(new ResearchNode {
-                value = r,
-                label = label,
-                button = project.GetNode<ButtonNode>("Button"),
-            });
+        var researchFilters = new List<string>(){
+            "All",
+            "Fundamental",
+            "Upgrade",
+            "Weapons",
+            "Energy Source",
+            "Shield",
+            "Artifact",
+            "Vessel Design",
+            "Sentinel",
+            "Exploration Drone",
+            "Base Module",
+        };
+        var filterSelect = GetNode<OptionButton>("ProjectList/FilterOptions");
+        foreach (var o in researchFilters) {
+            filterSelect.AddItem(o);
         }
+        filterSelect.Connect("item_selected", this, nameof(OnFilterSelected));
+    }
 
-        for (int i = 0; i < _researchNodes.Count; i++) {
-            _researchNodes[i].button.Connect("pressed", this, nameof(OnStartProjectButton), new Godot.Collections.Array { i });
-            _researchNodes[i].label.Connect("mouse_entered", this, nameof(OnProjectHover), new Godot.Collections.Array { i });
-            _researchNodes[i].button.Connect("mouse_entered", this, nameof(OnProjectHover), new Godot.Collections.Array { i });
-        }
+    private void OnFilterSelected(int index) {
+        UpdateUI();
     }
 
     private void OnStartProjectButton(int index) {
@@ -139,6 +122,112 @@ public class ResearchScreen : Node2D {
         GetNode<Label>("ProjectInfo/Panel/Label").Text = text;
     }
 
+    private List<Research> PrepareProjectList() {
+        var filterSelect = GetNode<OptionButton>("ProjectList/FilterOptions");
+        var selected = filterSelect.GetItemText(filterSelect.Selected);
+
+        Research.Category category = Research.Category.Dummy;
+        if (selected == "Fundamental") {
+            category = Research.Category.Fundamental;
+        }
+        if (selected == "Upgrade") {
+            category = Research.Category.Upgrade;
+        }
+        if (selected == "Energy Source") {
+            category = Research.Category.NewEnergySource;
+        }
+        if (selected == "Shield") {
+            category = Research.Category.NewShield;
+        }
+        if (selected == "Artifact") {
+            category = Research.Category.NewArtifact;
+        }
+        if (selected == "Vessel Design") {
+            category = Research.Category.NewVesselDesign;
+        }
+        if (selected == "Sentinel") {
+            category = Research.Category.NewSentinel;
+        }
+        if (selected == "Exploration Drone") {
+            category = Research.Category.NewExplorationDrone;
+        }
+        if (selected == "Base Module") {
+            category = Research.Category.NewBaseModule;
+        }
+
+        if (selected == "Weapons") {
+            var projects = _researchList.FindAll((r) => {
+                var c = r.GetFilterCategory();
+                return c == Research.Category.NewWeapon || c == Research.Category.NewSpecialWeapon;
+            });
+            return FilterAvailableResearches(projects);
+        } else if (category != Research.Category.Dummy) {
+            var projects = _researchList.FindAll((r) => r.GetFilterCategory() == category);
+            return FilterAvailableResearches(projects);
+        } else if (selected == "All") {
+            return FilterAvailableResearches(_researchList);
+        }
+
+        return new List<Research>();
+    }
+
+    private List<Research> FilterAvailableResearches(List<Research> projects) {
+        var result = new List<Research>();
+        foreach (var r in projects) {
+            if (r.researchTime == 0) {
+                continue;
+            }
+            if (r.quest != "") {
+                if (_gameState.activeQuests.Find((x) => x.name == r.quest) == null) {
+                    continue;
+                }
+            }
+            if (_gameState.technologiesResearched.Contains(r.name)) {
+                continue;
+            }
+            if (!Research.IsAvailable(_gameState.technologiesResearched, r.dependencies)) {
+                continue;
+            }
+            if (r.material != Faction.Neutral) {
+                if (_gameState.researchMaterial.Count(r.material) == 0) {
+                    continue;
+                }
+            }
+            if (r.category == Research.Category.NewArtifact && !_gameState.artifactsRecovered.Contains(r.name)) {
+                continue;
+            }
+            result.Add(r);
+        }
+        return result;
+    }
+
+    private void UpdateProjectList(List<Research> projects) {
+        var projectsPanel = GetNode<VBoxContainer>("ProjectList/ScrollContainer/List");
+        foreach (var child in projectsPanel.GetChildren()) {
+            ((Node)child).QueueFree();
+        }
+        _researchNodes.Clear();
+        foreach (var r in projects) {
+            var project = ListItemNode.New(r.name);
+
+            var label = project.GetNode<Label>("Label");
+            label.MouseFilter = Control.MouseFilterEnum.Stop;
+
+            projectsPanel.AddChild(project);
+
+            _researchNodes.Add(new ResearchNode {
+                value = r,
+                label = label,
+                button = project.GetNode<ButtonNode>("Button"),
+            });
+        }
+        for (int i = 0; i < _researchNodes.Count; i++) {
+            _researchNodes[i].button.Connect("pressed", this, nameof(OnStartProjectButton), new Godot.Collections.Array { i });
+            _researchNodes[i].label.Connect("mouse_entered", this, nameof(OnProjectHover), new Godot.Collections.Array { i });
+            _researchNodes[i].button.Connect("mouse_entered", this, nameof(OnProjectHover), new Godot.Collections.Array { i });
+        }
+    }
+
     private void UpdateUI() {
         GetNode<Button>("Status/InvestButton").Disabled = _gameState.credits < 1000;
 
@@ -152,6 +241,8 @@ public class ResearchScreen : Node2D {
 
         GetNode<Label>("Status/CreditsValue").Text = _gameState.credits.ToString();
         GetNode<Label>("Status/ScienceFuncsValue").Text = _gameState.scienceFunds.ToString();
+
+        UpdateProjectList(PrepareProjectList());
 
         if (_gameState.currentResearch == "") {
             GetNode<Label>("ResearchProgress/Subject").Text = "<No Research Subject>";

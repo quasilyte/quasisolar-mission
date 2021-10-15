@@ -271,7 +271,7 @@ __meta__ = {
 
 [node name="Panel" type="Panel" parent="ProjectList"]
 margin_left = 16.0
-margin_top = 64.0
+margin_top = 144.0
 margin_right = 528.0
 margin_bottom = 1008.0
 mouse_filter = 2
@@ -282,7 +282,7 @@ __meta__ = {
 
 [node name="ScrollContainer" type="ScrollContainer" parent="ProjectList"]
 margin_left = 32.0
-margin_top = 80.0
+margin_top = 160.0
 margin_right = 512.0
 margin_bottom = 996.0
 scroll_horizontal_enabled = false
@@ -298,11 +298,20 @@ custom_constants/separation = 16
 [node name="Title" type="Label" parent="ProjectList"]
 margin_left = 16.0
 margin_top = 16.0
-margin_right = 464.0
+margin_right = 528.0
 margin_bottom = 48.0
 text = "Available Projects"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FilterOptions" type="OptionButton" parent="ProjectList"]
+margin_left = 16.0
+margin_top = 64.0
+margin_right = 528.0
+margin_bottom = 128.0
 __meta__ = {
 "_edit_use_anchors_": false
 }

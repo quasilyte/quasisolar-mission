@@ -18,6 +18,7 @@ public class Research {
 
     public string name;
     public Faction material = Faction.Neutral;
+    public Category filterCategory = Category.Dummy;
     public Category category = Category.Fundamental;
     public int researchTime;
     public string effect = "";
@@ -53,6 +54,13 @@ public class Research {
         foreach (var r in list) {
             researchByName.Add(r.name, r);
         }
+    }
+
+    public Category GetFilterCategory() {
+        if (filterCategory != Category.Dummy) {
+            return filterCategory;
+        }
+        return category;
     }
 
     public static List<Research> list = new List<Research>{
@@ -276,6 +284,7 @@ public class Research {
         new Research{
             name = "Level 2 Shields",
             researchTime = 120,
+            filterCategory = Category.NewShield,
         },
 
         new Research{
@@ -310,6 +319,7 @@ public class Research {
             name = "Level 3 Shields",
             researchTime = 100,
             dependencies = {"Level 2 Shields"},
+            filterCategory = Category.NewShield,
         },
 
         new Research{
@@ -352,6 +362,7 @@ public class Research {
             name = "High-Capacity Reactors",
             researchTime = 150,
             dependencies = {"Vortex Battery"},
+            filterCategory = Category.NewEnergySource,
         },
 
         new Research{
@@ -373,6 +384,7 @@ public class Research {
         new Research{
             name = "Laser Weapons",
             researchTime = 40,
+            filterCategory = Category.NewWeapon,
         },
 
         new Research{
@@ -495,6 +507,7 @@ public class Research {
             name = "Zyth Weapons I",
             material = Faction.Zyth,
             researchTime = 75,
+            filterCategory = Category.NewWeapon,
         },
 
         new Research{
@@ -510,6 +523,7 @@ public class Research {
             material = Faction.Zyth,
             researchTime = 30,
             dependencies = {"Zyth Weapons I"},
+            filterCategory = Category.NewWeapon,
         },
 
         new Research{
@@ -533,6 +547,7 @@ public class Research {
             material = Faction.Zyth,
             researchTime = 50,
             dependencies = {"Zyth Weapons II"},
+            filterCategory = Category.NewWeapon,
         },
 
         new Research{
@@ -549,6 +564,7 @@ public class Research {
             name = "Draklid Weapons I",
             material = Faction.Draklid,
             researchTime = 75,
+            filterCategory = Category.NewWeapon,
         },
 
         new Research{
@@ -564,6 +580,7 @@ public class Research {
             material = Faction.Draklid,
             researchTime = 40,
             dependencies = {"Draklid Weapons I"},
+            filterCategory = Category.NewWeapon,
         },
 
         new Research{
@@ -580,12 +597,14 @@ public class Research {
             name = "Wertu Vessels",
             material = Faction.Wertu,
             researchTime = 130,
+            filterCategory = Category.NewVesselDesign,
         },
 
         new Research{
             name = "Wertu Weapons I",
             material = Faction.Wertu,
             researchTime = 70,
+            filterCategory = Category.NewWeapon,
         },
 
         new Research{
@@ -601,6 +620,7 @@ public class Research {
             material = Faction.Wertu,
             researchTime = 110,
             dependencies = {"Wertu Weapons I"},
+            filterCategory = Category.NewWeapon,
         },
 
         new Research{
@@ -632,6 +652,7 @@ public class Research {
             material = Faction.Wertu,
             researchTime = 125,
             dependencies = {"Wertu Weapons II"},
+            filterCategory = Category.NewWeapon,
         },
 
         new Research{
@@ -656,6 +677,7 @@ public class Research {
             name = "Vespion Weapons I",
             material = Faction.Vespion,
             researchTime = 100,
+            filterCategory = Category.NewWeapon,
         },
 
         new Research{
@@ -679,6 +701,7 @@ public class Research {
             material = Faction.Vespion,
             researchTime = 120,
             dependencies = {"Vespion Weapons I"},
+            filterCategory = Category.NewWeapon,
         },
 
         new Research{
@@ -702,12 +725,14 @@ public class Research {
             name = "Rarilou Vessels",
             material = Faction.Rarilou,
             researchTime = 130,
+            filterCategory = Category.NewVesselDesign,
         },
 
         new Research{
             name = "Rarilou Weapons",
             material = Faction.Rarilou,
             researchTime = 125,
+            filterCategory = Category.NewWeapon,
         },
 
         new Research{
@@ -731,6 +756,7 @@ public class Research {
             name = "Phaa Weapons",
             material = Faction.Phaa,
             researchTime = 50,
+            filterCategory = Category.NewWeapon,
         },
 
         new Research{
@@ -755,12 +781,14 @@ public class Research {
             name = "Krigia Vessels",
             material = Faction.Krigia,
             researchTime = 130,
+            filterCategory = Category.NewVesselDesign,
         },
 
         new Research{
             name = "Krigia Weapons I",
             material = Faction.Krigia,
             researchTime = 100,
+            filterCategory = Category.NewWeapon,
         },
 
         new Research{
@@ -776,6 +804,7 @@ public class Research {
             material = Faction.Krigia,
             researchTime = 120,
             dependencies = {"Krigia Weapons I"},
+            filterCategory = Category.NewWeapon,
         },
 
         new Research{
@@ -802,6 +831,7 @@ public class Research {
             material = Faction.Krigia,
             researchTime = 140,
             dependencies = {"Krigia Weapons II"},
+            filterCategory = Category.NewWeapon,
         },
 
         new Research{
