@@ -71,8 +71,19 @@ public class PointDefenseLaserWeapon : IWeapon {
         }
     }
 
+    private Beam CreateBeam(bool improved, Vector2 target) {
+        var color = improved ? Color.Color8(0x9c, 0x58, 0xf1) : Color.Color8(180, 255, 180);
+        var beam = Beam.New(_owner.Vessel.Position, target, color, improved ? 2 : 1);
+        beam.damage = Design.damage;
+        if (improved) {
+            beam.damage += 5;
+        }
+        beam.damageKind = Design.damageKind;
+        return beam;
+    }
+
     public void Fire(VesselState state, Vector2 cursor) {
-        _cooldown += Design.cooldown;
+        _cooldown += state.hasPointDefenseSaturator ? Design.cooldown * 0.75f : Design.cooldown;
         state.ConsumeEnergy(Design.energyCost);        
 
         foreach (var e in _owner.Enemies) {
@@ -82,9 +93,7 @@ public class PointDefenseLaserWeapon : IWeapon {
             if (e.Vessel.Position.DistanceTo(_owner.Vessel.Position) > Design.range) {
                 continue;
             }
-            var color = Color.Color8(180, 255, 180);
-            var beam = Beam.New(_owner.Vessel.Position, QMath.RandomizedLocation(e.Vessel.Position, 8), color, 1);
-            beam.weapon = Design;
+            var beam = CreateBeam(state.hasPointDefenseSaturator, QMath.RandomizedLocation(e.Vessel.Position, 8));
             beam.target = e.Vessel;
             _owner.Vessel.GetParent().AddChild(beam);
         }
@@ -100,9 +109,7 @@ public class PointDefenseLaserWeapon : IWeapon {
                 if (rocket.Position.DistanceTo(_owner.Vessel.Position) > Design.range) {
                     continue;
                 }
-                var color = Color.Color8(180, 255, 180);
-                var beam = Beam.New(_owner.Vessel.Position, rocket.Position, color, 1);
-                beam.weapon = Design;
+                var beam = CreateBeam(state.hasPointDefenseSaturator, rocket.Position);
                 _owner.Vessel.GetParent().AddChild(beam);
                 rocket.Explode();
             }
@@ -113,9 +120,7 @@ public class PointDefenseLaserWeapon : IWeapon {
                 if (torpedo.Position.DistanceTo(_owner.Vessel.Position) > Design.range) {
                     continue;
                 }
-                var color = Color.Color8(180, 255, 180);
-                var beam = Beam.New(_owner.Vessel.Position, torpedo.Position, color, 1);
-                beam.weapon = Design;
+                var beam = CreateBeam(state.hasPointDefenseSaturator, torpedo.Position);
                 _owner.Vessel.GetParent().AddChild(beam);
                 torpedo.ApplyDamage(Design.damage);
             }

@@ -60,7 +60,8 @@ public class PhotonBeamWeapon : IWeapon {
             }
             var color = Color.Color8(0x0c, 0x9b, 0xc4);
             var beam = Beam.New(_owner.Vessel.Position, QMath.RandomizedLocation(target.Position, 8), color, 6);
-            beam.weapon = Design;
+            beam.damage = Design.damage;
+            beam.damageKind = Design.damageKind;
             beam.target = target;
             _owner.Vessel.GetParent().AddChild(beam);
             var sfx = SoundEffectNode.New(GD.Load<AudioStream>("res://audio/weapon/Photon_Beam.wav"));

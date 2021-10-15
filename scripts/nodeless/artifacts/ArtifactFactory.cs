@@ -37,6 +37,9 @@ public static class ArtifactFactory {
         if (a == ImpulseDevourerArtifact.Design) {
             return new ImpulseDevourerArtifact();
         }
+        if (a == PointDefenseSaturatorArtifact.Design) {
+            return new PointDefenseSaturatorArtifact();
+        }
         if (a == ShivaRechargerArtifact.Design) {
             return new ShivaRechargerArtifact();
         }

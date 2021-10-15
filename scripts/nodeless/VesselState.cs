@@ -39,6 +39,7 @@ public class VesselState {
     public bool hasMissleCoordinator = false;
     public bool hasSentinelLink = false;
     public bool hasImpulseDevourer = false;
+    public bool hasPointDefenseSaturator = false;
 
     public int debris;
 

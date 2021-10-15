@@ -9,7 +9,8 @@ public class Beam : Node2D {
     private float _hp = 0.05f;
 
     public VesselNode target;
-    public WeaponDesign weapon;
+    public float damage;
+    public DamageKind damageKind;
 
     private static PackedScene _scene = null;
     public static Beam New(Vector2 from, Vector2 to, Color color, float width) {
@@ -26,7 +27,7 @@ public class Beam : Node2D {
 
     public override void _Ready() {
         if (target != null) {
-            target.ApplyDamage(weapon.damage, weapon.damageKind);
+            target.ApplyDamage(damage, damageKind);
         }
     }
 

@@ -17,7 +17,8 @@ public class PointDefenseGuardNode : SentinelNode {
     private void FireAt(Vector2 target) {
         var color = Color.Color8(180, 255, 180);
         var beam = Beam.New(_sprite.GlobalPosition, target, color, 1);
-        beam.weapon = _design.weapon;
+        beam.damage = _design.weapon.damage;
+        beam.damageKind = _design.weapon.damageKind;
         GetParent().AddChild(beam);
         _attackCooldown = _design.attackCooldown;
         
