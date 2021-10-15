@@ -32,4 +32,17 @@ public class StarBaseScreen : Node2D {
         RpgGameState.transition = RpgGameState.MapTransition.ExitStarBase;
         GetTree().ChangeScene("res://scenes/screens/MapView.tscn");
     }
+
+    public override void _Notification(int what) {
+        if (what == MainLoop.NotificationWmGoBackRequest) {
+            OnLeaveBaseButton();
+            return;
+        }
+    }
+
+    public override void _Process(float delta) {
+        if (Input.IsActionJustPressed("escape")) {
+            OnLeaveBaseButton();
+        }
+    }
 }

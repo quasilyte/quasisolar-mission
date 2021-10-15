@@ -30,6 +30,19 @@ public class ResearchScreen : Node2D {
         UpdateUI();
     }
 
+    public override void _Notification(int what) {
+        if (what == MainLoop.NotificationWmGoBackRequest) {
+            OnLeaveButton();
+            return;
+        }
+    }
+
+    public override void _Process(float delta) {
+        if (Input.IsActionJustPressed("escape")) {
+            OnLeaveButton();
+        }
+    }
+
     private void SetupUI() {
         GetNode<TextureButton>("Status/LeaveButton").Connect("pressed", this, nameof(OnLeaveButton));
         GetNode<Button>("Status/InvestButton").Connect("pressed", this, nameof(OnInvestButton));

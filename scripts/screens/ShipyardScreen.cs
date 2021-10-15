@@ -26,6 +26,19 @@ public class ShipyardScreen : Node2D {
         UpdateUI();
     }
 
+    public override void _Notification(int what) {
+        if (what == MainLoop.NotificationWmGoBackRequest) {
+            OnLeaveButton();
+            return;
+        }
+    }
+
+    public override void _Process(float delta) {
+        if (Input.IsActionJustPressed("escape")) {
+            OnLeaveButton();
+        }
+    }
+
     private int FleetEmptySlots() {
         var n = 0;
         for (int i = 0; i < _garrisonSlots.Length; i++) {

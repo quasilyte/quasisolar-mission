@@ -191,9 +191,9 @@ public class StarSystemNode : Node2D {
         if (sys.starBase.id != 0) {
             _starBase.Visible = true;
             SetStarBaseColor();
-            if (RpgGameState.instance.FactionsAtWar(sys.starBase.Get().owner, faction)) {
-                GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/enemy_base_detected.wav"));
-            }
+            // if (RpgGameState.instance.FactionsAtWar(sys.starBase.Get().owner, faction)) {
+            //     GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/enemy_base_detected.wav"));
+            // }
         }
 
         if (sys.HasArtifact()) {

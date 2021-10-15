@@ -29,6 +29,7 @@ public class MapView : Node2D, IMapViewContext {
     private Vector2 _cameraSpeed;
 
     private bool _lockControls = false;
+    private Popup _activePopup;
     private PlanetsMenuPopupNode _planetsPopup;
     private PopupNode _starSystemMenu;
     private PopupNode _researchCompletedPopup;
@@ -203,6 +204,34 @@ public class MapView : Node2D, IMapViewContext {
         _menuNode = GameMenuNode.New();
         GetNode<CanvasLayer>("UI").AddChild(_menuNode);
         _menuNode.Connect("Closed", this, nameof(OnGameMenuClosed));
+    }
+
+    private void GoBackAction() {
+        if (_activePopup != null && _lockControls) {
+            HidePopup(_activePopup);
+            return;
+        }
+        if (!_lockControls) {
+            OpenGameMenu();
+        }
+    }
+
+    private void HidePopup(Popup p) {
+        if (p != _activePopup) {
+            return;
+        }
+        _lockControls = false;
+        p.Hide();
+        _activePopup = null;
+    }
+
+    private void ShowPopup(Popup p) {
+        if (_lockControls) {
+            return;
+        }
+        p.PopupCentered();
+        _lockControls = true;
+        _activePopup = p;
     }
 
     private List<Vessel.Ref> RemoveCasualties(List<Vessel.Ref> fleet) {
@@ -397,13 +426,13 @@ public class MapView : Node2D, IMapViewContext {
     }
 
     private void OnStarSystemMenuDone() {
-        _lockControls = false;
-        _starSystemMenu.Hide();
+        HidePopup(_starSystemMenu);
     }
 
     private void OnAttackBaseButton() {
         _currentSystem.DestroyStarBase();
         GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/enemy_base_eradicated.wav"));
+        UpdateUI();
     }
 
     private void OnConvertPower() {
@@ -459,9 +488,8 @@ public class MapView : Node2D, IMapViewContext {
     }
 
     private void OnActionMenuButton() {
-        _lockControls = true;
         StopMovement();
-        _starSystemMenu.PopupCentered();
+        ShowPopup(_starSystemMenu);
     }
 
     private void OnEnterBaseButton() {
@@ -533,16 +561,12 @@ public class MapView : Node2D, IMapViewContext {
         _planetsPopup.GetNode<AnimatedPlanetNode>("PlanetModel").SetSprite(p.textureName);
     }
 
-    private void OnPlanetsDoneButton() {
-        _lockControls = false;
-        _planetsPopup.Hide();
-    }
+    private void OnPlanetsDoneButton() { HidePopup(_planetsPopup); }
 
     private void OnPlanetsButton() {
-        _lockControls = true;
         StopMovement();
         UpdatePlanetsMenu();
-        _planetsPopup.PopupCentered();
+        ShowPopup(_planetsPopup);
     }
 
     private void OnMovementTogglePressed() {
@@ -605,7 +629,7 @@ public class MapView : Node2D, IMapViewContext {
 
     public override void _Notification(int what) {
         if (what == MainLoop.NotificationWmGoBackRequest) {
-            OpenGameMenu();
+            GoBackAction();
             return;
         }
     }
@@ -613,8 +637,8 @@ public class MapView : Node2D, IMapViewContext {
     public override void _Process(float delta) {
         PanCamera(delta);
 
-        if (!_lockControls && Input.IsActionJustPressed("escape")) {
-            OpenGameMenu();
+        if (Input.IsActionJustPressed("escape")) {
+            GoBackAction();
         }
 
         if (!_lockControls && Input.IsActionJustPressed("mapMovementToggle")) {

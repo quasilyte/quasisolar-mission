@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class EquipmentShopScreen : Node2D {
     private bool _lockControls = false;
+    private Popup _activePopup;
 
     private Popup _repairPopup;
     private CargoMenuPopupNode _cargoPopup;
@@ -92,6 +93,45 @@ public class EquipmentShopScreen : Node2D {
         SelectShopCategory("Weapon");
 
         UpdateUI();
+    }
+
+    private void GoBackAction() {
+        if (_activePopup != null && _lockControls) {
+            HidePopup(_activePopup);
+            return;
+        }
+        OnLeavePressed();
+    }
+
+    private void HidePopup(Popup p) {
+        if (p != _activePopup) {
+            return;
+        }
+        _lockControls = false;
+        p.Hide();
+        _activePopup = null;
+    }
+
+    private void ShowPopup(Popup p) {
+        if (_lockControls) {
+            return;
+        }
+        p.PopupCentered();
+        _lockControls = true;
+        _activePopup = p;
+    }
+
+    public override void _Notification(int what) {
+        if (what == MainLoop.NotificationWmGoBackRequest) {
+            GoBackAction();
+            return;
+        }
+    }
+
+    public override void _Process(float delta) {
+        if (Input.IsActionJustPressed("escape")) {
+            GoBackAction();
+        }
     }
 
     private void SetupCargoPopup() {
@@ -548,8 +588,7 @@ public class EquipmentShopScreen : Node2D {
         var sellingPrice = ItemInfo.SellingPrice(item) / 2;
         _sellEquipmentPopup.GetNode<Label>("SellingPrice").Text = $"{sellingPrice} RU";
         
-        _lockControls = true;
-        _sellEquipmentPopup.PopupCentered();
+        ShowPopup(_sellEquipmentPopup);
     }
 
     private void OnShopBuySellButton() {
@@ -614,28 +653,13 @@ public class EquipmentShopScreen : Node2D {
         _selectedItemSlot.MakeUnselected();
         _selectedItemSlot.MakeEmpty();
 
-        _sellEquipmentPopup.Hide();
-        _lockControls = false;
+        HidePopup(_sellEquipmentPopup);
     }
 
-    private void OnSellEquipmentCancelButton() {
-        _sellEquipmentPopup.Hide();
-        _lockControls = false;
-    }
+    private void OnSellEquipmentCancelButton() { HidePopup(_sellEquipmentPopup); }
 
-    private void OnDronesButton() {
-        if (_lockControls) {
-            return;
-        }
-
-        _lockControls = true;
-        _dronesPopup.PopupCentered();
-    }
-
-    private void OnDronesDoneButton() {
-        _dronesPopup.Hide();
-        _lockControls = false;
-    }
+    private void OnDronesButton() { ShowPopup(_dronesPopup); }
+    private void OnDronesDoneButton() { HidePopup(_dronesPopup); }
 
     private void OnSellDebrisButton() {
         if (_lockControls) {
@@ -658,24 +682,15 @@ public class EquipmentShopScreen : Node2D {
         cargo.debris = new DebrisContainer();
     }
 
-    private void OnCargoButton() {
-        if (_lockControls) {
-            return;
-        }
-
-        _lockControls = true;
-        _cargoPopup.PopupCentered();
-    }
+    private void OnCargoButton() { ShowPopup(_cargoPopup); }
 
     private void OnCargoDoneButton() {
-        _cargoPopup.Hide();
+        HidePopup(_cargoPopup);
         UpdateUI();
-        _lockControls = false;
     }
 
     private void OnRepairCancelButton() {
-        _repairPopup.Hide();
-        _lockControls = false;
+        HidePopup(_repairPopup);
     }
 
     private void OnRepairAllButton() {
@@ -722,13 +737,12 @@ public class EquipmentShopScreen : Node2D {
         _repairPopup.GetNode<Button>("RepairMinor").Disabled = _selectedVessel.hp + 25 > _selectedVessel.MaxHp();
         _repairPopup.GetNode<Label>("RepairMinor/Label").Text = (repairPrice * 25).ToString() + " cr";
 
-        _lockControls = true;
-        _repairPopup.PopupCentered();
+        ShowPopup(_repairPopup);
     }
 
     private void OnFullRepairButton() {
-        _repairPopup.Hide();
-        _lockControls = false;
+        HidePopup(_repairPopup);
+
         var missingHp = (int)(_selectedVessel.MaxHp() - _selectedVessel.hp);
         var price = RpgGameState.enteredBase.RepairPrice(_selectedVessel) * missingHp;
         if (_gameState.credits < price) {
@@ -741,8 +755,7 @@ public class EquipmentShopScreen : Node2D {
     }
 
     private void OnMinorRepairButton() {
-        _repairPopup.Hide();
-        _lockControls = false;
+        HidePopup(_repairPopup);
         var price = RpgGameState.enteredBase.RepairPrice(_selectedVessel) * 25;
         if (_gameState.credits < price) {
             return;
