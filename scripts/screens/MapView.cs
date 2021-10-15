@@ -689,12 +689,10 @@ public class MapView : Node2D, IMapViewContext {
             return;
         }
 
-        if (_human.node.GlobalPosition.DistanceTo(sys.GlobalPosition) < ((_gameState.fuel * 2) - 1)) {
+        if (_currentSystem != null) {
             _dstSystem = sys;
             _human.SetDestination(sys.GlobalPosition);
             AddChild(SoundEffectNode.New(GD.Load<AudioStream>("res://audio/interface/movement_ok.wav")));
-        } else {
-            AddChild(SoundEffectNode.New(GD.Load<AudioStream>("res://audio/interface/movement_error.wav")));
         }
     }
 

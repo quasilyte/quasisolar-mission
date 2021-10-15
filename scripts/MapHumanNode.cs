@@ -7,6 +7,8 @@ public class MapHumanNode : Node2D {
     private RpgGameState _gameState;
     private SpaceUnit _unit;
 
+    private Vector2 _dest = Vector2.Zero;
+
     private Label _destDistValueLabel;
 
     private static PackedScene _scene = null;
@@ -33,20 +35,36 @@ public class MapHumanNode : Node2D {
     public override void _Draw() {
         // FIXME: DrawCircle is slow.
         DrawUtils.DrawCircle(this, RpgGameState.RadarRange(), Color.Color8(200, 200, 200));
-        if (node.GetDestination() == Vector2.Zero) {
+        if (node.GetDestination() != Vector2.Zero) {
+            DrawLine(Vector2.Zero, node.GetDestination() - GlobalPosition, Color.Color8(0x4b, 0xc2, 0x75), 1);
             return;
         }
-        DrawLine(Vector2.Zero, node.GetDestination() - GlobalPosition, Color.Color8(0x4b, 0xc2, 0x75), 1);
+        if (_dest != Vector2.Zero) {
+            DrawLine(Vector2.Zero, _dest - GlobalPosition, Color.Color8(0xe0 ,0x07, 0x07), 1);
+            return;
+        }
+    }
+
+    public override void _Process(float delta) {
+        if (_dest != Vector2.Zero) {
+            if (node.GlobalPosition.DistanceTo(_dest) < ((_gameState.fuel * 2) - 1)) {
+                node.SetDestination(_dest);
+                _dest = Vector2.Zero;
+                Update();
+            }
+        }
     }
 
     public void SetDestination(Vector2 dest) {
-        node.SetDestination(dest);
+        _dest = dest;
+        node.SetDestination(Vector2.Zero);
         UpdateDestDistValue(dest);
         Update();
         _destDistValueLabel.Visible = true;
     }
 
     public void UnsetDestination() {
+        _dest = Vector2.Zero;
         node.SetDestination(Vector2.Zero);
         _destDistValueLabel.Visible = false;
         Update();

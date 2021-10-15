@@ -158,7 +158,7 @@ public class Research {
             name = "Recycling",
             category = Category.Upgrade,
             researchTime = 70,
-            effect = "when in idle mode, fuel gain is doubled",
+            effect = "passive fuel gain is doubled",
         },
 
         // Vessel tech.
