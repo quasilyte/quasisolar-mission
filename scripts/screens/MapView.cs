@@ -1669,7 +1669,7 @@ public class MapView : Node2D, IMapViewContext {
             if (v.Get().Design().level <= 2) {
                 return true;
             }
-            if (taskForceFleet.Count == groupSize) {
+            if (taskForceFleet.Count >= groupSize) {
                 if (!hasBomber && v.Get().Design().canDestroyBase) {
                     hasBomber = true;
                     taskForceFleet.Add(v);
@@ -1760,7 +1760,7 @@ public class MapView : Node2D, IMapViewContext {
         spaceUnit.fleet = taskForceFleet;
 
         nearestStarBase.units.Add(spaceUnit.GetRef());
-        _gameState.krigiaPlans.taskForceDelay = QRandom.IntRange(200, 300);
+        _gameState.krigiaPlans.taskForceDelay = QRandom.IntRange(400, 600);
 
         var unitNode = KrigiaSpaceUnitNode.New(spaceUnit);
         AddSpaceUnit(unitNode);
