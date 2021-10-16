@@ -28,6 +28,19 @@ public class QuestLogScreen : Node2D {
         }
     }
 
+    public override void _Notification(int what) {
+        if (what == MainLoop.NotificationWmGoBackRequest) {
+            OnLeaveButton();
+            return;
+        }
+    }
+
+    public override void _Process(float delta) {
+        if (Input.IsActionJustPressed("escape")) {
+            OnLeaveButton();
+        }
+    }
+
     private void OnLeaveButton() {
         RpgGameState.transition = RpgGameState.MapTransition.ExitQuestLogScreen;
         GetTree().ChangeScene("res://scenes/screens/MapView.tscn");
