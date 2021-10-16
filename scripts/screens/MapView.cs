@@ -189,11 +189,6 @@ public class MapView : Node2D, IMapViewContext {
             ShowBattleResults();
         } else if (RpgGameState.transition == RpgGameState.MapTransition.EnemyUnitDestroyed) {
             ShowBattleResults();
-        } else if (RpgGameState.transition == RpgGameState.MapTransition.UnitDestroyed) {
-            _lockControls = true;
-            _human.node.Visible = false;
-            GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/unit_destroyed.wav"));
-            GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/mission_failed.wav"));
         }
 
         if (_currentSystem != null) {
