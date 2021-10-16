@@ -415,12 +415,7 @@ public class Arena : Node2D {
     }
 
     private void TriggerDefeat() {
-        RpgGameState.transition = RpgGameState.MapTransition.UnitDestroyed;
-        var unit = _gameState.humanUnit.Get();
-        unit.fleet = new List<Vessel.Ref>{unit.fleet[0]};
-        unit.fleet[0].Get().hp = 0;
-        unit.fleet[0].Get().energy = 0;
-        ChangeSceneAfterDelay("screens/MapView");
+        ChangeSceneAfterDelay("screens/DefeatScreen");
     }
 
     private void CheckStatus() {
