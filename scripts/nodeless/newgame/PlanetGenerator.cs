@@ -108,7 +108,7 @@ public class PlanetGenerator {
             explorationBonus = QMath.IntAdjust(explorationBonus, 1.3);
         }
 
-        planet.explorationUnits = QRandom.IntRange(70, 240) + (level * 10);
+        planet.explorationUnits = QRandom.IntRange(70, 240) + (level * 20);
 
         if (QRandom.Float() < 0.25) {
             explorationBonus = QMath.IntAdjust(explorationBonus, 1.5);
@@ -117,7 +117,6 @@ public class PlanetGenerator {
         if (planet.powerPerDay != 0 && planet.mineralsPerDay == 0 && planet.organicPerDay == 0) {
             planet.textureName = PickPlanetSprite("gas", planetSprites);
             planet.gasGiant = true;
-            planet.explorationUnits = QMath.IntAdjust(planet.explorationUnits, 1.25);
         } else if (planet.temperature >= 300) {
             planet.textureName = PickPlanetSprite("volcanic", planetSprites);
         } else if (planet.temperature < -70) {
@@ -155,6 +154,8 @@ public class PlanetGenerator {
 
         if (planet.gasGiant) {
             planet.temperature = QMath.ClampMax(planet.temperature, 205);
+            planet.explorationUnits += QRandom.IntRange(700, 1000);
+            explorationBonus = (explorationBonus * 2) + 1000;
         }
 
         planet.explorationBonus = explorationBonus;

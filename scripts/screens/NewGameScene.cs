@@ -413,6 +413,9 @@ public class NewGameScene : Node2D {
                     }
                     var hashSet = new HashSet<string>();
                     var p = PlanetGenerator.NewResourcePlanet(0.05f, 1, hashSet);
+                    if (!p.gasGiant) {
+                        p.explorationUnits += 1000;
+                    }
                     p.gasGiant = true;
                     p.mineralsPerDay = 0;
                     p.organicPerDay = 0;
