@@ -35,7 +35,7 @@ public class ExplorationDrone {
             name = "Fog Rider",
             sellingPrice = 800,
             maxTemp = 100,
-            explorationRate = 3,
+            explorationRate = 4,
             canExploreGasGiants = true,
             description = "A slower version of Curiosity that can explore gas giants.",
         },

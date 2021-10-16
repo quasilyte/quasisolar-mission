@@ -148,6 +148,7 @@ public class ResearchScreen : Node2D {
                 "Jump Tracer Mk2",
                 "Interceptor",
                 "Laser Weapons",
+                "Seeker",
             },
             new List<string>{
                 "Pulse Laser",
@@ -155,6 +156,7 @@ public class ResearchScreen : Node2D {
                 "Vortex Battery",
                 "Level 2 Shields",
                 "Aligned Jumping",
+                "Fog Shark",
             },
             new List<string>{
                 "Reflector",
@@ -209,9 +211,20 @@ public class ResearchScreen : Node2D {
             }
         }
 
+        // Always recommend artifact-related researches.
         foreach (var artifact in _gameState.artifactsRecovered) {
             if (!_gameState.technologiesResearched.Contains(artifact)) {
                 result.Add(Research.Find(artifact));
+            }
+        }
+
+        // Always recommend quest-related researches.
+        foreach (var r in _researchList) {
+            if (_gameState.technologiesResearched.Contains(r.name)) {
+                continue;
+            }
+            if (_gameState.activeQuests.Find((x) => x.name == r.quest) != null) {
+                result.Add(r);
             }
         }
 
