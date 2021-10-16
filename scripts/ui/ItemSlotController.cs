@@ -1,5 +1,19 @@
+using System.Collections.Generic;
+
 public class ItemSlotController {
     public ItemSlotNode selected = null;
+
+    public List<ItemSlotNode> slots = new List<ItemSlotNode>();
+
+    public ItemSlotNode NewSlot(int index, ItemKind itemKind) {
+        var item = ItemSlotNode.New(index, itemKind);
+        slots.Add(item);
+        return item;
+    }
+
+    public void AddSlot(ItemSlotNode slot) {
+        slots.Add(slot);
+    }
 
     public void OnItemClicked(ItemSlotNode itemSlot) {
         if (selected == null && itemSlot.IsEmpty()) {
@@ -19,9 +33,26 @@ public class ItemSlotController {
             selected = itemSlot;
         } else if (selected != null && itemSlot.IsEmpty()) {
             // Pressing an empty slot transfers an item to a new slot.
-            if (itemSlot.ApplyItem(selected)) {
+            if (selected.GetItemKind() != ItemKind.Shop && itemSlot.ApplyItem(selected)) {
                 selected.MakeUnselected();
                 selected = null;
+            }
+        }
+
+        if (selected != null) {
+            if (selected.GetItemKind() != ItemKind.Shop) {
+                foreach (var slot in slots) {
+                    if (slot == selected) {
+                        continue;
+                    }
+                    if (slot.CanApplyItem(selected.GetItem())) {
+                        slot.MakeHighlighted();
+                    }
+                }
+            }
+        } else {
+            foreach (var slot in slots) {
+                slot.MakeUnselected();
             }
         }
     }

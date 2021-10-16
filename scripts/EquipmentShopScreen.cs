@@ -20,7 +20,7 @@ public class EquipmentShopScreen : Node2D {
     private List<ItemSlotNode> _shopSlots = new List<ItemSlotNode>();
     private List<ItemSlotNode> _storageSlots = new List<ItemSlotNode>();
 
-    private ItemSlotNode _selectedItemSlot;
+    private ItemSlotController _itemSlotController = new ItemSlotController();
 
     private Button _buySell;
 
@@ -338,6 +338,7 @@ public class EquipmentShopScreen : Node2D {
 
         for (int i = 0; i < 2; i++) {
             var weaponSlot = panel.GetNode<ItemSlotNode>($"Weapon{i}");
+            _itemSlotController.AddSlot(weaponSlot);
             weaponSlot.SetAssignItemCallback((int index, IItem item) => {
                 _selectedVessel.weapons[index] = item != null ? ((WeaponDesign)item).name : EmptyWeapon.Design.name;
             });
@@ -345,6 +346,7 @@ public class EquipmentShopScreen : Node2D {
         }
         {
             var weaponSlot = panel.GetNode<ItemSlotNode>("SpecialWeapon");
+            _itemSlotController.AddSlot(weaponSlot);
             weaponSlot.SetAssignItemCallback((int index, IItem item) => {
                 _selectedVessel.specialWeaponName = item != null ? ((WeaponDesign)item).name : EmptyWeapon.Design.name;
             });
@@ -353,6 +355,7 @@ public class EquipmentShopScreen : Node2D {
 
         {
             var energySourceSlot = panel.GetNode<ItemSlotNode>("EnergySource");
+            _itemSlotController.AddSlot(energySourceSlot);
             energySourceSlot.SetAssignItemCallback((int index, IItem item) => {
                 _selectedVessel.energySourceName = item != null ? ((EnergySource)item).name : "None";
             });
@@ -361,6 +364,7 @@ public class EquipmentShopScreen : Node2D {
 
         {
             var shieldSlot = panel.GetNode<ItemSlotNode>("Shield");
+            _itemSlotController.AddSlot(shieldSlot);
             shieldSlot.SetAssignItemCallback((int index, IItem item) => {
                 _selectedVessel.shieldName = item != null ? ((ShieldDesign)item).name : EmptyShield.Design.name;
             });
@@ -369,6 +373,7 @@ public class EquipmentShopScreen : Node2D {
 
         {
             var sentinelSlot = panel.GetNode<ItemSlotNode>("Sentinel");
+            _itemSlotController.AddSlot(sentinelSlot);
             sentinelSlot.SetAssignItemCallback((int index, IItem item) => {
                 _selectedVessel.sentinelName = item != null ? ((SentinelDesign)item).name : "Empty";
             });
@@ -377,6 +382,7 @@ public class EquipmentShopScreen : Node2D {
 
         for (int i = 0; i < 5; i++) {
             var artifactSlot = panel.GetNode<ItemSlotNode>($"Artifact{i}");
+            _itemSlotController.AddSlot(artifactSlot);
             artifactSlot.SetAssignItemCallback((int index, IItem item) => {
                 _selectedVessel.artifacts[index] = item != null ? ((ArtifactDesign)item).name : EmptyArtifact.Design.name;
             });
@@ -385,7 +391,8 @@ public class EquipmentShopScreen : Node2D {
 
         var itemStorageGrid = GetNode<GridContainer>("Storage/ScrollContainer/GridContainer");
         for (int i = 0; i < _gameState.ItemStorageCapacity(); i++) {
-            var itemSlot = ItemSlotNode.New(i, ItemKind.Storage);
+            var itemSlot = _itemSlotController.NewSlot(i, ItemKind.Storage);
+            _itemSlotController.AddSlot(itemSlot);
             itemStorageGrid.AddChild(itemSlot);
             itemSlot.SetAssignItemCallback((int index, IItem item) => {
                 _gameState.PutItemToStorage(item, index);
@@ -401,7 +408,8 @@ public class EquipmentShopScreen : Node2D {
 
         var itemShopGrid = GetNode<GridContainer>("EquipmentShop/ScrollContainer/GridContainer");
         for (int i = 0; i < 30; i++) {
-            var itemSlot = ItemSlotNode.New(i, ItemKind.Shop);
+            var itemSlot = _itemSlotController.NewSlot(i, ItemKind.Shop);
+            _itemSlotController.AddSlot(itemSlot);
             itemShopGrid.AddChild(itemSlot);
             itemSlot.Connect("Clicked", this, nameof(OnItemClicked), new Godot.Collections.Array{itemSlot});
             itemSlot.Reset(null, true);
@@ -412,33 +420,12 @@ public class EquipmentShopScreen : Node2D {
     }
 
     private void OnItemClicked(ItemSlotNode itemSlot) {
-        if (_selectedItemSlot == null && itemSlot.IsEmpty()) {
-            // Clicking an empty slot without another slot selected is a no-op.
-        } else if (_selectedItemSlot == itemSlot) {
-            // Clicked on the same item again.
-            itemSlot.MakeUnselected();
-            _selectedItemSlot = null;
-        } else if (_selectedItemSlot == null) {
-            // Nothing is selected, so any item slot click selects it.
-            itemSlot.MakeSelected();
-            _selectedItemSlot = itemSlot;
-        } else if (_selectedItemSlot != null && !itemSlot.IsEmpty()) {
-            // Pressing the other item while having an item selected selects a new item.
-            _selectedItemSlot.MakeUnselected();
-            itemSlot.MakeSelected();
-            _selectedItemSlot = itemSlot;
-        } else if (_selectedItemSlot != null && itemSlot.IsEmpty()) {
-            // Pressing an empty slot transfers an item to a new slot.
-            if (itemSlot.ApplyItem(_selectedItemSlot)) {
-                _selectedItemSlot.MakeUnselected();
-                _selectedItemSlot = null;
-            }
-        }
+        _itemSlotController.OnItemClicked(itemSlot);
 
-        if (_selectedItemSlot == null) {
+        if (_itemSlotController.selected == null) {
             _buySell.Disabled = true;
-        } else if (_selectedItemSlot.GetItemKind() == ItemKind.Shop) {
-            _buySell.Disabled = ItemInfo.SellingPrice(_selectedItemSlot.GetItem()) > _gameState.credits;
+        } else if (_itemSlotController.selected.GetItemKind() == ItemKind.Shop) {
+            _buySell.Disabled = ItemInfo.SellingPrice(_itemSlotController.selected.GetItem()) > _gameState.credits;
             _buySell.Text = "Buy";
         } else {
             _buySell.Text = "Sell";
@@ -446,10 +433,10 @@ public class EquipmentShopScreen : Node2D {
         }
 
         var infoBox = GetNode<Label>("EquipmentInfo/InfoBox/Body");
-        if (_selectedItemSlot == null) {
+        if (_itemSlotController.selected == null) {
             infoBox.Text = "";
         } else {
-            infoBox.Text = ItemInfo.RenderHelp(_selectedItemSlot.GetItem());
+            infoBox.Text = ItemInfo.RenderHelp(_itemSlotController.selected.GetItem());
         }
     }
 
@@ -564,7 +551,7 @@ public class EquipmentShopScreen : Node2D {
     }
 
     private void OnItemBuy() {
-        var item = _selectedItemSlot.GetItem();
+        var item = _itemSlotController.selected.GetItem();
         var price = ItemInfo.BuyingPrice(item);
         if (price > _gameState.credits) {
             return;
@@ -576,13 +563,13 @@ public class EquipmentShopScreen : Node2D {
         _gameState.PutItemToStorage(item, i);
         _storageSlots[i].ApplyItem(item);
     
-        _buySell.Disabled = ItemInfo.SellingPrice(_selectedItemSlot.GetItem()) > _gameState.credits;
+        _buySell.Disabled = ItemInfo.SellingPrice(_itemSlotController.selected.GetItem()) > _gameState.credits;
 
         UpdateUI();
     }
 
     private void OnItemSell() {
-        var item = _selectedItemSlot.GetItem();
+        var item = _itemSlotController.selected.GetItem();
         var itemName = ItemInfo.Name(item);
         _sellEquipmentPopup.GetNode<Label>("Title").Text = "Sell " + itemName + "?";
         var sellingPrice = ItemInfo.SellingPrice(item) / 2;
@@ -592,7 +579,7 @@ public class EquipmentShopScreen : Node2D {
     }
 
     private void OnShopBuySellButton() {
-        if (_selectedItemSlot == null) {
+        if (_itemSlotController.selected == null) {
             return;
         }
         if (_buySell.Text == "Sell") {
@@ -643,15 +630,15 @@ public class EquipmentShopScreen : Node2D {
     }
 
     private void OnSellEquipmentConfirmButton() {
-        var item = _selectedItemSlot.GetItem();
+        var item = _itemSlotController.selected.GetItem();
         var sellingPrice = ItemInfo.SellingPrice(item) / 2;
         _gameState.credits += sellingPrice;
         UpdateUI();
 
         PlayMoneySound();
 
-        _selectedItemSlot.MakeUnselected();
-        _selectedItemSlot.MakeEmpty();
+        _itemSlotController.selected.MakeUnselected();
+        _itemSlotController.selected.MakeEmpty();
 
         HidePopup(_sellEquipmentPopup);
     }

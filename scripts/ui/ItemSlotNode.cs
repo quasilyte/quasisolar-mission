@@ -10,6 +10,7 @@ public class ItemSlotNode : Control {
 
     private static Texture selectedTexture = null;
     private static Texture normalTexture = null;
+    private static Texture highlightedTexture = null;
 
     private bool _enabled = false;
     private int _index;
@@ -39,6 +40,7 @@ public class ItemSlotNode : Control {
         if (normalTexture == null) {
             selectedTexture = GD.Load<Texture>("res://images/ui/item_slot_selected.png");
             normalTexture = GD.Load<Texture>("res://images/ui/item_slot_normal.png");
+            highlightedTexture = GD.Load<Texture>("res://images/ui/item_slot_highlighted.png");
         }
         if (presetItemKind != ItemKind.Unset) {
             _itemKind = presetItemKind;
@@ -58,6 +60,7 @@ public class ItemSlotNode : Control {
 
     public void MakeSelected() { _toggle.TextureNormal = selectedTexture; }
     public void MakeUnselected() { _toggle.TextureNormal = normalTexture; }
+    public void MakeHighlighted() { _toggle.TextureNormal = highlightedTexture;}
 
     public IItem GetItem() { return _item; }
     public ItemKind GetItemKind() { return _itemKind; }
@@ -85,7 +88,7 @@ public class ItemSlotNode : Control {
         _item = null;
     }
 
-    public bool ApplyItem(IItem item) {
+    public bool CanApplyItem(IItem item) {
         if (_item != null || !_enabled) {
             return false;
         }
@@ -113,6 +116,13 @@ public class ItemSlotNode : Control {
                     return false;
                 }
                 break;
+        }
+        return true;
+    }
+
+    public bool ApplyItem(IItem item) {
+        if (!CanApplyItem(item)) {
+            return false;
         }
 
         if (_assignItem != null) {

@@ -156,7 +156,7 @@ public class ShipyardScreen : Node2D {
 
         var productionGrid = GetNode<GridContainer>("VesselProduction/ScrollContainer/GridContainer");
         for (int i = 0; i < 5 * 4; i++) {
-            var slot = ItemSlotNode.New(0, ItemKind.Shop);
+            var slot = _itemSlotController.NewSlot(0, ItemKind.Shop);
             productionGrid.AddChild(slot);
             var args = new Godot.Collections.Array { i };
             slot.Reset(null, true);
@@ -186,6 +186,7 @@ public class ShipyardScreen : Node2D {
 
         for (int i = 0; i < _fleetSlots.Length; i++) {
             var vesselSlot = GetNode<ItemSlotNode>($"ActiveFleet/Vessel{i}");
+            _itemSlotController.AddSlot(vesselSlot);
             vesselSlot.SetAssignItemCallback((int index, IItem item) => {
                 _fleetSlots[index] = item != null ? (Vessel)item : null;
                 if (item == null) {
@@ -200,7 +201,7 @@ public class ShipyardScreen : Node2D {
 
         var garrisonGrid = GetNode<GridContainer>("Garrison/ScrollContainer/GridContainer");
         for (int i = 0; i < StarBase.maxGarrisonSize; i++) {
-            var itemSlot = ItemSlotNode.New(i, ItemKind.GarrisonVessel);
+            var itemSlot = _itemSlotController.NewSlot(i, ItemKind.GarrisonVessel);
             garrisonGrid.AddChild(itemSlot);
             itemSlot.SetAssignItemCallback((int index, IItem item) => {
                 _garrisonSlots[index] = item != null ? (Vessel)item : null;
