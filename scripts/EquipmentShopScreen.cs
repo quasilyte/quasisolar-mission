@@ -77,15 +77,15 @@ public class EquipmentShopScreen : Node2D {
         for (int i = 0; i < _humanUnit.fleet.Count; i++) {
             var u = _humanUnit.fleet[i];
             if (u.id == 0) {
-                break;
+                continue;
             }
-            var panel = GetNode<Sprite>($"UnitMenu/Unit{i}");
-            var button = new TextureButton();
-            button.RectSize = new Vector2(112, 112);
-            button.Expand = true;
-            button.StretchMode = TextureButton.StretchModeEnum.KeepCentered;
-            button.TextureNormal = u.Get().Design().Texture();
-            panel.AddChild(button);
+            var button = GetNode<TextureButton>($"UnitMenu/Unit{i}");
+            button.Disabled = false;
+            var sprite = new Sprite();
+            sprite.Position += new Vector2(56, 56);
+            sprite.Scale = new Vector2(2, 2);
+            sprite.Texture = u.Get().Design().Texture();
+            button.AddChild(sprite);
             button.Connect("pressed", this, nameof(OnMemberSelected), new Godot.Collections.Array { i });
         }
 
@@ -444,11 +444,18 @@ public class EquipmentShopScreen : Node2D {
         var panel = GetNode<Panel>("UnitMenu");
 
         for (int i = 0; i < _humanUnit.fleet.Count; i++) {
-            GetNode<Sprite>($"UnitMenu/Unit{i}").Frame = 0;
+            var b = GetNode<TextureButton>($"UnitMenu/Unit{i}");
+            if (vesselIndex != i) {
+                b.TextureNormal = GD.Load<Texture>("res://images/ui/item_slot2_normal.png");
+            } else {
+                b.TextureNormal = GD.Load<Texture>("res://images/ui/item_slot2_selected.png");
+            }
         }
 
-        var unitPanel = GetNode<Sprite>($"UnitMenu/Unit{vesselIndex}");
-        unitPanel.Frame = 1;
+        _itemSlotController.Unselect();
+        GetNode<Label>("EquipmentInfo/InfoBox/Body").Text = "";
+
+        var unitButton = GetNode<TextureButton>($"UnitMenu/Unit{vesselIndex}");
 
         var u = _humanUnit.fleet[vesselIndex].Get();
         _selectedVessel = u;

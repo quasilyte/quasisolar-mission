@@ -1,15 +1,16 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://theme.tres" type="Theme" id=1]
 [ext_resource path="res://styles/text_box.tres" type="StyleBox" id=2]
 [ext_resource path="res://images/bg/starbase_bg.png" type="Texture" id=3]
 [ext_resource path="res://scripts/EquipmentShopScreen.cs" type="Script" id=4]
+[ext_resource path="res://images/ui/item_slot2_normal.png" type="Texture" id=5]
 [ext_resource path="res://images/ui/green_bar.png" type="Texture" id=6]
 [ext_resource path="res://images/ui/gray_bar.png" type="Texture" id=7]
 [ext_resource path="res://styles/popup_box.tres" type="StyleBox" id=8]
 [ext_resource path="res://images/ui/back.png" type="Texture" id=9]
 [ext_resource path="res://scenes/ui/ItemSlotNode.tscn" type="PackedScene" id=10]
-[ext_resource path="res://images/ui/toggle_slot.png" type="Texture" id=11]
+[ext_resource path="res://images/ui/item_slot2_selected.png" type="Texture" id=11]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.156863, 0.156863, 0.156863, 0.686275 )
@@ -160,29 +161,56 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Unit0" type="Sprite" parent="UnitMenu"]
-position = Vector2( 48, 48 )
-texture = ExtResource( 11 )
-centered = false
-hframes = 2
+[node name="Unit0" type="TextureButton" parent="UnitMenu"]
+margin_left = 48.0
+margin_top = 48.0
+margin_right = 160.0
+margin_bottom = 160.0
+focus_mode = 0
+disabled = true
+texture_normal = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Unit1" type="Sprite" parent="UnitMenu"]
-position = Vector2( 224, 48 )
-texture = ExtResource( 11 )
-centered = false
-hframes = 2
+[node name="Unit1" type="TextureButton" parent="UnitMenu"]
+margin_left = 224.0
+margin_top = 48.0
+margin_right = 336.0
+margin_bottom = 160.0
+focus_mode = 0
+disabled = true
+texture_normal = ExtResource( 5 )
+texture_pressed = ExtResource( 11 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Unit2" type="Sprite" parent="UnitMenu"]
-position = Vector2( 352, 48 )
-texture = ExtResource( 11 )
-centered = false
-hframes = 2
+[node name="Unit2" type="TextureButton" parent="UnitMenu"]
+margin_left = 352.0
+margin_top = 48.0
+margin_right = 464.0
+margin_bottom = 160.0
+focus_mode = 0
+disabled = true
+texture_normal = ExtResource( 5 )
+texture_pressed = ExtResource( 11 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Unit3" type="Sprite" parent="UnitMenu"]
-position = Vector2( 480, 48 )
-texture = ExtResource( 11 )
-centered = false
-hframes = 2
+[node name="Unit3" type="TextureButton" parent="UnitMenu"]
+margin_left = 480.0
+margin_top = 48.0
+margin_right = 592.0
+margin_bottom = 160.0
+focus_mode = 0
+disabled = true
+texture_normal = ExtResource( 5 )
+texture_pressed = ExtResource( 11 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Weapon0" parent="UnitMenu" instance=ExtResource( 10 )]
 anchor_left = 0.159

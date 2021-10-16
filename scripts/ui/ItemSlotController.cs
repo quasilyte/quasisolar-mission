@@ -15,11 +15,16 @@ public class ItemSlotController {
         slots.Add(slot);
     }
 
-    public void ClearSelectedSlot() {
+    public void Unselect() {
         foreach (var slot in slots) {
             slot.MakeUnselected();
         }
+        selected = null;
+    }
+
+    public void ClearSelectedSlot() {
         selected.MakeEmpty();
+        Unselect();
     }
 
     public void OnItemClicked(ItemSlotNode itemSlot) {
