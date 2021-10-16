@@ -179,7 +179,7 @@ public class KrigiaSpaceUnitNode : SpaceUnitNode {
 
     private void PatrolDestinationReached() {
         if (_currentSystem.starBase.id == 0) {
-            unit.botSystemLeaveDelay = QRandom.IntRange(8, 32);
+            unit.botSystemLeaveDelay = QRandom.IntRange(30, 70);
             _canBeDetected = false;
             return;
         }

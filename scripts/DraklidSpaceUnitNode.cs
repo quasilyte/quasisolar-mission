@@ -2,8 +2,6 @@ using Godot;
 using System;
 
 public class DraklidSpaceUnitNode : SpaceUnitNode {
-    // FIXME: bots lose their field values when scene is switched.
-
     private bool _canBeDetected = false;
 
     private static PackedScene _scene = null;
@@ -71,7 +69,7 @@ public class DraklidSpaceUnitNode : SpaceUnitNode {
     private void OnDestinationReached() {
         var starBase = _currentSystem.starBase;
         if (starBase.id == 0 || starBase.Get().owner == Faction.Draklid) {
-            unit.botSystemLeaveDelay = QRandom.IntRange(8, 32);
+            unit.botSystemLeaveDelay = QRandom.IntRange(65, 120);
             _canBeDetected = false;
             return;
         }
