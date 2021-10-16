@@ -14,7 +14,7 @@ public class DiffuserShield : AbstractShield {
         cooldown = 9,
         energyCost = 20,
 
-        sellingPrice = 10000,
+        sellingPrice = 9500,
         researchRequired = true,
 
         visualAuraRotates = true,

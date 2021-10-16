@@ -329,6 +329,13 @@ public class Research {
             dependencies = {"Level 3 Shields"},
         },
 
+        new Research{
+            name = "Diffuser",
+            category = Category.NewShield,
+            researchTime = 100,
+            dependencies = {"Level 3 Shields"},
+        },
+
         // Energy sources tech.
 
         new Research{
@@ -747,6 +754,7 @@ public class Research {
 
         new Research{
             name = "Aegis",
+            material = Faction.Phaa,
             category = Category.NewShield,
             researchTime = 110,
             dependencies = {"Level 3 Shields"},
@@ -787,7 +795,7 @@ public class Research {
         new Research{
             name = "Krigia Weapons I",
             material = Faction.Krigia,
-            researchTime = 100,
+            researchTime = 70,
             filterCategory = Category.NewWeapon,
         },
 
@@ -802,7 +810,7 @@ public class Research {
         new Research{
             name = "Krigia Weapons II",
             material = Faction.Krigia,
-            researchTime = 120,
+            researchTime = 100,
             dependencies = {"Krigia Weapons I"},
             filterCategory = Category.NewWeapon,
         },

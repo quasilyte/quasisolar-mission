@@ -48,6 +48,7 @@ public class ResearchScreen : Node2D {
         GetNode<Button>("Status/InvestButton").Connect("pressed", this, nameof(OnInvestButton));
 
         var researchFilters = new List<string>(){
+            "Recommended",
             "All",
             "Fundamental",
             "Upgrade",
@@ -135,6 +136,88 @@ public class ResearchScreen : Node2D {
         GetNode<Label>("ProjectInfo/Panel/Label").Text = text;
     }
 
+    private List<Research> RecommendedProjects() {
+        var recommendations = new List<List<string>>{
+            new List<string>{
+                "Flame Eater",
+                "Ark",
+                "Gauss Turret Capacity",
+            },
+            new List<string>{
+                "Rocket Launcher",
+                "Jump Tracer Mk2",
+                "Interceptor",
+                "Laser Weapons",
+            },
+            new List<string>{
+                "Pulse Laser",
+                "Draklid Weapons I",
+                "Vortex Battery",
+                "Level 2 Shields",
+                "Aligned Jumping",
+            },
+            new List<string>{
+                "Reflector",
+                "Disruptor",
+                "Point-Defense Laser",
+                "Improved Fuel Tanks",
+                "Krigia Weapons I",
+            },
+            new List<string>{
+                "Reflector Guard",
+                "Assault Laser",
+                "Gladiator",
+                "Krigia Weapons II",
+            },
+            new List<string>{
+                "Hurricane",
+                "Bomber",
+                "High-Capacity Reactors",
+                "Krigia Weapons III",
+                "Level 3 Shields",
+            },
+            new List<string>{
+                "Graviton Generator",
+                "Lancer",
+                "Mortar",
+                "Phaser",
+            },
+        };
+
+        var result = new List<Research>();
+        foreach (var stage in recommendations) {
+            var stageCompleted = true;
+            foreach (var projectName in stage) {
+                var r = Research.Find(projectName);
+                if (!_gameState.technologiesResearched.Contains(projectName)) {
+                    if (r.material != Faction.Neutral) {
+                        result.Add(r);
+                        continue;
+                    }
+                    stageCompleted = false;
+                    break;
+                }
+            }
+            if (!stageCompleted) {
+                foreach (var projectName in stage) {
+                    var r = Research.Find(projectName);
+                    if (r.material == Faction.Neutral) {
+                        result.Add(r);
+                    }
+                }
+                break;
+            }
+        }
+
+        foreach (var artifact in _gameState.artifactsRecovered) {
+            if (!_gameState.technologiesResearched.Contains(artifact)) {
+                result.Add(Research.Find(artifact));
+            }
+        }
+
+        return result;
+    }
+
     private List<Research> PrepareProjectList() {
         var filterSelect = GetNode<OptionButton>("ProjectList/FilterOptions");
         var selected = filterSelect.GetItemText(filterSelect.Selected);
@@ -168,7 +251,9 @@ public class ResearchScreen : Node2D {
             category = Research.Category.NewBaseModule;
         }
 
-        if (selected == "Weapons") {
+        if (selected == "Recommended") {
+            return FilterAvailableResearches(RecommendedProjects());
+        } else if (selected == "Weapons") {
             var projects = _researchList.FindAll((r) => {
                 var c = r.GetFilterCategory();
                 return c == Research.Category.NewWeapon || c == Research.Category.NewSpecialWeapon;

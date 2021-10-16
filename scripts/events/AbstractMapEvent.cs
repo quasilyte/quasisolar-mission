@@ -79,7 +79,7 @@ public abstract class AbstractMapEvent {
     public virtual bool Condition() { return true; }
 
     protected static bool EventHappened(string name) {
-        return !GameState().randomEventsAvailable.Contains(name);
+        return GameState().eventsResolved.Contains(name);
     }
 
     protected static Vessel Flagship() { return PlayerSpaceUnit().fleet[0].Get(); }
