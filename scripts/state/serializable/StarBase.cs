@@ -21,7 +21,7 @@ public class StarBase: AbstractPoolValue {
 
     public Faction owner;
 
-    public Mode mode;
+    public Mode mode = Mode.ProduceRU;
 
     public StarSystem.Ref system;
 
