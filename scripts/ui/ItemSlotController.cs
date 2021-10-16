@@ -15,6 +15,13 @@ public class ItemSlotController {
         slots.Add(slot);
     }
 
+    public void ClearSelectedSlot() {
+        foreach (var slot in slots) {
+            slot.MakeUnselected();
+        }
+        selected.MakeEmpty();
+    }
+
     public void OnItemClicked(ItemSlotNode itemSlot) {
         if (selected == null && itemSlot.IsEmpty()) {
             // Clicking an empty slot without another slot selected is a no-op.

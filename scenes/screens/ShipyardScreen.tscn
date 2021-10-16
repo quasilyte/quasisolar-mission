@@ -155,6 +155,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="WarningText" type="Label" parent="ProductionQueue"]
+margin_left = 128.0
+margin_top = 144.0
+margin_right = 416.0
+margin_bottom = 176.0
+text = "(no minerals)"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Order0" type="Sprite" parent="ProductionQueue"]
 position = Vector2( 80, 96 )
 texture = ExtResource( 2 )

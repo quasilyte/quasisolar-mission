@@ -637,8 +637,8 @@ public class EquipmentShopScreen : Node2D {
 
         PlayMoneySound();
 
-        _itemSlotController.selected.MakeUnselected();
-        _itemSlotController.selected.MakeEmpty();
+        _itemSlotController.ClearSelectedSlot();
+        GetNode<Label>("EquipmentInfo/InfoBox/Body").Text = "";
 
         HidePopup(_sellEquipmentPopup);
     }

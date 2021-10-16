@@ -154,6 +154,18 @@ public class ShipyardScreen : Node2D {
 
         GetNode<Button>("VesselProduction/StartProduction").Connect("pressed", this, nameof(OnStartProductionButton));
 
+        var productionWarning = GetNode<Label>("ProductionQueue/WarningText");
+        productionWarning.AddColorOverride("font_color", Color.Color8(0x5d, 0x60, 0x79));
+        if (_starBase.productionQueue.Count != 0 && _starBase.mineralsStock == 0) {
+            productionWarning.Text = "(no minerals)";
+            productionWarning.Visible = true;
+        } else if (_starBase.productionQueue.Count != 0 && _starBase.powerStock == 0) {
+            productionWarning.Text = "(no power)";
+            productionWarning.Visible = true;
+        } else {
+            productionWarning.Visible = false;
+        }
+
         var productionGrid = GetNode<GridContainer>("VesselProduction/ScrollContainer/GridContainer");
         for (int i = 0; i < 5 * 4; i++) {
             var slot = _itemSlotController.NewSlot(0, ItemKind.Shop);
