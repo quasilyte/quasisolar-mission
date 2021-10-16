@@ -170,6 +170,7 @@ public class ShipyardScreen : Node2D {
         for (int i = 0; i < 5 * 4; i++) {
             var slot = _itemSlotController.NewSlot(0, ItemKind.Shop);
             productionGrid.AddChild(slot);
+            slot.SetItemScaling(2.0f);
             var args = new Godot.Collections.Array { i };
             slot.Reset(null, true);
             slot.Connect("Clicked", this, nameof(OnItemClicked), new Godot.Collections.Array{slot});
@@ -215,6 +216,7 @@ public class ShipyardScreen : Node2D {
         for (int i = 0; i < StarBase.maxGarrisonSize; i++) {
             var itemSlot = _itemSlotController.NewSlot(i, ItemKind.GarrisonVessel);
             garrisonGrid.AddChild(itemSlot);
+            itemSlot.SetItemScaling(2.0f);
             itemSlot.SetAssignItemCallback((int index, IItem item) => {
                 _garrisonSlots[index] = item != null ? (Vessel)item : null;
             });
@@ -227,6 +229,7 @@ public class ShipyardScreen : Node2D {
 
         for (int i = 0; i < _fleetSlots.Length; i++) {
             var slot = GetNode<ItemSlotNode>($"ActiveFleet/Vessel{i}");
+            slot.SetItemScaling(2.0f);
             if (_gameState.humanUnit.Get().fleet.Count <= i) {
                 slot.GetNode<Label>("Name").Text = "";
                 continue;

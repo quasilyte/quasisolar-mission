@@ -55,6 +55,10 @@ public class ItemSlotNode : Control {
         _toggle.Connect("button_up", this, nameof(OnButtonUp));
     }
 
+    public void SetItemScaling(float v) {
+        _itemSprite.Scale = new Vector2(v, v);
+    }
+
     public bool IsEmpty() { return _item == null; }
     public bool IsSelected() { return _toggle.TextureNormal == selectedTexture; }
 
