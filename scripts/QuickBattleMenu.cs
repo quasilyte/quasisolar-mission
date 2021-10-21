@@ -458,6 +458,11 @@ public class QuickBattleMenu : Node2D {
         QuickBattleState.envDanger = _hazardOption.Selected;
         ArenaSettings.envDanger = _hazardSelection[QuickBattleState.envDanger];
 
+        if (ArenaSettings.envDanger == ArenaSettings.EnvDanger.Star) {
+            var colors = Enum.GetValues(typeof(StarColor));
+            ArenaSettings.starColor = (StarColor)colors.GetValue(QRandom.IntRange(0, colors.Length-1));
+        }
+
         if (QuickBattleState.gameSpeed == "Slow") {
             ArenaSettings.speed = ArenaSettings.BattleSpeed.Slow;
         } else if (QuickBattleState.gameSpeed == "Normal") {
