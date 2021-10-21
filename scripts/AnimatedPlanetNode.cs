@@ -15,6 +15,6 @@ public class AnimatedPlanetNode : Node2D {
     }
 
     public void SetSprite(string name) {
-        GetNode<Sprite>("Sprite").Texture = GD.Load<Texture>("res://images/planet/" + name + ".png");
+        GetNode<Sprite>("Sprite").Texture = GD.Load<Texture>("res://images/planet/" + name + ".jpg");
     }
 }

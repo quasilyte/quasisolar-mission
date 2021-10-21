@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://images/planet/oceanic1.png" type="Texture" id=1]
+[ext_resource path="res://images/planet/alpine1.jpg" type="Texture" id=1]
 [ext_resource path="res://scripts/AnimatedPlanetNode.cs" type="Script" id=2]
 
 [sub_resource type="Shader" id=1]
