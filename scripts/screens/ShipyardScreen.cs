@@ -70,6 +70,7 @@ public class ShipyardScreen : Node2D {
         _productionButton.Disabled = selected == null ||
             selected.GetItemKind() != ItemKind.Shop ||
             _starBase.VesselProductionPrice((VesselDesign)selected.GetItem()) > _gameState.credits ||
+            _starBase.level < ItemInfo.MinStarBaseLevel(selected.GetItem()) ||
             _starBase.productionQueue.Count >= 4;
 
         // GetNode<Button>("VesselProduction/StartProduction").Disabled = _selectedMerchandise.sprite == null ||
@@ -92,9 +93,6 @@ public class ShipyardScreen : Node2D {
     private List<VesselDesign> VesselSelection() {
         var selection = new List<VesselDesign>();
         foreach (var design in VesselDesign.list) {
-            if (_starBase.level < ItemInfo.MinStarBaseLevel(design)) {
-                continue;
-            }
             switch (design.availability) {
             case VesselDesign.ProductionAvailability.Never:
                 continue;
@@ -173,11 +171,16 @@ public class ShipyardScreen : Node2D {
             productionGrid.AddChild(slot);
             slot.SetItemScaling(2.0f);
             var args = new Godot.Collections.Array { i };
-            slot.Reset(null, true);
-            slot.Connect("Clicked", this, nameof(OnItemClicked), new Godot.Collections.Array{slot});
             if (_vesselSelection.Count > i) {
+                slot.Reset(null, true);
                 slot.AssignItem(_vesselSelection[i]);
+                if (_starBase.level < ItemInfo.MinStarBaseLevel(_vesselSelection[i])) {
+                    slot.SetItemSpriteAlpha(0.5f);
+                }
+            } else {
+                slot.Reset(null, false);
             }
+            slot.Connect("Clicked", this, nameof(OnItemClicked), new Godot.Collections.Array{slot});
         }
 
         for (int i = 0; i < 4; i++) {
@@ -248,7 +251,13 @@ public class ShipyardScreen : Node2D {
         if (_itemSlotController.selected == null) {
             infoBox.Text = "";
         } else {
-            infoBox.Text = ItemInfo.RenderHelp(_itemSlotController.selected.GetItem());
+            var item = _itemSlotController.selected.GetItem();
+            var text = "";
+            if (_starBase.level < ItemInfo.MinStarBaseLevel(item)) {
+                text += "[!] Can't produce: star base level is too low.\n\n";
+            }
+            text += ItemInfo.RenderHelp(item);
+            infoBox.Text = text;
         }
 
         UpdateUI();
