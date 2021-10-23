@@ -40,6 +40,9 @@ public static class ArtifactFactory {
         if (a == PointDefenseSaturatorArtifact.Design) {
             return new PointDefenseSaturatorArtifact();
         }
+        if (a == IonCannonSaturatorArtifact.Design) {
+            return new IonCannonSaturatorArtifact();
+        }
         if (a == ShivaRechargerArtifact.Design) {
             return new ShivaRechargerArtifact();
         }

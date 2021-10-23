@@ -12,6 +12,7 @@ public class Projectile : Node2D, IProjectile {
 
     private static Texture _laserTexture;
     private static Texture _ionTexture;
+    private static Texture _improvedIonTexture;
     private static Texture _stingerTexture;
     private static Texture _scytheTexture;
     private static Texture _photonBurstTexture;
@@ -213,14 +214,21 @@ public class Projectile : Node2D, IProjectile {
 
     private void InitIonCannon() {
         _hp = IonCannonWeapon.Design.range;
-        if (_ionTexture == null) {
-            _ionTexture = GD.Load<Texture>("res://images/ion.png");
+        if (_firedBy.Vessel.State.hasIonCannonSaturator) {
+            if (_improvedIonTexture == null) {
+                _improvedIonTexture = GD.Load<Texture>("res://images/ammo/Improved_Ion.png");
+            }
+            _texture = _improvedIonTexture;
+        } else {
+            if (_ionTexture == null) {
+                _ionTexture = GD.Load<Texture>("res://images/ion.png");
+            }
+            _texture = _ionTexture;
         }
         if (_ionAudioStream == null) {
             _ionAudioStream = GD.Load<AudioStream>("res://audio/ion_cannon.wav");
         }
         _volumeAdjust = -5;
-        _texture = _ionTexture;
         _audioStream = _ionAudioStream;
     }
 

@@ -40,6 +40,7 @@ public class VesselState {
     public bool hasSentinelLink = false;
     public bool hasImpulseDevourer = false;
     public bool hasPointDefenseSaturator = false;
+    public bool hasIonCannonSaturator = false;
 
     public int debris;
 

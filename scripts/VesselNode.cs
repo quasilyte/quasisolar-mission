@@ -408,6 +408,9 @@ public class VesselNode : Node2D {
             if (projectile is EnergyBoltNode energyBolt) {
                 damage += 4 * energyBolt.chargeLevel;
             }
+            if (design == IonCannonWeapon.Design && firedBy.Vessel.State.hasIonCannonSaturator) {
+                damage += 4;
+            }
             bool critical = false;
             // firedBy.Vessel is null for base defensive turrets.
             if (design.damageKind == DamageKind.Kinetic && firedBy.Vessel != null && firedBy.Vessel.State.hasKineticAccelerator) {
