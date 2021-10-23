@@ -14,6 +14,8 @@ public class MainMenu : Node2D {
         GetNode<Button>("SettingsButton").Connect("pressed", this, nameof(OnSettingsButtonPressed));
         GetNode<Button>("ExitButton").Connect("pressed", this, nameof(OnExitButtonPressed));
 
+        RpgGameState.instance = null;
+
         if (_needInit) {
             _needInit = false;
 
