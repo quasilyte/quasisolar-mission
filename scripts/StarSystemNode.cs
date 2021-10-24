@@ -181,6 +181,9 @@ public class StarSystemNode : Node2D {
             if (owner == Faction.Phaa) {
                 return MapNodeColor.Lime;
             }
+            if (owner == Faction.Lezeona) {
+                return MapNodeColor.Gray;
+            }
             throw new Exception("unexpected faction: " + owner.ToString());
         };
 

@@ -266,12 +266,13 @@ anchor_top = 0.659
 anchor_right = 0.5
 anchor_bottom = 0.659
 margin_left = -88.0
-margin_top = -9.74402
+margin_top = -9.74396
 margin_right = 88.0
 margin_bottom = 10.256
 value = 90.0
 texture_under = ExtResource( 7 )
 texture_progress = ExtResource( 6 )
+nine_patch_stretch = true
 __meta__ = {
 "_edit_use_anchors_": false
 }

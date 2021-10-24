@@ -17,7 +17,7 @@ public class StarHazardNode : EnvHazardNode {
     public override void _Ready() {
         base._Ready();
 
-        if (_color == StarColor.Orange || _color == StarColor.Yellow || _color == StarColor.Red) {
+        if (_color == StarColor.Orange || _color == StarColor.Yellow || _color == StarColor.Red || _color == StarColor.Purple) {
             GetNode<Sprite>("Sprite").Texture = GD.Load<Texture>("res://images/arena/yellow_star.png");
         } else if (_color == StarColor.Blue || _color == StarColor.White) {
             GetNode<Sprite>("Sprite").Texture = GD.Load<Texture>("res://images/arena/blue_star.png");
