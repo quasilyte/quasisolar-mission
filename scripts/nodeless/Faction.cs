@@ -24,6 +24,7 @@ public enum Faction {
     Phaa,
     Vespion,
     Rarilou,
+    Lezeona,
 
     // Minor campaign factions.
     PhaaRebel,
