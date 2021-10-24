@@ -86,6 +86,7 @@ public class VesselNode : Node2D {
         foreach (var w in weapons) {
             w.Ready();
         }
+        specialWeapon.Ready();
     }
 
     private void DragDetach() {
@@ -288,6 +289,10 @@ public class VesselNode : Node2D {
         var sfx = SoundEffectNode.New(_destroyedAudioStream, -10);
         GetParent().AddChild(sfx);
         ClearWaypoints();
+        // TODO: add OnVesselDestroyed() to a base class?
+        if (specialWeapon is PulseBladeWeapon pulseBlade) {
+            pulseBlade.OnVesselDestroyed();
+        }
         var e = Explosion.New(0.5f);
         e.Position = Position;
         e.Scale = new Vector2(2f, 2f);

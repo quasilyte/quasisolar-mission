@@ -687,6 +687,13 @@ public class Research {
             category = Category.NewShield,
         },
 
+        new Research{
+            name = "Pulse Blade",
+            material = Faction.Lezeona,
+            researchTime = 110,
+            category = Category.NewSpecialWeapon,
+        },
+
         // Vespion tech tree.
 
         new Research{

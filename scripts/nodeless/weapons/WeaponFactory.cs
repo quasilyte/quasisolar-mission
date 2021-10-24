@@ -118,6 +118,9 @@ public static class WeaponFactory {
         if (w == SwarmSpawnerWeapon.Design) {
             return new SwarmSpawnerWeapon(p);
         }
+        if (w == PulseBladeWeapon.Design) {
+            return new PulseBladeWeapon(p);
+        }
         if (w == HyperCutterWeapon.Design) {
             return new HyperCutterWeapon(p);
         }
