@@ -771,6 +771,9 @@ public class MapView : Node2D, IMapViewContext {
         } else if (starBase.owner == Faction.Krigia) {
             baseNode = KrigiaStarBaseNode.New(starBase);
             baseNode.Connect("SpaceUnitCreated", this, nameof(OnSpaceUnitCreated));
+        } else if (starBase.owner == Faction.Zyth) {
+            baseNode = ZythStarBaseNode.New(starBase);
+            baseNode.Connect("SpaceUnitCreated", this, nameof(OnSpaceUnitCreated));
         } else if (starBase.owner == Faction.Phaa) {
             baseNode = PhaaStarBaseNode.New(starBase);
         } else {
@@ -840,6 +843,8 @@ public class MapView : Node2D, IMapViewContext {
                 node = KrigiaSpaceUnitNode.New(u);
             } else if (u.owner == Faction.Rarilou) {
                 node = RarilouSpaceUnitNode.New(u);
+            } else if (u.owner == Faction.Zyth) {
+                node = ZythSpaceUnitNode.New(u);
             } else if (u.owner == Faction.Earthling) {
                 // Handled above.
             } else {
@@ -1101,6 +1106,7 @@ public class MapView : Node2D, IMapViewContext {
 
             if (!droneSelect.Disabled) {
                 droneSelect.AddItem("No drone deployed");
+                droneSelect.AddSeparator();
                 var droneSet = new HashSet<string>();
                 foreach (var drone in _gameState.explorationDrones) {
                     var d = ExplorationDrone.Find(drone);
@@ -1318,6 +1324,10 @@ public class MapView : Node2D, IMapViewContext {
     }
 
     private bool RollUnitAttack(SpaceUnitNode u) {
+        if (u.unit.owner == Faction.Zyth) {
+            TriggerZythEvent(u);
+            return true;
+        }
         if (u.unit.owner == Faction.Draklid) {
             TriggerDraklidEvent(u);
             return true;
@@ -1372,6 +1382,14 @@ public class MapView : Node2D, IMapViewContext {
         _lockControls = true;
         _eventUnit = u;
         _krigiaTaskForcePopup.PopupCentered();
+    }
+
+    private void TriggerZythEvent(SpaceUnitNode u) {
+        _randomEventProto = new ZythEncounterMapEvent();
+        var ctx = NewRandomEventContext();
+        ctx.spaceUnit = u.unit;
+        RpgGameState.arenaUnit1 = u.unit;
+        OpenRandomEvent(ctx);
     }
 
     private void TriggerDraklidEvent(SpaceUnitNode u) {

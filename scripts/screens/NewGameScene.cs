@@ -321,6 +321,7 @@ public class NewGameScene : Node2D {
             DeployBases(neutralSystems, Faction.Wertu, numWertuBases);
             DeployBases(neutralSystems, Faction.Zyth, numZythBases);
             DeployBases(neutralSystems, Faction.Draklid, numDraklidBases);
+            DeployBases(neutralSystems, Faction.Lezeona, 1);
             DeployBases(neutralSystems, Faction.Phaa, 1);
             DeployBases(neutralSystems, Faction.Vespion, 1);
         }
