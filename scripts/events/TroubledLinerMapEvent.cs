@@ -9,7 +9,7 @@ public class TroubledLinerMapEvent: AbstractMapEvent {
     }
 
     public override bool Condition() {
-        return !AtPlayerSystem();
+        return AtNeutralSystem();
     }
 
     public override AbstractMapEvent Create(RandomEventContext ctx) {
@@ -19,7 +19,7 @@ public class TroubledLinerMapEvent: AbstractMapEvent {
             You received a message from a vessel.
             
             `This is a non-military Wertu transporter.
-            Our batteries are exhausted and we can't charge the warp engine to leave this system.
+            Our batteries are exhausted and we can't charge the engine to leave this system.
             Please help.`
         ");
 
@@ -29,15 +29,15 @@ public class TroubledLinerMapEvent: AbstractMapEvent {
             if (roll < 0.4) {
                 effects.Add(new Effect{
                     kind = EffectKind.AddOrganic,
-                    value = 50,
+                    value = 90,
                 });
-                text += "In reward, they shared some of their transported goods worth 50 units of organic.\n";
+                text += "In reward, they shared some of their transported goods worth 90 units of organic.\n";
             } else if (roll < 0.8) {
                 effects.Add(new Effect{
                     kind = EffectKind.AddCredits,
-                    value = 1000,
+                    value = 2700,
                 });
-                text += "In reward, they paid 1000 credits for your assistance.\n";
+                text += "In reward, they paid 2700 RU for your assistance.\n";
             } else {
                 effects.Add(new Effect{
                     kind = EffectKind.AddReputation,
@@ -109,7 +109,7 @@ public class TroubledLinerMapEvent: AbstractMapEvent {
             name = "Ignore the call",
             apply = () => {
                 return new Result{
-                    text = "You can't help to everyone; more over, you have a mission to accomplish!",
+                    text = "You can't help to everyone; more over, you have a mission to accomplish.",
                 };
             }
         });
