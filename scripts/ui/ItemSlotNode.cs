@@ -151,6 +151,10 @@ public class ItemSlotNode : Control {
         _itemSprite.Visible = true;
     }
 
+    public void SetItemSpriteAlpha(float a) {
+        _itemSprite.Modulate = new Color(1, 1, 1, a);
+    }
+
     public void OnButtonDown() {
         _buttonDownPos = GetGlobalMousePosition();
     }
