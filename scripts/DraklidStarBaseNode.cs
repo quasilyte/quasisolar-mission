@@ -59,6 +59,19 @@ public class DraklidStarBaseNode : StarBaseNode {
             return;
         }
 
+        if (_gameState.day > 400 && starBase.garrison.Count > 5 && starBase.level >= ItemInfo.MinStarBaseLevel(VesselDesign.Find("Plunderer"))) {
+            var numPlunderers = 0;
+            foreach (var vessel in starBase.garrison) {
+                if (vessel.Get().designName == "Plunderer") {
+                    numPlunderers++;
+                }
+            }
+            if (numPlunderers < 2) {
+                starBase.productionQueue.Enqueue("Plunderer");
+                return;
+            }
+        }
+
         if (starBase.mineralsStock > 100 && starBase.powerStock > 50) {
             starBase.productionQueue.Enqueue("Marauder");
             return;
