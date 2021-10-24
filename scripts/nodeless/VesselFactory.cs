@@ -125,6 +125,10 @@ public static class VesselFactory {
             InitPhaaSpacehopper(v);
         } else if (kind == "Rarilou Leviathan") {
             InitRarilouLeviathan(v);
+        } else if (kind == "Lezeona Pin") {
+            InitLezeonaPin(v);
+        } else if (kind == "Lezeona Core") {
+            InitLezeonaCore(v);
         } else {
             throw new Exception($"unexpected player slot kind: {kind}");
         }
@@ -225,7 +229,7 @@ public static class VesselFactory {
 
         SetShield(v,
             0.25, DispersionFieldShield.Design.name,
-            0.25, ReflectorShield.Design.name,
+            0.25, DeceleratorShield.Design.name,
             0.5, LatticeShield.Design.name);
     }
 
@@ -238,7 +242,7 @@ public static class VesselFactory {
             v.shieldName = HeatScreenShield.Design.name;
         } else {
             v.weapons.Add(ShieldBreakerWeapon.Design.name);
-            v.shieldName = ReflectorShield.Design.name;
+            v.shieldName = DeceleratorShield.Design.name;
         }
     }
 
@@ -507,15 +511,15 @@ public static class VesselFactory {
             if (sentinelRoll < 0.4) {
                 v.sentinelName = "Ion Curtain Guard";
             } else if (sentinelRoll < 0.8) {
-                v.sentinelName = "Reflector Guard";
+                v.sentinelName = "Decelerator Guard";
             }
             SetShield(v,
-                0.4, ReflectorShield.Design.name,
+                0.4, DeceleratorShield.Design.name,
                 0.3, DispersionFieldShield.Design.name,
                 0.2, IonCurtainShield.Design.name);
         } else {
             SetShield(v,
-                0.3, ReflectorShield.Design.name,
+                0.3, DeceleratorShield.Design.name,
                 0.2, DispersionFieldShield.Design.name,
                 0.1, IonCurtainShield.Design.name);
         }
@@ -535,7 +539,7 @@ public static class VesselFactory {
 
         SetShield(v,
             0.6, DispersionFieldShield.Design.name,
-            0.4, ReflectorShield.Design.name);
+            0.4, DeceleratorShield.Design.name);
     }
 
     private static void InitKrigiaTusks(Vessel v) {
@@ -563,13 +567,13 @@ public static class VesselFactory {
         }
 
         if (QRandom.Float() < RankChance(v.rank, 0, 0.5, 0.9)) {
-            v.sentinelName = "Reflector Guard";
+            v.sentinelName = "Decelerator Guard";
         }
 
         SetShield(v,
             0.3, IonCurtainShield.Design.name,
             0.2, DispersionFieldShield.Design.name,
-            0.1, ReflectorShield.Design.name);
+            0.1, DeceleratorShield.Design.name);
     }
 
     private static void InitKrigiaHorns(Vessel v) {
@@ -601,7 +605,7 @@ public static class VesselFactory {
 
         SetShield(v,
             0.5, DispersionFieldShield.Design.name,
-            0.3, ReflectorShield.Design.name,
+            0.3, DeceleratorShield.Design.name,
             0.2, IonCurtainShield.Design.name);
     }
 
@@ -755,7 +759,7 @@ public static class VesselFactory {
         SetSpecialWeapon(v, 0.5, DisruptorWeapon.Design.name);
 
         SetShield(v,
-            0.65, ReflectorShield.Design.name,
+            0.65, DeceleratorShield.Design.name,
             0.35, DispersionFieldShield.Design.name);
     }
 
@@ -912,5 +916,39 @@ public static class VesselFactory {
         v.artifacts.Add(ShieldProlongerArtifact.Design.name);
         v.artifacts.Add(ShivaRechargerArtifact.Design.name);
         v.artifacts.Add(MagneticNegatorArtifact.Design.name);
+    }
+
+    private static void InitLezeonaPin(Vessel v) {
+        v.designName = "Pin";
+        v.energySourceName = "Power Generator";
+
+        v.sentinelName = "Ion Fighter";
+
+        if (QRandom.Float() < RankChance(v.rank, 0.4, 0.7, 1)) {
+            v.shieldName = "Deflector";
+        }
+
+        v.artifacts.Add(IonCannonSaturatorArtifact.Design.name);
+    }
+
+    private static void InitLezeonaCore(Vessel v) {
+        v.designName = "Core";
+        v.energySourceName = "Vortex Battery";
+
+        if (QRandom.Bool()) {
+            v.weapons.Add(IonCannonWeapon.Design.name);
+            v.artifacts.Add(IonCannonSaturatorArtifact.Design.name);
+        } else {
+            v.weapons.Add(PointDefenseLaserWeapon.Design.name);
+            v.artifacts.Add(PointDefenseSaturatorArtifact.Design.name);
+        }
+
+        if (QRandom.Float() < RankChance(v.rank, 0.3, 0.7, 1)) {
+            v.specialWeaponName = PulseBladeWeapon.Design.name;
+        }
+
+        if (QRandom.Float() < RankChance(v.rank, 0.5, 0.9, 1)) {
+            v.shieldName = "Deflector";
+        }
     }
 }

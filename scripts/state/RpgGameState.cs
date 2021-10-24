@@ -224,6 +224,19 @@ public class RpgGameState {
         return x != y;
     }
 
+    public static List<StarSystem> GetSystemConnections(StarSystem x, float maxDist) {
+        if (maxDist >= 600) {
+            throw new Exception("max dist should be less than 600");
+        }
+        var candidates = new List<StarSystem>();
+        foreach (var y in starSystemConnections[x]) {
+            if (x.pos.DistanceTo(y.pos) <= maxDist) {
+                candidates.Add(y);
+            }
+        }
+        return candidates;
+    }
+
     public bool rpgMode = false;
 
     public KrigiaPlans krigiaPlans = new KrigiaPlans();
@@ -233,12 +246,13 @@ public class RpgGameState {
     public Dictionary<Faction, int> reputations = new Dictionary<Faction, int>{
         {Faction.Krigia, -25},
         {Faction.Wertu, 5},
-        {Faction.Zyth, -10},
+        {Faction.Zyth, -5},
         {Faction.Vespion, 0},
         {Faction.Phaa, 0},
         {Faction.PhaaRebel, 0},
-        {Faction.Draklid, -5},
+        {Faction.Draklid, -10},
         {Faction.Rarilou, 0},
+        {Faction.Lezeona, 5},
     };
 
     public Dictionary<Faction, int> alienCurrency = new Dictionary<Faction, int>{};
@@ -252,6 +266,7 @@ public class RpgGameState {
         {Faction.Phaa, "Pure Scales"},
         {Faction.Draklid, "?"},
         {Faction.Rarilou, "Rosy Crystals"},
+        {Faction.Lezeona, "?"},
     };
 
     public Dictionary<Faction, DiplomaticStatus> diplomaticStatuses = new Dictionary<Faction, DiplomaticStatus>{
@@ -262,6 +277,7 @@ public class RpgGameState {
         {Faction.Phaa, DiplomaticStatus.Unspecified},
         {Faction.Draklid, DiplomaticStatus.War},
         {Faction.Rarilou, DiplomaticStatus.Unspecified},
+        {Faction.Lezeona, DiplomaticStatus.Unspecified},
     };
 
     public List<string> explorationDrones = new List<string>{};

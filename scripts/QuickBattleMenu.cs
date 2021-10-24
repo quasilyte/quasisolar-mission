@@ -117,6 +117,8 @@ public class QuickBattleMenu : Node2D {
             "Neutral Avenger",
             "Neutral Spectre",
             "Neutral Visitor",
+            "Lezeona Pin",
+            "Lezeona Core",
             "Zyth Hunter",
             "Zyth Invader",
             "Phaa Mantis",

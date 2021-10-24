@@ -8,4 +8,5 @@ public enum MapNodeColor {
     LightBlue,
     Yellow,
     Pink,
+    Gray,
 }

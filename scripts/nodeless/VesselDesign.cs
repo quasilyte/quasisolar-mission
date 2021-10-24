@@ -986,7 +986,7 @@ public class VesselDesign: IItem {
             name = "Hunter",
             affiliation = Faction.Zyth,
             description = "TODO",
-            sellingPrice = 8000,
+            sellingPrice = 8500,
             debris = 125,
             productionTime = 105,
 
@@ -1301,6 +1301,58 @@ public class VesselDesign: IItem {
 
             cargoSpace = 130,
             size = Size.Large,
+        },
+
+        // Lezeona designs.
+
+        new VesselDesign{
+            level = 1,
+            name = "Pin",
+            affiliation = Faction.Lezeona,
+            description = "TODO",
+            sellingPrice = 3200,
+            debris = 30,
+            productionTime = 60,
+
+            maxHp = 105,
+            maxShieldLevel = 2,
+
+            maxSpeed = 90,
+            acceleration = 1.2f,
+            rotationSpeed = 1.8f,
+
+            sentinelSlot = true,
+            specialSlot = false,
+            weaponSlots = 0,
+            artifactSlots = 2,
+
+            cargoSpace = 60,
+            size = Size.Small,
+        },
+
+        new VesselDesign{
+            level = 4,
+            name = "Core",
+            affiliation = Faction.Lezeona,
+            description = "TODO",
+            sellingPrice = 9000,
+            debris = 70,
+            productionTime = 150,
+
+            maxHp = 255,
+            maxShieldLevel = 2,
+
+            maxSpeed = 80,
+            acceleration = 1.4f,
+            rotationSpeed = 1.8f,
+
+            sentinelSlot = false,
+            specialSlot = true,
+            weaponSlots = 1,
+            artifactSlots = 2,
+
+            cargoSpace = 95,
+            size = Size.Normal,
         },
 
         // Unique designs.
