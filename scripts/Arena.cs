@@ -202,7 +202,7 @@ public class Arena : Node2D {
                     sentinel = PointDefenseGuardNode.New(pilot.Vessel, sentinelDesign);
                 } else if (sentinelDesign.name == "Restructuring Guard") {
                     sentinel = RestructuringGuardNode.New(pilot.Vessel, sentinelDesign);
-                } else if (sentinelDesign.name == "Ion Curtain Guard" || sentinelDesign.name == "Reflector Guard") {
+                } else if (sentinelDesign.name == "Ion Curtain Guard" || sentinelDesign.name == "Decelerator Guard") {
                     sentinel = ShieldSentinelNode.New(pilot.Vessel, sentinelDesign);
                 } else {
                     throw new Exception("unexpected sentinel design: " + sentinelDesign.name);
