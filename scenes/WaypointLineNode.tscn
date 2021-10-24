@@ -5,7 +5,7 @@
 [node name="WaypointLineNode" type="Line2D"]
 points = PoolVector2Array( 0, 0, 64, 48, 96, 16, 144, 64 )
 width = 3.0
-default_color = Color( 0, 0.996078, 0.109804, 0.196078 )
+default_color = Color( 0, 0.996078, 0.109804, 0.156863 )
 texture_mode = 1
 joint_mode = 2
 begin_cap_mode = 2
