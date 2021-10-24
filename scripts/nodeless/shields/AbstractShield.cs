@@ -12,7 +12,7 @@ public abstract class AbstractShield : IShield {
     protected string _audioName;
     protected string _textureName = "";
 
-    private ShieldAuraNode _lastAura = null;
+    protected Node _lastAura = null;
 
     public bool CanActivate(VesselState state) {
         return _cooldown <= 0 && state.CanConsumeEnergy(GetDesign().energyCost) && _activation == 0;

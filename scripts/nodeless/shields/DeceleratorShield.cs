@@ -1,8 +1,8 @@
 using Godot;
 
-public class ReflectorShield : AbstractShield {
+public class DeceleratorShield : AbstractShield {
     public static ShieldDesign Design = new ShieldDesign{
-        name = "Reflector",
+        name = "Decelerator",
         description = "TODO",
         level = 2,
 
@@ -19,8 +19,8 @@ public class ReflectorShield : AbstractShield {
     };
     public override ShieldDesign GetDesign() { return Design; }
 
-    public ReflectorShield(Pilot pilot): base(pilot) {
-        _textureName = "res://images/reflector_shield.png";
-        _audioName = "res://audio/reflector_shield.wav";
+    public DeceleratorShield(Pilot pilot): base(pilot) {
+        _textureName = "res://images/decelerator_shield.png";
+        _audioName = "res://audio/decelerator_shield.wav";
     }
 }

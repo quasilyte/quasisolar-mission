@@ -71,7 +71,8 @@ public class ShieldDesign : IItem {
             HeatScreenShield.Design,
 
             DispersionFieldShield.Design,
-            ReflectorShield.Design,
+            DeceleratorShield.Design,
+            DeflectorShield.Design,
             LaserPerimeterShield.Design,
             LatticeShield.Design,
 

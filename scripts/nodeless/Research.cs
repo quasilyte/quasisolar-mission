@@ -273,10 +273,10 @@ public class Research {
         },
 
         new Research{
-            name = "Reflector Guard",
+            name = "Decelerator Guard",
             category = Category.NewSentinel,
             researchTime = 75,
-            dependencies = {"Reflector"},
+            dependencies = {"Decelerator"},
         },
 
         // Shield tech.
@@ -295,7 +295,7 @@ public class Research {
         },
 
         new Research{
-            name = "Reflector",
+            name = "Decelerator",
             category = Category.NewShield,
             researchTime = 40,
             dependencies = {"Level 2 Shields"},
@@ -678,6 +678,15 @@ public class Research {
             dependencies = {"Wertu Weapons III"},
         },
 
+        // Lezeona tech tree.
+
+        new Research{
+            name = "Deflector",
+            material = Faction.Lezeona,
+            researchTime = 70,
+            category = Category.NewShield,
+        },
+
         // Vespion tech tree.
 
         new Research{
@@ -756,8 +765,7 @@ public class Research {
             name = "Aegis",
             material = Faction.Phaa,
             category = Category.NewShield,
-            researchTime = 110,
-            dependencies = {"Level 3 Shields"},
+            researchTime = 180,
         },
 
         new Research{

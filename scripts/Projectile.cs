@@ -4,6 +4,7 @@ using System;
 public class Projectile : Node2D, IProjectile {
     private float _hp;
 
+    private Vector2 _velocity;
     private Sprite _sprite;
     private Texture _texture;
     private AudioStream _audioStream = null;
@@ -39,6 +40,15 @@ public class Projectile : Node2D, IProjectile {
     public WeaponDesign GetWeaponDesign() { return _weapon; }
     public Pilot FiredBy() { return _firedBy; }
     public Node2D GetProjectileNode() { return this; }
+
+    public void Deflect(Pilot pilot) {
+        _firedBy = pilot;
+        _hp = _weapon.range * 1.2f;
+
+        var surface = (pilot.Vessel.Position - Position).Normalized().Rotated((float)Math.PI / 2);
+        var normal = new Vector2(-surface.y, surface.x);
+        _velocity = normal * _weapon.projectileSpeed;
+    }
 
     private static PackedScene _scene = null;
     public static Projectile New(WeaponDesign design, Pilot owner) {
@@ -97,6 +107,8 @@ public class Projectile : Node2D, IProjectile {
             var sfx = SoundEffectNode.New(_audioStream, _volumeAdjust);
             GetParent().AddChild(sfx);
         }
+
+        _velocity = Transform.x * _weapon.projectileSpeed;
     }
 
     private void InitScythe() {
@@ -268,7 +280,8 @@ public class Projectile : Node2D, IProjectile {
         }
 
         float traveled = speed * delta;
-        Position += Transform.x.Normalized() * traveled;
+        Position += _velocity * delta;
+        Rotation = _velocity.Angle();
         _hp -= traveled;
     }
 

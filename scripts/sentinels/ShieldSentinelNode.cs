@@ -22,8 +22,8 @@ public class ShieldSentinelNode : SentinelNode {
         base._Ready();
         if (_design.shield == IonCurtainShield.Design) {
             _textureName = "res://images/ion_shield_impulse.png";
-        } else if (_design.shield == ReflectorShield.Design) {
-            _textureName = "res://images/reflector_shield_impulse.png";
+        } else if (_design.shield == DeceleratorShield.Design) {
+            _textureName = "res://images/decelerator_shield_impulse.png";
             _sprite.Texture = GD.Load<Texture>("res://images/sentinel/type_d_green.png");
         } else {
             throw new Exception("unexpected shield design " + _design.shield.name);

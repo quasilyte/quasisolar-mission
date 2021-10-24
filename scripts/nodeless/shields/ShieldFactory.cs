@@ -16,8 +16,11 @@ public static class ShieldFactory {
         if (shield == DispersionFieldShield.Design) {
             return new DispersionFieldShield(p);
         }
-        if (shield == ReflectorShield.Design) {
-            return new ReflectorShield(p);
+        if (shield == DeceleratorShield.Design) {
+            return new DeceleratorShield(p);
+        }
+        if (shield == DeflectorShield.Design) {
+            return new DeflectorShield(p);
         }
         if (shield == LaserPerimeterShield.Design) {
             return new LaserPerimeterShield(p);

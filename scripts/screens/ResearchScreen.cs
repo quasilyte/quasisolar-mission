@@ -159,14 +159,14 @@ public class ResearchScreen : Node2D {
                 "Fog Shark",
             },
             new List<string>{
-                "Reflector",
+                "Decelerator",
                 "Disruptor",
                 "Point-Defense Laser",
                 "Improved Fuel Tanks",
                 "Krigia Weapons I",
             },
             new List<string>{
-                "Reflector Guard",
+                "Decelerator Guard",
                 "Assault Laser",
                 "Gladiator",
                 "Krigia Weapons II",
@@ -272,6 +272,8 @@ public class ResearchScreen : Node2D {
                 return c == Research.Category.NewWeapon || c == Research.Category.NewSpecialWeapon;
             });
             return FilterAvailableResearches(projects);
+        } else if (selected == "Fundamental") {
+            return FilterAvailableResearches(_researchList.FindAll((r) => r.category == category));
         } else if (category != Research.Category.Dummy) {
             var projects = _researchList.FindAll((r) => r.GetFilterCategory() == category);
             return FilterAvailableResearches(projects);

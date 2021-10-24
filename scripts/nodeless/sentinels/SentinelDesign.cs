@@ -124,11 +124,11 @@ public class SentinelDesign: IItem {
 
         new SentinelDesign{
             researchRequired = true,
-            name = "Reflector Guard",
+            name = "Decelerator Guard",
             description = "TODO",
             kind = Kind.Defense,
             hp = 45,
-            shield = ReflectorShield.Design,
+            shield = DeceleratorShield.Design,
             attackCooldown = 3.5f,
             sellingPrice = 6000,
         },

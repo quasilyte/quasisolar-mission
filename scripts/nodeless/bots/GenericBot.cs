@@ -439,21 +439,35 @@ class GenericBot : AbstractBot {
             }
         }
 
-        foreach (Area2D other in events.closeRangeCollisions) {
-            if (!IsInstanceValid(other)) {
-                continue;
+        if (_shield == DeflectorShield.Design) {
+            foreach (Area2D other in events.midRangeCollisions) {
+                if (!IsInstanceValid(other)) {
+                    continue;
+                }
+                if (other.GetParent() is Projectile projectile) {
+                    if (DeflectorShield.CanDeflect(projectile.GetWeaponDesign())) {
+                        Shield();
+                        return true;
+                    }
+                }
             }
+        } else {
+            foreach (Area2D other in events.closeRangeCollisions) {
+                if (!IsInstanceValid(other)) {
+                    continue;
+                }
 
-            if (other.GetParent() is IProjectile projectile) {
-                var firedBy = projectile.FiredBy();
-                if (firedBy.alliance == _pilot.alliance) {
-                    continue;
+                if (other.GetParent() is IProjectile projectile) {
+                    var firedBy = projectile.FiredBy();
+                    if (firedBy.alliance == _pilot.alliance) {
+                        continue;
+                    }
+                    if (!CanReduceDamage(projectile.GetWeaponDesign().damageKind)) {
+                        continue;
+                    }
+                    Shield();
+                    return true;
                 }
-                if (!CanReduceDamage(projectile.GetWeaponDesign().damageKind)) {
-                    continue;
-                }
-                Shield();
-                return true;
             }
         }
 
