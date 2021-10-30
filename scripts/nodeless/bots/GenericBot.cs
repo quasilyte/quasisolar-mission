@@ -424,7 +424,7 @@ class GenericBot : AbstractBot {
             }
 
             if (shell != null) {
-                if (!CanUseForFree(_vessel.shield.GetDesign().energyCost)) {
+                if (!CanUseForFree(_vessel.shield.ActivationCost(_vessel.State))) {
                     dangerDistance += 10;
                 }
 
@@ -886,7 +886,7 @@ class GenericBot : AbstractBot {
         if (w is ScytheWeapon || w is GreatScytheWeapon || w is StingerWeapon) {
             return 1;
         }
-        if (w is IonCannonWeapon || w is CutterWeapon) {
+        if (w is IonCannonWeapon || w is CutterWeapon || w is HeavyPhotonBurstCannonWeapon) {
             return 2;
         }
         if (w is NeedleGunWeapon || w is PhotonBurstCannonWeapon || w is TwinPhotonBurstCannonWeapon || w is PulseLaserWeapon || w is AssaultLaserWeapon) {

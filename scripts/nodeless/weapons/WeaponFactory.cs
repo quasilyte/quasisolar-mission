@@ -39,6 +39,9 @@ public static class WeaponFactory {
         if (w == TwinPhotonBurstCannonWeapon.Design) {
             return new TwinPhotonBurstCannonWeapon(p);
         }
+        if (w == HeavyPhotonBurstCannonWeapon.Design) {
+            return new HeavyPhotonBurstCannonWeapon(p);
+        }
         if (w == PhotonBeamWeapon.Design) {
             return new PhotonBeamWeapon(p);
         }

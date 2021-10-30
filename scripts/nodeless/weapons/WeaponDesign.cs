@@ -152,6 +152,7 @@ public class WeaponDesign : IItem {
             CutterWeapon.Design,
             GreatScytheWeapon.Design,
             TwinPhotonBurstCannonWeapon.Design,
+            HeavyPhotonBurstCannonWeapon.Design,
             PointDefenseLaserWeapon.Design,
             StingerWeapon.Design,
             DiskThrowerWeapon.Design,

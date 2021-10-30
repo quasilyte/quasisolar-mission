@@ -55,12 +55,13 @@ Special Weapons:
 
 Weapons:
 
-* Photon Burst Cannon
+* **Photon Burst Cannon**
 * Point-Laser Defense
 * Zap
 * Cutter
 * **Shield Breaker**
-* Twin Photon Burst Cannon
+* **Twin Photon Burst Cannon**
+* **Heavy Photon Burst Cannon**
 * **Plasma Emitter**
 
 Special weapons:
@@ -171,6 +172,7 @@ Special weapons:
 | Assault Laser | Krigia, Zyth, Draklid | n/a |
 | Great Scythe | Krigia | Krigia |
 | Twin Proton Burst Cannon | Wertu, Rarilou | Wertu |
+| Heavy Photon Burst Cannon | Wertu |
 | Hurricane | Krigia, Phaa | Krigia |
 | Shield Breaker | Wertu | Wertu |
 | Restructuring Ray | Wertu | Wertu |
