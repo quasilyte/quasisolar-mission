@@ -296,13 +296,20 @@ public class ShipyardScreen : Node2D {
 
     private void UpdateGarrison() {
         var list = VesselArrayToList(_garrisonSlots);
+        foreach (var v in list) {
+            v.Get().RecalculateStats();
+        }
         RpgGameState.enteredBase.garrison = list;
     }
 
     public void UpdateFleet() {
         var list = VesselArrayToList(_fleetSlots);
         list[0].Get().isBot = false;
+        list[0].Get().isFlagship = true;
         list[0].Get().isGamepad = GameControls.preferGamepad;
+        foreach (var v in list) {
+            v.Get().RecalculateStats();
+        }
         _gameState.humanUnit.Get().fleet = list;
     }
 
@@ -312,6 +319,7 @@ public class ShipyardScreen : Node2D {
             if (arr[i] != null) {
                 var vessel = arr[i];
                 vessel.isBot = true;
+                vessel.isFlagship = false;
                 fleetList.Add(vessel.GetRef());
             }
         }

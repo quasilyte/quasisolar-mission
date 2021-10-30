@@ -22,7 +22,7 @@ public class ShieldAuraNode : Node2D {
     }
 
     public override void _Ready() {
-        _hp = _shield.duration * _target.State.shieldDurationRate;
+        _hp = _shield.duration * _target.State.stats.shieldDurationRate;
 
         _sprite = GetNode<Sprite>("Sprite");
         _sprite.Texture = _texture;

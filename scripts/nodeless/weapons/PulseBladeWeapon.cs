@@ -12,6 +12,7 @@ public class PulseBladeWeapon : IWeapon {
         range = 440,
         damage = 15,
         burst = 5,
+        isSpecial = true,
         damageKind = DamageKind.Electromagnetic,
         projectileSpeed = 1000.0f,
         botHintSnipe = 0,
@@ -99,7 +100,11 @@ public class PulseBladeWeapon : IWeapon {
         VesselNode target = null;
 
         var from = _owner.Vessel.Position;
-        var to = _owner.Vessel.Position + (_owner.Vessel.Transform.x * Design.range);
+        var range = Design.range;
+        if (_owner.Vessel.State.hasBeamAmplifier) {
+            range *= 1.15f;
+        }
+        var to = _owner.Vessel.Position + (_owner.Vessel.Transform.x * range);
 
         _raycast.Position = from;
         _raycast.CastTo = _raycast.ToLocal(to);
@@ -120,7 +125,11 @@ public class PulseBladeWeapon : IWeapon {
 
     public void Fire(VesselState state, Vector2 cursor) {
         _cooldown += Design.cooldown;
-        state.ConsumeEnergy(Design.energyCost);
+        var energyCost = Design.energyCost;
+        if (state.hasBeamAmplifier) {
+            energyCost *= 0.8f;
+        }
+        state.ConsumeEnergy(energyCost);
 
         _burst = Design.burst;
 

@@ -6,8 +6,6 @@ public class VesselState {
 
     public VesselStats stats;
 
-    public float rotationSpeed;
-
     public float initialHp;
     public float hp;
     public float energy;
@@ -20,7 +18,6 @@ public class VesselState {
     public float phasingTime = 0;
 
     public float shieldCooldownRate = 1;
-    public float shieldDurationRate = 1;
 
     public float speedPenalty = 0;
     public float speedBonus = 0;
@@ -41,6 +38,8 @@ public class VesselState {
     public bool hasImpulseDevourer = false;
     public bool hasPointDefenseSaturator = false;
     public bool hasIonCannonSaturator = false;
+    public bool hasPhotonium = false;
+    public bool hasBeamAmplifier = false;
 
     public int debris;
 
@@ -48,8 +47,6 @@ public class VesselState {
 
     public VesselState(VesselStats vesselStats, VesselDesign design, EnergySource battery) {
         vesselLevel = design.level;
-
-        rotationSpeed = design.rotationSpeed;
 
         stats = vesselStats;
 

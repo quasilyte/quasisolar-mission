@@ -17,6 +17,7 @@ public class Projectile : Node2D, IProjectile {
     private static Texture _stingerTexture;
     private static Texture _scytheTexture;
     private static Texture _photonBurstTexture;
+    private static Texture _heavyPhotonBurstTexture;
     private static Texture _needleGunTexture;
     private static Texture _shockwaveCasterTexture;
     private static Texture _spreadGunTexture;
@@ -72,6 +73,8 @@ public class Projectile : Node2D, IProjectile {
             InitScythe();
         } else if (_weapon == PhotonBurstCannonWeapon.Design || _weapon == TwinPhotonBurstCannonWeapon.Design) {
             InitPhotonBurstCannon();
+        } else if (_weapon == HeavyPhotonBurstCannonWeapon.Design) {
+            InitHeavyPhotonBurstCannon();
         } else if (_weapon == NeedleGunWeapon.Design) {
             InitNeedleGun();
         } else if (_weapon == NeedleGunWeapon.TurretDesign) {
@@ -209,6 +212,14 @@ public class Projectile : Node2D, IProjectile {
             _photonBurstTexture = GD.Load<Texture>("res://images/ammo/photon_burst.png");
         }
         _texture = _photonBurstTexture;
+    }
+
+    private void InitHeavyPhotonBurstCannon() {
+        _hp = _weapon.range;
+        if (_heavyPhotonBurstTexture == null) {
+            _heavyPhotonBurstTexture = GD.Load<Texture>("res://images/ammo/heavy_photon_burst.png");
+        }
+        _texture = _heavyPhotonBurstTexture;
     }
 
     private void InitStinger() {

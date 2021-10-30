@@ -291,7 +291,6 @@ public class NewGameScene : Node2D {
             defender.designName = "Fighter";
             defender.energySourceName = "Power Generator";
             VesselFactory.InitStats(defender);
-            VesselFactory.RollUpgrades(defender);
             startingStarBase.garrison.Add(defender.GetRef());
         }
 
@@ -334,7 +333,11 @@ public class NewGameScene : Node2D {
             foreach (var sys in config.starSystems.objects.Values) {
                 systems.Add(sys);
             }
-            foreach (var art in ArtifactDesign.list) {
+            var numArtifacts = 13;
+            var candidateArts = new List<ArtifactDesign>(ArtifactDesign.list);
+            QRandom.Sort(candidateArts);
+            var selectedArts = candidateArts.GetRange(0, numArtifacts);
+            foreach (var art in selectedArts) {
                 while (true) {
                     var sys = QRandom.Element(systems);
                     if (sys.HasArtifact() || sys.color == StarColor.Purple) {
@@ -345,6 +348,7 @@ public class NewGameScene : Node2D {
                     }
                     var planet = QRandom.Element(sys.resourcePlanets);
                     planet.artifact = art.name;
+                    GD.Print($"Put {art.name} in {planet.name} at {sys.name}");
                     break;
                 }   
             }
@@ -355,6 +359,7 @@ public class NewGameScene : Node2D {
             var fleet = new List<Vessel.Ref>();
             var humanVessel = config.vessels.New();
             humanVessel.isGamepad = GameControls.preferGamepad;
+            humanVessel.isFlagship = true;
             humanVessel.faction = Faction.Earthling;
             humanVessel.pilotName = PilotNames.UniqHumanName(config.usedNames);
             humanVessel.designName = "Explorer";
@@ -371,7 +376,6 @@ public class NewGameScene : Node2D {
                 EmptyWeapon.Design.name,
             };
             VesselFactory.InitStats(humanVessel);
-            VesselFactory.RollUpgrades(humanVessel);
             fleet.Add(humanVessel.GetRef());
 
             var numScoutsEscort = 1;
@@ -381,7 +385,6 @@ public class NewGameScene : Node2D {
                 v.faction = Faction.Earthling;
                 v.pilotName = PilotNames.UniqHumanName(config.usedNames);
                 VesselFactory.Init(v, "Earthling Scout");
-                VesselFactory.RollUpgrades(v);
                 fleet.Add(v.GetRef());
             }
             var unit = config.spaceUnits.New();
@@ -389,6 +392,29 @@ public class NewGameScene : Node2D {
             unit.fleet = fleet;
             unit.pos = world.startingSystem.data.pos;
             config.humanUnit = unit.GetRef();
+        }
+
+        {
+            var fleet = new List<Vessel.Ref>();
+            var trader = config.vessels.New();
+            trader.rank = 3;
+            trader.isBot = true;
+            trader.faction = Faction.Neutral;
+            VesselFactory.Init(trader, "Neutral X-The-Bit");
+            fleet.Add(trader.GetRef());
+
+            var traderSpawnSystem = config.starSystems.objects[QRandom.IntRange(0, config.starSystems.objects.Count - 1)];
+
+            var spaceUnit = config.spaceUnits.New();
+            spaceUnit.cargo.minerals = 25;
+            spaceUnit.cargo.organic = 100;
+            spaceUnit.cargo.power = 70;
+            spaceUnit.owner = Faction.ModTrader;
+            spaceUnit.pos = QMath.RandomizedLocation(traderSpawnSystem.pos, 100);
+            spaceUnit.waypoint = traderSpawnSystem.pos;
+            spaceUnit.fleet = fleet;
+
+            GD.Print($"Trader spawned near {traderSpawnSystem.name}");
         }
 
         // Make sure that there is at least 1 gas giant planet.

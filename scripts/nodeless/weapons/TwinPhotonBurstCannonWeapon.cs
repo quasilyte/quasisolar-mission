@@ -15,7 +15,7 @@ public class TwinPhotonBurstCannonWeapon : IWeapon {
         burst = 4,
         damageKind = DamageKind.Electromagnetic,
         projectileSpeed = 400.0f,
-        botHintSnipe = 0.3f,
+        botHintSnipe = 0.35f,
     };
     public WeaponDesign GetDesign() { return Design; }
     public void Ready() {}
@@ -26,7 +26,7 @@ public class TwinPhotonBurstCannonWeapon : IWeapon {
 
     private int _burst = 0;
     private float _burstCooldown = 0;
-    private Vector2 _burstTarget;
+    private float _burstDirection;
 
     public TwinPhotonBurstCannonWeapon(Pilot owner) {
         _owner = owner;
@@ -49,23 +49,21 @@ public class TwinPhotonBurstCannonWeapon : IWeapon {
             _burst--;
             _burstCooldown += 0.1f;
 
-            var rotation = (_burstTarget - _owner.Vessel.Position).Normalized().Angle();
-
             var transform = _owner.Vessel.GlobalTransform;
-            transform.Rotation = rotation;
+            transform.Rotation = _burstDirection;
 
             {
                 var projectile = Projectile.New(Design, _owner);
                 projectile.GlobalTransform = transform;
                 projectile.Position += projectile.Transform.y * 8;
-                projectile.Rotation = rotation;
+                projectile.Rotation = _burstDirection;
                 _owner.Vessel.GetParent().AddChild(projectile);
             }
             {
                 var projectile = Projectile.New(Design, _owner);
                 projectile.GlobalTransform = transform;
                 projectile.Position -= projectile.Transform.y * 8;
-                projectile.Rotation = rotation;
+                projectile.Rotation = _burstDirection;
                 _owner.Vessel.GetParent().AddChild(projectile);
             }
 
@@ -78,6 +76,9 @@ public class TwinPhotonBurstCannonWeapon : IWeapon {
         _cooldown += Design.cooldown;
         state.ConsumeEnergy(Design.energyCost);
         _burst = 2;
-        _burstTarget = cursor;
+        if (state.hasPhotonium) {
+            _burst++;
+        }
+        _burstDirection = (cursor - _owner.Vessel.Position).Normalized().Angle();
     }
 }

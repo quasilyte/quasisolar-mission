@@ -68,6 +68,7 @@ public class ItemSlotNode : Control {
 
     public IItem GetItem() { return _item; }
     public ItemKind GetItemKind() { return _itemKind; }
+    public int GetItemIndex() { return _index; }
 
     public void SetAssignItemCallback(Action<int, IItem> f) {
         _assignItem = f;
@@ -98,10 +99,12 @@ public class ItemSlotNode : Control {
         }
 
         switch (_itemKind) {
+            case ItemKind.Mod:
+                return false;
             case ItemKind.Shop:
                 return false;
             case ItemKind.Storage:
-                break; // OK
+                return item.GetItemKind() != ItemKind.Mod;
             case ItemKind.GarrisonVessel:
                 if (item.GetItemKind() != ItemKind.Vessel) {
                     return false;

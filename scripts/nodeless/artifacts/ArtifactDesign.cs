@@ -62,6 +62,8 @@ public class ArtifactDesign : IItem {
             KineticAcceleratorArtifact.Design,
             PointDefenseSaturatorArtifact.Design,
             IonCannonSaturatorArtifact.Design,
+            PhotoniumArtifact.Design,
+            BeamAmplifierArtifact.Design,
         };
         Array.Sort(list, (x, y) => x.sellingPrice.CompareTo(y.sellingPrice));
 

@@ -38,7 +38,7 @@ public class QuickBattleMenu : Node2D {
     private void UpdateVessel() {
         var vesselPreview = GetNode<Sprite>("SpritePanel/VesselPreview");
         var d = VesselDesign.Find(QuickBattleState.playerSettings[_playerIndex].vesselDesignName);
-        vesselPreview.Texture = GD.Load<Texture>($"res://images/vessel/{d.affiliation}_{d.name}.png");
+        vesselPreview.Texture = ItemInfo.Texture(d);
 
         GetNode<OptionButton>("SpecialWeaponSelect").Disabled = !d.specialSlot;
         GetNode<OptionButton>("SentinelSelect").Disabled = !d.sentinelSlot;
@@ -112,6 +112,7 @@ public class QuickBattleMenu : Node2D {
             "Human 1",
             "Human 1 (Gamepad 1)",
             "Human 2 (Gamepad 2)",
+            "Neutral X-The-Bit",
             "Neutral Ravager",
             "Neutral Nomad",
             "Neutral Avenger",
@@ -522,7 +523,6 @@ public class QuickBattleMenu : Node2D {
 
         v.designName = settings.vesselDesignName;
         v.energySourceName = settings.energySource.name;
-        v.statusList.Add("Alternative Cooling System");
 
         var artifacts = settings.artifacts;
         var weapons = settings.weapons;

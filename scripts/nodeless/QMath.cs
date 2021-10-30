@@ -15,8 +15,18 @@ static class QMath {
     public static double ClampMax(double v, double max) { return v > max ? max : v; }
     public static double ClampMin(double v, double min) { return v < min ? min : v; }
 
-    public static int Percantage(int value, int max) { return (int)(100 * ((float)value / (float)max)); }
-    public static float Percantage(float value, float max) { return 100 * (value / max); }
+    public static int Percantage(int value, int max) {
+        if (max == 0 && value == 0) {
+            return 0;
+        }
+        return (int)(100 * ((float)value / (float)max));
+    }
+    public static float Percantage(float value, float max) {
+        if (max == 0 && value == 0) {
+            return 0;
+        }
+        return 100 * (value / max);
+    }
 
     public static float Rad2Deg(float rad) { return (float)((double)rad * (180 / Math.PI)); }
     public static float Deg2Rad(float deg) { return (float)((double)deg * (Math.PI / 180)); }

@@ -15,6 +15,7 @@ public class Vessel: AbstractPoolValue, IItem {
 
     public int deviceId;
     public bool isGamepad;
+    public bool isFlagship = false;
 
     public string pilotName;
 
@@ -25,8 +26,7 @@ public class Vessel: AbstractPoolValue, IItem {
     public string energySourceName;
     public List<string> artifacts = new List<string>();
     public List<string> weapons = new List<string>();
-    public List<string> statusList = new List<string>();
-    public List<string> rolledUpgrades = new List<string>();
+    public List<string> modList = new List<string>();
     public string specialWeaponName = EmptyWeapon.Design.name;
     public string shieldName = EmptyShield.Design.name;
     public string sentinelName = "Empty";
@@ -58,10 +58,18 @@ public class Vessel: AbstractPoolValue, IItem {
 
     public int MaxCargo() { 
         float cargo = (float)Design().cargoSpace;
-        foreach (var statusName in statusList) {
-            cargo *= VesselStatus.statusByName[statusName].cargoMultiplier;
+        var multiplier = 1.0f;
+        foreach (var modName in modList) {
+            multiplier += VesselMod.modByName[modName].cargoSpace;
         }
-        return (int)cargo;
+        return (int)(cargo * multiplier);
+    }
+
+    public VesselStats RecalculateStats() {
+        var stats = new VesselStats(this);
+        hp = QMath.ClampMax(hp, stats.maxHp);
+        energy = QMath.ClampMax(energy, stats.maxBackupEnergy);
+        return stats;
     }
 
     // public ArtifactDesign Artifact(int i) { return ArtifactDesign.Find(artifacts[i]); }

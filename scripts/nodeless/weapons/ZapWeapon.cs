@@ -82,7 +82,10 @@ public class ZapWeapon : IWeapon {
 
     private void CreateZap(Vector2 cursor) {
         var randomizedCursor = QMath.RandomizedLocation(cursor, 6);
-        var maxRange = ZapWeapon.Design.range;
+        var maxRange = Design.range;
+        if (_owner.Vessel.State.hasBeamAmplifier) {
+            maxRange *= 1.15f;
+        }
         var zapFrom = _owner.Vessel.Position;
         var zapTo = zapFrom + ((randomizedCursor - zapFrom).Normalized() * maxRange);
 
@@ -111,7 +114,11 @@ public class ZapWeapon : IWeapon {
 
     public void Fire(VesselState state, Vector2 cursor) {
         _cooldown += Design.cooldown;
-        state.ConsumeEnergy(Design.energyCost);
+        var energyCost = Design.energyCost;
+        if (state.hasBeamAmplifier) {
+            energyCost *= 0.8f;
+        }
+        state.ConsumeEnergy(energyCost);
 
         _burst = Design.burst;
         _burstTarget = cursor;

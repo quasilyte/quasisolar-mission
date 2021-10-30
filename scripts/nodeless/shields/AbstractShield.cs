@@ -14,8 +14,12 @@ public abstract class AbstractShield : IShield {
 
     protected Node _lastAura = null;
 
+    public float ActivationCost(VesselState state) {
+        return GetDesign().energyCost + state.stats.shieldExtraActivationCost;
+    }
+
     public bool CanActivate(VesselState state) {
-        return _cooldown <= 0 && state.CanConsumeEnergy(GetDesign().energyCost) && _activation == 0;
+        return _cooldown <= 0 && state.CanConsumeEnergy(ActivationCost(state)) && _activation == 0;
     }
 
     public void Deactivate() {
@@ -27,9 +31,9 @@ public abstract class AbstractShield : IShield {
 
     public virtual void Activate(VesselState state) {
         var design = GetDesign();
-        _activation = design.duration * state.shieldDurationRate;
+        _activation = design.duration * state.stats.shieldDurationRate;
         _cooldown = design.cooldown * state.shieldCooldownRate;
-        state.ConsumeEnergy(design.energyCost);
+        state.ConsumeEnergy(ActivationCost(state));
 
         var sfx = SoundEffectNode.New(GD.Load<AudioStream>(_audioName));
         _pilot.Vessel.GetParent().AddChild(sfx);

@@ -91,6 +91,9 @@ public class HumanStarBaseNode : StarBaseNode {
             if (vesselProduced.Design().weaponSlots >= 1) {
                 vesselProduced.weapons[0] = SpreadGunWeapon.Design.name;
             }
+            if (starBase.modules.Contains("War Factory")) {
+                vesselProduced.modList.Add("Fortification");
+            }
             VesselFactory.InitStats(vesselProduced);
             GetNode<SoundQueue>("/root/SoundQueue").AddToQueue(GD.Load<AudioStream>("res://audio/voice/production_completed.wav"));
             var notification = MapNotificationNode.New("Production completed");

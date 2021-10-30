@@ -38,6 +38,6 @@ public class AttackSentinelNode : SentinelNode {
             GetParent().AddChild(sfx);
         }
 
-        _attackCooldown = _design.attackCooldown;
+        AddCooldown();
     }
 }

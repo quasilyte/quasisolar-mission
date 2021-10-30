@@ -48,7 +48,7 @@ Weapons:
 
 Special Weapons:
 
-* Mortar
+* **Mortar**
 * **Torpedo Launcher**
 
 ### Wertu
@@ -187,7 +187,7 @@ Special weapons:
 | Disk Thrower | Zyth | Zyth |
 | Photon Beam | Wertu | Wertu |
 | Plasma Emitter | Wertu | Wertu |
-| Mortar | Krigia, Vespion | ? |
+| Mortar | Krigia | ? |
 | Storm Bringer | ? | ? |
 | Torpedo Launcher | Krigia | Krigia |
 | Lancer | Krigia | Krigia |

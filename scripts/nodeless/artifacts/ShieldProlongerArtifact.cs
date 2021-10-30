@@ -11,6 +11,6 @@ public class ShieldProlongerArtifact : IArtifact {
     public void Apply(VesselState state, float delta) {}
 
     public void Upgrade(VesselState state) {
-        state.shieldDurationRate = 1.15f;
+        state.stats.shieldDurationRate += 0.15f;
     }
 }

@@ -28,7 +28,7 @@ public class MainMenu : Node2D {
             SentinelDesign.InitLists();
             Research.InitLists();
             MapEventRegistry.InitLists();
-            VesselStatus.InitLists();
+            VesselMod.InitLists();
         }
 
         foreach (var design in VesselDesign.list) {

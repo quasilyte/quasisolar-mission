@@ -20,7 +20,7 @@ public class PointDefenseGuardNode : SentinelNode {
         beam.damage = _design.weapon.damage;
         beam.damageKind = _design.weapon.damageKind;
         GetParent().AddChild(beam);
-        _attackCooldown = _design.attackCooldown;
+        AddCooldown();
         
         var sfx = SoundEffectNode.New(GD.Load<AudioStream>("res://audio/point_laser.wav"));
         GetParent().AddChild(sfx);

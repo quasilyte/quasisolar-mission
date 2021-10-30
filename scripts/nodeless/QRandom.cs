@@ -9,6 +9,15 @@ public static class QRandom {
         QRandom.rng = rng;
     }
 
+    public static void Sort<T>(List<T> list) {
+        for (var i = list.Count-1; i > 0; i--) {
+            var randomIndex = QRandom.IntRange(0, i);
+            var temp = list[i];
+            list[i] = list[randomIndex];
+            list[randomIndex] = temp;
+        }
+    }
+
     public static T Element<T>(List<T> list) {
         return list[PositiveInt() % list.Count];
     }

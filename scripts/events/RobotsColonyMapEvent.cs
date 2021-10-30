@@ -12,8 +12,8 @@ public class RobotsColonyMapEvent: AbstractMapEvent {
         if (!AtNeutralSystem()) {
             return false;
         }
-        return !Flagship().statusList.Contains("Energy Deviator") ||
-            !Flagship().statusList.Contains("Star Heat Resistor");
+        return !Flagship().modList.Contains("Energy Deviator") ||
+            !Flagship().modList.Contains("Star Heat Resistor");
     }
 
     public override AbstractMapEvent Create(RandomEventContext ctx) {
@@ -35,7 +35,7 @@ public class RobotsColonyMapEvent: AbstractMapEvent {
         e.actions.Add(new Action {
             name = "Pick energy deviator",
             hint = () => "(3000 RU)",
-            condition = () => GameState().credits >= 3000 && !Flagship().statusList.Contains("Energy Deviator"),
+            condition = () => GameState().credits >= 3000 && !Flagship().modList.Contains("Energy Deviator"),
             apply = () => {
                 return new Result{
                     text = MultilineText(@"
@@ -50,7 +50,7 @@ public class RobotsColonyMapEvent: AbstractMapEvent {
                             value = -3000,
                         },
                         new Effect{
-                            kind = EffectKind.AddVesselStatus,
+                            kind = EffectKind.AddVesselMod,
                             value = 0,
                             value2 = "Energy Deviator",
                         },
@@ -62,7 +62,7 @@ public class RobotsColonyMapEvent: AbstractMapEvent {
         e.actions.Add(new Action {
             name = "Pick heat resistor",
             hint = () => "(1000 RU)",
-            condition = () => GameState().credits >= 1000 && !Flagship().statusList.Contains("Star Heat Resistor"),
+            condition = () => GameState().credits >= 1000 && !Flagship().modList.Contains("Star Heat Resistor"),
             apply = () => {
                 return new Result{
                     text = MultilineText(@"
@@ -77,7 +77,7 @@ public class RobotsColonyMapEvent: AbstractMapEvent {
                             value = -1000,
                         },
                         new Effect{
-                            kind = EffectKind.AddVesselStatus,
+                            kind = EffectKind.AddVesselMod,
                             value = 0,
                             value2 = "Star Heat Resistor",
                         },

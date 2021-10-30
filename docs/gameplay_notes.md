@@ -174,6 +174,14 @@ When you find an artifact, you can't use it straight away. You need to research
 it first. After the research you'll get the artifact itself available for use
 as well as an ability to produce them on your star base.
 
+## Vessel modules (mods)
+
+How to acquire mods:
+
+* In a random events
+* Get as a quest reward
+* Buy from a mod trader
+
 ## Enemy Star Bases
 
 ![image](https://user-images.githubusercontent.com/6286655/112732471-3043c900-8f4b-11eb-96d7-f8e013a053ba.png)

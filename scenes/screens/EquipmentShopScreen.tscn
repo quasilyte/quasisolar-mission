@@ -57,7 +57,7 @@ __meta__ = {
 margin_left = 448.0
 margin_top = 48.0
 margin_right = 1104.0
-margin_bottom = 864.0
+margin_bottom = 1024.0
 mouse_filter = 2
 theme = ExtResource( 1 )
 custom_styles/panel = SubResource( 1 )
@@ -218,9 +218,9 @@ anchor_top = 0.324
 anchor_right = 0.159
 anchor_bottom = 0.324
 margin_left = -56.304
-margin_top = -56.384
+margin_top = -108.224
 margin_right = 55.696
-margin_bottom = 55.616
+margin_bottom = 3.776
 presetItemKind = 6
 
 [node name="Weapon1" parent="UnitMenu" instance=ExtResource( 10 )]
@@ -229,9 +229,9 @@ anchor_top = 0.324
 anchor_right = 0.354
 anchor_bottom = 0.324
 margin_left = -56.224
-margin_top = -56.384
+margin_top = -108.224
 margin_right = 55.776
-margin_bottom = 55.616
+margin_bottom = 3.776
 presetItemKind = 6
 presetIndex = 1
 
@@ -241,9 +241,9 @@ anchor_top = 0.324
 anchor_right = 0.817
 anchor_bottom = 0.324
 margin_left = -55.952
-margin_top = -56.384
+margin_top = -108.224
 margin_right = 56.048
-margin_bottom = 55.616
+margin_bottom = 3.776
 presetItemKind = 7
 
 [node name="VesselDesign" type="Panel" parent="UnitMenu"]
@@ -266,9 +266,9 @@ anchor_top = 0.659
 anchor_right = 0.5
 anchor_bottom = 0.659
 margin_left = -88.0
-margin_top = -9.74396
+margin_top = -115.184
 margin_right = 88.0
-margin_bottom = 10.256
+margin_bottom = -95.1841
 value = 90.0
 texture_under = ExtResource( 7 )
 texture_progress = ExtResource( 6 )
@@ -299,9 +299,9 @@ anchor_top = 0.725
 anchor_right = 0.5
 anchor_bottom = 0.725
 margin_left = -88.0
-margin_top = -31.6
+margin_top = -137.04
 margin_right = 88.0
-margin_bottom = 32.4
+margin_bottom = -73.04
 focus_mode = 0
 theme = ExtResource( 1 )
 text = "Repair"
@@ -315,9 +315,9 @@ anchor_top = 0.912
 anchor_right = 0.11
 anchor_bottom = 0.912
 margin_left = -56.16
-margin_top = -56.1921
+margin_top = -202.112
 margin_right = 55.84
-margin_bottom = 55.8079
+margin_bottom = -90.1121
 presetItemKind = 11
 
 [node name="Artifact1" parent="UnitMenu" instance=ExtResource( 10 )]
@@ -326,9 +326,9 @@ anchor_top = 0.912
 anchor_right = 0.305
 anchor_bottom = 0.912
 margin_left = -56.08
-margin_top = -56.1921
+margin_top = -202.112
 margin_right = 55.92
-margin_bottom = 55.8079
+margin_bottom = -90.1121
 presetItemKind = 11
 presetIndex = 1
 
@@ -337,10 +337,79 @@ anchor_left = 0.5
 anchor_top = 0.912
 anchor_right = 0.5
 anchor_bottom = 0.912
-margin_top = -56.1921
-margin_bottom = 55.8079
+margin_top = -202.112
+margin_bottom = -90.1121
 presetItemKind = 11
 presetIndex = 2
+
+[node name="ModsHeader" type="Label" parent="UnitMenu"]
+margin_left = 16.0
+margin_top = 816.0
+margin_right = 640.0
+margin_bottom = 845.0
+theme = ExtResource( 1 )
+text = "Mods"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Mod0" parent="UnitMenu" instance=ExtResource( 10 )]
+anchor_left = 0.5
+anchor_top = 0.912
+anchor_right = 0.5
+anchor_bottom = 0.912
+margin_left = -312.0
+margin_top = -42.1121
+margin_right = -200.0
+margin_bottom = 69.8879
+presetItemKind = 12
+
+[node name="Mod1" parent="UnitMenu" instance=ExtResource( 10 )]
+anchor_left = 0.5
+anchor_top = 0.912
+anchor_right = 0.5
+anchor_bottom = 0.912
+margin_left = -184.0
+margin_top = -42.112
+margin_right = -72.0
+margin_bottom = 69.888
+presetItemKind = 12
+presetIndex = 1
+
+[node name="Mod2" parent="UnitMenu" instance=ExtResource( 10 )]
+anchor_left = 0.5
+anchor_top = 0.912
+anchor_right = 0.5
+anchor_bottom = 0.912
+margin_top = -42.112
+margin_bottom = 69.888
+presetItemKind = 12
+presetIndex = 2
+
+[node name="Mod3" parent="UnitMenu" instance=ExtResource( 10 )]
+anchor_left = 0.5
+anchor_top = 0.912
+anchor_right = 0.5
+anchor_bottom = 0.912
+margin_left = 72.0
+margin_top = -42.112
+margin_right = 184.0
+margin_bottom = 69.888
+presetItemKind = 12
+presetIndex = 3
+
+[node name="Mod4" parent="UnitMenu" instance=ExtResource( 10 )]
+anchor_left = 0.5
+anchor_top = 0.912
+anchor_right = 0.5
+anchor_bottom = 0.912
+margin_left = 200.0
+margin_top = -42.112
+margin_right = 312.0
+margin_bottom = 69.888
+presetItemKind = 12
+presetIndex = 4
 
 [node name="Artifact3" parent="UnitMenu" instance=ExtResource( 10 )]
 anchor_left = 0.695
@@ -348,9 +417,9 @@ anchor_top = 0.912
 anchor_right = 0.695
 anchor_bottom = 0.912
 margin_left = -55.92
-margin_top = -56.1921
+margin_top = -202.112
 margin_right = 56.08
-margin_bottom = 55.8079
+margin_bottom = -90.1121
 presetItemKind = 11
 presetIndex = 3
 
@@ -360,9 +429,9 @@ anchor_top = 0.912
 anchor_right = 0.89
 anchor_bottom = 0.912
 margin_left = -55.84
-margin_top = -56.1921
+margin_top = -202.112
 margin_right = 56.16
-margin_bottom = 55.8079
+margin_bottom = -90.1121
 presetItemKind = 11
 presetIndex = 4
 
@@ -372,9 +441,9 @@ anchor_top = 0.716
 anchor_right = 0.159
 anchor_bottom = 0.716
 margin_left = -56.304
-margin_top = -56.256
+margin_top = -170.816
 margin_right = 55.696
-margin_bottom = 55.744
+margin_bottom = -58.816
 presetItemKind = 9
 
 [node name="Sentinel" parent="UnitMenu" instance=ExtResource( 10 )]
@@ -383,9 +452,9 @@ anchor_top = 0.716
 anchor_right = 0.817
 anchor_bottom = 0.716
 margin_left = -55.952
-margin_top = -56.256
+margin_top = -170.816
 margin_right = 56.048
-margin_bottom = 55.744
+margin_bottom = -58.816
 presetItemKind = 8
 
 [node name="EnergySource" parent="UnitMenu" instance=ExtResource( 10 )]
@@ -394,9 +463,9 @@ anchor_top = 0.52
 anchor_right = 0.817
 anchor_bottom = 0.52
 margin_left = -55.952
-margin_top = -56.32
+margin_top = -139.52
 margin_right = 56.048
-margin_bottom = 55.68
+margin_bottom = -27.52
 presetItemKind = 10
 
 [node name="Status" type="Panel" parent="."]

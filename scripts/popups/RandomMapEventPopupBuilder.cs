@@ -95,8 +95,8 @@ public class RandomMapEventPopupBuilder : AbstractMapPopupBuilder {
                 _gameState.explorationDrones.Add((string)effect.value);
                 return;
 
-            case AbstractMapEvent.EffectKind.AddVesselStatus:
-                _gameState.humanUnit.Get().fleet[(int)effect.value].Get().statusList.Add((string)effect.value2);
+            case AbstractMapEvent.EffectKind.AddVesselMod:
+                _gameState.humanUnit.Get().fleet[(int)effect.value].Get().modList.Add((string)effect.value2);
                 return;
 
             case AbstractMapEvent.EffectKind.AddItem:

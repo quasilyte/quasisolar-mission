@@ -4,16 +4,6 @@ using System.Collections.Generic;
 
 // TODO: rename this class.
 public static class VesselFactory {
-    public static void RollUpgrades(Vessel v) {
-        int numRolled = QRandom.IntRange(1, 3);
-        var rollable = new List<VesselStatus>(VesselStatus.rollableList);
-        for (int i = 0; i < numRolled; i++) {
-            var status = QRandom.Element(rollable);
-            rollable.Remove(status);
-            v.rolledUpgrades.Add(status.name);
-        }
-    }
-
     public static void PadEquipment(Vessel v) {
         v.energySourceName = "None";
         v.weapons = new List<string>{
@@ -51,7 +41,9 @@ public static class VesselFactory {
     public static void Init(Vessel v, string kind) {
         v.sentinelName = "Empty";
 
-        if (kind == "Neutral Ravager") {
+        if (kind == "Neutral X-The-Bit") {
+            InitXTheBit(v);
+        } else if (kind == "Neutral Ravager") {
             InitNeutralRavager(v);
         } else if (kind == "Neutral Nomad") {
             InitNeutralNomad(v);
@@ -199,6 +191,28 @@ public static class VesselFactory {
             }
             v.specialWeaponName = w;
         }
+    }
+
+    private static void InitXTheBit(Vessel v) {
+        v.designName = "X-The-Bit";
+        v.energySourceName = "Cryogenic Block";
+
+        v.specialWeaponName = TempestWeapon.Design.name;
+        v.sentinelName = "Stinger Fighter";
+
+        v.shieldName = HeatScreenShield.Design.name;
+
+        v.weapons.Add(FlareWeapon.Design.name);
+
+        v.artifacts.Add(MagneticNegatorArtifact.Design.name);
+        v.artifacts.Add(DroidArtifact.Design.name);
+        v.artifacts.Add(SentinelControllerArtifact.Design.name);
+        v.artifacts.Add(SentinelLinkArtifact.Design.name);
+
+        v.modList.Add("Sentinel Patch: Overclock");
+        v.modList.Add("Sentinel Patch: Berserk");
+        v.modList.Add("Sentinel Patch: Bastion");
+        v.modList.Add("Shield Booster");
     }
 
     private static void InitNeutralRavager(Vessel v) {
@@ -454,6 +468,8 @@ public static class VesselFactory {
                 0.2, IonCannonWeapon.Design.name,
                 0.2, StingerWeapon.Design.name);
         }
+
+        v.modList.Add("Asteroid Danger");
     }
 
     private static void InitKrigiaClaws(Vessel v) {
@@ -483,6 +499,8 @@ public static class VesselFactory {
         if (QRandom.Float() < RankChance(v.rank, 0.2, 0.3, 0.7)) {
             v.shieldName = IonCurtainShield.Design.name;
         }
+
+        v.modList.Add("Asteroid Danger");
     }
 
     private static void InitKrigiaFangs(Vessel v) {
@@ -523,6 +541,8 @@ public static class VesselFactory {
                 0.2, DispersionFieldShield.Design.name,
                 0.1, IonCurtainShield.Design.name);
         }
+ 
+        v.modList.Add("Asteroid Danger");
     }
 
     private static void InitKrigiaDestroyer(Vessel v) {
@@ -540,6 +560,8 @@ public static class VesselFactory {
         SetShield(v,
             0.6, DispersionFieldShield.Design.name,
             0.4, DeceleratorShield.Design.name);
+
+        v.modList.Add("Asteroid Danger");
     }
 
     private static void InitKrigiaTusks(Vessel v) {
@@ -574,6 +596,8 @@ public static class VesselFactory {
             0.3, IonCurtainShield.Design.name,
             0.2, DispersionFieldShield.Design.name,
             0.1, DeceleratorShield.Design.name);
+
+        v.modList.Add("Asteroid Danger");
     }
 
     private static void InitKrigiaHorns(Vessel v) {
@@ -607,6 +631,8 @@ public static class VesselFactory {
             0.5, DispersionFieldShield.Design.name,
             0.3, DeceleratorShield.Design.name,
             0.2, IonCurtainShield.Design.name);
+
+        v.modList.Add("Asteroid Danger");
     }
 
     private static void InitKrigiaAshes(Vessel v) {
@@ -655,9 +681,15 @@ public static class VesselFactory {
         v.designName = "Guardian";
         v.energySourceName = "Vortex Battery";
 
-        AddWeapon(v,
-            0.7, PhotonBurstCannonWeapon.Design.name,
-            0.3, TwinPhotonBurstCannonWeapon.Design.name);
+        if (v.rank > 1) {
+            AddWeapon(v,
+                0.5, HeavyPhotonBurstCannonWeapon.Design.name,
+                0.5, TwinPhotonBurstCannonWeapon.Design.name);
+        } else {
+            AddWeapon(v,
+                0.7, PhotonBurstCannonWeapon.Design.name,
+                0.3, TwinPhotonBurstCannonWeapon.Design.name);
+        }
 
         AddWeapon(v,
             0.4, PointDefenseLaserWeapon.Design.name,
@@ -670,6 +702,10 @@ public static class VesselFactory {
             0.2, LatticeShield.Design.name,
             0.2, LaserPerimeterShield.Design.name,
             0.2, HeatScreenShield.Design.name);
+
+        if (QRandom.Float() < RankChance(v.rank, 0, 0.2, 0.5)) {
+            v.artifacts.Add(PhotoniumArtifact.Design.name);
+        }
     }
 
     private static void InitWertuAngel(Vessel v) {
@@ -677,8 +713,9 @@ public static class VesselFactory {
         v.energySourceName = "Cryogenic Block";
 
         AddWeapon(v,
-            0.6, PointDefenseLaserWeapon.Design.name,
-            0.4, TwinPhotonBurstCannonWeapon.Design.name);
+            0.5, PointDefenseLaserWeapon.Design.name,
+            0.3, TwinPhotonBurstCannonWeapon.Design.name,
+            0.2, HeavyPhotonBurstCannonWeapon.Design.name);
 
         AddWeapon(v,
             0.7, CutterWeapon.Design.name,
@@ -691,6 +728,10 @@ public static class VesselFactory {
         }
 
         SetShield(v, 0.4, HeatScreenShield.Design.name);
+
+        if (QRandom.Float() < RankChance(v.rank, 0.2, 0.5, 0.8)) {
+            v.artifacts.Add(PhotoniumArtifact.Design.name);
+        }
     }
 
     private static void InitWertuDominator(Vessel v) {
@@ -699,7 +740,7 @@ public static class VesselFactory {
 
         AddWeapon(v,
             0.7, ShieldBreakerWeapon.Design.name,
-            0.3, TwinPhotonBurstCannonWeapon.Design.name);
+            0.3, HeavyPhotonBurstCannonWeapon.Design.name);
 
         v.weapons.Add(PlasmaEmitterWeapon.Design.name);
 
@@ -711,6 +752,10 @@ public static class VesselFactory {
             v.sentinelName = "Photon Fighter";
         } else if (v.rank == 3) {
             v.sentinelName = "Restructuring Guard";
+        }
+
+        if (QRandom.Float() < RankChance(v.rank, 0.7, 0.9, 1)) {
+            v.artifacts.Add(PhotoniumArtifact.Design.name);
         }
     }
 

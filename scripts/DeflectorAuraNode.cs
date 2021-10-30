@@ -17,7 +17,7 @@ public class DeflectorAuraNode : Node2D {
     }
 
     public override void _Ready() {
-        _hp = DeflectorShield.Design.duration * _target.State.shieldDurationRate;
+        _hp = DeflectorShield.Design.duration * _target.State.stats.shieldDurationRate;
 
         _sprite = GetNode<Sprite>("Sprite");
         if (_target.State.vesselSize == VesselDesign.Size.Normal) {

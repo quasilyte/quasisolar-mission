@@ -37,6 +37,6 @@ public class UnitTestsScreen : Node2D {
         SentinelDesign.InitLists();
         Research.InitLists();
         MapEventRegistry.InitLists();
-        VesselStatus.InitLists();
+        VesselMod.InitLists();
     }
 }

@@ -29,12 +29,20 @@ public class PhotonBeamWeapon : IWeapon {
         _owner = owner;
     }
 
+    public float MaxRange() {
+        var range = Design.range;
+        if (_owner.Vessel.State.hasBeamAmplifier) {
+            range *= 1.15f;
+        }
+        return range;
+    }
+
     public bool CanFire(VesselState state, Vector2 cursor) {
         if (_cooldown != 0 || !state.CanConsumeEnergy(Design.energyCost)) {
             return false;
         }
         var e = QMath.NearestEnemy(cursor, _owner);
-        if (e != null && e.Vessel.Position.DistanceTo(_owner.Vessel.Position) <= Design.range) {
+        if (e != null && e.Vessel.Position.DistanceTo(_owner.Vessel.Position) <= MaxRange()) {
             return true;
         }
         return false;
@@ -55,7 +63,7 @@ public class PhotonBeamWeapon : IWeapon {
             if (!Godot.Object.IsInstanceValid(target)) {
                 return; // Target was destroyed
             }
-            if (target.Position.DistanceTo(_owner.Vessel.Position) > Design.range) {
+            if (target.Position.DistanceTo(_owner.Vessel.Position) > MaxRange()) {
                 return; // Target got too far, can't fire
             }
             var color = Color.Color8(0x0c, 0x9b, 0xc4);
@@ -71,7 +79,11 @@ public class PhotonBeamWeapon : IWeapon {
 
     public void Fire(VesselState state, Vector2 cursor) {
         _cooldown += Design.cooldown;
-        state.ConsumeEnergy(Design.energyCost);
+        var energyCost = Design.energyCost;
+        if (state.hasBeamAmplifier) {
+            energyCost *= 0.8f;
+        }
+        state.ConsumeEnergy(energyCost);
         _target = QMath.NearestEnemy(cursor, _owner).Vessel;
         _fireDelay = 0.7f;
         var sfx = SoundEffectNode.New(GD.Load<AudioStream>("res://audio/weapon/Photon_Beam_Charge.wav"));

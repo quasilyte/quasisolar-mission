@@ -57,10 +57,6 @@ public class VesselDesign: IItem {
     // Special properties.
     public bool fullArc = false;
 
-    public Texture Texture() {
-        return GD.Load<Texture>($"res://images/vessel/{affiliation}_{name}.png");
-    }
-
     public static VesselDesign Find(string name) {
         if (designByName.ContainsKey(name)) {
             return designByName[name];
@@ -1377,6 +1373,31 @@ public class VesselDesign: IItem {
             specialSlot = true,
             weaponSlots = 2,
             artifactSlots = 4,
+
+            cargoSpace = 100,
+            size = Size.Normal,
+        },
+
+        new VesselDesign{
+            level = 6,
+            name = "X-The-Bit",
+            affiliation = Faction.Neutral,
+            description = "TODO",
+            sellingPrice = 19000,
+            debris = 200,
+            productionTime = 215,
+
+            maxHp = 500,
+            maxShieldLevel = 1,
+
+            maxSpeed = 95,
+            acceleration = 2.5f,
+            rotationSpeed = 2,
+
+            sentinelSlot = true,
+            specialSlot = true,
+            weaponSlots = 1,
+            artifactSlots = 5,
 
             cargoSpace = 100,
             size = Size.Normal,

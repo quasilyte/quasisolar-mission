@@ -1,15 +1,16 @@
 using Godot;
 
-public class SentinelControllerArtifact : IArtifact {
+public class PhotoniumArtifact : IArtifact {
     public static ArtifactDesign Design = new ArtifactDesign{
-        name = "Sentinel Controller",
+        name = "Photonium",
         description = "TODO",
-        effect = "+50% sentinel max hp",
-        sellingPrice = 3500,
+        effect = "+1 burst shot for photon cannons",
+        sellingPrice = 3100,
     };
 
     public void Apply(VesselState state, float delta) {}
+
     public void Upgrade(VesselState state) {
-        state.stats.sentinelMaxHpRate += 0.5f;
+        state.hasPhotonium = true;
     }
 }

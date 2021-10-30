@@ -84,7 +84,7 @@ public class EquipmentShopScreen : Node2D {
             var sprite = new Sprite();
             sprite.Position += new Vector2(56, 56);
             sprite.Scale = new Vector2(2, 2);
-            sprite.Texture = u.Get().Design().Texture();
+            sprite.Texture = ItemInfo.Texture(u.Get().Design());
             button.AddChild(sprite);
             button.Connect("pressed", this, nameof(OnMemberSelected), new Godot.Collections.Array { i });
         }
@@ -389,6 +389,12 @@ public class EquipmentShopScreen : Node2D {
             artifactSlot.Connect("Clicked", this, nameof(OnItemClicked), new Godot.Collections.Array{artifactSlot});
         }
 
+        for (int i = 0; i < 5; i++) {
+            var modSlot = panel.GetNode<ItemSlotNode>($"Mod{i}");
+            _itemSlotController.AddSlot(modSlot);
+            modSlot.Connect("Clicked", this, nameof(OnItemClicked), new Godot.Collections.Array{modSlot});
+        }
+
         var itemStorageGrid = GetNode<GridContainer>("Storage/ScrollContainer/GridContainer");
         for (int i = 0; i < _gameState.ItemStorageCapacity(); i++) {
             var itemSlot = _itemSlotController.NewSlot(i, ItemKind.Storage);
@@ -424,6 +430,9 @@ public class EquipmentShopScreen : Node2D {
 
         if (_itemSlotController.selected == null) {
             _buySell.Disabled = true;
+        } else if (_itemSlotController.selected.GetItemKind() == ItemKind.Mod) {
+            _buySell.Disabled = !((VesselMod)_itemSlotController.selected.GetItem()).removable;
+            _buySell.Text = "Remove";
         } else if (_itemSlotController.selected.GetItemKind() == ItemKind.Shop) {
             _buySell.Disabled = ItemInfo.SellingPrice(_itemSlotController.selected.GetItem()) > _gameState.credits;
             _buySell.Text = "Buy";
@@ -460,7 +469,7 @@ public class EquipmentShopScreen : Node2D {
         var u = _humanUnit.fleet[vesselIndex].Get();
         _selectedVessel = u;
 
-        panel.GetNode<Sprite>("VesselDesign/Sprite").Texture = u.Design().Texture();
+        panel.GetNode<Sprite>("VesselDesign/Sprite").Texture = ItemInfo.Texture(u.Design());
 
         panel.GetNode<TextureProgress>("HealthBar").Value = QMath.Percantage(u.hp, u.MaxHp());
 
@@ -525,12 +534,28 @@ public class EquipmentShopScreen : Node2D {
 
             artifactSlot.ApplyItem(ArtifactDesign.Find(art));
         }
+
+        UpdateModSlots();
+    }
+
+    private void UpdateModSlots() {
+        var panel = GetNode<Panel>("UnitMenu");
+        for (int j = 0; j < 5; j++) {
+            var modSlot = panel.GetNode<ItemSlotNode>($"Mod{j}");
+            modSlot.Reset(_selectedVessel, true);
+            if (j < _selectedVessel.modList.Count) {
+                var mod = VesselMod.modByName[_selectedVessel.modList[j]];
+                modSlot.AssignItem(mod);
+            }
+        }
     }
 
     private void SelectShopCategory(string category) {
         foreach (var slot in _shopSlots) {
             slot.Reset(null, true);
         }
+
+        GetNode<ScrollContainer>("EquipmentShop/ScrollContainer").ScrollVertical = 0;
 
         int i = 0;
         category = category.Replace(" ", ""); // "Special Weapon" -> "SpecialWeapon"
@@ -542,6 +567,11 @@ public class EquipmentShopScreen : Node2D {
             var itemNode = _shopSlots[i];
             itemNode.AssignItem(item);
             i++;
+        }
+
+        if (_itemSlotController.selected != null && _itemSlotController.selected.GetItemKind() == ItemKind.Shop) {
+            _itemSlotController.Unselect();
+            GetNode<Label>("EquipmentInfo/InfoBox/Body").Text = "";
         }
     }
 
@@ -575,6 +605,20 @@ public class EquipmentShopScreen : Node2D {
         UpdateUI();
     }
 
+    private void OnModRemove() {
+        _selectedVessel.modList.RemoveAt(_itemSlotController.selected.GetItemIndex());
+        _selectedVessel.RecalculateStats();
+
+        _itemSlotController.ClearSelectedSlot();
+        GetNode<Label>("EquipmentInfo/InfoBox/Body").Text = "";
+
+        UpdateUI();
+        UpdateModSlots();
+        UpdateCargoPopup();
+
+        _buySell.Disabled = true;
+    }
+
     private void OnItemSell() {
         var item = _itemSlotController.selected.GetItem();
         var itemName = ItemInfo.Name(item);
@@ -589,7 +633,9 @@ public class EquipmentShopScreen : Node2D {
         if (_itemSlotController.selected == null) {
             return;
         }
-        if (_buySell.Text == "Sell") {
+        if (_buySell.Text == "Remove") {
+            OnModRemove();
+        } else if (_buySell.Text == "Sell") {
             OnItemSell();
         } else {
             OnItemBuy();
@@ -782,6 +828,10 @@ public class EquipmentShopScreen : Node2D {
     }
 
     private void OnLeavePressed() {
+        foreach (var v in _humanUnit.fleet) {
+            var stats = v.Get().RecalculateStats();
+            v.Get().energy = stats.maxBackupEnergy;
+        }
         GetTree().ChangeScene("res://scenes/screens/StarBaseScreen.tscn");
     }
 }

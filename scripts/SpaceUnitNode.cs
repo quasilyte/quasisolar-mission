@@ -120,7 +120,12 @@ public abstract class SpaceUnitNode : Node2D {
 
     private List<string> GetKnownInfo() {
         var lines = new List<string>();
-        lines.Add(unit.owner.ToString() + " Unit");
+
+        if (unit.owner == Faction.ModTrader) {
+            lines.Add("Unidentified Unit");
+        } else {
+            lines.Add(unit.owner.ToString() + " Unit");
+        }
         
         lines.Add("--");
         foreach (var x in unit.fleet) {

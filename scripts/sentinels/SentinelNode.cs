@@ -27,11 +27,8 @@ public abstract class SentinelNode : Node2D {
     }
 
     public override void _Ready() {
-        _hp = _design.hp;
-        if (_vessel.hasSentinelController) {
-            _hp *= 1.5f;
-        }
-
+        _hp = (_design.hp + _vessel.State.stats.sentinelMaxHpBonus) * _vessel.State.stats.sentinelMaxHpRate;
+        
         _pivot = GetNode<Node2D>("Pivot");
 
         var area = GetNode<Area2D>("Pivot/Sprite/Area2D");
@@ -135,6 +132,10 @@ public abstract class SentinelNode : Node2D {
         GetParent().AddChild(e);
         e.GlobalPosition = _sprite.GlobalPosition;
         QueueFree();
+    }
+
+    protected void AddCooldown() {
+        _attackCooldown = _design.attackCooldown * _vessel.State.stats.sentinelActionCooldownRate;
     }
 
     protected virtual void OnDestroy() {}

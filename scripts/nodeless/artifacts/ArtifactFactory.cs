@@ -43,6 +43,12 @@ public static class ArtifactFactory {
         if (a == IonCannonSaturatorArtifact.Design) {
             return new IonCannonSaturatorArtifact();
         }
+        if (a == PhotoniumArtifact.Design) {
+            return new PhotoniumArtifact();
+        }
+        if (a == BeamAmplifierArtifact.Design) {
+            return new BeamAmplifierArtifact();
+        }
         if (a == ShivaRechargerArtifact.Design) {
             return new ShivaRechargerArtifact();
         }

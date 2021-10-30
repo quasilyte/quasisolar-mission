@@ -11,6 +11,6 @@ public class DivioryThrusterArtifact : IArtifact {
     public void Apply(VesselState state, float delta) {}
 
     public void Upgrade(VesselState state) {
-        state.rotationSpeed *= 1.30f;
+        state.stats.rotationSpeed *= 1.30f;
     }
 }

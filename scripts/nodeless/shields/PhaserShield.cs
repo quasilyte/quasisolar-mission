@@ -25,6 +25,6 @@ public class PhaserShield : AbstractShield {
 
     public override void Activate(VesselState state) {
         base.Activate(state);
-        _pilot.Vessel.EnablePhasing(Design.duration);
+        _pilot.Vessel.EnablePhasing(_activation);
     }
 }

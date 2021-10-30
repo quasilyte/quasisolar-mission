@@ -408,7 +408,7 @@ public class MapView : Node2D, IMapViewContext {
 
         var hpPercentage = QMath.Percantage(v.hp, v.MaxHp());
         var energyPercentage = QMath.Percantage(v.energy, v.MaxBackupEnergy());
-        var m = UnitMemberNode.New(v.pilotName, v.Design().Texture(), hpPercentage, energyPercentage);
+        var m = UnitMemberNode.New(v.pilotName, ItemInfo.Texture(v.Design()), hpPercentage, energyPercentage);
         _unitMembers.Add(m);
         box.AddChild(m);
     }
@@ -845,6 +845,8 @@ public class MapView : Node2D, IMapViewContext {
                 node = RarilouSpaceUnitNode.New(u);
             } else if (u.owner == Faction.Zyth) {
                 node = ZythSpaceUnitNode.New(u);
+            } else if (u.owner == Faction.ModTrader) {
+                node = ModTraderSpaceUnitNode.New(u);
             } else if (u.owner == Faction.Earthling) {
                 // Handled above.
             } else {
@@ -1065,6 +1067,7 @@ public class MapView : Node2D, IMapViewContext {
         ProcessKrigiaActions();
         ProcessPhaaActions();
         ProcessRarilouActions();
+        ProcessModTraderActions();
 
         if (_gameState.day == _gameState.missionDeadline) {
             SpawnKrigiaFinalAttack(new Vector2(512, 224), RpgGameState.StartingSystem().pos);
@@ -1339,6 +1342,13 @@ public class MapView : Node2D, IMapViewContext {
             return true;
         }
 
+        if (u.unit.owner == Faction.ModTrader) {
+            if (_gameState.modTraderState.delay == 0 && QRandom.Float() < 0.35f) {
+                _gameState.modTraderState.delay = QRandom.IntRange(15, 40);
+                TriggerModTraderEvent(u);
+            }
+        }
+
         return false;
     }
 
@@ -1382,6 +1392,14 @@ public class MapView : Node2D, IMapViewContext {
         _lockControls = true;
         _eventUnit = u;
         _krigiaTaskForcePopup.PopupCentered();
+    }
+
+    private void TriggerModTraderEvent(SpaceUnitNode u) {
+        _randomEventProto = new ModTraderEncounterMapEvent();
+        var ctx = NewRandomEventContext();
+        ctx.spaceUnit = u.unit;
+        RpgGameState.arenaUnit1 = u.unit;
+        OpenRandomEvent(ctx);
     }
 
     private void TriggerZythEvent(SpaceUnitNode u) {
@@ -1486,6 +1504,10 @@ public class MapView : Node2D, IMapViewContext {
         var ctx = NewRandomEventContext();
         ctx.spaceUnit = spaceUnit;
         OpenRandomEvent(ctx);
+    }
+
+    private void ProcessModTraderActions() {
+        _gameState.modTraderState.delay = QMath.ClampMin(_gameState.modTraderState.delay - 1, 0);
     }
 
     private void ProcessRarilouActions() {

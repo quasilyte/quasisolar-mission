@@ -10,4 +10,5 @@ public class EmptyShield : IShield {
     public void Deactivate() {}
     public void Process(VesselState state, float delta) {}
     public float ReduceDamage(float damage, DamageKind kind) { return damage; }
+    public float ActivationCost(VesselState state) { return 0; }
 }

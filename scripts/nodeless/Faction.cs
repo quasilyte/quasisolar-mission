@@ -28,4 +28,5 @@ public enum Faction {
 
     // Minor campaign factions.
     PhaaRebel,
+    ModTrader,
 }

@@ -639,6 +639,14 @@ public class Research {
         },
 
         new Research{
+            name = "Heavy Photon Burst Cannon",
+            material = Faction.Wertu,
+            category = Category.NewWeapon,
+            researchTime = 40,
+            dependencies = {"Wertu Weapons II"},
+        },
+
+        new Research{
             name = "Shield Breaker",
             material = Faction.Wertu,
             category = Category.NewWeapon,

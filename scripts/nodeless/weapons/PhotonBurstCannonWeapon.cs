@@ -26,7 +26,7 @@ public class PhotonBurstCannonWeapon : IWeapon {
 
     private int _burst = 0;
     private float _burstCooldown = 0;
-    private Vector2 _burstTarget;
+    private float _burstDirection;
 
     public PhotonBurstCannonWeapon(Pilot owner) {
         _owner = owner;
@@ -50,7 +50,7 @@ public class PhotonBurstCannonWeapon : IWeapon {
             _burstCooldown += 0.1f;
             var projectile = Projectile.New(Design, _owner);
             projectile.Position = _owner.Vessel.Position;
-            projectile.Rotation = (_burstTarget - _owner.Vessel.Position).Normalized().Angle();
+            projectile.Rotation = _burstDirection;
             _owner.Vessel.GetParent().AddChild(projectile);
 
             var sfx = SoundEffectNode.New(GD.Load<AudioStream>("res://audio/weapon/Photon_Burst_Cannon.wav"), -4);
@@ -62,6 +62,9 @@ public class PhotonBurstCannonWeapon : IWeapon {
         _cooldown += Design.cooldown;
         state.ConsumeEnergy(Design.energyCost);
         _burst = Design.burst;
-        _burstTarget = cursor;
+        if (state.hasPhotonium) {
+            _burst++;
+        }
+        _burstDirection = (cursor - _owner.Vessel.Position).Normalized().Angle();
     }
 }

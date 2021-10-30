@@ -11,7 +11,7 @@ public abstract class AbstractMapEvent {
 
     public enum EffectKind {
         None,
-        AddVesselStatus,
+        AddVesselMod,
 
         AddCredits,
         AddMinerals,

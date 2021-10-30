@@ -20,8 +20,6 @@ public class VesselNode : Node2D {
     private bool _hasMagneticNegator = false;
     private bool _hasLaserAbsorber = false;
 
-    public bool hasSentinelController = false;
-
     private bool _phasing = false;
     private bool _destroyed = false;
 
@@ -77,9 +75,6 @@ public class VesselNode : Node2D {
             }
             if (a is LaserAbsorberArtifact) {
                 _hasLaserAbsorber = true;
-            }
-            if (a is SentinelControllerArtifact) {
-                hasSentinelController = true;
             }
         }
 
@@ -185,7 +180,7 @@ public class VesselNode : Node2D {
         var moving = false;
         var contrailLength = 0.2f;
         if (_currentWaypoint != null && State.stats.maxSpeed != 0) {
-            var engineRotationSpeed = State.insidePurpleNebula ? State.rotationSpeed - 0.5f : State.rotationSpeed;
+            var engineRotationSpeed = State.insidePurpleNebula ? State.stats.rotationSpeed - 0.5f : State.stats.rotationSpeed;
             var rotationSpeed = State.rotationCrippledTime != 0 ? 0.5f : engineRotationSpeed;
             rotationSpeed = Math.Max(rotationSpeed, 0.5f);
             var dstRotation = _currentWaypoint.Position.AngleToPoint(Position);
@@ -200,7 +195,7 @@ public class VesselNode : Node2D {
                 if (CurrentWaypointDistance() < 150) {
                     var diff = QMath.RotationDiff(dstRotation, State.velocity.Angle());
                     if (Math.Abs(diff) > 0.7) {
-                        var speedDecrease = (State.stats.maxSpeed * 0.5f) - (State.rotationSpeed * 2);
+                        var speedDecrease = (State.stats.maxSpeed * 0.5f) - (State.stats.rotationSpeed * 2);
                         maxSpeed -= speedDecrease;
                         contrailLength = 0.1f;
                     }
@@ -390,7 +385,7 @@ public class VesselNode : Node2D {
     private void HandleCollision(Area2D other) {
         if (other.GetParent() is Asteroid asteroid) {
             asteroid.ApplyDamage(100);
-            ApplyDamage(50, DamageKind.Kinetic);
+            ApplyDamage(50 + State.stats.asteroidDamageReceived, DamageKind.Kinetic);
             return;
         }
 

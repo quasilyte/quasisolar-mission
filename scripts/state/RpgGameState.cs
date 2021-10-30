@@ -14,6 +14,7 @@ public class RpgGameState {
     public static HashSet<StarBase> humanBases;
     public static StarBase phaaBase;
     public static StarBase vespionBase;
+    public static SpaceUnit modTraderUnit;
 
     public static int enemyBaseNumAttackers = 0;
     public static SpaceUnit arenaUnit1;
@@ -93,6 +94,11 @@ public class RpgGameState {
         public int unitSpawnDelay = 0;
     }
 
+    public class ModTraderState {
+        public int delay = 0;
+        public HashSet<string> artifacts = new HashSet<string>();
+    }
+
     public RpgGameState() {}
 
     public void InitStaticState(bool newGame) {
@@ -103,6 +109,14 @@ public class RpgGameState {
         enteredBase = null;
         transition = newGame ? MapTransition.NewGame : MapTransition.LoadGame;
         lastBattleResult = null;
+        modTraderUnit = null;
+
+        foreach (var u in spaceUnits.objects.Values) {
+            if (u.owner == Faction.ModTrader) {
+                modTraderUnit = u;
+                break;
+            }
+        }
 
         starSystemList = new List<StarSystem>();
         foreach (var sys in starSystems.objects.Values) {
@@ -242,6 +256,7 @@ public class RpgGameState {
     public KrigiaPlans krigiaPlans = new KrigiaPlans();
     public PhaaPlans phaaPlans = new PhaaPlans();
     public RarilouPlans rarilouPlans = new RarilouPlans();
+    public ModTraderState modTraderState = new ModTraderState();
 
     public Dictionary<Faction, int> reputations = new Dictionary<Faction, int>{
         {Faction.Krigia, -25},

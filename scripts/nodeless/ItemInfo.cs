@@ -52,6 +52,8 @@ public class ItemInfo {
             return RenderHelp(vessel.Design());
         } else if (item is VesselDesign vesselDesign) {
             return vesselDesign.RenderHelp();
+        } else if (item is VesselMod mod) {
+            return mod.RenderHelp();
         }
         return "unknown_item";
     }
@@ -71,6 +73,8 @@ public class ItemInfo {
             return Name(vessel.Design());
         } else if (item is VesselDesign vesselDesign) {
             return vesselDesign.affiliation + " " + vesselDesign.name;
+        } else if (item is VesselMod mod) {
+            return mod.name;
         }
         return "unknown_item";
     }
@@ -79,8 +83,12 @@ public class ItemInfo {
         var name = Name(item);
         name = name.Replace(' ', '_');
         name = name.Replace('-', '_');
+        name = name.Replace(":", "");
         if (item is VesselDesign || item is Vessel) {
             return GD.Load<Texture>($"res://images/vessel/{name}.png");
+        }
+        if (item is VesselDesign || item is VesselMod) {
+            return GD.Load<Texture>($"res://images/mods/{name}.png");
         }
         return GD.Load<Texture>($"res://images/items/{name}.png");
     }

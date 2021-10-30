@@ -35,7 +35,7 @@ public class ShieldSentinelNode : SentinelNode {
             return damage;
         }
 
-        _attackCooldown = _design.attackCooldown;
+        AddCooldown();
         var aura = ShieldImpulseNode.New(_vessel, GD.Load<Texture>(_textureName), _design.shield);
         _vessel.GetParent().AddChild(aura);
 

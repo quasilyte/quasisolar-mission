@@ -32,6 +32,15 @@ public class StarBaseModule {
             buildTime = 60,
         },
 
+        // Upgrades.
+
+        new StarBaseModule{
+            name = "War Factory",
+            sellingPrice = 3750,
+            effect = "produced vessels start with Fortification mod",
+            buildTime = 40,
+        },
+
         // Defensive structures.
 
         new StarBaseModule{

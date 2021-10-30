@@ -82,7 +82,7 @@ public class Arena : Node2D {
             a.Upgrade(state);
         }
 
-        var vesselNode = VesselNode.New(pilot, state, v.Design().Texture());
+        var vesselNode = VesselNode.New(pilot, state, ItemInfo.Texture(v.Design()));
         vesselNode.artifacts = artifacts;
         foreach (string w in v.weapons) {
             vesselNode.weapons.Add(WeaponFactory.New(WeaponDesign.Find(w), pilot));

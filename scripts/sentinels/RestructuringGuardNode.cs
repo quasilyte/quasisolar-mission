@@ -66,6 +66,6 @@ public class RestructuringGuardNode : SentinelNode {
         _line = RestructuringLine.New(_sprite, _vessel);
         GetParent().AddChild(_line);
 
-        _attackCooldown = _design.attackCooldown;
+        AddCooldown();
     }
 }

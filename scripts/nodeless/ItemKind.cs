@@ -14,4 +14,5 @@ public enum ItemKind {
     Shield,
     EnergySource,
     Artifact,
+    Mod,
 }
