@@ -83,7 +83,7 @@ public class ShipyardScreen : Node2D {
             foreach (var vesselDesignName in _starBase.productionQueue) {
                 var order = productionQueue.GetNode<Sprite>($"Order{i}");
                 var sprite = order.GetNode<Sprite>("Sprite");
-                sprite.Scale = new Vector2(2, 2);
+                sprite.Scale = new Vector2(1.5f, 1.5f);
                 sprite.Texture = ItemInfo.Texture(VesselDesign.Find(vesselDesignName));
                 i++;
             }

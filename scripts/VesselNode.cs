@@ -194,11 +194,13 @@ public class VesselNode : Node2D {
             if (!isRotating) {
                 var engineMaxSpeed = State.insidePurpleNebula ? State.stats.maxSpeed / 2 : State.stats.maxSpeed;
                 float maxSpeed = engineMaxSpeed - State.speedPenalty + State.speedBonus;
+                var acceleration = State.stats.acceleration;
                 if (CurrentWaypointDistance() < 150) {
                     var diff = QMath.RotationDiff(dstRotation, State.velocity.Angle());
                     if (Math.Abs(diff) > 0.7) {
-                        var speedDecrease = (State.stats.maxSpeed * 0.5f) - (State.stats.rotationSpeed * 2);
+                        var speedDecrease = State.stats.maxSpeed * 0.55f;
                         maxSpeed -= speedDecrease;
+                        acceleration = (acceleration * 2) + 0.5f;
                         contrailLength = 0.1f;
                     }
                 }
@@ -208,7 +210,7 @@ public class VesselNode : Node2D {
                 showContrail = true;
                 if (State.velocity.Length() < maxSpeed) {
                     moving = true;
-                    State.velocity += Transform.x * State.stats.acceleration;
+                    State.velocity += Transform.x * acceleration;
                     State.velocity = State.velocity.Clamped(maxSpeed);
                 }
             }

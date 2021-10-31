@@ -16,7 +16,11 @@ public abstract class AbstractBot {
     }
 
     public void Ready() {
-        _screenCenter = new Vector2(_vessel.GetTree().Root.Size.x / 2, _vessel.GetTree().Root.Size.y / 2);
+        _screenCenter = RootSize() / 2;
+    }
+
+    protected Vector2 RootSize() {
+        return _vessel.GetTree().Root.GetVisibleRect().Size;
     }
 
     protected PilotActionList _actions = new PilotActionList();
@@ -40,8 +44,9 @@ public abstract class AbstractBot {
     }
 
     protected bool IsOutOfScreen(Vector2 pos) {
-        return pos.x > _vessel.GetTree().Root.Size.x || pos.x < 0 ||
-            pos.y > _vessel.GetTree().Root.Size.y || pos.y < 0;
+        var size = RootSize();
+        return pos.x > size.x || pos.x < 0 ||
+            pos.y > size.y || pos.y < 0;
 
     }
 

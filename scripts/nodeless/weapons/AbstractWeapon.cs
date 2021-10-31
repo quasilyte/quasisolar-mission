@@ -12,7 +12,7 @@ public abstract class AbstractWeapon : IWeapon {
 
     public WeaponDesign GetDesign() { return _design; }
 
-    public void Ready() {}
+    public virtual void Ready() {}
 
     public virtual bool CanFire(VesselState state, Vector2 cursor) {
         if (_cooldown != 0) {

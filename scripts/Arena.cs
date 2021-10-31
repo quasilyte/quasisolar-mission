@@ -187,7 +187,7 @@ public class Arena : Node2D {
             pilot.Vessel = vesselNode;
             AddChild(vesselNode);
             _context.affectedByEnvHazard.Add(vesselNode);
-            var centerPos = new Vector2(GetTree().Root.Size.x / 2, GetTree().Root.Size.y / 2);
+            var centerPos = GetTree().Root.GetVisibleRect().Size / 2;
             vesselNode.GlobalPosition = combatant.spawnPos;
             if (!combatant.Design().fullArc) {
                 vesselNode.Rotation = centerPos.AngleToPoint(vesselNode.GlobalPosition);
@@ -311,14 +311,14 @@ public class Arena : Node2D {
     }
 
     private Vector2 RandomScreenPosCentered() {
-        var screenSize = GetTree().Root.Size;
+        var screenSize = GetTree().Root.GetVisibleRect().Size;
         var x = QRandom.FloatRange(640, screenSize.x - 640);
         var y = QRandom.FloatRange(96, screenSize.y - 96);
         return new Vector2(x, y);
     }
 
     private Vector2 RandomScreenPos() {
-        var screenSize = GetTree().Root.Size;
+        var screenSize = GetTree().Root.GetVisibleRect().Size;
         var x = QRandom.FloatRange(128, screenSize.x - 128);
         var y = QRandom.FloatRange(128, screenSize.y - 128);
         return new Vector2(x, y);

@@ -29,7 +29,19 @@ public class DisintegratorWeapon : AbstractWeapon {
     private const int MAX_CHARGE_LEVEL = 4;
     private const float SECONDS_PER_CHARGE = 0.75f;
 
-    public DisintegratorWeapon(Pilot owner) : base(Design, owner) { }
+    private float _projectileOffset;
+
+    public DisintegratorWeapon(Pilot owner) : base(Design, owner) {}
+
+    public override void Ready() {
+        float offset = 20;
+        if (_owner.Vessel.State.vesselSize == VesselDesign.Size.Normal) {
+            offset = 25;
+        } else if (_owner.Vessel.State.vesselSize == VesselDesign.Size.Large) {
+            offset = 30;
+        }
+        _projectileOffset = offset;
+    }
 
     public override void Charge(float delta) {
         if (_cooldown == 0) {
@@ -37,7 +49,7 @@ public class DisintegratorWeapon : AbstractWeapon {
         }
         if (_node == null && _charge != 0) {
             _node = EnergyBoltChargerNode.New();
-            _node.Position += _node.Transform.x * 15;
+            _node.Position += _node.Transform.x * _projectileOffset;
             _owner.Vessel.AddChild(_node);
         }
     }
@@ -63,7 +75,7 @@ public class DisintegratorWeapon : AbstractWeapon {
         var projectile = EnergyBoltNode.New(_owner);
         projectile.chargeLevel = _powerLevel;
         projectile.Position = _owner.Vessel.Position;
-        projectile.Position += _owner.Vessel.Transform.x * 10;
+        projectile.Position += _owner.Vessel.Transform.x * _projectileOffset;
         projectile.Rotation = (cursor - _owner.Vessel.Position).Normalized().Angle();
 
         var particles = projectile.GetNode<CPUParticles2D>("CPUParticles2D");

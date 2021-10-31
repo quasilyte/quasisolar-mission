@@ -273,9 +273,9 @@ public class VesselDesign: IItem {
             maxHp = 125,
             maxShieldLevel = 1,
 
-            maxSpeed = 95,
-            acceleration = 2.4f,
-            rotationSpeed = 2.0f,
+            maxSpeed = 90,
+            acceleration = 1.9f,
+            rotationSpeed = 1.6f,
 
             sentinelSlot = false,
             specialSlot = false,
@@ -299,9 +299,9 @@ public class VesselDesign: IItem {
             maxHp = 160,
             maxShieldLevel = 1,
 
-            maxSpeed = 90,
-            acceleration = 2.2f,
-            rotationSpeed = 2,
+            maxSpeed = 85,
+            acceleration = 1.75f,
+            rotationSpeed = 1.6f,
 
             sentinelSlot = true,
             specialSlot = true,
@@ -325,9 +325,9 @@ public class VesselDesign: IItem {
             maxHp = 300,
             maxShieldLevel = 1,
 
-            maxSpeed = 65,
-            acceleration = 1.5f,
-            rotationSpeed = 1.3f,
+            maxSpeed = 60,
+            acceleration = 1.2f,
+            rotationSpeed = 1,
 
             sentinelSlot = false,
             specialSlot = false,
@@ -351,9 +351,9 @@ public class VesselDesign: IItem {
             maxHp = 200,
             maxShieldLevel = 2,
 
-            maxSpeed = 80,
-            acceleration = 2.0f,
-            rotationSpeed = 1.8f,
+            maxSpeed = 75,
+            acceleration = 1.6f,
+            rotationSpeed = 1.45f,
 
             sentinelSlot = false,
             specialSlot = false,
@@ -379,9 +379,9 @@ public class VesselDesign: IItem {
             maxHp = 300,
             maxShieldLevel = 2,
 
-            maxSpeed = 70,
-            acceleration = 2,
-            rotationSpeed = 1.6f,
+            maxSpeed = 65,
+            acceleration = 1.6f,
+            rotationSpeed = 1.3f,
 
             sentinelSlot = true,
             specialSlot = true,
@@ -405,9 +405,9 @@ public class VesselDesign: IItem {
             maxHp = 230,
             maxShieldLevel = 1,
 
-            maxSpeed = 95,
-            acceleration = 3.5f,
-            rotationSpeed = 2.2f,
+            maxSpeed = 90,
+            acceleration = 2.8f,
+            rotationSpeed = 1.75f,
 
             sentinelSlot = false,
             specialSlot = true,
@@ -431,9 +431,9 @@ public class VesselDesign: IItem {
             maxHp = 310,
             maxShieldLevel = 3,
 
-            maxSpeed = 90,
-            acceleration = 2.6f,
-            rotationSpeed = 2.5f,
+            maxSpeed = 85,
+            acceleration = 2.05f,
+            rotationSpeed = 1.9f,
 
             sentinelSlot = true,
             specialSlot = true,
@@ -464,9 +464,9 @@ public class VesselDesign: IItem {
             maxHp = 495,
             maxShieldLevel = 3,
 
-            maxSpeed = 85,
-            acceleration = 2,
-            rotationSpeed = 2,
+            maxSpeed = 80,
+            acceleration = 1.6f,
+            rotationSpeed = 1.5f,
 
             sentinelSlot = true,
             specialSlot = true,
@@ -495,9 +495,9 @@ public class VesselDesign: IItem {
             maxHp = 380,
             maxShieldLevel = 3,
 
-            maxSpeed = 75,
-            acceleration = 4.5f,
-            rotationSpeed = 3.5f,
+            maxSpeed = 70,
+            acceleration = 3.6f,
+            rotationSpeed = 2,
 
             sentinelSlot = false,
             specialSlot = true,
@@ -523,9 +523,9 @@ public class VesselDesign: IItem {
             maxHp = 415,
             maxShieldLevel = 2,
 
-            maxSpeed = 75,
-            acceleration = 3,
-            rotationSpeed = 2,
+            maxSpeed = 70,
+            acceleration = 2.4f,
+            rotationSpeed = 1.6f,
 
             sentinelSlot = false,
             specialSlot = true,
@@ -549,9 +549,9 @@ public class VesselDesign: IItem {
             maxHp = 515,
             maxShieldLevel = 3,
 
-            maxSpeed = 90,
-            acceleration = 4.5f,
-            rotationSpeed = 4,
+            maxSpeed = 85,
+            acceleration = 3.6f,
+            rotationSpeed = 2,
 
             sentinelSlot = true,
             specialSlot = true,
@@ -575,7 +575,7 @@ public class VesselDesign: IItem {
             maxHp = 370,
             maxShieldLevel = 1,
 
-            maxSpeed = 60,
+            maxSpeed = 55,
             acceleration = 1.4f,
             rotationSpeed = 1.2f,
 
@@ -602,9 +602,9 @@ public class VesselDesign: IItem {
             maxHp = 140,
             maxShieldLevel = 1,
 
-            maxSpeed = 105,
-            acceleration = 4,
-            rotationSpeed = 2,
+            maxSpeed = 100,
+            acceleration = 3.6f,
+            rotationSpeed = 1.8f,
 
             sentinelSlot = false,
             specialSlot = false,
@@ -627,9 +627,9 @@ public class VesselDesign: IItem {
             maxHp = 170,
             maxShieldLevel = 1,
 
-            maxSpeed = 100,
-            acceleration = 3.5f,
-            rotationSpeed = 3,
+            maxSpeed = 95,
+            acceleration = 3.15f,
+            rotationSpeed = 2.5f,
 
             sentinelSlot = true,
             specialSlot = true,
@@ -652,9 +652,9 @@ public class VesselDesign: IItem {
             maxHp = 335,
             maxShieldLevel = 2,
 
-            maxSpeed = 85,
-            acceleration = 3,
-            rotationSpeed = 2,
+            maxSpeed = 80,
+            acceleration = 2.4f,
+            rotationSpeed = 1.6f,
 
             sentinelSlot = true,
             specialSlot = true,
@@ -679,9 +679,9 @@ public class VesselDesign: IItem {
             maxHp = 110,
             maxShieldLevel = 1,
 
-            maxSpeed = 100,
-            acceleration = 3.7f,
-            rotationSpeed = 2.8f,
+            maxSpeed = 95,
+            acceleration = 3,
+            rotationSpeed = 2.25f,
 
             sentinelSlot = false,
             specialSlot = false,
@@ -705,8 +705,8 @@ public class VesselDesign: IItem {
             maxShieldLevel = 1,
 
             maxSpeed = 80,
-            acceleration = 2.7f,
-            rotationSpeed = 2.2f,
+            acceleration = 2.15f,
+            rotationSpeed = 1.8f,
 
             sentinelSlot = false,
             specialSlot = false,
@@ -729,9 +729,9 @@ public class VesselDesign: IItem {
             maxHp = 225,
             maxShieldLevel = 2,
 
-            maxSpeed = 100,
-            acceleration = 3.2f,
-            rotationSpeed = 2.7f,
+            maxSpeed = 95,
+            acceleration = 2.55f,
+            rotationSpeed = 2.15f,
 
             sentinelSlot = true,
             specialSlot = true,
@@ -756,9 +756,9 @@ public class VesselDesign: IItem {
             maxHp = 415,
             maxShieldLevel = 2,
 
-            maxSpeed = 75,
-            acceleration = 3,
-            rotationSpeed = 2,
+            maxSpeed = 70,
+            acceleration = 2.4f,
+            rotationSpeed = 1.6f,
 
             sentinelSlot = false,
             specialSlot = true,
@@ -781,9 +781,9 @@ public class VesselDesign: IItem {
             maxHp = 520,
             maxShieldLevel = 2,
 
-            maxSpeed = 70,
-            acceleration = 2.7f,
-            rotationSpeed = 1.9f,
+            maxSpeed = 65,
+            acceleration = 2.15f,
+            rotationSpeed = 1.5f,
 
             sentinelSlot = true,
             specialSlot = true,
@@ -806,9 +806,9 @@ public class VesselDesign: IItem {
             maxHp = 370,
             maxShieldLevel = 3,
 
-            maxSpeed = 105,
-            acceleration = 7.0f,
-            rotationSpeed = 2.5f,
+            maxSpeed = 100,
+            acceleration = 5.6f,
+            rotationSpeed = 2f,
 
             sentinelSlot = true,
             specialSlot = true,
@@ -834,8 +834,8 @@ public class VesselDesign: IItem {
             maxShieldLevel = 3,
 
             maxSpeed = 80,
-            acceleration = 2.5f,
-            rotationSpeed = 1.6f,
+            acceleration = 2,
+            rotationSpeed = 1.25f,
 
             sentinelSlot = true,
             specialSlot = true,
@@ -860,9 +860,9 @@ public class VesselDesign: IItem {
             maxHp = 155,
             maxShieldLevel = 1,
 
-            maxSpeed = 120,
-            acceleration = 2.3f,
-            rotationSpeed = 1.2f,
+            maxSpeed = 115,
+            acceleration = 1.8f,
+            rotationSpeed = 0.95f,
 
             sentinelSlot = false,
             specialSlot = false,
@@ -910,9 +910,9 @@ public class VesselDesign: IItem {
             maxHp = 295,
             maxShieldLevel = 2,
 
-            maxSpeed = 105,
-            acceleration = 2.7f,
-            rotationSpeed = 1.8f,
+            maxSpeed = 100,
+            acceleration = 2.15f,
+            rotationSpeed = 1.45f,
 
             sentinelSlot = false,
             specialSlot = true,
@@ -935,9 +935,9 @@ public class VesselDesign: IItem {
             maxHp = 330,
             maxShieldLevel = 1,
 
-            maxSpeed = 110,
-            acceleration = 3.5f,
-            rotationSpeed = 2.5f,
+            maxSpeed = 105,
+            acceleration = 2.8f,
+            rotationSpeed = 2,
 
             sentinelSlot = true,
             specialSlot = true,
@@ -963,8 +963,8 @@ public class VesselDesign: IItem {
             maxShieldLevel = 3,
 
             maxSpeed = 95,
-            acceleration = 2.5f,
-            rotationSpeed = 1.5f,
+            acceleration = 2,
+            rotationSpeed = 1.2f,
 
             sentinelSlot = true,
             specialSlot = false,
@@ -989,9 +989,9 @@ public class VesselDesign: IItem {
             maxHp = 220,
             maxShieldLevel = 1,
 
-            maxSpeed = 110,
-            acceleration = 4.5f,
-            rotationSpeed = 2.5f,
+            maxSpeed = 105,
+            acceleration = 3.6f,
+            rotationSpeed = 2,
 
             sentinelSlot = false,
             specialSlot = true,
@@ -1014,9 +1014,9 @@ public class VesselDesign: IItem {
             maxHp = 440,
             maxShieldLevel = 3,
 
-            maxSpeed = 100,
-            acceleration = 5.0f,
-            rotationSpeed = 2f,
+            maxSpeed = 95,
+            acceleration = 4,
+            rotationSpeed = 1.6f,
 
             sentinelSlot = true,
             specialSlot = true,
@@ -1041,9 +1041,9 @@ public class VesselDesign: IItem {
             maxHp = 290,
             maxShieldLevel = 1,
 
-            maxSpeed = 95,
-            acceleration = 4,
-            rotationSpeed = 3.5f,
+            maxSpeed = 90,
+            acceleration = 3.2f,
+            rotationSpeed = 2.5f,
 
             sentinelSlot = false,
             specialSlot = true,
@@ -1073,9 +1073,9 @@ public class VesselDesign: IItem {
             maxHp = 195,
             maxShieldLevel = 3,
 
-            maxSpeed = 90,
-            acceleration = 2.2f,
-            rotationSpeed = 2,
+            maxSpeed = 85,
+            acceleration = 1.75f,
+            rotationSpeed = 1.6f,
 
             sentinelSlot = false,
             specialSlot = false,
@@ -1099,9 +1099,9 @@ public class VesselDesign: IItem {
             maxHp = 195,
             maxShieldLevel = 3,
 
-            maxSpeed = 90,
-            acceleration = 2.2f,
-            rotationSpeed = 2,
+            maxSpeed = 85,
+            acceleration = 1.75f,
+            rotationSpeed = 1.6f,
 
             sentinelSlot = false,
             specialSlot = false,
@@ -1132,9 +1132,9 @@ public class VesselDesign: IItem {
             maxHp = 85,
             maxShieldLevel = 1,
 
-            maxSpeed = 100,
-            acceleration = 2.5f,
-            rotationSpeed = 4,
+            maxSpeed = 95,
+            acceleration = 2,
+            rotationSpeed = 2.5f,
 
             sentinelSlot = true,
             specialSlot = true,
@@ -1157,9 +1157,9 @@ public class VesselDesign: IItem {
             maxHp = 170,
             maxShieldLevel = 2,
 
-            maxSpeed = 110,
-            acceleration = 3,
-            rotationSpeed = 4,
+            maxSpeed = 105,
+            acceleration = 2.4f,
+            rotationSpeed = 2.7f,
 
             sentinelSlot = false,
             specialSlot = true,
@@ -1182,9 +1182,9 @@ public class VesselDesign: IItem {
             maxHp = 335,
             maxShieldLevel = 3,
 
-            maxSpeed = 95,
-            acceleration = 3.2f,
-            rotationSpeed = 4,
+            maxSpeed = 90,
+            acceleration = 2.55f,
+            rotationSpeed = 2.5f,
 
             sentinelSlot = true,
             specialSlot = true,
@@ -1209,9 +1209,9 @@ public class VesselDesign: IItem {
             maxHp = 265,
             maxShieldLevel = 0,
 
-            maxSpeed = 75,
-            acceleration = 5,
-            rotationSpeed = 2,
+            maxSpeed = 70,
+            acceleration = 4,
+            rotationSpeed = 1.5f,
 
             sentinelSlot = true,
             specialSlot = true,
@@ -1235,9 +1235,9 @@ public class VesselDesign: IItem {
             maxHp = 210,
             maxShieldLevel = 2,
 
-            maxSpeed = 108,
-            acceleration = 2.5f,
-            rotationSpeed = 2.0f,
+            maxSpeed = 105,
+            acceleration = 2,
+            rotationSpeed = 1.6f,
 
             sentinelSlot = true,
             specialSlot = false,
@@ -1261,9 +1261,9 @@ public class VesselDesign: IItem {
             maxHp = 275,
             maxShieldLevel = 1,
 
-            maxSpeed = 105,
-            acceleration = 2.9f,
-            rotationSpeed = 2.9f,
+            maxSpeed = 100,
+            acceleration = 2.3f,
+            rotationSpeed = 2.3f,
 
             sentinelSlot = false,
             specialSlot = true,
@@ -1286,9 +1286,9 @@ public class VesselDesign: IItem {
             maxHp = 600,
             maxShieldLevel = 3,
 
-            maxSpeed = 100,
-            acceleration = 3.2f,
-            rotationSpeed = 2.3f,
+            maxSpeed = 95,
+            acceleration = 2.5f,
+            rotationSpeed = 1.65f,
 
             sentinelSlot = true,
             specialSlot = true,
@@ -1313,9 +1313,9 @@ public class VesselDesign: IItem {
             maxHp = 120,
             maxShieldLevel = 2,
 
-            maxSpeed = 90,
-            acceleration = 1.2f,
-            rotationSpeed = 1.8f,
+            maxSpeed = 85,
+            acceleration = 1,
+            rotationSpeed = 1.6f,
 
             sentinelSlot = true,
             specialSlot = false,
@@ -1338,9 +1338,9 @@ public class VesselDesign: IItem {
             maxHp = 295,
             maxShieldLevel = 2,
 
-            maxSpeed = 80,
+            maxSpeed = 75,
             acceleration = 1.4f,
-            rotationSpeed = 1.8f,
+            rotationSpeed = 1.6f,
 
             sentinelSlot = false,
             specialSlot = true,
@@ -1365,9 +1365,9 @@ public class VesselDesign: IItem {
             maxHp = 225,
             maxShieldLevel = 3,
 
-            maxSpeed = 110,
-            acceleration = 2.5f,
-            rotationSpeed = 3.0f,
+            maxSpeed = 105,
+            acceleration = 2,
+            rotationSpeed = 2.2f,
 
             sentinelSlot = false,
             specialSlot = true,
@@ -1390,9 +1390,9 @@ public class VesselDesign: IItem {
             maxHp = 575,
             maxShieldLevel = 1,
 
-            maxSpeed = 95,
-            acceleration = 2.5f,
-            rotationSpeed = 2,
+            maxSpeed = 90,
+            acceleration = 2.2f,
+            rotationSpeed = 1.6f,
 
             sentinelSlot = true,
             specialSlot = true,
