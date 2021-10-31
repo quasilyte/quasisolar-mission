@@ -210,51 +210,51 @@ public class StarBase: AbstractPoolValue {
         var technologiesResearched = RpgGameState.instance.technologiesResearched;
 
         foreach (WeaponDesign weapon in WeaponDesign.list) {
-            // if (weapon.researchRequired && !technologiesResearched.Contains(weapon.name)) {
-            //     continue;
-            // }
-            // if (level < ItemInfo.MinStarBaseLevel(weapon)) {
-            //     continue;
-            // }
+            if (weapon.researchRequired && !technologiesResearched.Contains(weapon.name)) {
+                continue;
+            }
+            if (level < ItemInfo.MinStarBaseLevel(weapon)) {
+                continue;
+            }
             shopSelection.Add(weapon);
         }
 
         foreach (WeaponDesign weapon in WeaponDesign.specialList) {
-            // if (weapon.researchRequired && !technologiesResearched.Contains(weapon.name)) {
-            //     continue;
-            // }
-            // if (level < ItemInfo.MinStarBaseLevel(weapon)) {
-            //     continue;
-            // }
+            if (weapon.researchRequired && !technologiesResearched.Contains(weapon.name)) {
+                continue;
+            }
+            if (level < ItemInfo.MinStarBaseLevel(weapon)) {
+                continue;
+            }
             shopSelection.Add(weapon);
         }
 
         foreach (ShieldDesign shield in ShieldDesign.list) {
-            // if (!Research.IsAvailable(technologiesResearched, shield.technologiesNeeded)) {
-            //     continue;
-            // }
-            // if (level < ItemInfo.MinStarBaseLevel(shield)) {
-            //     continue;
-            // }
-            // if (shield.researchRequired && !technologiesResearched.Contains(shield.name)) {
-            //     continue;
-            // }
+            if (!Research.IsAvailable(technologiesResearched, shield.technologiesNeeded)) {
+                continue;
+            }
+            if (level < ItemInfo.MinStarBaseLevel(shield)) {
+                continue;
+            }
+            if (shield.researchRequired && !technologiesResearched.Contains(shield.name)) {
+                continue;
+            }
             shopSelection.Add(shield);
         }
 
         // Start from 1 to skip the "None" energy source.
         for (int i = 1; i < EnergySource.list.Length; i++) {
             var energySource = EnergySource.list[i];
-            // if (energySource.researchRequired && !technologiesResearched.Contains(energySource.name)) {
-            //     continue;
-            // }
+            if (energySource.researchRequired && !technologiesResearched.Contains(energySource.name)) {
+                continue;
+            }
             shopSelection.Add(energySource);
         }
 
         foreach (var art in ArtifactDesign.list) {
-            // if (!technologiesResearched.Contains(art.name)) {
-            //     continue;
-            // }
+            if (!technologiesResearched.Contains(art.name)) {
+                continue;
+            }
             shopSelection.Add(art);
         }
 
@@ -262,9 +262,9 @@ public class StarBase: AbstractPoolValue {
             if (sentinel.name == "Empty") {
                 continue;
             }
-            // if (sentinel.researchRequired && !technologiesResearched.Contains(sentinel.name)) {
-            //     continue;
-            // }
+            if (sentinel.researchRequired && !technologiesResearched.Contains(sentinel.name)) {
+                continue;
+            }
 
             shopSelection.Add(sentinel);
         }
