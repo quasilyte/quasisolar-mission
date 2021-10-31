@@ -29,7 +29,7 @@ public class ShieldAuraNode : Node2D {
         if (_target.State.vesselSize == VesselDesign.Size.Normal) {
             _sprite.Scale = new Vector2(1.2f, 1.2f);
         } else if (_target.State.vesselSize == VesselDesign.Size.Large) {
-            _sprite.Scale = new Vector2(1.5f, 1.5f);
+            _sprite.Scale = new Vector2(1.55f, 1.55f);
         }
         Position = _target.Position;
     }

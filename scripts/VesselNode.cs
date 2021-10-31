@@ -63,9 +63,11 @@ public class VesselNode : Node2D {
         _contrail.Emitting = false;
         if (State.vesselSize == VesselDesign.Size.Normal) {
             _contrail.Scale = new Vector2(1.6f, 1.6f);
+            _contrail.Position -= new Vector2(4, 0);
             mask.Scale = new Vector2(1.1f, 1.1f);
         } else if (State.vesselSize == VesselDesign.Size.Large) {
             _contrail.Scale = new Vector2(1.8f, 1.8f);
+            _contrail.Position -= new Vector2(10, 0);
             mask.Scale = new Vector2(1.3f, 1.3f);
         }
 
