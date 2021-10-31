@@ -588,8 +588,8 @@ public class Arena : Node2D {
     }
 
     private void spawnAsteroid() {
-        var screenWidth = GetTree().Root.Size.x;
-        var screenHeight = GetTree().Root.Size.y;
+        var screenWidth = GetTree().Root.GetVisibleRect().Size.x;
+        var screenHeight = GetTree().Root.GetVisibleRect().Size.y;
         var asteroid = Asteroid.New();
         int side = QRandom.IntRange(0, 3);
         if (side == 0) { // Right

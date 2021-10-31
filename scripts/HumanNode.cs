@@ -49,7 +49,7 @@ public class HumanNode : Node2D {
     public override void _Process(float delta) {
         HandleInput(delta);
         if (!playerInput.IsGamepadControlled()) {
-            _cursor.GlobalPosition = GetGlobalMousePosition();
+            _cursor.GlobalPosition = GodotUtils.CorrectedCursorPos(GetViewport());
         }
         UpdateHUD();
     }
@@ -63,7 +63,7 @@ public class HumanNode : Node2D {
     private void HandleInput(float delta) {
         Vector2 cursor;
         if (!playerInput.IsGamepadControlled()) {
-            cursor = GetGlobalMousePosition();
+            cursor = GodotUtils.CorrectedCursorPos(GetViewport());
         } else {
             // TODO: use qmath TranslateViewportPos here?
             var offset = camera.GetCameraScreenCenter() - camera.GetViewportRect().Size / 2;
@@ -169,25 +169,4 @@ public class HumanNode : Node2D {
             }
         }
     }
-
-    // public override void _Input(InputEvent e) {
-    //     if (e is InputEventKey keyEvent) {
-    //         if (keyEvent.Scancode == (uint)Godot.KeyList.Space && !keyEvent.Pressed) {
-    //             pilot.Vessel.ClearWaypoints();
-    //         }
-    //     }
-    // }
-
-    // public override void _UnhandledInput(InputEvent e) {
-    //     if (e is InputEventMouseButton mouseEvent) {
-    //         if (mouseEvent.ButtonIndex == (int)ButtonList.Left && mouseEvent.Pressed) {
-    //             var wp = Waypoint.New(true, null);
-    //             wp.GlobalPosition = GetGlobalMousePosition();
-    //             pilot.Vessel.AddWaypoint(wp);
-    //             GetParent().AddChild(wp);
-    //             GetTree().SetInputAsHandled();
-    //             return;
-    //         }
-    //     }
-    // }
 }

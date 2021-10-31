@@ -84,8 +84,8 @@ public class Asteroid : Node2D {
         var posY = Position.y;
         var spriteWidth = 32f;
         var spriteHeight = 32f;
-        var screenWidth = GetTree().Root.Size.x;
-        var screenHeight = GetTree().Root.Size.y;
+        var screenWidth = GetTree().Root.GetVisibleRect().Size.x;
+        var screenHeight = GetTree().Root.GetVisibleRect().Size.y;
         bool outOfScreen = false;
         if (posX <= 0 - spriteWidth / 2) {
             outOfScreen = true;

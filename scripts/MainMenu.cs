@@ -31,9 +31,11 @@ public class MainMenu : Node2D {
             VesselMod.InitLists();
         }
 
-        foreach (var design in VesselDesign.list) {
-            GD.Print(design.name + " = " + design.PriceHintApprox() + " (orig: " + design.sellingPrice + ")");
-        }
+        // foreach (var design in VesselDesign.list) {
+        //     GD.Print(design.name + " = " + design.PriceHintApprox() + " (orig: " + design.sellingPrice + ")");
+        // }
+
+        GodotUtils.Init(GetViewport());
 
         QuickBattleState.Reset();
     }
