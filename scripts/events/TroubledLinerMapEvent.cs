@@ -29,15 +29,15 @@ public class TroubledLinerMapEvent: AbstractMapEvent {
             if (roll < 0.4) {
                 effects.Add(new Effect{
                     kind = EffectKind.AddOrganic,
-                    value = 90,
+                    value = 120,
                 });
-                text += "In reward, they shared some of their transported goods worth 90 units of organic.\n";
+                text += "In reward, they shared some of their transported goods worth 120 units of organic.\n";
             } else if (roll < 0.8) {
                 effects.Add(new Effect{
                     kind = EffectKind.AddCredits,
-                    value = 2700,
+                    value = 3400,
                 });
-                text += "In reward, they paid 2700 RU for your assistance.\n";
+                text += "In reward, they paid 3400 RU for your assistance.\n";
             } else {
                 effects.Add(new Effect{
                     kind = EffectKind.AddReputation,
@@ -82,7 +82,7 @@ public class TroubledLinerMapEvent: AbstractMapEvent {
                 var liner = VesselFactory.NewVessel(Faction.Wertu, "Transporter");
                 var spaceUnit = NewSpaceUnit(Faction.RandomEventHostile, liner);
                 if (ctx.roll < 0.6) {
-                    spaceUnit.cargo.organic = (int)((ctx.roll + 0.6f) * 150);
+                    spaceUnit.cargo.organic = 160;
                 }
                 return new Result{
                     text = MultilineText(@"

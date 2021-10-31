@@ -13,7 +13,8 @@ public class RobotsColonyMapEvent: AbstractMapEvent {
             return false;
         }
         return !Flagship().modList.Contains("Energy Deviator") ||
-            !Flagship().modList.Contains("Star Heat Resistor");
+            !Flagship().modList.Contains("Star Heat Resistor") &&
+            Flagship().modList.Count < 5;
     }
 
     public override AbstractMapEvent Create(RandomEventContext ctx) {
@@ -34,8 +35,8 @@ public class RobotsColonyMapEvent: AbstractMapEvent {
 
         e.actions.Add(new Action {
             name = "Pick energy deviator",
-            hint = () => "(3000 RU)",
-            condition = () => GameState().credits >= 3000 && !Flagship().modList.Contains("Energy Deviator"),
+            hint = () => "(1500 RU)",
+            condition = () => GameState().credits >= 1500 && !Flagship().modList.Contains("Energy Deviator"),
             apply = () => {
                 return new Result{
                     text = MultilineText(@"
@@ -47,7 +48,7 @@ public class RobotsColonyMapEvent: AbstractMapEvent {
                     effects = {
                         new Effect{
                             kind = EffectKind.AddCredits,
-                            value = -3000,
+                            value = -1500,
                         },
                         new Effect{
                             kind = EffectKind.AddVesselMod,
@@ -61,8 +62,8 @@ public class RobotsColonyMapEvent: AbstractMapEvent {
 
         e.actions.Add(new Action {
             name = "Pick heat resistor",
-            hint = () => "(1000 RU)",
-            condition = () => GameState().credits >= 1000 && !Flagship().modList.Contains("Star Heat Resistor"),
+            hint = () => "(500 RU)",
+            condition = () => GameState().credits >= 500 && !Flagship().modList.Contains("Star Heat Resistor"),
             apply = () => {
                 return new Result{
                     text = MultilineText(@"
@@ -74,7 +75,7 @@ public class RobotsColonyMapEvent: AbstractMapEvent {
                     effects = {
                         new Effect{
                             kind = EffectKind.AddCredits,
-                            value = -1000,
+                            value = -500,
                         },
                         new Effect{
                             kind = EffectKind.AddVesselMod,

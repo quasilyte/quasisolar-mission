@@ -26,9 +26,9 @@ public class AbandonedVesselMapEvent : AbstractMapEvent {
         e.actions.Add(new Action {
             name = "Collect resources",
             apply = () => {
-                if (ctx.roll < 0.6) {
-                    var ru = (int)(ctx.roll * 750) + 300;
-                    var fuel = (int)((1 - ctx.roll) * 100) + 5;
+                if (ctx.roll < 0.65) {
+                    var ru = (int)(ctx.roll * 1500) + 2500;
+                    var fuel = (int)((1 - ctx.roll) * 200) + 5;
                     return new Result {
                         text = MultilineText($@"
                             The vessel was pretty much empty, but you managed to get some scraps out.

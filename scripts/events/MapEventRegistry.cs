@@ -10,16 +10,13 @@ public class MapEventRegistry {
             // Special events.
             new PurpleSystemVisitorMapEvent(),
 
-            // Text quests.
-            new HackingMapEvent(),
-
             // Spectre sequence.
             new SpectreMapEvent(),
             new SpectreAttackMapEvent(),
 
             // Ravagers sequence.
-            new StaticNoiseMapEvent(),
-            new RavagersRetaliationMapEvent(),
+            // new StaticNoiseMapEvent(),
+            // new RavagersRetaliationMapEvent(),
 
             // Normal events.
             new EnigmaMapEvent(),

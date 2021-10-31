@@ -26,9 +26,9 @@ public class KrigiaDroneMapEvent: AbstractMapEvent {
             hint = () => "(100 fuel)",
             condition = () => RpgGameState.instance.fuel >= 100 && RpgGameState.MaxExplorationDrones() > RpgGameState.instance.explorationDrones.Count,
             apply = () => {
-                var ru = (int)(ctx.roll * 1000) + 1500;
+                var ru = (int)(ctx.roll * 1000) + 3000;
                 return new Result{
-                    text = $"You successfully captured the Scavenger drone along with {ru} resource units it carried.",
+                    text = $"You successfully captured the Curiosity drone along with {ru} resource units it carried.",
                     expReward = 6,
                     effects = {
                         new Effect{
@@ -37,7 +37,7 @@ public class KrigiaDroneMapEvent: AbstractMapEvent {
                         },
                         new Effect{
                             kind = EffectKind.AddDrone,
-                            value = "Scavenger",
+                            value = "Curiosity",
                         },
                         new Effect{
                             kind = EffectKind.AddCredits,
@@ -53,10 +53,10 @@ public class KrigiaDroneMapEvent: AbstractMapEvent {
             hint = () => "(10 fuel)",
             condition = () => RpgGameState.instance.fuel >= 10,
             apply = () => {
-                var ru = (int)(ctx.roll * 1000) + 1000;
+                var ru = (int)(ctx.roll * 1000) + 2000;
                 return new Result{
                     text = MultilineText($@"
-                        A few minutes later, the drone is no more.
+                        A few minutes later, the drone exists no more.
 
                         What remains is there for you to harvest ({ru} resource units).
                     "),

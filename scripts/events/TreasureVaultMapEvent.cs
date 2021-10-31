@@ -13,8 +13,6 @@ public class TreasureVaultMapEvent: AbstractMapEvent {
         var e = new TreasureVaultMapEvent();
 
         e.text = MultilineText(@"
-            It's your lucky day!
-
             You found an open vault on a surface of one of the moons.
             You can scavenge all the resources from there.
 
@@ -27,7 +25,7 @@ public class TreasureVaultMapEvent: AbstractMapEvent {
         e.actions.Add(new Action{
             name = "Play it safe",
             apply = () => {
-                var bounty = 2000 + QRandom.IntRange(0, 300);
+                var bounty = 4500 + QRandom.IntRange(0, 300);
                 return new Result{
                     text = MultilineText($@"
                         You harvested all the resources that were reachable through the open areas.
@@ -62,7 +60,7 @@ public class TreasureVaultMapEvent: AbstractMapEvent {
                         "),
                     };
                 }
-                var bounty = 4000 + QRandom.IntRange(0, 600);
+                var bounty = 9000 + QRandom.IntRange(0, 600);
                 return new Result{
                     text = MultilineText($@"
                         The door took a few shots before it finally gave up.
