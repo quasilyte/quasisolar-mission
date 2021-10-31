@@ -1201,7 +1201,7 @@ public class VesselDesign: IItem {
             level = 3,
             name = "Ravager",
             affiliation = Faction.Neutral,
-            description = "",
+            description = "TODO",
             sellingPrice = 6500,
             debris = 90,
             productionTime = 70,

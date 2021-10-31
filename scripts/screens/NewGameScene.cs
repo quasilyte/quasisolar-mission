@@ -403,7 +403,7 @@ public class NewGameScene : Node2D {
             VesselFactory.Init(trader, "Neutral X-The-Bit");
             fleet.Add(trader.GetRef());
 
-            var traderSpawnSystem = config.starSystems.objects[QRandom.IntRange(0, config.starSystems.objects.Count - 1)];
+            var traderSpawnSystem = config.starSystems.objects[QRandom.IntRange(1, config.starSystems.objects.Count)];
 
             var spaceUnit = config.spaceUnits.New();
             spaceUnit.cargo.minerals = 25;
