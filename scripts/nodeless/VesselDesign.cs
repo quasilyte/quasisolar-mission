@@ -270,7 +270,7 @@ public class VesselDesign: IItem {
             productionTime = 20,
             availability = ProductionAvailability.Always,
 
-            maxHp = 110,
+            maxHp = 125,
             maxShieldLevel = 1,
 
             maxSpeed = 95,
@@ -296,7 +296,7 @@ public class VesselDesign: IItem {
             productionTime = 50,
             availability = ProductionAvailability.Always,
 
-            maxHp = 140,
+            maxHp = 160,
             maxShieldLevel = 1,
 
             maxSpeed = 90,
@@ -322,7 +322,7 @@ public class VesselDesign: IItem {
             productionTime = 75,
             availability = ProductionAvailability.Always,
 
-            maxHp = 260,
+            maxHp = 300,
             maxShieldLevel = 1,
 
             maxSpeed = 65,
@@ -348,7 +348,7 @@ public class VesselDesign: IItem {
             productionTime = 65,
             availability = ProductionAvailability.Always,
 
-            maxHp = 175,
+            maxHp = 200,
             maxShieldLevel = 2,
 
             maxSpeed = 80,
@@ -376,7 +376,7 @@ public class VesselDesign: IItem {
 
             canDestroyBase = true,
 
-            maxHp = 260,
+            maxHp = 300,
             maxShieldLevel = 2,
 
             maxSpeed = 70,
@@ -402,7 +402,7 @@ public class VesselDesign: IItem {
             productionTime = 100,
             availability = ProductionAvailability.ResearchRequired,
 
-            maxHp = 200,
+            maxHp = 230,
             maxShieldLevel = 1,
 
             maxSpeed = 95,
@@ -428,7 +428,7 @@ public class VesselDesign: IItem {
             productionTime = 120,
             availability = ProductionAvailability.ResearchRequired,
 
-            maxHp = 270,
+            maxHp = 310,
             maxShieldLevel = 3,
 
             maxSpeed = 90,
@@ -461,7 +461,7 @@ public class VesselDesign: IItem {
             productionTime = 210,
             availability = ProductionAvailability.ResearchRequired,
 
-            maxHp = 430,
+            maxHp = 495,
             maxShieldLevel = 3,
 
             maxSpeed = 85,
@@ -492,7 +492,7 @@ public class VesselDesign: IItem {
             productionTime = 180,
             availability = ProductionAvailability.ResearchRequired,
 
-            maxHp = 330,
+            maxHp = 380,
             maxShieldLevel = 3,
 
             maxSpeed = 75,
@@ -520,7 +520,7 @@ public class VesselDesign: IItem {
             productionTime = 190,
             availability = ProductionAvailability.ResearchRequired,
 
-            maxHp = 360,
+            maxHp = 415,
             maxShieldLevel = 2,
 
             maxSpeed = 75,
@@ -546,7 +546,7 @@ public class VesselDesign: IItem {
             productionTime = 250,
             availability = ProductionAvailability.ResearchRequired,
 
-            maxHp = 450,
+            maxHp = 515,
             maxShieldLevel = 3,
 
             maxSpeed = 90,
@@ -572,7 +572,7 @@ public class VesselDesign: IItem {
             productionTime = 100,
             availability = ProductionAvailability.ResearchRequired,
 
-            maxHp = 320,
+            maxHp = 370,
             maxShieldLevel = 1,
 
             maxSpeed = 60,
@@ -599,7 +599,7 @@ public class VesselDesign: IItem {
             debris = 45,
             productionTime = 30,
             
-            maxHp = 120,
+            maxHp = 140,
             maxShieldLevel = 1,
 
             maxSpeed = 105,
@@ -624,7 +624,7 @@ public class VesselDesign: IItem {
             debris = 65,
             productionTime = 45,
 
-            maxHp = 145,
+            maxHp = 170,
             maxShieldLevel = 1,
 
             maxSpeed = 100,
@@ -649,7 +649,7 @@ public class VesselDesign: IItem {
             debris = 130,
             productionTime = 120,
 
-            maxHp = 290,
+            maxHp = 335,
             maxShieldLevel = 2,
 
             maxSpeed = 85,
@@ -676,7 +676,7 @@ public class VesselDesign: IItem {
             debris = 45,
             productionTime = 20,
 
-            maxHp = 95,
+            maxHp = 110,
             maxShieldLevel = 1,
 
             maxSpeed = 100,
@@ -701,7 +701,7 @@ public class VesselDesign: IItem {
             debris = 65,
             productionTime = 70,
 
-            maxHp = 145,
+            maxHp = 165,
             maxShieldLevel = 1,
 
             maxSpeed = 80,
@@ -726,7 +726,7 @@ public class VesselDesign: IItem {
             debris = 110,
             productionTime = 115,
 
-            maxHp = 195,
+            maxHp = 225,
             maxShieldLevel = 2,
 
             maxSpeed = 100,
@@ -753,7 +753,7 @@ public class VesselDesign: IItem {
 
             canDestroyBase = true,
 
-            maxHp = 360,
+            maxHp = 415,
             maxShieldLevel = 2,
 
             maxSpeed = 75,
@@ -778,7 +778,7 @@ public class VesselDesign: IItem {
             debris = 190,
             productionTime = 200,
 
-            maxHp = 450,
+            maxHp = 520,
             maxShieldLevel = 2,
 
             maxSpeed = 70,
@@ -803,7 +803,7 @@ public class VesselDesign: IItem {
             debris = 220,
             productionTime = 180,
 
-            maxHp = 320,
+            maxHp = 370,
             maxShieldLevel = 3,
 
             maxSpeed = 105,
@@ -830,7 +830,7 @@ public class VesselDesign: IItem {
 
             canDestroyBase = true,
 
-            maxHp = 1000,
+            maxHp = 1150,
             maxShieldLevel = 3,
 
             maxSpeed = 80,
@@ -857,7 +857,7 @@ public class VesselDesign: IItem {
             debris = 50,
             productionTime = 30,
 
-            maxHp = 135,
+            maxHp = 155,
             maxShieldLevel = 1,
 
             maxSpeed = 120,
@@ -882,7 +882,7 @@ public class VesselDesign: IItem {
             debris = 130,
             productionTime = 70,
 
-            maxHp = 280,
+            maxHp = 320,
             maxShieldLevel = 2,
 
             maxSpeed = 80,
@@ -907,7 +907,7 @@ public class VesselDesign: IItem {
             debris = 145,
             productionTime = 130,
 
-            maxHp = 250,
+            maxHp = 295,
             maxShieldLevel = 2,
 
             maxSpeed = 105,
@@ -932,7 +932,7 @@ public class VesselDesign: IItem {
             debris = 165,
             productionTime = 140,
 
-            maxHp = 285,
+            maxHp = 330,
             maxShieldLevel = 1,
 
             maxSpeed = 110,
@@ -959,7 +959,7 @@ public class VesselDesign: IItem {
             
             canDestroyBase = true,
 
-            maxHp = 550,
+            maxHp = 635,
             maxShieldLevel = 3,
 
             maxSpeed = 95,
@@ -986,7 +986,7 @@ public class VesselDesign: IItem {
             debris = 125,
             productionTime = 105,
 
-            maxHp = 190,
+            maxHp = 220,
             maxShieldLevel = 1,
 
             maxSpeed = 110,
@@ -1011,7 +1011,7 @@ public class VesselDesign: IItem {
             debris = 240,
             productionTime = 160,
 
-            maxHp = 390,
+            maxHp = 440,
             maxShieldLevel = 3,
 
             maxSpeed = 100,
@@ -1038,7 +1038,7 @@ public class VesselDesign: IItem {
             debris = 90,
             productionTime = 130,
 
-            maxHp = 250,
+            maxHp = 290,
             maxShieldLevel = 1,
 
             maxSpeed = 95,
@@ -1070,7 +1070,7 @@ public class VesselDesign: IItem {
             productionTime = 85,
             availability = ProductionAvailability.ResearchRequired,
 
-            maxHp = 165,
+            maxHp = 195,
             maxShieldLevel = 3,
 
             maxSpeed = 90,
@@ -1096,7 +1096,7 @@ public class VesselDesign: IItem {
             productionTime = 85,
             availability = ProductionAvailability.Never,
 
-            maxHp = 165,
+            maxHp = 195,
             maxShieldLevel = 3,
 
             maxSpeed = 90,
@@ -1129,7 +1129,7 @@ public class VesselDesign: IItem {
             debris = 20,
             productionTime = 15,
 
-            maxHp = 75,
+            maxHp = 85,
             maxShieldLevel = 1,
 
             maxSpeed = 100,
@@ -1154,7 +1154,7 @@ public class VesselDesign: IItem {
             debris = 60,
             productionTime = 50,
 
-            maxHp = 145,
+            maxHp = 170,
             maxShieldLevel = 2,
 
             maxSpeed = 110,
@@ -1179,7 +1179,7 @@ public class VesselDesign: IItem {
             debris = 105,
             productionTime = 120,
 
-            maxHp = 290,
+            maxHp = 335,
             maxShieldLevel = 3,
 
             maxSpeed = 95,
@@ -1206,7 +1206,7 @@ public class VesselDesign: IItem {
             debris = 90,
             productionTime = 70,
 
-            maxHp = 225,
+            maxHp = 265,
             maxShieldLevel = 0,
 
             maxSpeed = 75,
@@ -1232,7 +1232,7 @@ public class VesselDesign: IItem {
             productionTime = 85,
             availability = ProductionAvailability.ResearchRequired,
 
-            maxHp = 180,
+            maxHp = 210,
             maxShieldLevel = 2,
 
             maxSpeed = 108,
@@ -1258,7 +1258,7 @@ public class VesselDesign: IItem {
             productionTime = 100,
             availability = ProductionAvailability.ResearchRequired,
 
-            maxHp = 235,
+            maxHp = 275,
             maxShieldLevel = 1,
 
             maxSpeed = 105,
@@ -1283,7 +1283,7 @@ public class VesselDesign: IItem {
             debris = 420,
             productionTime = 210,
 
-            maxHp = 520,
+            maxHp = 600,
             maxShieldLevel = 3,
 
             maxSpeed = 100,
@@ -1310,7 +1310,7 @@ public class VesselDesign: IItem {
             debris = 30,
             productionTime = 60,
 
-            maxHp = 105,
+            maxHp = 120,
             maxShieldLevel = 2,
 
             maxSpeed = 90,
@@ -1335,7 +1335,7 @@ public class VesselDesign: IItem {
             debris = 70,
             productionTime = 150,
 
-            maxHp = 255,
+            maxHp = 295,
             maxShieldLevel = 2,
 
             maxSpeed = 80,
@@ -1362,7 +1362,7 @@ public class VesselDesign: IItem {
             debris = 270,
             productionTime = 170,
 
-            maxHp = 190,
+            maxHp = 225,
             maxShieldLevel = 3,
 
             maxSpeed = 110,
@@ -1387,7 +1387,7 @@ public class VesselDesign: IItem {
             debris = 200,
             productionTime = 215,
 
-            maxHp = 500,
+            maxHp = 575,
             maxShieldLevel = 1,
 
             maxSpeed = 95,
@@ -1412,7 +1412,7 @@ public class VesselDesign: IItem {
             debris = 400,
             productionTime = 500,
 
-            maxHp = 780,
+            maxHp = 900,
             maxShieldLevel = 3,
 
             maxSpeed = 0,
