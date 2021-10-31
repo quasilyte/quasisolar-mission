@@ -121,9 +121,6 @@ public class MapViewCheatMenuPopupNode : PopupDialog {
                 if (e == null) {
                     throw new Exception($"event {arg} not found");
                 }
-                if (!e.Condition()) {
-                    throw new Exception($"{arg} event condition is not satisfied");
-                }
                 _command = new Command { kind = CommandKind.CallRandomEvent, value = e };
                 Log($"Triggered {e.title} event");
                 return;

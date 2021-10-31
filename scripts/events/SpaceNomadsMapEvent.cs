@@ -21,7 +21,7 @@ public class SpaceNomadsMapEvent: AbstractMapEvent {
         var nomadDesign = VesselDesign.Find("Nomad");
 
         Func<int> vesselPrice = () => {
-            return (int)(nomadDesign.sellingPrice * 0.65);
+            return (int)(nomadDesign.sellingPrice * 0.6);
         };
 
         var text = (@"
@@ -38,18 +38,29 @@ public class SpaceNomadsMapEvent: AbstractMapEvent {
         e.actions.Add(new Action {
             name = "Buy a vessel",
             hint = () => "(" + vesselPrice() + " credits)",
-            condition = () => RpgGameState.instance.credits >= vesselPrice(),
+            condition = () => RpgGameState.instance.credits >= vesselPrice() && PlayerSpaceUnit().fleet.Count < SpaceUnit.maxFleetSize,
             apply = () => {
                 var v = RpgGameState.instance.NewVessel(Faction.Earthling, nomadDesign);
                 v.pilotName = PilotNames.UniqHumanName(RpgGameState.instance.usedNames);
                 VesselFactory.PadEquipment(v);
                 VesselFactory.InitStats(v);
+                var equipment = "";
+                if (QRandom.Bool()) {
+                    v.weapons[0] = NeedleGunWeapon.Design.name;
+                    equipment = "Needle Gun";
+                } else {
+                    v.energySourceName = "Power Generator";
+                    equipment = "Power Generator";
+                }
             
                 return new Result{
-                    text = MultilineText(@"
+                    text = MultilineText($@"
                         A new vessel is piloted to your fleet by a grumpy Zyth thug.
 
                         You transfer some of your crew members to it and make it ready to go.
+
+                        Equipment-wise, the vessel had {equipment} installed.
+                        Still better than nothing.
                     "),
                     expReward = 4,
                     effects = {
