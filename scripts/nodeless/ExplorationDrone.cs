@@ -28,7 +28,7 @@ public class ExplorationDrone {
             sellingPrice = 800,
             maxTemp = 130,
             explorationRate = 5,
-            description = "Can only explor low-temp rocky worlds, but it's fast and cheap.",
+            description = "Can only explore low-temp rocky worlds, but it's fast and cheap.",
         },
 
         new ExplorationDrone{
