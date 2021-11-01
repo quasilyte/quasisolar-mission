@@ -34,6 +34,9 @@ public class MapEventRegistry {
             new AbandonedVesselMapEvent(),
             new DraklidShadowMarketMapEvent(),
             new GuardianCrashSiteMapEvent(),
+            new FuelTraderMapEvent(),
+            new ScrapsMapEvent(),
+            new BlackAsteroidMapEvent(),
         };
 
         onSystemEnteredList = new List<AbstractMapEvent>();
