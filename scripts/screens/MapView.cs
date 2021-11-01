@@ -436,10 +436,11 @@ public class MapView : Node2D, IMapViewContext {
         }
         _humanUnit.cargo.power -= 5;
         if (_gameState.technologiesResearched.Contains("Improved Power Conversion")) {
-            _gameState.fuel += 20;
+            RpgGameState.AddFuel(20);
         } else {
-            _gameState.fuel += 15;
+            RpgGameState.AddFuel(15);
         }
+        
         UpdateUI();
     }
 
@@ -968,7 +969,7 @@ public class MapView : Node2D, IMapViewContext {
 
         bool canDestroyEnemyBase = isAtEnemyBase && hasBomber && _currentSystem.sys.starBase.Get().garrison.Count == 0;
 
-        _starSystemMenu.GetNode<ButtonNode>("ConvertPower").Disabled = _humanUnit.cargo.power < 5;
+        _starSystemMenu.GetNode<ButtonNode>("ConvertPower").Disabled = _humanUnit.cargo.power < 5 || _gameState.fuel >= RpgGameState.MaxFuel();
         _starSystemMenu.GetNode<ButtonNode>("Attack").Disabled = !canDestroyEnemyBase;
         _starSystemMenu.GetNode<ButtonNode>("BuildNewBase").Disabled = ArkVesselIndex() == -1 || !CanBuildStarBase();
 
