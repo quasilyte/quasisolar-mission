@@ -32,7 +32,7 @@ public class BlackAsteroidMapEvent: AbstractMapEvent {
                     text = MultilineText($@"
                         After two hours your drone returns with {power} units of power resource.
 
-                        We can use it to generate the fuel. Or we can bring it to one of our star bases.
+                        We can use it to generate fuel. Or we can bring it to one of our star bases.
                     "),
                     effects = {
                         new Effect{

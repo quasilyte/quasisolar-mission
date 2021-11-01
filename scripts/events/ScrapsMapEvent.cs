@@ -19,7 +19,6 @@ public class ScrapsMapEvent: AbstractMapEvent {
             big cloud of scraps swimming the space.
 
             It's probably a victim of asteroids, you concluded.
-
             Since it was on your way, you colledted some useful parts.
 
             Found {minerals} minerals and {fuel} fuel units.

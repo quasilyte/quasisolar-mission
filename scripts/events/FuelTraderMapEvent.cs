@@ -16,9 +16,9 @@ public class FuelTraderMapEvent: AbstractMapEvent {
             A small automated refuel drone approaches your fleet.
 
             It's willing to sell you some fuel.
-            
-            It looks like you can even have 50 fuel units for free
-            in case you can't afford buying it.
+
+            If you can't afford buying it, there is a special
+            offer to get 50 fuel units for free.
         ");
 
         e.actions.Add(new Action {
