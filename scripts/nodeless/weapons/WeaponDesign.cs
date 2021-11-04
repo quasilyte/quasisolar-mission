@@ -185,6 +185,7 @@ public class WeaponDesign : IItem {
             AfterburnerWeapon.Design,
             TempestWeapon.Design,
             PulseBladeWeapon.Design,
+            PullingBeamerWeapon.Design,
         };
         Array.Sort(specialList, (x, y) => x.sellingPrice.CompareTo(y.sellingPrice));
         foreach (var w in specialList) {

@@ -226,6 +226,10 @@ public static class VesselFactory {
             v.specialWeaponName = TempestWeapon.Design.name;
         }
 
+        if (QRandom.Float() < RankChance(v.rank, 0.4, 0.75, 1)) {
+            v.sentinelName = "Pulling Fighter";
+        }
+
         AddWeapon(v,
             0.6, IonCannonWeapon.Design.name,
             0.4, StingerWeapon.Design.name);

@@ -45,6 +45,9 @@ public static class WeaponFactory {
         if (w == PhotonBeamWeapon.Design) {
             return new PhotonBeamWeapon(p);
         }
+        if (w == PullingBeamerWeapon.Design) {
+            return new PullingBeamerWeapon(p);
+        }
         if (w == PlasmaEmitterWeapon.Design) {
             return new PlasmaEmitterWeapon(p);
         }

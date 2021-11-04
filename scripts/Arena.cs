@@ -196,7 +196,9 @@ public class Arena : Node2D {
             if (combatant.sentinelName != "Empty") {
                 SentinelNode sentinel = null;
                 var sentinelDesign = SentinelDesign.Find(combatant.sentinelName);
-                if (sentinelDesign.kind == SentinelDesign.Kind.Attack) {
+                if (sentinelDesign.name == "Pulling Fighter") {
+                    sentinel = PullingSentinelNode.New(pilot.Vessel);
+                } else if (sentinelDesign.kind == SentinelDesign.Kind.Attack) {
                     sentinel = AttackSentinelNode.New(pilot.Vessel, sentinelDesign);
                 } else if (sentinelDesign.name == "Point-Defense Guard") {
                     sentinel = PointDefenseGuardNode.New(pilot.Vessel, sentinelDesign);

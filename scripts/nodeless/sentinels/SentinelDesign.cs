@@ -113,6 +113,16 @@ public class SentinelDesign: IItem {
 
         new SentinelDesign{
             researchRequired = true,
+            name = "Pulling Fighter",
+            description = "TODO",
+            kind = Kind.Attack,
+            hp = 70,
+            sellingPrice = 4000,
+            attackCooldown = 0.8f,
+        },
+
+        new SentinelDesign{
+            researchRequired = true,
             name = "Point-Defense Guard",
             description = "TODO",
             kind = Kind.Defense,
