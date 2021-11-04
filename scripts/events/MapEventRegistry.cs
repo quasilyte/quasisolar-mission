@@ -14,9 +14,11 @@ public class MapEventRegistry {
             new SpectreMapEvent(),
             new SpectreAttackMapEvent(),
 
-            // Ravagers sequence.
-            // new StaticNoiseMapEvent(),
-            // new RavagersRetaliationMapEvent(),
+            // Dark beacon sequence.
+            new MysteriousBeaconMapEvent(),
+            new BeaconActivityMapEvent(),
+            new RiftAmbushMapEvent(),
+            new LurkingThreatMapEvent(),
 
             // Normal events.
             new EnigmaMapEvent(),
