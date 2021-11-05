@@ -66,9 +66,12 @@ public class ResearchScreen : Node2D {
             filterSelect.AddItem(o);
         }
         filterSelect.Connect("item_selected", this, nameof(OnFilterSelected));
+        filterSelect.Select(researchFilters.FindIndex((x) => x == _gameState.selectedResearchCategory));
     }
 
     private void OnFilterSelected(int index) {
+         var filterSelect = GetNode<OptionButton>("ProjectList/FilterOptions");
+        _gameState.selectedResearchCategory = filterSelect.GetItemText(index);
         UpdateUI();
     }
 

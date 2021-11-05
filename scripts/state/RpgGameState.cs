@@ -323,6 +323,8 @@ public class RpgGameState {
     public int travelSlowPoints = 0;
     public float travelSpeed;
 
+    public string selectedResearchCategory = "Recommended";
+
     public List<Quest.Data> activeQuests = new List<Quest.Data>();
     public HashSet<string> completedQuests = new HashSet<string>();
     public HashSet<string> issuedQuests = new HashSet<string>();
