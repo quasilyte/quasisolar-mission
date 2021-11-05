@@ -34,6 +34,7 @@ public class MapView : Node2D, IMapViewContext {
     private PopupNode _starSystemMenu;
     private PopupNode _researchCompletedPopup;
     private PopupNode _patrolReachesBasePopup;
+    private PopupNode _dronesNoticePopup;
     private MapViewCheatMenuPopupNode _cheatsPopup;
 
     private SpaceUnitNode _eventUnit;
@@ -143,6 +144,10 @@ public class MapView : Node2D, IMapViewContext {
         GetNode<TextureButton>("UI/ActionMenuButton").Connect("pressed", this, nameof(OnActionMenuButton));
         GetNode<TextureButton>("UI/ResearchButton").Connect("pressed", this, nameof(OnResearchButton));
         GetNode<TextureButton>("UI/QuestLogButton").Connect("pressed", this, nameof(OnQuestLogButton));
+
+        _dronesNoticePopup = GetNode<PopupNode>("UI/DronesNoticePopup");
+        _dronesNoticePopup.GetNode<ButtonNode>("Leave").Connect("pressed", this, nameof(OnDronesNoticeLeave));
+        _dronesNoticePopup.GetNode<ButtonNode>("Stay").Connect("pressed", this, nameof(OnDronesNoticeStay));
 
         _patrolReachesBasePopup = GetNode<PopupNode>("UI/PatrolReachesBasePopup");
         _patrolReachesBasePopup.GetNode<ButtonNode>("AttackButton").Connect("pressed", this, nameof(OnPatrolReachesBaseAttackButton));
@@ -569,7 +574,13 @@ public class MapView : Node2D, IMapViewContext {
         if (_lockControls) {
             return;
         }
-        _gameState.mapState.movementEnabled = !_gameState.mapState.movementEnabled;
+        var movementEnabled = !_gameState.mapState.movementEnabled;
+        if (movementEnabled && DronesDispatched() && _human.node.unit.waypoint != Vector2.Zero) {
+            _dronesNoticePopup.PopupCentered();
+            _lockControls = true;
+            return;
+        }
+        _gameState.mapState.movementEnabled = movementEnabled;
     }
 
     private void StopMovement() {
@@ -630,6 +641,11 @@ public class MapView : Node2D, IMapViewContext {
         }
     }
 
+    private void ToggleMovement() {
+        _movementToggle.Pressed = !_movementToggle.Pressed;
+        _movementToggle.EmitSignal("pressed");
+    }
+
     public override void _Process(float delta) {
         PanCamera(delta);
 
@@ -638,14 +654,12 @@ public class MapView : Node2D, IMapViewContext {
         }
 
         if (!_lockControls && Input.IsActionJustPressed("mapMovementToggle")) {
-            _movementToggle.Pressed = !_movementToggle.Pressed;
-            _movementToggle.EmitSignal("pressed");
+            ToggleMovement();
         }
 
         if (!_lockControls && Input.IsActionJustPressed("openConsole")) {
             OpenCheats();
         }
-
 
         _human.node.ProcessTick(delta);
         foreach (var u in _spaceUnits) {
@@ -1158,6 +1172,31 @@ public class MapView : Node2D, IMapViewContext {
         if ((int)_gameState.researchProgress >= researchTime) {
             ResearchCompleted();
         }
+    }
+
+    private void OnDronesNoticeLeave() {
+        _dronesNoticePopup.Hide();
+        _lockControls = false;
+        _gameState.mapState.movementEnabled = true;
+        _movementToggle.Pressed = true;
+    }
+
+    private void OnDronesNoticeStay() {
+        _dronesNoticePopup.Hide();
+        _lockControls = false;
+        _movementToggle.Pressed = false;
+    }
+
+    private bool DronesDispatched() {
+        if (_currentSystem == null) {
+            return false;
+        }
+        foreach (var p in _currentSystem.sys.resourcePlanets) {
+            if (p.activeDrone != "") {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void OnPatrolReachesBaseAttackButton() {

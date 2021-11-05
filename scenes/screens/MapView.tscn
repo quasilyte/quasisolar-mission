@@ -288,7 +288,6 @@ __meta__ = {
 }
 
 [node name="StarSystemMenuPopup" parent="UI" instance=ExtResource( 18 )]
-visible = true
 margin_left = 1120.0
 margin_top = 544.0
 margin_right = 1520.0
@@ -579,3 +578,39 @@ margin_left = 688.0
 margin_top = 224.0
 margin_right = 1472.0
 margin_bottom = 768.0
+
+[node name="DronesNoticePopup" parent="UI" instance=ExtResource( 18 )]
+margin_left = 1504.0
+margin_top = 224.0
+margin_right = 2144.0
+margin_bottom = 512.0
+
+[node name="Text" type="Label" parent="UI/DronesNoticePopup"]
+margin_left = 32.0
+margin_top = 16.0
+margin_right = 608.0
+margin_bottom = 176.0
+text = "Drones are still exploring the planets.
+All dispatched drones will be lost.
+
+Do you want to leave the system?"
+align = 1
+valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Leave" parent="UI/DronesNoticePopup" instance=ExtResource( 19 )]
+margin_left = 32.0
+margin_top = 192.0
+margin_right = 256.0
+margin_bottom = 256.0
+text = "Leave"
+
+[node name="Stay" parent="UI/DronesNoticePopup" instance=ExtResource( 19 )]
+margin_left = 384.0
+margin_top = 192.0
+margin_right = 608.0
+margin_bottom = 256.0
+text = "Stay"
