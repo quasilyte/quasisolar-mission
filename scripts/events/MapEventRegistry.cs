@@ -19,6 +19,11 @@ public class MapEventRegistry {
             new BeaconActivityMapEvent(),
             new RiftAmbushMapEvent(),
             new LurkingThreatMapEvent(),
+            
+            // Low-fuel events.
+            new FuelTraderMapEvent(),
+            new ScrapsMapEvent(),
+            new BlackAsteroidMapEvent(),
 
             // Normal events.
             new EnigmaMapEvent(),
@@ -36,9 +41,6 @@ public class MapEventRegistry {
             new AbandonedVesselMapEvent(),
             new DraklidShadowMarketMapEvent(),
             new GuardianCrashSiteMapEvent(),
-            new FuelTraderMapEvent(),
-            new ScrapsMapEvent(),
-            new BlackAsteroidMapEvent(),
         };
 
         onSystemEnteredList = new List<AbstractMapEvent>();
