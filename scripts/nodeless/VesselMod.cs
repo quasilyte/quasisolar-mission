@@ -171,7 +171,7 @@ public class VesselMod: IItem {
         new VesselMod{
             level = 1,
             name = "Fortification",
-            maxHp = +20,
+            maxHp = +25,
             asteroidDamageReceived = -10,
         },
 
