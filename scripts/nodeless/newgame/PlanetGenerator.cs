@@ -14,7 +14,25 @@ public class PlanetGenerator {
         {"volcanic", 6}, // Hot planets
         {"primordial", 6}, // Fallback kind
         {"martian", 8}, // Fallback kind
+        {"treasure", 4}, // A special kind (treasure worlds)
     };
+
+    public static ResourcePlanet NewTreasurePlanet(WorldTemplate.System sys) {
+        var level = sys.sector.level;
+
+        var explorationBonus = QRandom.IntRange(8000, 12000);
+        explorationBonus += level * QRandom.IntRange(2000, 3000);
+
+        var planet = new ResourcePlanet(0, 0, 0, "Treasure World");
+        planet.explorationBonus = explorationBonus;
+        planet.explorationUnits = QRandom.IntRange(300, 550) + (level * 20);
+        planet.temperature = QRandom.IntRange(115, 180);
+
+        var planetSprites = new HashSet<string>();
+        planet.textureName = PickPlanetSprite("treasure", planetSprites);
+
+        return planet;
+    }
 
     public static void GeneratePlanets(WorldTemplate.System sys) {
         var planetSprites = new HashSet<string>();
@@ -88,7 +106,7 @@ public class PlanetGenerator {
         var planet = new ResourcePlanet(minerals, organic, power);
 
         var explorationBonus = QRandom.IntRange(3000, 6000);
-        explorationBonus += level * QRandom.IntRange(3000, 3500);
+        explorationBonus += level * QRandom.IntRange(1000, 2200);
 
         // 20% - cold
         // 25% - normal
@@ -155,7 +173,7 @@ public class PlanetGenerator {
         if (planet.gasGiant) {
             planet.temperature = QMath.ClampMax(planet.temperature, 205);
             planet.explorationUnits += QRandom.IntRange(700, 1000);
-            explorationBonus = (explorationBonus * 2) + 1000;
+            explorationBonus = QMath.IntAdjust(explorationBonus, 1.75);
         }
 
         planet.explorationBonus = explorationBonus;

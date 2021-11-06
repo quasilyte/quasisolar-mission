@@ -180,28 +180,14 @@ public class NewGameScene : Node2D {
             }
         }
 
-        // Fill sectors with star systems.
-        {
-            var starSystenNames = new HashSet<string>();
-            foreach (var sector in sectors) {
-                var middle = sector.rect.Position + sector.rect.Size / 2;
-                sector.systems.Add(NewGameSysGen.NewStarSystem(sector, QMath.RandomizedLocation(middle, 240)));
-                var numSystems = QRandom.IntRange(minSectorSystems, maxSectorSystems);
-                for (int j = 0; j < numSystems; j++) {
-                    var pos = NewGameSysGen.PickStarSystemPos(sector);
-                    sector.systems.Add(NewGameSysGen.NewStarSystem(sector, pos));
-                }
-            }
-        }
+        // Player always starts in the middle of the map.
+        var startingCol = 1;
+        var startingRow = QRandom.IntRange(0, 1);
 
         // Assign sector levels.
         {
-            // Player always starts in the middle of the map.
-            var startingCol = 1;
-            var startingRow = QRandom.IntRange(0, 1);
             var i = startingCol + startingRow * numMapCols;
             world.startingSector = sectors[i];
-            world.startingSystem = world.startingSector.systems[0];
 
             // There are two possible sector level layouts:
             //
@@ -224,6 +210,44 @@ public class NewGameScene : Node2D {
                 } else {
                     sector.level = 3;
                 }
+            }
+        }
+
+        // Fill sectors with star systems.
+        {
+            var starSystenNames = new HashSet<string>();
+            foreach (var sector in sectors) {
+                var middle = sector.rect.Position + sector.rect.Size / 2;
+                sector.systems.Add(NewGameSysGen.NewStarSystem(sector, QMath.RandomizedLocation(middle, 240)));
+                var numSystems = QRandom.IntRange(minSectorSystems, maxSectorSystems);
+                for (int j = 0; j < numSystems; j++) {
+                    var pos = NewGameSysGen.PickStarSystemPos(sector);
+                    sector.systems.Add(NewGameSysGen.NewStarSystem(sector, pos));
+                }
+            }
+
+            world.startingSystem = world.startingSector.systems[0];
+        }
+
+        // Deploy treasure worlds.
+        {
+            int toDeploy = QRandom.IntRange(3, 5);
+            while (toDeploy > 0) {
+                var sector = QRandom.Element(sectors);
+                var sys = QRandom.Element(sector.systems);
+                if (sys == world.startingSystem) {
+                    continue;
+                }
+                if (sys.data.resourcePlanets.Count >= 3) {
+                    continue;
+                }
+                if (sys.data.resourcePlanets.Find((x) => x.name == "Treasure World") != null) {
+                    continue;
+                }
+                var planet = PlanetGenerator.NewTreasurePlanet(sys);
+                sys.data.resourcePlanets.Add(planet);
+                GD.Print($"treasure world at {sys.data.name} (RU={planet.explorationBonus})");
+                toDeploy -= 1;
             }
         }
 

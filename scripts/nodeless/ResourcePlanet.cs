@@ -23,7 +23,7 @@ public class ResourcePlanet {
 
     public ResourcePlanet() {}
 
-    public ResourcePlanet(int minerals, int organic, int power) {
+    public ResourcePlanet(int minerals, int organic, int power, string planetName = "") {
         powerPerDay = power;
         organicPerDay = organic;
         mineralsPerDay = minerals;
@@ -33,8 +33,13 @@ public class ResourcePlanet {
             name = powerWorlds[nameRoll % powerWorlds.Length] + " World";
         } else if (organic > 0) {
             name = organicWorlds[nameRoll % organicWorlds.Length] + " World";
-        } else {
+        } else if (minerals > 0) {
             name = mineralWorlds[nameRoll % mineralWorlds.Length] + " World";
+        } else {
+            if (planetName == "") {
+                throw new System.Exception("empty planet name with empty resources");
+            }
+            name = planetName;
         }
     }
 

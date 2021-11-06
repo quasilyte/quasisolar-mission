@@ -543,15 +543,17 @@ public class MapView : Node2D, IMapViewContext {
 
         var surfaceDescription = "";
         if (p.explorationBonus < 6000) {
-            surfaceDescription = "very poor";
+            surfaceDescription = "very poor (*)";
         } else if (p.explorationBonus < 9000) {
-            surfaceDescription = "poor";
+            surfaceDescription = "poor (**)";
         } else if (p.explorationBonus < 12000) {
-            surfaceDescription = "normal";
+            surfaceDescription = "normal (***)";
         } else if (p.explorationBonus < 15000) {
-            surfaceDescription = "rich";
+            surfaceDescription = "rich (****)";
+        } else if (p.explorationBonus < 20000) {
+            surfaceDescription = "very rich (*****)";
         } else {
-            surfaceDescription = "very rich";
+            surfaceDescription = "extraordinary rich (******)";
         }
 
         infoLines.Add("Surface resources: " + surfaceDescription);
