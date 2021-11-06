@@ -135,19 +135,25 @@ public class StarBase: AbstractPoolValue {
     }
 
     public int VesselRank(float roll) {
+        var rank = 1;
         if (level == 1) {
-            return GenerateRank(0.9, 0.1);
+            rank = GenerateRank(0.9, 0.1);
+        } else if (level == 2) {
+            rank = GenerateRank(0.7, 0.3);
+        } else if (level == 3) {
+            rank = GenerateRank(0.5, 0.4);
+        } else if (level == 4) {
+            rank = GenerateRank(0.3, 0.45);
+        } else {
+            rank = GenerateRank(0.1, 0.45);
         }
-        if (level == 2) {
-            return GenerateRank(0.7, 0.3);
+        var maxRank = 3;
+        if (roll < 0.3f) {
+            maxRank = 1;
+        } else if (roll < 0.6f) {
+            maxRank = 2;
         }
-        if (level == 3) {
-            return GenerateRank(0.5, 0.4);
-        }
-        if (level == 4) {
-            return GenerateRank(0.3, 0.45);
-        }
-        return GenerateRank(0.1, 0.45);
+        return QMath.ClampMax(rank, maxRank);
     }
 
     private int GenerateRank(double first, double second) {

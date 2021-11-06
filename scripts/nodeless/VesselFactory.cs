@@ -468,8 +468,8 @@ public static class VesselFactory {
         } else {
             AddWeapon(v, 
                 0.4, PulseLaserWeapon.Design.name,
+                0.2, GreatScytheWeapon.Design.name,
                 0.2, ScytheWeapon.Design.name,
-                0.2, IonCannonWeapon.Design.name,
                 0.2, StingerWeapon.Design.name);
         }
 
@@ -481,25 +481,26 @@ public static class VesselFactory {
 
         if (v.rank == 1) {
             v.energySourceName = "Power Generator";    
-        } else if (v.rank == 2) {
+        } else {
             v.energySourceName = "Advanced Power Generator";
-        } else if (v.rank == 3) {
-            if (QRandom.Bool()) {
-                v.energySourceName = "Advanced Power Generator";
-            } else {
-                v.energySourceName = "Advanced Power Generator";
-            }
         }
 
-        AddWeapon(v,
-            0.5, PulseLaserWeapon.Design.name,
-            0.3, IonCannonWeapon.Design.name,
-            0.2, PointDefenseLaserWeapon.Design.name);
+        if (v.rank == 1) {
+            AddWeapon(v,
+                0.5, ScytheWeapon.Design.name,
+                0.3, IonCannonWeapon.Design.name,
+                0.2, PointDefenseLaserWeapon.Design.name);
+        } else {
+            AddWeapon(v,
+                0.5, PulseLaserWeapon.Design.name,
+                0.3, IonCannonWeapon.Design.name,
+                0.2, PointDefenseLaserWeapon.Design.name);
+            AddWeapon(v,
+                0.5, RocketLauncherWeapon.Design.name,
+                0.4, v.rank < 3 ? ScytheWeapon.Design.name : GreatScytheWeapon.Design.name);
+        }
 
-        AddWeapon(v,
-            0.5, RocketLauncherWeapon.Design.name,
-            0.4, v.rank < 3 ? ScytheWeapon.Design.name : GreatScytheWeapon.Design.name);
-
+        
         if (QRandom.Float() < RankChance(v.rank, 0.2, 0.3, 0.7)) {
             v.shieldName = IonCurtainShield.Design.name;
         }
@@ -524,7 +525,7 @@ public static class VesselFactory {
             0.7, RocketLauncherWeapon.Design.name,
             0.3, v.rank < 3 ? ScytheWeapon.Design.name : GreatScytheWeapon.Design.name);
 
-        if (QRandom.Float() < RankChance(v.rank, 0, 0.2, 0.5)) {
+        if (QRandom.Float() < RankChance(v.rank, 0, 0.45, 0.85)) {
             v.specialWeaponName = DisintegratorWeapon.Design.name;
         }
 
@@ -771,19 +772,25 @@ public static class VesselFactory {
             v.energySourceName = "Vortex Battery";
         }
 
-        SetSpecialWeapon(v,
-            0.5, HarpoonWeapon.Design.name,
-            0.5, DisruptorWeapon.Design.name);
+        if (v.rank > 1) {
+            SetSpecialWeapon(v,
+                0.5, HarpoonWeapon.Design.name,
+                0.5, DisruptorWeapon.Design.name);
 
-        if (v.specialWeaponName != HarpoonWeapon.Design.name) {
-            AddWeapon(v,
-                0.4, HellfireWeapon.Design.name,
-                0.3, CutterWeapon.Design.name,
-                0.3, FlareWeapon.Design.name);
+            if (v.specialWeaponName != HarpoonWeapon.Design.name) {
+                AddWeapon(v,
+                    0.4, HellfireWeapon.Design.name,
+                    0.3, CutterWeapon.Design.name,
+                    0.3, FlareWeapon.Design.name);
+            } else {
+                AddWeapon(v,
+                    0.6, HellfireWeapon.Design.name,
+                    0.4, FlareWeapon.Design.name);
+            }
         } else {
             AddWeapon(v,
-                0.6, HellfireWeapon.Design.name,
-                0.4, FlareWeapon.Design.name);
+                0.6, CutterWeapon.Design.name,
+                0.35, FlareWeapon.Design.name);
         }
 
         if (QRandom.Float() < RankChance(v.rank, 0.5, 0.7, 0.9)) {
@@ -795,17 +802,26 @@ public static class VesselFactory {
 
     private static void InitZythInvader(Vessel v) {
         v.designName = "Invader";
-        v.energySourceName = "Graviton Generator";
+        v.energySourceName = "Vortex Battery";
+        if (v.rank == 2) {
+            v.energySourceName = "Cryogenic Block";
+        } else if (v.rank == 3) {
+            v.energySourceName = "Graviton Generator";
+        }
 
         AddWeapon(v,
             0.6, DiskThrowerWeapon.Design.name,
             0.4, AssaultLaserWeapon.Design.name);
 
-        AddWeapon(v,
-            0.6, PulseLaserWeapon.Design.name,
-            0.4, FlareWeapon.Design.name);
+        if (QRandom.Float() < RankChance(v.rank, 0.2, 0.5, 1)) {
+            AddWeapon(v,
+                0.6, PulseLaserWeapon.Design.name,
+                0.4, FlareWeapon.Design.name);
+        }
 
-        SetSpecialWeapon(v, 0.5, DisruptorWeapon.Design.name);
+        if (QRandom.Float() < RankChance(v.rank, 0.6, 0.9, 1)) {
+            SetSpecialWeapon(v, 0.5, DisruptorWeapon.Design.name);
+        }
 
         SetShield(v,
             0.65, DeceleratorShield.Design.name,

@@ -85,7 +85,17 @@ public class StarBaseNode : Node2D {
             starBase.productionProgress = 0;
             starBase.productionQueue.Dequeue();
             vessel = _gameState.NewVessel(starBase.owner, vesselDesign);
-            vessel.rank = starBase.VesselRank(QRandom.Float());
+            var rankRollMax = 1.0f;
+            if (_gameState.day < 2000) {
+                rankRollMax = 0.9f;
+            } else if (_gameState.day < 1500) {
+                rankRollMax = 0.8f;
+            } else if (_gameState.day < 1000) {
+                rankRollMax = 0.65f;
+            } else if (_gameState.day < 500) {
+                rankRollMax = 0.35f;
+            }
+            vessel.rank = starBase.VesselRank(QRandom.FloatRange(0, rankRollMax));
             starBase.garrison.Add(vessel.GetRef());
         } else {
             starBase.productionProgress += productionDelta;

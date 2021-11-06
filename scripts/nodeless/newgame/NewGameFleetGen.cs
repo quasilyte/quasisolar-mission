@@ -91,7 +91,7 @@ public class NewGameFleetGen {
                 v.isBot = true;
                 v.pilotName = starBase.owner.ToString(); // FIXME
                 v.faction = starBase.owner;
-                v.rank = starBase.VesselRank(QRandom.Float());
+                v.rank = starBase.VesselRank(0.1f);
                 VesselFactory.Init(v, _template.design);
                 fleet.Add(v.GetRef());
                 budget -= cost;
