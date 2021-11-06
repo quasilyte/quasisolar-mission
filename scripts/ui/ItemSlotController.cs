@@ -61,6 +61,13 @@ public class ItemSlotController {
                         slot.MakeHighlighted();
                     }
                 }
+            } else {
+                foreach (var slot in slots) {
+                    if (slot == selected) {
+                        continue;
+                    }
+                    slot.MakeUnselected();
+                }
             }
         } else {
             foreach (var slot in slots) {
