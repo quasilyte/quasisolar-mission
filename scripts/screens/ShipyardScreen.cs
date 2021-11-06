@@ -244,27 +244,21 @@ public class ShipyardScreen : Node2D {
         }
     }
 
-    private VesselDesign GetVesselDesign(IItem item) {
-        if (item is VesselDesign vesselDesign) {
-            return vesselDesign;
-        }
-        return ((Vessel)item).Design();
-    }
-
     private void OnItemClicked(ItemSlotNode itemSlot) {
         _itemSlotController.OnItemClicked(itemSlot);
 
         var infoBox = GetNode<Label>("VesselInfo/InfoBox/Body");
         if (_itemSlotController.selected == null) {
             infoBox.Text = "";
-        } else {
-            var item = GetVesselDesign(_itemSlotController.selected.GetItem());
+        } else if (_itemSlotController.selected.GetItem() is VesselDesign vesselDesign) {
             var text = "";
-            if (_starBase.level < ItemInfo.MinStarBaseLevel(item)) {
+            if (_starBase.level < ItemInfo.MinStarBaseLevel(vesselDesign)) {
                 text += "[!] Can't produce: star base level is too low.\n\n";
             }
-            text += item.RenderHelp(_starBase.VesselProductionPrice(item));
+            text += vesselDesign.RenderHelp(_starBase.VesselProductionPrice(vesselDesign));
             infoBox.Text = text;
+        } else {
+            infoBox.Text = ItemInfo.RenderHelp(_itemSlotController.selected.GetItem());
         }
 
         UpdateUI();
