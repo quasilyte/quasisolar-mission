@@ -43,6 +43,7 @@ public class SpaceNomadsMapEvent: AbstractMapEvent {
                 var v = RpgGameState.instance.NewVessel(Faction.Earthling, nomadDesign);
                 v.pilotName = PilotNames.UniqHumanName(RpgGameState.instance.usedNames);
                 VesselFactory.PadEquipment(v);
+                v.modList.Add(QRandom.Bool() ? "Reinforced Hull" : "Extra Armor");
                 VesselFactory.InitStats(v);
                 var equipment = "";
                 if (QRandom.Bool()) {
