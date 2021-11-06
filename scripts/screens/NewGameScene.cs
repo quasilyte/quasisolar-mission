@@ -130,12 +130,15 @@ public class NewGameScene : Node2D {
         return starBase;
     }
 
-    private void DeployBases(List<WorldTemplate.System> neutralSystems, Faction faction, int numBases) {
+    private void DeployBases(WorldTemplate world, List<WorldTemplate.System> neutralSystems, Faction faction, int numBases) {
         if (neutralSystems.Count < numBases) {
             throw new Exception($"can't deploy {numBases} for {faction}");
         }
         while (numBases > 0) {
             var sys = QRandom.Element(neutralSystems);
+            if (sys.sector == world.startingSector && faction == Faction.Krigia) {
+                continue;
+            }
             var fleetRollBonus = (float)sys.sector.level * 10;
             var fleetRoll = QRandom.FloatRange(40, 80) + fleetRollBonus;
             var config = sys.sector.world.config;
@@ -318,15 +321,6 @@ public class NewGameScene : Node2D {
             startingStarBase.garrison.Add(defender.GetRef());
         }
 
-        // For a normal game, there is a Krigia base in a starting sector.
-        if (OptionValue("KrigiaPresence") != "minimal") {
-            var sector = world.startingSector;
-            var starBase = NewStarBase(config, Faction.Krigia, 2);
-            BindStarBase(starBase, sector.systems[1].data);
-            NewGameFleetGen.InitFleet(config, starBase, Faction.Krigia, 25);
-            numKrigiaBases--;
-        }
-
         // Populate the star systems with bases.
         {
             var neutralSystems = new List<WorldTemplate.System>();
@@ -340,13 +334,13 @@ public class NewGameScene : Node2D {
                     }
                 }
             }
-            DeployBases(neutralSystems, Faction.Krigia, numKrigiaBases);
-            DeployBases(neutralSystems, Faction.Wertu, numWertuBases);
-            DeployBases(neutralSystems, Faction.Zyth, numZythBases);
-            DeployBases(neutralSystems, Faction.Draklid, numDraklidBases);
-            DeployBases(neutralSystems, Faction.Lezeona, 1);
-            DeployBases(neutralSystems, Faction.Phaa, 1);
-            DeployBases(neutralSystems, Faction.Vespion, 1);
+            DeployBases(world, neutralSystems, Faction.Krigia, numKrigiaBases);
+            DeployBases(world, neutralSystems, Faction.Wertu, numWertuBases);
+            DeployBases(world, neutralSystems, Faction.Zyth, numZythBases);
+            DeployBases(world, neutralSystems, Faction.Draklid, numDraklidBases);
+            DeployBases(world, neutralSystems, Faction.Lezeona, 1);
+            DeployBases(world, neutralSystems, Faction.Phaa, 1);
+            DeployBases(world, neutralSystems, Faction.Vespion, 1);
         }
 
         config.startingSystemID = world.startingSystem.data.id;
