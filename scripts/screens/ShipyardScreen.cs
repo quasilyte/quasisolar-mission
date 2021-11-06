@@ -244,6 +244,13 @@ public class ShipyardScreen : Node2D {
         }
     }
 
+    private VesselDesign GetVesselDesign(IItem item) {
+        if (item is VesselDesign vesselDesign) {
+            return vesselDesign;
+        }
+        return ((Vessel)item).Design();
+    }
+
     private void OnItemClicked(ItemSlotNode itemSlot) {
         _itemSlotController.OnItemClicked(itemSlot);
 
@@ -251,12 +258,12 @@ public class ShipyardScreen : Node2D {
         if (_itemSlotController.selected == null) {
             infoBox.Text = "";
         } else {
-            var item = _itemSlotController.selected.GetItem();
+            var item = GetVesselDesign(_itemSlotController.selected.GetItem());
             var text = "";
             if (_starBase.level < ItemInfo.MinStarBaseLevel(item)) {
                 text += "[!] Can't produce: star base level is too low.\n\n";
             }
-            text += ItemInfo.RenderHelp(item);
+            text += item.RenderHelp(_starBase.VesselProductionPrice(item));
             infoBox.Text = text;
         }
 
