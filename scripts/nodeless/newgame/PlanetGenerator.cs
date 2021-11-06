@@ -25,7 +25,7 @@ public class PlanetGenerator {
 
         var planet = new ResourcePlanet(0, 0, 0, "Treasure World");
         planet.explorationBonus = explorationBonus;
-        planet.explorationUnits = QRandom.IntRange(300, 550) + (level * 20);
+        planet.explorationUnits = QRandom.IntRange(200, 290) + (level * 20);
         planet.temperature = QRandom.IntRange(115, 180);
 
         var planetSprites = new HashSet<string>();
