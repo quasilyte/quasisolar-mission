@@ -167,6 +167,7 @@ public class ResearchScreen : Node2D {
                 "Point-Defense Laser",
                 "Improved Fuel Tanks",
                 "Krigia Weapons I",
+                "Ifrit",
             },
             new List<string>{
                 "Decelerator Guard",
@@ -200,7 +201,6 @@ public class ResearchScreen : Node2D {
                         continue;
                     }
                     stageCompleted = false;
-                    break;
                 }
             }
             if (!stageCompleted) {
