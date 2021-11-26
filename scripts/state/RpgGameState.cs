@@ -96,6 +96,7 @@ public class RpgGameState {
 
     public class ModTraderState {
         public int delay = 0;
+        public bool contacted = false;
         public HashSet<string> artifacts = new HashSet<string>();
     }
 
