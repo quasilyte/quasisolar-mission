@@ -9,6 +9,7 @@ public class DispersionFieldShield : AbstractShield {
         activeElectromagneticDamageReceive = 0.7f,
         activeKineticDamageReceive = 0.8f,
         activeThermalDamageReceive = 1,
+        hpBonus = +50,
 
         duration = 1f,
         cooldown = 2.5f,

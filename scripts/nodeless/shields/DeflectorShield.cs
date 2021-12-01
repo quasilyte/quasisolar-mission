@@ -9,6 +9,7 @@ public class DeflectorShield : AbstractShield {
         activeElectromagneticDamageReceive = 1,
         activeKineticDamageReceive = 1,
         activeThermalDamageReceive = 1,
+        hpBonus = +15,
 
         duration = 2.6f,
         cooldown = 8.5f,

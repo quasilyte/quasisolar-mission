@@ -9,6 +9,7 @@ public class DiffuserShield : AbstractShield {
         activeElectromagneticDamageReceive = 0.1f,
         activeKineticDamageReceive = 1,
         activeThermalDamageReceive = 1,
+        hpBonus = +60,
 
         duration = 2,
         cooldown = 9,

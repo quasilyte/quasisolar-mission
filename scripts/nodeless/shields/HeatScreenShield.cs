@@ -9,6 +9,7 @@ public class HeatScreenShield : AbstractShield {
         activeElectromagneticDamageReceive = 0.75f,
         activeKineticDamageReceive = 1,
         activeThermalDamageReceive = 0.8f,
+        hpBonus = +30,
 
         duration = 0.9f,
         cooldown = 5,

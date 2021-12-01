@@ -38,6 +38,10 @@ public class VesselStats {
         acceleration = design.acceleration;
         rotationSpeed = design.rotationSpeed;
 
+        if (v.shieldName != EmptyShield.Design.name) {
+            maxHp += v.Shield().hpBonus;
+        }
+
         foreach (var modName in v.modList) {
             var mod = VesselMod.modByName[modName];
             if (mod.flagshipOnly && !v.isFlagship) {

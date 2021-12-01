@@ -21,6 +21,8 @@ public class ShieldDesign : IItem {
 
     public int sellingPrice = 0;
 
+    public int hpBonus = 0;
+
     public bool researchRequired = false;
 
     public bool visualAuraRotates = false;
@@ -56,6 +58,9 @@ public class ShieldDesign : IItem {
         }
         if (activeThermalDamageReceive != 1) {
             parts.Add("Thermal damage reduction: " + (int)Math.Round(100 * (1.0 - activeThermalDamageReceive)) + "%");
+        }
+        if (hpBonus != 0) {
+            parts.Add("Max hp bonus: +" + hpBonus);
         }
         parts.Add("Cooldown: " + cooldown.ToString("0.0") + " seconds");
         parts.Add("Duration: " + duration.ToString("0.0") + " seconds");

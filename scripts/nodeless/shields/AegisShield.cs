@@ -9,6 +9,7 @@ public class AegisShield : AbstractShield {
         activeElectromagneticDamageReceive = 0.25f,
         activeKineticDamageReceive = 0.3f,
         activeThermalDamageReceive = 0.5f,
+        hpBonus = +85,
 
         duration = 1.60f,
         cooldown = 8,

@@ -9,6 +9,7 @@ public class IonCurtainShield : AbstractShield {
         activeElectromagneticDamageReceive = 0.60f,
         activeKineticDamageReceive = 1,
         activeThermalDamageReceive = 1,
+        hpBonus = +20,
 
         duration = 1.5f,
         cooldown = 6,

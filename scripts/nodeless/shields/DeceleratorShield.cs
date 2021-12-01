@@ -9,6 +9,7 @@ public class DeceleratorShield : AbstractShield {
         activeElectromagneticDamageReceive = 1,
         activeKineticDamageReceive = 0.6f,
         activeThermalDamageReceive = 0.4f,
+        hpBonus = +35,
 
         duration = 1.6f,
         cooldown = 9,

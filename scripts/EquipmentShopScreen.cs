@@ -366,7 +366,14 @@ public class EquipmentShopScreen : Node2D {
             var shieldSlot = panel.GetNode<ItemSlotNode>("Shield");
             _itemSlotController.AddSlot(shieldSlot);
             shieldSlot.SetAssignItemCallback((int index, IItem item) => {
+                var currentHp = _selectedVessel.hp;
+                var maxHp = _selectedVessel.MaxHp();
                 _selectedVessel.shieldName = item != null ? ((ShieldDesign)item).name : EmptyShield.Design.name;
+                var newStats = _selectedVessel.RecalculateStats();
+                if (newStats.maxHp > maxHp) {
+                    _selectedVessel.hp += (newStats.maxHp - maxHp);
+                }
+                UpdateUI();
             });
             shieldSlot.Connect("Clicked", this, nameof(OnItemClicked), new Godot.Collections.Array{shieldSlot});
         }

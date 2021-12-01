@@ -9,6 +9,7 @@ public class LatticeShield : AbstractShield {
         activeElectromagneticDamageReceive = 0.70f,
         activeKineticDamageReceive = 0.80f,
         activeThermalDamageReceive = 0.90f,
+        hpBonus = +60,
 
         duration = 1.20f,
         cooldown = 5,
